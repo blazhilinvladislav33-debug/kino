@@ -8,6 +8,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <style>
     :root {
       --bg: #0d0d0d; --bg2: #151515; --bg3: #1a1a1a; --bg4: #222;
@@ -274,18 +275,20 @@
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo"><span>Кіно</span><span>База</span></div>
-    <div class="login-sub">Панель управління рекламою</div>
+    <div class="login-sub">Вхід для адміністраторів</div>
     <div class="form-group">
-      <label>Логін</label>
-      <input type="text" id="login-user" placeholder="admin" onkeyup="if(event.key==='Enter')doLogin()">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="admin@example.com" onkeyup="if(event.key==='Enter')doLogin()">
     </div>
     <div class="form-group">
       <label>Пароль</label>
       <input type="password" id="login-pass" placeholder="••••••••" onkeyup="if(event.key==='Enter')doLogin()">
     </div>
     <button class="btn-primary" onclick="doLogin()">Увійти</button>
-    <div class="login-error" id="login-error">Невірний логін або пароль</div>
-    <div style="color:var(--muted);font-size:11px;margin-top:14px;">За замовчуванням: admin / admin123</div>
+    <div class="login-error" id="login-error">Невірний email або пароль</div>
+    <div style="text-align:center;margin-top:12px;">
+      <span onclick="doForgotPassword()" style="color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">Забули пароль?</span>
+    </div>
   </div>
 </div>
 
@@ -688,45 +691,115 @@
   } catch(e) { console.warn('Firebase init failed'); }
 
   // ========================
-  // AUTH
+  // AUTH — Firebase Auth
   // ========================
-  const CREDS_KEY = 'kb_admin_creds';
-  function getCredentials() {
-    const stored = localStorage.getItem(CREDS_KEY);
-    if (stored) return JSON.parse(stored);
-    return { user: 'admin', pass: 'admin123' };
-  }
+  let auth = null;
+  try { auth = firebase.auth(); } catch(e) { console.warn('Firebase Auth init failed'); }
 
-  function doLogin() {
-    const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-pass').value;
-    const creds = getCredentials();
-    if (u === creds.user && p === creds.pass) {
-      sessionStorage.setItem('kb_logged', '1');
+  // Реакція на зміну стану авторизації
+  if (auth) {
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        // Не залогінений — показати форму входу
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('admin-screen').style.display = 'none';
+        return;
+      }
+      // Залогінений — перевірити роль у Firestore
+      let role = 'user';
+      if (db) {
+        try {
+          const doc = await db.collection('users').doc(user.uid).get();
+          if (doc.exists) role = doc.data().role || 'user';
+        } catch(e) {}
+      }
+      if (role !== 'admin') {
+        // Не адмін — вийти і показати помилку
+        await auth.signOut();
+        const errEl = document.getElementById('login-error');
+        errEl.textContent = 'У вас немає прав адміністратора';
+        errEl.style.display = 'block';
+        return;
+      }
+      // Адмін — відкрити панель
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-screen').style.display = 'block';
       initAdmin();
-    } else {
-      document.getElementById('login-error').style.display = 'block';
+    });
+  }
+
+  function doLogin() {
+    if (!auth) { alert('Firebase Auth недоступний'); return; }
+    const email = document.getElementById('login-email').value.trim();
+    const pass  = document.getElementById('login-pass').value;
+    const errEl = document.getElementById('login-error');
+    errEl.style.display = 'none';
+    if (!email || !pass) {
+      errEl.textContent = 'Заповніть всі поля';
+      errEl.style.display = 'block';
+      return;
     }
+    auth.signInWithEmailAndPassword(email, pass)
+      .catch(e => {
+        const msgs = {
+          'auth/user-not-found':    'Користувача не знайдено',
+          'auth/wrong-password':    'Невірний пароль',
+          'auth/invalid-email':     'Невірний формат email',
+          'auth/invalid-credential':'Невірний email або пароль',
+          'auth/too-many-requests': 'Забагато спроб. Спробуйте пізніше'
+        };
+        errEl.textContent = msgs[e.code] || 'Помилка входу';
+        errEl.style.display = 'block';
+      });
   }
 
   function logout() {
-    sessionStorage.removeItem('kb_logged');
-    location.reload();
+    if (auth) auth.signOut();
+  }
+
+  function doForgotPassword() {
+    if (!auth) return;
+    const email = document.getElementById('login-email').value.trim();
+    const errEl = document.getElementById('login-error');
+    if (!email) {
+      errEl.textContent = 'Введіть email вище';
+      errEl.style.display = 'block';
+      return;
+    }
+    auth.sendPasswordResetEmail(email)
+      .then(() => {
+        errEl.style.color = 'var(--green)';
+        errEl.textContent = `Лист надіслано на ${email}`;
+        errEl.style.display = 'block';
+        setTimeout(() => { errEl.style.color = ''; }, 5000);
+      })
+      .catch(() => {
+        errEl.textContent = 'Не вдалось надіслати лист';
+        errEl.style.display = 'block';
+      });
   }
 
   function changePassword() {
-    const cur = document.getElementById('cur-pass').value;
-    const nw = document.getElementById('new-pass').value;
+    const nw  = document.getElementById('new-pass').value;
     const rep = document.getElementById('rep-pass').value;
-    const creds = getCredentials();
-    if (cur !== creds.pass) { showToast('Невірний поточний пароль', true); return; }
-    if (!nw || nw.length < 4) { showToast('Новий пароль занадто короткий', true); return; }
+    if (!nw || nw.length < 6) { showToast('Пароль мінімум 6 символів', true); return; }
     if (nw !== rep) { showToast('Паролі не співпадають', true); return; }
-    localStorage.setItem(CREDS_KEY, JSON.stringify({ user: creds.user, pass: nw }));
-    showToast('✅ Пароль успішно змінено!');
-    ['cur-pass','new-pass','rep-pass'].forEach(id => document.getElementById(id).value = '');
+    const user = auth && auth.currentUser;
+    if (!user) { showToast('Не авторизовано', true); return; }
+    user.updatePassword(nw)
+      .then(() => {
+        showToast('✅ Пароль успішно змінено!');
+        ['cur-pass','new-pass','rep-pass'].forEach(id => {
+          const el = document.getElementById(id); if(el) el.value = '';
+        });
+      })
+      .catch(e => {
+        if (e.code === 'auth/requires-recent-login') {
+          showToast('Для зміни пароля виконайте повторний вхід', true);
+        } else {
+          showToast('Помилка зміни пароля', true);
+        }
+      });
   }
 
   // ========================
@@ -1173,12 +1246,7 @@
     startKeysListener();
   }
 
-  // Check session
-  if (sessionStorage.getItem('kb_logged') === '1') {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
-    initAdmin();
-  }
+  // Сесія керується через Firebase onAuthStateChanged (вище)
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
