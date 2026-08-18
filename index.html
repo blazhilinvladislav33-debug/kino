@@ -1172,19 +1172,33 @@ const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).joi
 // =====================================================================
 // lang codes: '' = auto, 'uk' = ukrainian, 'en' = english
 const MOVIE_PLAYERS = [
-  { id:'vs1', name:'Плеєр 1', badge:'',   url: (id,lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
-  { id:'vs2', name:'Плеєр 2', badge:'4K', url: (id,lang) => `https://vidsrc.xyz/embed/movie?tmdb=${id}&autoplay=1${lang?'&ds_lang='+lang:''}` },
-  { id:'vs3', name:'Плеєр 3', badge:'HD', url: (id,lang) => `https://vidlink.pro/movie/${id}?autoplay=true` },
-  { id:'em4', name:'Плеєр 4', badge:'',   url: (id,lang) => `https://embed.su/embed/movie/${id}` },
-  { id:'em5', name:'Плеєр 5', badge:'',   url: (id,lang) => `https://multiembed.mov/?video_id=${id}&tmdb=1${lang?'&lang='+lang:''}` },
-  { id:'em6', name:'Плеєр 6', badge:'',   url: (id,lang) => `https://autoembed.co/embed/movie/${id}` },
+  { id:'vs1',  name:'Плеєр 1',  badge:'',   url: (id,lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+  { id:'vs2',  name:'Плеєр 2',  badge:'4K', url: (id,lang) => `https://vidsrc.xyz/embed/movie?tmdb=${id}&autoplay=1${lang?'&ds_lang='+lang:''}` },
+  { id:'vs3',  name:'Плеєр 3',  badge:'HD', url: (id,lang) => `https://vidlink.pro/movie/${id}?autoplay=true` },
+  { id:'vsm',  name:'Плеєр 4',  badge:'',   url: (id,lang) => `https://vidsrc.me/embed/movie?tmdb=${id}` },
+  { id:'vsp',  name:'Плеєр 5',  badge:'',   url: (id,lang) => `https://vidsrc.pro/embed/movie/${id}` },
+  { id:'2em',  name:'Плеєр 6',  badge:'',   url: (id,lang) => `https://www.2embed.cc/embed/${id}` },
+  { id:'mapi', name:'Плеєр 7',  badge:'',   url: (id,lang) => `https://moviesapi.club/movie/${id}` },
+  { id:'vsy',  name:'Плеєр 8',  badge:'HD', url: (id,lang) => `https://player.videasy.net/movie/${id}` },
+  { id:'blk',  name:'Плеєр 9',  badge:'',   url: (id,lang) => `https://blackvid.space/embed/movie/${id}` },
+  { id:'emb',  name:'Плеєр 10', badge:'',   url: (id,lang) => `https://www.embedder.online/embed/movie/${id}` },
+  { id:'em4',  name:'Плеєр 11', badge:'',   url: (id,lang) => `https://embed.su/embed/movie/${id}` },
+  { id:'em5',  name:'Плеєр 12', badge:'',   url: (id,lang) => `https://multiembed.mov/?video_id=${id}&tmdb=1${lang?'&lang='+lang:''}` },
+  { id:'em6',  name:'Плеєр 13', badge:'',   url: (id,lang) => `https://autoembed.co/embed/movie/${id}` },
 ];
 const TV_PLAYERS = [
-  { id:'vs1', name:'Плеєр 1', badge:'',   url: (id,s,e,lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
-  { id:'vs2', name:'Плеєр 2', badge:'4K', url: (id,s,e,lang) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}&autoplay=1${lang?'&ds_lang='+lang:''}` },
-  { id:'vs3', name:'Плеєр 3', badge:'HD', url: (id,s,e,lang) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
-  { id:'em4', name:'Плеєр 4', badge:'',   url: (id,s,e,lang) => `https://embed.su/embed/tv/${id}/${s}/${e}` },
-  { id:'em5', name:'Плеєр 5', badge:'',   url: (id,s,e,lang) => `https://autoembed.co/embed/tv/${id}-${s}-${e}` },
+  { id:'vs1',  name:'Плеєр 1',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+  { id:'vs2',  name:'Плеєр 2',  badge:'4K', url: (id,s,e,lang) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}&autoplay=1${lang?'&ds_lang='+lang:''}` },
+  { id:'vs3',  name:'Плеєр 3',  badge:'HD', url: (id,s,e,lang) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
+  { id:'vsm',  name:'Плеєр 4',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` },
+  { id:'vsp',  name:'Плеєр 5',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.pro/embed/tv/${id}/${s}/${e}` },
+  { id:'2em',  name:'Плеєр 6',  badge:'',   url: (id,s,e,lang) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
+  { id:'mapi', name:'Плеєр 7',  badge:'',   url: (id,s,e,lang) => `https://moviesapi.club/tv/${id}-${s}-${e}` },
+  { id:'vsy',  name:'Плеєр 8',  badge:'HD', url: (id,s,e,lang) => `https://player.videasy.net/tv/${id}/${s}/${e}` },
+  { id:'blk',  name:'Плеєр 9',  badge:'',   url: (id,s,e,lang) => `https://blackvid.space/embed/tv/${id}/${s}/${e}` },
+  { id:'emb',  name:'Плеєр 10', badge:'',   url: (id,s,e,lang) => `https://www.embedder.online/embed/tv/${id}/${s}/${e}` },
+  { id:'em4',  name:'Плеєр 11', badge:'',   url: (id,s,e,lang) => `https://embed.su/embed/tv/${id}/${s}/${e}` },
+  { id:'em5',  name:'Плеєр 12', badge:'',   url: (id,s,e,lang) => `https://autoembed.co/embed/tv/${id}-${s}-${e}` },
 ];
 // Озвучки — перемикають мову в тих серверах де є підтримка
 const DUBS = [
