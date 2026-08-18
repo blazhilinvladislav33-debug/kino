@@ -234,6 +234,7 @@
     .player-tab:hover{color:#fff;background:rgba(255,255,255,.06);}
     .player-tab.act{background:#fff;color:#111;}
     .player-tab.act .ptab-badge{color:#b8860b;background:rgba(0,0,0,.12);}
+    .player-tab.broken{opacity:.35;text-decoration:line-through;cursor:not-allowed;pointer-events:none;}
     .ptab-badge{font-size:10px;font-weight:700;color:var(--gold);background:rgba(245,197,24,.15);padding:1px 5px;border-radius:3px;line-height:1.4;}
     .player-rating-right{display:flex;align-items:center;gap:3px;padding:0 14px;border-left:1px solid var(--border);white-space:nowrap;color:var(--gold);font-size:13px;font-weight:700;}
     .player-rating-right span{color:var(--dim);font-size:11px;font-weight:400;}
@@ -1131,6 +1132,8 @@ function loadFallback() {
     keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
   } catch {}
   renderAds();
+  // Запускаємо сайт одразу (не чекаємо 5 с таймаут)
+  if (!dbReady) { dbReady = true; initSite(); }
 }
 
 // =====================================================================
@@ -1140,7 +1143,14 @@ const TMDB_BASE = 'https://api.themoviedb.org/3';
 const IMG = 'https://image.tmdb.org/t/p/';
 let keyIdx = 0;
 
-function getKeys() { return keysCache; }
+// Запасний ключ TMDB — вставте сюди свій ключ, щоб сайт завжди працював на мобільних
+const TMDB_FALLBACK_KEY = '';
+
+function getKeys() {
+  const k = [...keysCache];
+  if (TMDB_FALLBACK_KEY && !k.includes(TMDB_FALLBACK_KEY)) k.push(TMDB_FALLBACK_KEY);
+  return k;
+}
 
 async function tmdb(ep, params={}) {
   const keys = getKeys();
@@ -1303,6 +1313,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
   // Відновлення прогресу: сервер із localStorage (глобальний) або з Firestore
   currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0');
   currentLang = '';          // скинути мову при кожному відкритті
+  brokenPlayers.clear();     // скинути список зламаних плеєрів для нового фільму
   const _prog = libraryCache[String(id)];
   if (_prog) {
     if (type === 'tv' && _prog.lastSeason)  currentSeason  = _prog.lastSeason;
@@ -1509,6 +1520,9 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
 function loadPlayer() { _doLoadPlayer(); }
 
+// Відстежуємо зламані плеєри (заблоковані X-Frame-Options)
+const brokenPlayers = new Set();
+
 function _doLoadPlayer() {
   const loading=document.getElementById('player-loading');
   const iframe=document.getElementById('player-iframe');
@@ -1524,6 +1538,7 @@ function _doLoadPlayer() {
     :p.url(currentModalId,currentLang);
 
   savePlayerProgress();
+  const thisPlayer = currentPlayer;
 
   iframe.removeAttribute('src');
   iframe.src='about:blank';
@@ -1534,9 +1549,46 @@ function _doLoadPlayer() {
       if(loaded) return; loaded=true;
       loading.style.display='none';
       iframe.style.opacity='1';
+      _schedulePlayerCheck(iframe, thisPlayer);
     };
-    setTimeout(()=>{ if(!loaded){ loaded=true; loading.style.display='none'; iframe.style.opacity='1'; } },5000);
+    setTimeout(()=>{ if(!loaded){ loaded=true; loading.style.display='none'; iframe.style.opacity='1'; _schedulePlayerCheck(iframe, thisPlayer); } },5000);
   },150);
+}
+
+function _schedulePlayerCheck(iframe, playerIdx) {
+  // Перевіряємо через 2.5с — якщо iframe same-origin (заблокований браузером),
+  // позначаємо таб як зламаний і автоматично переходимо до наступного
+  setTimeout(()=>{
+    try {
+      const doc = iframe.contentWindow.document;
+      const bodyLen = doc.body ? doc.body.innerHTML.length : 0;
+      if (bodyLen < 100) {
+        // Порожня сторінка = embed заблокований X-Frame-Options
+        _markPlayerBroken(playerIdx);
+        _autoAdvancePlayer();
+      }
+    } catch(e) {
+      // Cross-origin = плеєр завантажив свою сторінку (може показувати "недоступно" —
+      // але це вже поведінка самого плеєра, не блокування браузером)
+    }
+  }, 2500);
+}
+
+function _markPlayerBroken(idx) {
+  brokenPlayers.add(idx);
+  const tabs = document.querySelectorAll('.player-tab');
+  if (tabs[idx]) tabs[idx].classList.add('broken');
+}
+
+function _autoAdvancePlayer() {
+  const players = currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
+  for (let i = 1; i < players.length; i++) {
+    const next = (currentPlayer + i) % players.length;
+    if (!brokenPlayers.has(next)) {
+      switchPlayer(next);
+      return;
+    }
+  }
 }
 
 // Вибір озвучки з дропдауну
@@ -1563,6 +1615,7 @@ function toggleDubDropdown(e) {
 
 // Перемикання вкладки плеєра
 function switchPlayer(idx) {
+  if (brokenPlayers.has(idx)) return; // пропускаємо зламані
   currentPlayer=idx;
   localStorage.setItem('kb_pref_srv', idx);
   document.querySelectorAll('.player-tab').forEach((b,i)=>b.classList.toggle('act',i===idx));
