@@ -273,6 +273,33 @@
     .sk-s{width:55%;}
     @keyframes skP{0%,100%{opacity:1}50%{opacity:.45}}
 
+    /* ===== CATALOG ===== */
+    #cat-section{display:none;}
+    .cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;margin-top:10px;}
+    .cat-filters{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;}
+    .cat-fg{display:flex;flex-direction:column;gap:5px;min-width:0;}
+    .cat-fg label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+    .cat-sel{background:var(--bg3);border:1px solid var(--border);color:#fff;padding:8px 12px;border-radius:7px;font-size:13px;font-family:inherit;outline:none;cursor:pointer;min-width:130px;}
+    .cat-sel:focus{border-color:var(--accent);}
+    .cat-sel option{background:var(--bg3);}
+    .cat-pill-row{display:flex;gap:5px;flex-wrap:wrap;}
+    .cat-pill{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit;}
+    .cat-pill:hover{border-color:#fff;color:#fff;}
+    .cat-pill.act{background:var(--accent);border-color:var(--accent);color:#fff;}
+    .cat-yr-wrap{display:flex;gap:6px;align-items:center;}
+    .cat-yr-inp{background:var(--bg3);border:1px solid var(--border);color:#fff;padding:8px 10px;border-radius:7px;font-size:13px;font-family:inherit;outline:none;width:76px;text-align:center;}
+    .cat-yr-inp:focus{border-color:var(--accent);}
+    .cat-yr-inp::placeholder{color:var(--dim);}
+    .cat-btn-apply{background:var(--accent);border:none;color:#fff;padding:9px 20px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;align-self:flex-end;}
+    .cat-btn-apply:hover{background:var(--ah);}
+    .cat-btn-reset{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 16px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;align-self:flex-end;}
+    .cat-btn-reset:hover{border-color:#555;color:#fff;}
+    .cat-active{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+    .cat-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(229,9,20,.15);border:1px solid rgba(229,9,20,.35);color:var(--accent);font-size:12px;padding:4px 10px;border-radius:20px;}
+    .cat-chip-del{cursor:pointer;font-size:14px;line-height:1;opacity:.7;}
+    .cat-chip-del:hover{opacity:1;}
+    .cat-count{font-size:12px;color:var(--muted);margin-top:2px;}
+
     /* ===== FOOTER ===== */
     footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:50px;padding:32px 24px 18px;}
     .ft-grid{max-width:1600px;margin:0 auto 22px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:26px;}
@@ -311,13 +338,13 @@
   <div class="hdr">
     <a href="#" class="logo"><b>Кіно</b>База</a>
     <nav>
-      <a href="#" class="act" onclick="showHome();return false;">Головна</a>
-      <a href="#" onclick="quickFilter('/movie/now_playing',{});return false;">Фільми</a>
-      <a href="#" onclick="quickFilter('/tv/popular',{});return false;">Серіали</a>
-      <a href="#" onclick="quickFilter('/discover/movie',{with_genres:16});return false;">Мультфільми</a>
-      <a href="#" onclick="quickFilter('/discover/movie',{with_genres:99});return false;">Документальні</a>
-      <a href="#" onclick="quickFilter('/movie/top_rated',{});return false;">Топ рейтинг</a>
-      <a href="#" onclick="showClassics();return false;">Класика</a>
+      <a href="#" class="act" id="nav-home" onclick="showHome();return false;">Головна</a>
+      <a href="#" id="nav-catalog" onclick="showCatalog({type:'movie'});return false;">Фільми</a>
+      <a href="#" onclick="showCatalog({type:'tv'});return false;">Серіали</a>
+      <a href="#" onclick="showCatalog({type:'movie',genre:'16'});return false;">Мультфільми</a>
+      <a href="#" onclick="showCatalog({type:'movie',genre:'99'});return false;">Документальні</a>
+      <a href="#" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});return false;">Топ рейтинг</a>
+      <a href="#" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});return false;">Класика</a>
     </nav>
     <div class="srch-wrap">
       <div class="srch">
@@ -416,6 +443,103 @@
     </div>
   </div>
 
+  <!-- CATALOG -->
+  <div id="cat-section">
+    <div class="cat-head">
+      <div>
+        <div class="sec-title" id="cat-title">Каталог фільмів</div>
+        <div class="cat-count" id="cat-count"></div>
+      </div>
+      <a href="#" class="sec-more" onclick="showHome();return false;">← Головна</a>
+    </div>
+    <div class="cat-filters">
+      <div class="cat-fg">
+        <label>Тип</label>
+        <div class="cat-pill-row">
+          <button class="cat-pill act" id="cpt-movie" onclick="setCatType('movie')">Фільми</button>
+          <button class="cat-pill"     id="cpt-tv"    onclick="setCatType('tv')">Серіали</button>
+        </div>
+      </div>
+      <div class="cat-fg">
+        <label>Жанр</label>
+        <select class="cat-sel" id="cat-genre" onchange="applyCatFilters()">
+          <option value="">Всі жанри</option>
+          <option value="28">Бойовик</option>
+          <option value="12">Пригоди</option>
+          <option value="16">Анімація</option>
+          <option value="35">Комедія</option>
+          <option value="80">Кримінал</option>
+          <option value="99">Документальний</option>
+          <option value="18">Драма</option>
+          <option value="10751">Сімейний</option>
+          <option value="14">Фентезі</option>
+          <option value="36">Історичний</option>
+          <option value="27">Жахи</option>
+          <option value="10749">Мелодрама</option>
+          <option value="878">Фантастика</option>
+          <option value="53">Трилер</option>
+          <option value="10752">Воєнний</option>
+          <option value="37">Вестерн</option>
+        </select>
+      </div>
+      <div class="cat-fg">
+        <label>Країна</label>
+        <select class="cat-sel" id="cat-country" onchange="applyCatFilters()">
+          <option value="">Всі країни</option>
+          <option value="US">США</option>
+          <option value="GB">Велика Британія</option>
+          <option value="FR">Франція</option>
+          <option value="DE">Німеччина</option>
+          <option value="IT">Італія</option>
+          <option value="JP">Японія</option>
+          <option value="KR">Корея</option>
+          <option value="CN">Китай</option>
+          <option value="ES">Іспанія</option>
+          <option value="IN">Індія</option>
+          <option value="AU">Австралія</option>
+          <option value="CA">Канада</option>
+          <option value="UA">Україна</option>
+        </select>
+      </div>
+      <div class="cat-fg">
+        <label>Рік</label>
+        <div class="cat-yr-wrap">
+          <input class="cat-yr-inp" type="text" id="cat-yr-from" placeholder="Від" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')">
+          <span style="color:var(--dim)">—</span>
+          <input class="cat-yr-inp" type="text" id="cat-yr-to" placeholder="До" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')">
+        </div>
+      </div>
+      <div class="cat-fg">
+        <label>Рейтинг</label>
+        <select class="cat-sel" id="cat-rating" onchange="applyCatFilters()">
+          <option value="">Будь-який</option>
+          <option value="6">6+</option>
+          <option value="7">7+</option>
+          <option value="7.5">7.5+</option>
+          <option value="8">8+</option>
+          <option value="8.5">8.5+</option>
+        </select>
+      </div>
+      <div class="cat-fg">
+        <label>Сортування</label>
+        <select class="cat-sel" id="cat-sort" onchange="applyCatFilters()">
+          <option value="popularity.desc">За популярністю</option>
+          <option value="vote_average.desc">За рейтингом</option>
+          <option value="release_date.desc">Новинки спочатку</option>
+          <option value="vote_count.desc">За кількістю голосів</option>
+          <option value="revenue.desc">За касовими зборами</option>
+        </select>
+      </div>
+      <button class="cat-btn-apply" onclick="applyCatFilters()">Застосувати</button>
+      <button class="cat-btn-reset" onclick="resetCatFilters()">Скинути</button>
+    </div>
+    <div class="cat-active" id="cat-active"></div>
+    <div class="movies-grid" id="cat-grid"></div>
+    <div style="text-align:center;margin-top:24px;display:none;" id="cat-more">
+      <button class="btn-sm" onclick="loadMoreCatalog()" style="padding:10px 32px;font-size:14px;">Завантажити ще</button>
+    </div>
+  </div>
+
   <!-- LIBRARY -->
   <div id="lib-section">
     <div class="sec-hdr">
@@ -445,7 +569,7 @@
     <!-- NEW MOVIES -->
     <div class="sec-hdr">
       <div class="sec-title">🔥 Нові фільми</div>
-      <a href="#" class="sec-more">Всі →</a>
+      <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'release_date.desc'});return false;">Всі →</a>
     </div>
     <div id="new-grid" class="movies-grid">
       <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
@@ -464,7 +588,7 @@
       <div class="mv-col">
         <div class="sec-hdr">
           <div class="sec-title">🌟 Популярні</div>
-          <a href="#" class="sec-more">Всі →</a>
+          <a href="#" class="sec-more" onclick="showCatalog({type:'movie'});return false;">Всі →</a>
         </div>
         <div id="pop-grid" class="movies-grid">
           <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
@@ -485,7 +609,7 @@
     <!-- TOP RATED -->
     <div class="sec-hdr">
       <div class="sec-title">🏆 Топ рейтинг</div>
-      <a href="#" class="sec-more">Всі →</a>
+      <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});return false;">Всі →</a>
     </div>
     <div id="top-grid" class="movies-grid">
       <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
@@ -502,7 +626,7 @@
     <!-- SERIES -->
     <div class="sec-hdr">
       <div class="sec-title">📺 Серіали</div>
-      <a href="#" class="sec-more">Всі →</a>
+      <a href="#" class="sec-more" onclick="showCatalog({type:'tv'});return false;">Всі →</a>
     </div>
     <div id="series-grid" class="movies-grid">
       <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
@@ -516,7 +640,7 @@
     <!-- CLASSICS -->
     <div class="sec-hdr" style="margin-top:28px;">
       <div class="sec-title">🎞️ Класика кіно</div>
-      <a href="#" class="sec-more" onclick="showClassics();return false;">Всі →</a>
+      <a href="#" class="sec-more" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});return false;">Всі →</a>
     </div>
     <div id="classic-grid" class="movies-grid">
       <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
@@ -1264,6 +1388,7 @@ function showLibrary(tab = 'fav') {
   document.getElementById('lib-section').style.display = 'block';
   document.getElementById('home-content').style.display = 'none';
   document.getElementById('srch-sec').style.display = 'none';
+  document.getElementById('cat-section').style.display = 'none';
   switchLibTab(tab);
 }
 
@@ -1312,8 +1437,12 @@ function renderLibGrid(tab) {
 
 function showHome(){
   document.getElementById('lib-section').style.display='none';
+  document.getElementById('cat-section').style.display='none';
   document.getElementById('home-content').style.display='block';
   document.getElementById('srch-sec').style.display='none';
+  // Підсвітити "Головна" в навігації
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
+  const nh=document.getElementById('nav-home');if(nh)nh.classList.add('act');
 }
 
 // =====================================================================
@@ -1611,6 +1740,7 @@ async function doSearch(filter) {
   document.getElementById('srch-sec').style.display = 'block';
   document.getElementById('home-content').style.display = 'none';
   document.getElementById('lib-section').style.display = 'none';
+  document.getElementById('cat-section').style.display = 'none';
   document.getElementById('srch-title').textContent = `🔍 «${q}»`;
   document.getElementById('srch-count').textContent = '';
   document.getElementById('srch-more').style.display = 'none';
@@ -1656,6 +1786,7 @@ function clearSearch() {
   document.getElementById('srch-sec').style.display = 'none';
   document.getElementById('home-content').style.display = 'block';
   document.getElementById('lib-section').style.display = 'none';
+  document.getElementById('cat-section').style.display = 'none';
   document.getElementById('si').value = '';
 }
 
@@ -1681,6 +1812,169 @@ function quickFilter(ep,params){
 function showClassics(){
   quickFilter('/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'});
   loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,24);
+}
+
+// =====================================================================
+// CATALOG — каталог з фільтрами
+// =====================================================================
+let catPage = 1, catTotalPages = 1, catType = 'movie';
+
+const GENRE_NAMES = {
+  '28':'Бойовик','12':'Пригоди','16':'Анімація','35':'Комедія','80':'Кримінал',
+  '99':'Документальний','18':'Драма','10751':'Сімейний','14':'Фентезі',
+  '36':'Історичний','27':'Жахи','10749':'Мелодрама','878':'Фантастика',
+  '53':'Трилер','10752':'Воєнний','37':'Вестерн'
+};
+const COUNTRY_NAMES = {
+  'US':'США','GB':'Велика Британія','FR':'Франція','DE':'Німеччина',
+  'IT':'Італія','JP':'Японія','KR':'Корея','CN':'Китай','ES':'Іспанія',
+  'IN':'Індія','AU':'Австралія','CA':'Канада','UA':'Україна'
+};
+
+function showCatalog(preset = {}) {
+  document.getElementById('home-content').style.display = 'none';
+  document.getElementById('srch-sec').style.display    = 'none';
+  document.getElementById('lib-section').style.display = 'none';
+  document.getElementById('cat-section').style.display = 'block';
+
+  // Скидуємо поля до дефолтних, потім застосовуємо пресет
+  document.getElementById('cat-genre').value   = '';
+  document.getElementById('cat-country').value = '';
+  document.getElementById('cat-yr-from').value = '';
+  document.getElementById('cat-yr-to').value   = '';
+  document.getElementById('cat-rating').value  = '';
+  document.getElementById('cat-sort').value    = 'popularity.desc';
+
+  if (preset.type)    catType = preset.type;
+  if (preset.genre)   document.getElementById('cat-genre').value   = String(preset.genre);
+  if (preset.sort)    document.getElementById('cat-sort').value    = preset.sort;
+  if (preset.rating)  document.getElementById('cat-rating').value  = String(preset.rating);
+  if (preset.yearFrom)document.getElementById('cat-yr-from').value = String(preset.yearFrom);
+  if (preset.yearTo)  document.getElementById('cat-yr-to').value   = String(preset.yearTo);
+  if (preset.country) document.getElementById('cat-country').value = preset.country;
+
+  document.getElementById('cpt-movie').classList.toggle('act', catType === 'movie');
+  document.getElementById('cpt-tv').classList.toggle('act', catType === 'tv');
+  document.getElementById('cat-title').textContent = catType === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
+
+  // Підсвітити в навігації
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
+  const nc = document.getElementById('nav-catalog'); if(nc) nc.classList.add('act');
+
+  applyCatFilters();
+  document.getElementById('cat-section').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function setCatType(type) {
+  catType = type;
+  document.getElementById('cpt-movie').classList.toggle('act', type === 'movie');
+  document.getElementById('cpt-tv').classList.toggle('act', type === 'tv');
+  document.getElementById('cat-title').textContent = type === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
+  // При зміні типу скидаємо sort опції (для серіалів немає revenue)
+  const sortEl = document.getElementById('cat-sort');
+  if (type === 'tv' && sortEl.value === 'revenue.desc') sortEl.value = 'popularity.desc';
+  applyCatFilters();
+}
+
+function applyCatFilters() {
+  catPage = 1;
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(12);
+  document.getElementById('cat-more').style.display = 'none';
+  document.getElementById('cat-count').textContent  = '';
+  renderCatChips();
+  _loadCatPage(true);
+}
+
+function _buildCatParams() {
+  const genre    = document.getElementById('cat-genre').value;
+  const country  = document.getElementById('cat-country').value;
+  const yearFrom = document.getElementById('cat-yr-from').value.trim();
+  const yearTo   = document.getElementById('cat-yr-to').value.trim();
+  const rating   = document.getElementById('cat-rating').value;
+  const sort     = document.getElementById('cat-sort').value || 'popularity.desc';
+
+  const p = { sort_by: sort, 'vote_count.gte': 50 };
+  if (genre)   p.with_genres         = genre;
+  if (country) p.with_origin_country = country;
+  if (rating)  p['vote_average.gte'] = rating;
+  if (sort === 'vote_average.desc' && !rating) p['vote_count.gte'] = 300;
+
+  if (catType === 'movie') {
+    if (yearFrom) p['primary_release_date.gte'] = `${yearFrom}-01-01`;
+    if (yearTo)   p['primary_release_date.lte'] = `${yearTo}-12-31`;
+  } else {
+    if (yearFrom) p['first_air_date.gte'] = `${yearFrom}-01-01`;
+    if (yearTo)   p['first_air_date.lte'] = `${yearTo}-12-31`;
+  }
+  return p;
+}
+
+async function _loadCatPage(reset) {
+  const ep   = catType === 'tv' ? '/discover/tv' : '/discover/movie';
+  const data = await tmdb(ep, { ..._buildCatParams(), page: catPage });
+  const grid = document.getElementById('cat-grid');
+
+  if (!data || !data.results || !data.results.length) {
+    if (reset) grid.innerHTML = '<div style="color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;">Нічого не знайдено за цими фільтрами</div>';
+    document.getElementById('cat-more').style.display = 'none';
+    document.getElementById('cat-count').textContent  = '';
+    return;
+  }
+
+  catTotalPages = Math.min(data.total_pages || 1, 500);
+  const total   = data.total_results || 0;
+  const html    = data.results.map(m => card({ ...m, media_type: catType })).join('');
+  if (reset) grid.innerHTML = html; else grid.innerHTML += html;
+
+  document.getElementById('cat-count').textContent = `${total.toLocaleString('uk-UA')} результатів`;
+  document.getElementById('cat-more').style.display = (catPage < catTotalPages && catPage < 15) ? 'block' : 'none';
+}
+
+function loadMoreCatalog() { catPage++; _loadCatPage(false); }
+
+function resetCatFilters() {
+  document.getElementById('cat-genre').value   = '';
+  document.getElementById('cat-country').value = '';
+  document.getElementById('cat-yr-from').value = '';
+  document.getElementById('cat-yr-to').value   = '';
+  document.getElementById('cat-rating').value  = '';
+  document.getElementById('cat-sort').value    = 'popularity.desc';
+  applyCatFilters();
+}
+
+function renderCatChips() {
+  const genre    = document.getElementById('cat-genre').value;
+  const country  = document.getElementById('cat-country').value;
+  const yearFrom = document.getElementById('cat-yr-from').value.trim();
+  const yearTo   = document.getElementById('cat-yr-to').value.trim();
+  const rating   = document.getElementById('cat-rating').value;
+  const sort     = document.getElementById('cat-sort').value;
+
+  const chips = [];
+  if (genre)   chips.push({ key:'genre',   label: GENRE_NAMES[genre]     || genre });
+  if (country) chips.push({ key:'country', label: COUNTRY_NAMES[country] || country });
+  if (yearFrom && yearTo)  chips.push({ key:'year', label: `${yearFrom}–${yearTo}` });
+  else if (yearFrom)       chips.push({ key:'year', label: `Від ${yearFrom}` });
+  else if (yearTo)         chips.push({ key:'year', label: `До ${yearTo}` });
+  if (rating)  chips.push({ key:'rating', label: `Рейтинг ${rating}+` });
+  if (sort && sort !== 'popularity.desc') {
+    const sn = {'vote_average.desc':'За рейтингом','release_date.desc':'Новинки','vote_count.desc':'За голосами','revenue.desc':'За зборами'};
+    chips.push({ key:'sort', label: sn[sort] || sort });
+  }
+
+  document.getElementById('cat-active').innerHTML = chips.map(c =>
+    `<span class="cat-chip">${c.label}<span class="cat-chip-del" onclick="removeCatFilter('${c.key}')">×</span></span>`
+  ).join('');
+}
+
+function removeCatFilter(key) {
+  if (key === 'genre')   document.getElementById('cat-genre').value   = '';
+  if (key === 'country') document.getElementById('cat-country').value = '';
+  if (key === 'year')  { document.getElementById('cat-yr-from').value = ''; document.getElementById('cat-yr-to').value = ''; }
+  if (key === 'rating')  document.getElementById('cat-rating').value  = '';
+  if (key === 'sort')    document.getElementById('cat-sort').value    = 'popularity.desc';
+  applyCatFilters();
 }
 
 // =====================================================================
