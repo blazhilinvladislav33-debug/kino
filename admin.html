@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>КіноБаза — Адмін Панель</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d0d; --bg2: #151515; --bg3: #1a1a1a; --bg4: #222;
+      --accent: #e50914; --gold: #f5c518;
+      --text: #fff; --muted: #888; --border: #2a2a2a;
+      --green: #1db954; --blue: #1a8cff; --orange: #f5a623;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+    /* ===== LOGIN ===== */
+    #login-screen {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background: radial-gradient(ellipse at center, #1a0505 0%, #0d0d0d 70%);
+    }
+    .login-box {
+      background:var(--bg2); border:1px solid var(--border); border-radius:16px;
+      padding:48px 40px; width:360px; text-align:center;
+    }
+    .login-logo { font-size:32px; font-weight:800; margin-bottom:8px; }
+    .login-logo span:first-child { color:var(--accent); }
+    .login-sub { color:var(--muted); font-size:13px; margin-bottom:32px; }
+    .form-group { margin-bottom:16px; text-align:left; }
+    .form-group label { font-size:12px; color:var(--muted); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:8px;
+      color:var(--text); padding:10px 14px; font-size:14px; font-family:inherit; outline:none;
+      transition:border-color .2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--accent); }
+    .form-group textarea { resize:vertical; min-height:80px; }
+    .btn-primary {
+      width:100%; background:var(--accent); color:#fff; border:none; border-radius:8px;
+      padding:12px; font-size:15px; font-weight:700; cursor:pointer; transition:background .2s;
+    }
+    .btn-primary:hover { background:#b20710; }
+    .login-error { color:var(--accent); font-size:13px; margin-top:10px; display:none; }
+
+    /* ===== ADMIN LAYOUT ===== */
+    #admin-screen { display:none; }
+    .admin-header {
+      background:var(--bg2); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 28px; height:56px; position:sticky; top:0; z-index:100;
+    }
+    .admin-logo { font-size:18px; font-weight:800; }
+    .admin-logo span:first-child { color:var(--accent); }
+    .admin-logo .badge {
+      background:var(--bg3); color:var(--muted); font-size:11px; font-weight:500;
+      padding:2px 8px; border-radius:4px; margin-left:8px; vertical-align:middle;
+    }
+    .admin-header-right { display:flex; align-items:center; gap:12px; }
+    .btn-site { color:var(--muted); font-size:13px; text-decoration:none; }
+    .btn-site:hover { color:#fff; }
+    .btn-logout {
+      background:transparent; border:1px solid var(--border); color:var(--muted);
+      padding:6px 14px; border-radius:6px; cursor:pointer; font-size:13px; transition:all .2s;
+    }
+    .btn-logout:hover { border-color:#fff; color:#fff; }
+
+    .admin-body { display:flex; min-height:calc(100vh - 56px); }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width:220px; background:var(--bg2); border-right:1px solid var(--border);
+      padding:20px 0; flex-shrink:0;
+    }
+    .sidebar-section { padding:0 16px; margin-bottom:20px; }
+    .sidebar-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; padding:0 12px; margin-bottom:8px; }
+    .sidebar-link {
+      display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px;
+      color:var(--muted); font-size:14px; font-weight:500; cursor:pointer;
+      text-decoration:none; transition:all .2s; margin-bottom:2px;
+    }
+    .sidebar-link:hover { background:var(--bg3); color:#fff; }
+    .sidebar-link.active { background:rgba(229,9,20,.15); color:var(--accent); }
+    .sidebar-link .icon { width:20px; text-align:center; }
+    .sidebar-count {
+      margin-left:auto; background:var(--bg4); color:var(--muted);
+      font-size:11px; padding:1px 7px; border-radius:10px;
+    }
+    .sidebar-link.active .sidebar-count { background:rgba(229,9,20,.3); color:var(--accent); }
+
+    /* Main content */
+    .admin-main { flex:1; padding:28px; overflow-x:hidden; }
+
+    /* Page header */
+    .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .page-title { font-size:22px; font-weight:700; }
+    .page-sub { color:var(--muted); font-size:13px; margin-top:2px; }
+    .btn-add {
+      background:var(--accent); color:#fff; border:none; border-radius:8px;
+      padding:10px 20px; font-size:14px; font-weight:600; cursor:pointer;
+      display:flex; align-items:center; gap:6px; transition:background .2s;
+    }
+    .btn-add:hover { background:#b20710; }
+
+    /* Stats row */
+    .stats-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:28px; }
+    .stat-card {
+      background:var(--bg2); border:1px solid var(--border); border-radius:12px;
+      padding:20px; display:flex; align-items:center; gap:16px;
+    }
+    .stat-icon { font-size:28px; }
+    .stat-num { font-size:26px; font-weight:800; }
+    .stat-label { color:var(--muted); font-size:12px; margin-top:2px; }
+
+    /* Filters */
+    .filters-bar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+    .filter-btn {
+      padding:6px 14px; border-radius:20px; border:1px solid var(--border);
+      background:var(--bg2); color:var(--muted); font-size:13px; cursor:pointer;
+      transition:all .2s; font-family:inherit;
+    }
+    .filter-btn:hover, .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .search-filter {
+      margin-left:auto; background:var(--bg2); border:1px solid var(--border);
+      border-radius:8px; padding:6px 12px; color:var(--text); font-size:13px;
+      font-family:inherit; outline:none; width:200px;
+    }
+    .search-filter:focus { border-color:var(--accent); }
+
+    /* Ads table */
+    .ads-table { width:100%; border-collapse:collapse; }
+    .ads-table th {
+      text-align:left; padding:10px 14px; font-size:11px; color:var(--muted);
+      text-transform:uppercase; letter-spacing:.5px; border-bottom:1px solid var(--border);
+    }
+    .ads-table td { padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; }
+    .ads-table tr:hover td { background:rgba(255,255,255,.02); }
+
+    .ad-thumb {
+      width:80px; height:45px; border-radius:6px; object-fit:cover;
+      background:var(--bg3); display:flex; align-items:center; justify-content:center;
+      font-size:20px; flex-shrink:0;
+    }
+    .ad-thumb img { width:100%; height:100%; object-fit:cover; border-radius:6px; }
+    .ad-name { font-weight:600; font-size:14px; }
+    .ad-link { color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px; }
+
+    .slot-badge {
+      display:inline-flex; align-items:center; gap:4px; padding:3px 10px;
+      border-radius:20px; font-size:12px; font-weight:600;
+    }
+    .slot-header { background:rgba(26,140,255,.15); color:var(--blue); }
+    .slot-between { background:rgba(29,185,84,.15); color:var(--green); }
+    .slot-popup { background:rgba(229,9,20,.15); color:var(--accent); }
+    .slot-sidebar { background:rgba(245,166,35,.15); color:var(--orange); }
+    .slot-footer { background:rgba(128,128,128,.15); color:#aaa; }
+
+    .type-badge {
+      display:inline-flex; align-items:center; gap:4px; padding:2px 8px;
+      border-radius:4px; font-size:11px; background:var(--bg3); color:var(--muted);
+    }
+
+    .toggle-switch {
+      position:relative; width:42px; height:24px; display:inline-block; cursor:pointer;
+    }
+    .toggle-switch input { opacity:0; width:0; height:0; }
+    .toggle-slider {
+      position:absolute; inset:0; background:#333; border-radius:12px; transition:.3s;
+    }
+    .toggle-slider::before {
+      content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px;
+      background:#fff; border-radius:50%; transition:.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background:var(--green); }
+    .toggle-switch input:checked + .toggle-slider::before { transform:translateX(18px); }
+
+    .action-btn {
+      background:none; border:1px solid var(--border); color:var(--muted);
+      width:32px; height:32px; border-radius:6px; cursor:pointer; font-size:14px;
+      display:inline-flex; align-items:center; justify-content:center; transition:all .2s;
+    }
+    .action-btn:hover { border-color:#fff; color:#fff; }
+    .action-btn.del:hover { border-color:var(--accent); color:var(--accent); }
+    .action-btn.edit:hover { border-color:var(--blue); color:var(--blue); }
+
+    /* Empty state */
+    .empty-state { text-align:center; padding:60px 20px; color:var(--muted); }
+    .empty-state .empty-icon { font-size:56px; margin-bottom:16px; }
+    .empty-state h3 { font-size:18px; color:#fff; margin-bottom:8px; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:1000;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity .25s;
+      backdrop-filter:blur(4px);
+    }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal {
+      background:var(--bg2); border:1px solid var(--border); border-radius:16px;
+      padding:32px; width:560px; max-width:95vw; max-height:90vh;
+      overflow-y:auto; position:relative;
+      animation: modalIn .25s ease;
+    }
+    @keyframes modalIn { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-title { font-size:18px; font-weight:700; margin-bottom:24px; }
+    .modal-close {
+      position:absolute; top:16px; right:16px; background:none; border:none;
+      color:var(--muted); font-size:22px; cursor:pointer;
+    }
+    .modal-close:hover { color:#fff; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-hint { font-size:11px; color:var(--muted); margin-top:4px; }
+    .modal-footer { display:flex; gap:10px; margin-top:24px; justify-content:flex-end; }
+    .btn-cancel {
+      background:transparent; border:1px solid var(--border); color:var(--muted);
+      padding:10px 20px; border-radius:8px; cursor:pointer; font-size:14px;
+      font-family:inherit; transition:all .2s;
+    }
+    .btn-cancel:hover { border-color:#fff; color:#fff; }
+    .btn-save {
+      background:var(--green); color:#fff; border:none; border-radius:8px;
+      padding:10px 24px; font-size:14px; font-weight:700; cursor:pointer;
+      font-family:inherit; transition:background .2s;
+    }
+    .btn-save:hover { background:#17a845; }
+
+    /* Preview */
+    .preview-box {
+      background:var(--bg3); border:1px dashed var(--border); border-radius:8px;
+      padding:12px; margin-top:6px; text-align:center; overflow:hidden;
+    }
+    .preview-box img { max-width:100%; max-height:150px; border-radius:4px; object-fit:contain; }
+    .preview-placeholder { color:var(--muted); font-size:13px; padding:20px; }
+
+    /* Slots guide */
+    .slots-guide { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:20px; }
+    .slots-guide h3 { font-size:15px; margin-bottom:14px; }
+    .slot-row {
+      display:flex; align-items:center; gap:14px; padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.04);
+    }
+    .slot-row:last-child { border:none; }
+    .slot-row .slot-icon { font-size:20px; width:32px; text-align:center; }
+    .slot-row .slot-info { flex:1; }
+    .slot-row .slot-name { font-size:14px; font-weight:600; }
+    .slot-row .slot-desc { font-size:12px; color:var(--muted); margin-top:2px; }
+    .slot-row .slot-dim { font-size:11px; color:var(--blue); }
+
+    .toast-admin {
+      position:fixed; bottom:24px; right:24px; background:#222; color:#fff;
+      padding:12px 20px; border-radius:8px; font-size:14px;
+      border-left:3px solid var(--green); z-index:9999;
+      transform:translateY(60px); transition:transform .3s; opacity:0;
+    }
+    .toast-admin.show { transform:translateY(0); opacity:1; }
+    .toast-admin.error { border-left-color:var(--accent); }
+
+    .section-page { display:none; }
+    .section-page.active { display:block; }
+
+    @media (max-width:768px) {
+      .admin-sidebar { display:none; }
+      .stats-row { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><span>Кіно</span><span>База</span></div>
+    <div class="login-sub">Панель управління рекламою</div>
+    <div class="form-group">
+      <label>Логін</label>
+      <input type="text" id="login-user" placeholder="admin" onkeyup="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="form-group">
+      <label>Пароль</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeyup="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Увійти</button>
+    <div class="login-error" id="login-error">Невірний логін або пароль</div>
+    <div style="color:var(--muted);font-size:11px;margin-top:14px;">За замовчуванням: admin / admin123</div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="admin-screen">
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="admin-logo">
+      <span>Кіно</span><span>База</span>
+      <span class="badge">Admin</span>
+    </div>
+    <div class="admin-header-right">
+      <a href="index.html" target="_blank" class="btn-site">↗ Переглянути сайт</a>
+      <button class="btn-logout" onclick="logout()">Вийти</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Меню</div>
+        <div class="sidebar-link active" onclick="showPage('ads')" id="nav-ads">
+          <span class="icon">📢</span> Реклама
+          <span class="sidebar-count" id="count-ads">0</span>
+        </div>
+        <div class="sidebar-link" onclick="showPage('slots')" id="nav-slots">
+          <span class="icon">🗺️</span> Слоти
+        </div>
+        <div class="sidebar-link" onclick="showPage('settings')" id="nav-settings">
+          <span class="icon">⚙️</span> Налаштування
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Статистика</div>
+        <div style="padding:0 12px; color:var(--muted); font-size:12px; line-height:1.8;">
+          <div>🟢 Активних: <span id="sb-active">0</span></div>
+          <div>🔴 Вимкнених: <span id="sb-inactive">0</span></div>
+          <div>🎯 Слотів: 6</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="admin-main">
+
+      <!-- === PAGE: ADS === -->
+      <div class="section-page active" id="page-ads">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Рекламні банери</div>
+            <div class="page-sub">Керуйте рекламними оголошеннями на сайті</div>
+          </div>
+          <button class="btn-add" onclick="openModal()">+ Додати банер</button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">📢</div>
+            <div><div class="stat-num" id="s-total">0</div><div class="stat-label">Всього банерів</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div><div class="stat-num" id="s-active" style="color:var(--green)">0</div><div class="stat-label">Активних</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔴</div>
+            <div><div class="stat-num" id="s-inactive" style="color:var(--accent)">0</div><div class="stat-label">Вимкнених</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div><div class="stat-num" id="s-slots" style="color:var(--blue)">0</div><div class="stat-label">Зайнятих слотів</div></div>
+          </div>
+        </div>
+
+        <div class="filters-bar">
+          <button class="filter-btn active" onclick="filterAds('all',this)">Всі</button>
+          <button class="filter-btn" onclick="filterAds('active',this)">Активні</button>
+          <button class="filter-btn" onclick="filterAds('inactive',this)">Вимкнені</button>
+          <button class="filter-btn" onclick="filterAds('header',this)">Шапка</button>
+          <button class="filter-btn" onclick="filterAds('popup',this)">Pop-up</button>
+          <input class="search-filter" type="text" placeholder="🔍 Пошук..." oninput="filterBySearch(this.value)">
+        </div>
+
+        <div id="ads-list-container">
+          <table class="ads-table">
+            <thead>
+              <tr>
+                <th>Банер</th>
+                <th>Назва / Посилання</th>
+                <th>Слот</th>
+                <th>Тип</th>
+                <th>Статус</th>
+                <th style="text-align:right">Дії</th>
+              </tr>
+            </thead>
+            <tbody id="ads-tbody"></tbody>
+          </table>
+          <div id="ads-empty" class="empty-state" style="display:none">
+            <div class="empty-icon">📭</div>
+            <h3>Немає банерів</h3>
+            <p>Додайте перший рекламний банер натиснувши кнопку вище</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- === PAGE: SLOTS === -->
+      <div class="section-page" id="page-slots">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Рекламні слоти</div>
+            <div class="page-sub">Розташування реклами на сайті</div>
+          </div>
+        </div>
+        <div class="slots-guide">
+          <h3>📍 Доступні позиції для реклами</h3>
+          <div class="slot-row">
+            <div class="slot-icon">🔝</div>
+            <div class="slot-info">
+              <div class="slot-name">header — Шапка сайту</div>
+              <div class="slot-desc">Банер під навігаційним меню, перший що бачить користувач</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-150px висота</div>
+            </div>
+            <div class="slot-badge slot-header">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">📌</div>
+            <div class="slot-info">
+              <div class="slot-name">between1 — Між рядами 1</div>
+              <div class="slot-desc">Після секції "Нові фільми"</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
+            </div>
+            <div class="slot-badge slot-between">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">📐</div>
+            <div class="slot-info">
+              <div class="slot-name">sidebar — Бокова панель</div>
+              <div class="slot-desc">Збоку від секції "Популярні фільми"</div>
+              <div class="slot-dim">Вертикальний • 200px ширина • 400-600px висота (мобільний: горизонт.)</div>
+            </div>
+            <div class="slot-badge slot-sidebar">вертикал.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">📌</div>
+            <div class="slot-info">
+              <div class="slot-name">between2 — Між рядами 2</div>
+              <div class="slot-desc">Після секції "Популярні"</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
+            </div>
+            <div class="slot-badge slot-between">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">📌</div>
+            <div class="slot-info">
+              <div class="slot-name">between3 — Між рядами 3</div>
+              <div class="slot-desc">Після секції "Топ рейтинг"</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
+            </div>
+            <div class="slot-badge slot-between">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">⬇️</div>
+            <div class="slot-info">
+              <div class="slot-name">footer — Підвал сайту</div>
+              <div class="slot-desc">У нижній частині сторінки</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
+            </div>
+            <div class="slot-badge slot-footer">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">💬</div>
+            <div class="slot-info">
+              <div class="slot-name">popup — Pop-up вікно</div>
+              <div class="slot-desc">Спливаюче вікно через 4 секунди після відкриття сайту</div>
+              <div class="slot-dim">Зображення 400×300px • Таймер 5 сек перед закриттям</div>
+            </div>
+            <div class="slot-badge slot-popup">pop-up</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- === PAGE: SETTINGS === -->
+      <div class="section-page" id="page-settings">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Налаштування</div>
+            <div class="page-sub">Конфігурація адмін-панелі</div>
+          </div>
+        </div>
+        <div style="max-width:480px;">
+          <div class="slots-guide">
+            <h3 style="margin-bottom:20px;">🔐 Зміна пароля</h3>
+            <div class="form-group">
+              <label>Поточний пароль</label>
+              <input type="password" id="cur-pass" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label>Новий пароль</label>
+              <input type="password" id="new-pass" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label>Повторіть новий пароль</label>
+              <input type="password" id="rep-pass" placeholder="••••••••">
+            </div>
+            <button class="btn-primary" onclick="changePassword()" style="width:auto;padding:10px 24px;">Змінити пароль</button>
+          </div>
+          <div class="slots-guide" style="margin-top:16px;">
+            <h3 style="margin-bottom:16px;">📊 Дані</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn-add" onclick="exportData()" style="font-size:13px;padding:8px 16px;">⬇ Експорт JSON</button>
+              <button class="btn-add" onclick="document.getElementById('import-file').click()" style="background:var(--blue);font-size:13px;padding:8px 16px;">⬆ Імпорт JSON</button>
+              <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
+              <button class="btn-add" onclick="clearAllAds()" style="background:var(--accent);font-size:13px;padding:8px 16px;">🗑 Очистити всі</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADD/EDIT MODAL ===== -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title">Додати банер</div>
+
+    <input type="hidden" id="edit-id">
+
+    <div class="form-group">
+      <label>Назва банера *</label>
+      <input type="text" id="f-name" placeholder="Наприклад: Casino Banner шапка">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Слот (позиція) *</label>
+        <select id="f-slot" onchange="updateTypeHint()">
+          <option value="header">🔝 Шапка (header)</option>
+          <option value="between1">📌 Між рядами 1</option>
+          <option value="sidebar">📐 Бокова панель (sidebar)</option>
+          <option value="between2">📌 Між рядами 2</option>
+          <option value="between3">📌 Між рядами 3</option>
+          <option value="footer">⬇️ Підвал (footer)</option>
+          <option value="popup">💬 Pop-up вікно</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Тип банера</label>
+        <select id="f-type">
+          <option value="horizontal">↔ Горизонтальний</option>
+          <option value="vertical">↕ Вертикальний</option>
+          <option value="popup">🪟 Pop-up</option>
+        </select>
+        <div class="form-hint" id="type-hint">Горизонтальний: розтягується на всю ширину</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>URL зображення *</label>
+      <input type="url" id="f-img" placeholder="https://example.com/banner.jpg" oninput="previewImage(this.value)">
+      <div class="form-hint">Рекомендовано: JPG, PNG, GIF, WebP</div>
+    </div>
+    <div class="preview-box" id="img-preview">
+      <div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>
+    </div>
+
+    <div class="form-group" style="margin-top:14px;">
+      <label>URL посилання *</label>
+      <input type="url" id="f-link" placeholder="https://example.com">
+    </div>
+
+    <div class="form-group">
+      <label>Альтернативний текст</label>
+      <input type="text" id="f-alt" placeholder="Опис реклами для SEO">
+    </div>
+
+    <div class="form-group">
+      <label>HTML код (необов'язково)</label>
+      <textarea id="f-html" placeholder="Вставте готовий HTML код банера (якщо є). Перевага над зображенням."></textarea>
+      <div class="form-hint">Якщо вказати HTML — він буде використаний замість зображення</div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Скасувати</button>
+      <button class="btn-save" onclick="saveAd()">💾 Зберегти</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-admin" id="toast"></div>
+
+<script>
+  // ========================
+  // AUTH
+  // ========================
+  const CREDS_KEY = 'kb_admin_creds';
+  function getCredentials() {
+    const stored = localStorage.getItem(CREDS_KEY);
+    if (stored) return JSON.parse(stored);
+    return { user: 'admin', pass: 'admin123' };
+  }
+
+  function doLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    const creds = getCredentials();
+    if (u === creds.user && p === creds.pass) {
+      sessionStorage.setItem('kb_logged', '1');
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      initAdmin();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('kb_logged');
+    location.reload();
+  }
+
+  function changePassword() {
+    const cur = document.getElementById('cur-pass').value;
+    const nw = document.getElementById('new-pass').value;
+    const rep = document.getElementById('rep-pass').value;
+    const creds = getCredentials();
+    if (cur !== creds.pass) { showToast('Невірний поточний пароль', true); return; }
+    if (!nw || nw.length < 4) { showToast('Новий пароль занадто короткий', true); return; }
+    if (nw !== rep) { showToast('Паролі не співпадають', true); return; }
+    localStorage.setItem(CREDS_KEY, JSON.stringify({ user: creds.user, pass: nw }));
+    showToast('✅ Пароль успішно змінено!');
+    ['cur-pass','new-pass','rep-pass'].forEach(id => document.getElementById(id).value = '');
+  }
+
+  // ========================
+  // ADS DATA
+  // ========================
+  const ADS_KEY = 'kb_ads';
+
+  function getAds() {
+    const raw = localStorage.getItem(ADS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }
+
+  function saveAds(ads) {
+    localStorage.setItem(ADS_KEY, JSON.stringify(ads));
+  }
+
+  function genId() {
+    return 'ad_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  }
+
+  // ========================
+  // RENDER
+  // ========================
+  const SLOT_LABELS = {
+    header: ['Шапка', 'slot-header'],
+    between1: ['Між рядами 1', 'slot-between'],
+    between2: ['Між рядами 2', 'slot-between'],
+    between3: ['Між рядами 3', 'slot-between'],
+    sidebar: ['Бокова панель', 'slot-sidebar'],
+    footer: ['Підвал', 'slot-footer'],
+    popup: ['Pop-up', 'slot-popup'],
+  };
+
+  let currentFilter = 'all';
+  let currentSearch = '';
+
+  function renderAds() {
+    const ads = getAds();
+    const active = ads.filter(a=>a.active).length;
+    const inactive = ads.filter(a=>!a.active).length;
+    const slots = new Set(ads.filter(a=>a.active).map(a=>a.slot)).size;
+
+    // Stats
+    document.getElementById('s-total').textContent = ads.length;
+    document.getElementById('s-active').textContent = active;
+    document.getElementById('s-inactive').textContent = inactive;
+    document.getElementById('s-slots').textContent = slots;
+    document.getElementById('count-ads').textContent = ads.length;
+    document.getElementById('sb-active').textContent = active;
+    document.getElementById('sb-inactive').textContent = inactive;
+
+    // Filter
+    let filtered = ads;
+    if (currentFilter === 'active') filtered = ads.filter(a=>a.active);
+    else if (currentFilter === 'inactive') filtered = ads.filter(a=>!a.active);
+    else if (['header','popup','between1','between2','between3','sidebar','footer'].includes(currentFilter))
+      filtered = ads.filter(a=>a.slot===currentFilter);
+
+    if (currentSearch)
+      filtered = filtered.filter(a =>
+        a.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+        (a.linkUrl||'').toLowerCase().includes(currentSearch.toLowerCase())
+      );
+
+    const tbody = document.getElementById('ads-tbody');
+    const empty = document.getElementById('ads-empty');
+
+    if (!filtered.length) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = filtered.map(ad => {
+      const [slotLabel, slotClass] = SLOT_LABELS[ad.slot] || ['—', ''];
+      const thumb = ad.imageUrl
+        ? `<div class="ad-thumb"><img src="${ad.imageUrl}" onerror="this.parentNode.innerHTML='🖼️'"></div>`
+        : `<div class="ad-thumb">🖼️</div>`;
+      return `
+        <tr>
+          <td>${thumb}</td>
+          <td>
+            <div class="ad-name">${ad.name}</div>
+            <div class="ad-link">${ad.linkUrl || '—'}</div>
+          </td>
+          <td><span class="slot-badge ${slotClass}">${slotLabel}</span></td>
+          <td><span class="type-badge">${ad.type === 'vertical' ? '↕ Верт.' : ad.type === 'popup' ? '🪟 Pop-up' : '↔ Горизонт.'}</span></td>
+          <td>
+            <label class="toggle-switch">
+              <input type="checkbox" ${ad.active?'checked':''} onchange="toggleAd('${ad.id}',this.checked)">
+              <div class="toggle-slider"></div>
+            </label>
+          </td>
+          <td style="text-align:right;">
+            <button class="action-btn edit" onclick="editAd('${ad.id}')" title="Редагувати">✏️</button>
+            <button class="action-btn del" onclick="deleteAd('${ad.id}')" title="Видалити">🗑</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // ========================
+  // AD ACTIONS
+  // ========================
+  function toggleAd(id, val) {
+    const ads = getAds();
+    const ad = ads.find(a=>a.id===id);
+    if (ad) { ad.active = val; saveAds(ads); renderAds(); showToast(val ? '✅ Банер увімкнено' : '⏸ Банер вимкнено'); }
+  }
+
+  function deleteAd(id) {
+    if (!confirm('Видалити цей банер?')) return;
+    const ads = getAds().filter(a=>a.id!==id);
+    saveAds(ads);
+    renderAds();
+    showToast('🗑 Банер видалено');
+  }
+
+  function editAd(id) {
+    const ad = getAds().find(a=>a.id===id);
+    if (!ad) return;
+    document.getElementById('edit-id').value = id;
+    document.getElementById('modal-title').textContent = 'Редагувати банер';
+    document.getElementById('f-name').value = ad.name;
+    document.getElementById('f-slot').value = ad.slot;
+    document.getElementById('f-type').value = ad.type;
+    document.getElementById('f-img').value = ad.imageUrl || '';
+    document.getElementById('f-link').value = ad.linkUrl || '';
+    document.getElementById('f-alt').value = ad.altText || '';
+    document.getElementById('f-html').value = ad.html || '';
+    previewImage(ad.imageUrl || '');
+    updateTypeHint();
+    openModal();
+  }
+
+  function saveAd() {
+    const name = document.getElementById('f-name').value.trim();
+    const slot = document.getElementById('f-slot').value;
+    const type = document.getElementById('f-type').value;
+    const imageUrl = document.getElementById('f-img').value.trim();
+    const linkUrl = document.getElementById('f-link').value.trim();
+    const altText = document.getElementById('f-alt').value.trim();
+    const html = document.getElementById('f-html').value.trim();
+
+    if (!name) { showToast('Введіть назву банера', true); return; }
+    if (!imageUrl && !html) { showToast('Вкажіть URL зображення або HTML код', true); return; }
+    if (!linkUrl && !html) { showToast('Вкажіть URL посилання', true); return; }
+
+    const ads = getAds();
+    const editId = document.getElementById('edit-id').value;
+
+    if (editId) {
+      const ad = ads.find(a=>a.id===editId);
+      if (ad) {
+        Object.assign(ad, { name, slot, type, imageUrl, linkUrl, altText, html });
+      }
+      showToast('✅ Банер оновлено!');
+    } else {
+      ads.push({ id: genId(), name, slot, type, imageUrl, linkUrl, altText, html, active: true, createdAt: new Date().toISOString() });
+      showToast('✅ Банер додано!');
+    }
+
+    saveAds(ads);
+    renderAds();
+    closeModal();
+  }
+
+  function clearAllAds() {
+    if (!confirm('Видалити ВСІ банери? Цю дію не можна скасувати.')) return;
+    saveAds([]);
+    renderAds();
+    showToast('🗑 Всі банери видалено');
+  }
+
+  // ========================
+  // FILTERS
+  // ========================
+  function filterAds(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderAds();
+  }
+
+  function filterBySearch(q) {
+    currentSearch = q;
+    renderAds();
+  }
+
+  // ========================
+  // MODAL
+  // ========================
+  function openModal() {
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.getElementById('edit-id').value = '';
+    document.getElementById('modal-title').textContent = 'Додати банер';
+    ['f-name','f-img','f-link','f-alt','f-html'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-slot').value = 'header';
+    document.getElementById('f-type').value = 'horizontal';
+    document.getElementById('img-preview').innerHTML = '<div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>';
+    updateTypeHint();
+  }
+
+  function previewImage(url) {
+    const box = document.getElementById('img-preview');
+    if (!url) {
+      box.innerHTML = '<div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>';
+      return;
+    }
+    box.innerHTML = `<img src="${url}" onerror="this.parentNode.innerHTML='<div class=preview-placeholder>❌ Не вдалося завантажити зображення</div>'">`;
+  }
+
+  function updateTypeHint() {
+    const slot = document.getElementById('f-slot').value;
+    const hints = {
+      header: 'Горизонтальний • 100% ширина • 90-150px висота',
+      between1: 'Горизонтальний • повна ширина між рядами фільмів',
+      between2: 'Горизонтальний • повна ширина між рядами фільмів',
+      between3: 'Горизонтальний • повна ширина між рядами фільмів',
+      sidebar: 'Вертикальний • 200px ширина на десктопі, горизонт. на мобільному',
+      footer: 'Горизонтальний • повна ширина у підвалі',
+      popup: 'Pop-up • 480px • з'являється через 4 сек',
+    };
+    const typeMap = { header:'horizontal', between1:'horizontal', between2:'horizontal', between3:'horizontal', sidebar:'vertical', footer:'horizontal', popup:'popup' };
+    document.getElementById('f-type').value = typeMap[slot] || 'horizontal';
+    document.getElementById('type-hint').textContent = hints[slot] || '';
+  }
+
+  // ========================
+  // NAVIGATION
+  // ========================
+  function showPage(page) {
+    document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('nav-' + page).classList.add('active');
+  }
+
+  // ========================
+  // EXPORT / IMPORT
+  // ========================
+  function exportData() {
+    const data = { ads: getAds(), exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'kinobaza-ads.json';
+    a.click();
+    showToast('✅ Дані експортовано!');
+  }
+
+  function importData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.ads && Array.isArray(data.ads)) {
+          saveAds(data.ads);
+          renderAds();
+          showToast(`✅ Імпортовано ${data.ads.length} банерів!`);
+        } else {
+          showToast('❌ Невірний формат файлу', true);
+        }
+      } catch { showToast('❌ Помилка читання файлу', true); }
+    };
+    reader.readAsText(file);
+    input.value = '';
+  }
+
+  // ========================
+  // TOAST
+  // ========================
+  let toastT = null;
+  function showToast(msg, error = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast-admin show' + (error ? ' error' : '');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ========================
+  // INIT
+  // ========================
+  function initAdmin() {
+    renderAds();
+  }
+
+  // Check session
+  if (sessionStorage.getItem('kb_logged') === '1') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    initAdmin();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+</body>
+</html>
