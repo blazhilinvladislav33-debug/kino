@@ -4,1029 +4,275 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>КіноБаза — Дивитись фільми онлайн безкоштовно</title>
-  <meta name="description" content="Дивитись фільми та серіали онлайн безкоштовно у хорошій якості. Нові фільми 2024-2025.">
+  <meta name="description" content="Дивитись фільми та серіали онлайн безкоштовно у хорошій якості.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #0d0d0d;
-      --bg-secondary: #151515;
-      --bg-card: #1a1a1a;
-      --bg-hover: #252525;
-      --accent: #e50914;
-      --accent-hover: #b20710;
-      --accent-gold: #f5c518;
-      --text-primary: #ffffff;
-      --text-secondary: #aaaaaa;
-      --text-muted: #666666;
+      --bg-primary: #0d0d0d; --bg-secondary: #151515; --bg-card: #1a1a1a; --bg-hover: #252525;
+      --accent: #e50914; --accent-hover: #b20710; --accent-gold: #f5c518;
+      --text-primary: #ffffff; --text-secondary: #aaaaaa; --text-muted: #666666;
       --border: #2a2a2a;
-      --ad-bg: #1e1e1e;
-      --ad-border: #333;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; overflow-x:hidden; }
 
     /* ===== SETUP BANNER ===== */
     #setup-banner {
-      background: linear-gradient(135deg, #1a0a00, #2d1500);
-      border-bottom: 2px solid #f5a623;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      font-size: 13px;
-      flex-wrap: wrap;
-      text-align: center;
+      background:linear-gradient(135deg,#1a0a00,#2d1500);
+      border-bottom:2px solid #f5a623; padding:10px 20px;
+      display:flex; align-items:center; justify-content:center; gap:12px;
+      font-size:13px; flex-wrap:wrap; text-align:center;
     }
-    #setup-banner .icon { font-size: 18px; }
-    #setup-banner strong { color: #f5a623; }
+    #setup-banner strong { color:#f5a623; }
     #setup-banner input {
-      background: #0d0d0d;
-      border: 1px solid #f5a623;
-      color: #fff;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 13px;
-      width: 220px;
-      font-family: monospace;
+      background:#0d0d0d; border:1px solid #f5a623; color:#fff;
+      padding:4px 10px; border-radius:4px; font-size:13px; width:220px; font-family:monospace;
     }
-    #setup-banner button {
-      background: #f5a623;
-      color: #000;
-      border: none;
-      padding: 5px 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 13px;
-    }
-    #setup-banner .close-setup { cursor: pointer; color: #f5a623; margin-left: 10px; font-size: 18px; }
+    #setup-banner .sb-btn { background:#f5a623; color:#000; border:none; padding:5px 14px; border-radius:4px; cursor:pointer; font-weight:700; font-size:13px; }
+    #setup-banner .sb-close { cursor:pointer; color:#f5a623; margin-left:10px; font-size:18px; }
 
     /* ===== HEADER ===== */
-    header {
-      background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 100%);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-top {
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      height: 60px;
-      max-width: 1400px;
-      margin: 0 auto;
-      gap: 20px;
-    }
-    .logo {
-      font-size: 26px;
-      font-weight: 800;
-      text-decoration: none;
-      letter-spacing: -1px;
-      flex-shrink: 0;
-    }
-    .logo span:first-child { color: var(--accent); }
-    .logo span:last-child { color: #fff; }
-    nav {
-      display: flex;
-      gap: 4px;
-      flex: 1;
-    }
-    nav a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-    nav a:hover, nav a.active { color: #fff; background: var(--bg-hover); }
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      flex: 0 1 300px;
-    }
-    .search-box input {
-      background: none;
-      border: none;
-      outline: none;
-      color: #fff;
-      padding: 8px 14px;
-      font-size: 14px;
-      width: 100%;
-      font-family: inherit;
-    }
-    .search-box input::placeholder { color: var(--text-muted); }
-    .search-box button {
-      background: var(--accent);
-      border: none;
-      color: #fff;
-      padding: 8px 14px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.2s;
-    }
-    .search-box button:hover { background: var(--accent-hover); }
-    .header-actions { display: flex; gap: 8px; align-items: center; }
-    .btn-login, .btn-reg {
-      padding: 7px 16px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-login { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
-    .btn-login:hover { border-color: #fff; color: #fff; }
-    .btn-reg { background: var(--accent); border: 1px solid var(--accent); color: #fff; }
-    .btn-reg:hover { background: var(--accent-hover); }
+    header { background:linear-gradient(180deg,rgba(0,0,0,.97),rgba(0,0,0,.88)); backdrop-filter:blur(10px); position:sticky; top:0; z-index:1000; border-bottom:1px solid var(--border); }
+    .header-top { display:flex; align-items:center; padding:0 24px; height:58px; max-width:1600px; margin:0 auto; gap:18px; }
+    .logo { font-size:24px; font-weight:800; text-decoration:none; letter-spacing:-1px; flex-shrink:0; }
+    .logo span:first-child { color:var(--accent); }
+    .logo span:last-child { color:#fff; }
+    nav { display:flex; gap:2px; flex:1; }
+    nav a { color:var(--text-secondary); text-decoration:none; font-size:13px; font-weight:500; padding:6px 11px; border-radius:6px; transition:all .2s; white-space:nowrap; }
+    nav a:hover, nav a.active { color:#fff; background:var(--bg-hover); }
+    .search-box { display:flex; align-items:center; background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px; overflow:hidden; flex:0 1 280px; }
+    .search-box input { background:none; border:none; outline:none; color:#fff; padding:8px 12px; font-size:14px; width:100%; font-family:inherit; }
+    .search-box input::placeholder { color:var(--text-muted); }
+    .search-box button { background:var(--accent); border:none; color:#fff; padding:8px 14px; cursor:pointer; font-size:16px; transition:background .2s; flex-shrink:0; }
+    .search-box button:hover { background:var(--accent-hover); }
+    .header-actions { display:flex; gap:8px; align-items:center; flex-shrink:0; }
+    .btn-login, .btn-reg { padding:7px 14px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; transition:all .2s; }
+    .btn-login { background:transparent; border:1px solid var(--border); color:var(--text-secondary); }
+    .btn-login:hover { border-color:#fff; color:#fff; }
+    .btn-reg { background:var(--accent); border:1px solid var(--accent); color:#fff; }
+    .btn-reg:hover { background:var(--accent-hover); }
+    .btn-admin-link { color:var(--text-muted); font-size:11px; padding:5px 8px; border:1px solid var(--border); border-radius:4px; text-decoration:none; }
+    .btn-admin-link:hover { color:#fff; border-color:#555; }
 
-    /* Header Ad Banner */
-    .header-ad {
-      background: var(--ad-bg);
-      border-top: 1px solid var(--ad-border);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 6px;
-      min-height: 50px;
-      position: relative;
+    /* ===== AD SLOT: HORIZONTAL ===== */
+    .ad-slot-wrap {
+      width:100%; background:#111; border-bottom:1px solid #1a1a1a;
+      position:relative; overflow:hidden;
     }
-    .ad-label {
-      position: absolute;
-      top: 2px;
-      left: 8px;
-      font-size: 9px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .ad-slot-wrap.in-page { border-top:1px solid #1a1a1a; border-bottom:1px solid #1a1a1a; margin:28px 0; }
+    .ad-label-tag {
+      position:absolute; top:3px; left:8px; font-size:9px; color:#444;
+      text-transform:uppercase; letter-spacing:1px; z-index:2; pointer-events:none;
     }
-    .ad-banner-728 {
-      width: 728px;
-      max-width: 100%;
-      height: 90px;
-      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #1e3a5f;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      text-decoration: none;
+    /* Horizontal banner: full width, fits image */
+    .ad-horizontal {
+      width:100%; display:block; cursor:pointer; text-decoration:none;
+      display:flex; align-items:center; justify-content:center; overflow:hidden;
+      min-height:70px; max-height:160px;
     }
-    .ad-banner-728::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.03) 50%, transparent 70%);
-      animation: shine 3s infinite;
+    .ad-horizontal img { width:100%; height:100%; object-fit:cover; display:block; max-height:160px; }
+
+    /* Vertical sidebar ad */
+    .ad-vertical-wrap { width:200px; flex-shrink:0; }
+    .ad-vertical {
+      width:100%; display:block; cursor:pointer; text-decoration:none;
+      overflow:hidden; border-radius:8px; border:1px solid var(--border);
     }
-    @keyframes shine {
-      0% { transform: translateX(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) rotate(45deg); }
-    }
-    .ad-banner-728 .ad-content {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      z-index: 1;
-    }
-    .ad-banner-728 .ad-logo {
-      font-size: 28px;
-      font-weight: 900;
-      color: #4fc3f7;
-      text-shadow: 0 0 20px rgba(79,195,247,0.5);
-    }
-    .ad-banner-728 .ad-text { color: #ccc; font-size: 13px; }
-    .ad-banner-728 .ad-text strong { color: #fff; font-size: 16px; display: block; }
-    .ad-banner-728 .ad-cta {
-      background: #f5a623;
-      color: #000;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 13px;
-      white-space: nowrap;
+    .ad-vertical img { width:100%; display:block; object-fit:cover; max-height:600px; }
+    @media (max-width:900px) {
+      .ad-vertical-wrap { width:100%; }
+      .ad-vertical img { max-height:120px; object-fit:cover; width:100%; }
     }
 
-    /* ===== MAIN CONTAINER ===== */
-    main { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
-
-    /* ===== HERO SECTION ===== */
-    .hero {
-      position: relative;
-      height: 500px;
-      border-radius: 16px;
-      overflow: hidden;
-      margin: 20px 0;
-      cursor: pointer;
+    /* Popup ad */
+    .popup-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:9999;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity .3s; backdrop-filter:blur(4px);
     }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center top;
-      transition: all 0.8s ease;
+    .popup-overlay.visible { opacity:1; pointer-events:all; }
+    .popup-box {
+      position:relative; max-width:500px; width:93%; border-radius:14px;
+      overflow:hidden; cursor:pointer; box-shadow:0 30px 80px rgba(0,0,0,.8);
+      animation:popIn .35s ease;
     }
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%);
+    @keyframes popIn { from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
+    .popup-box img { width:100%; display:block; }
+    .popup-box .popup-fallback {
+      background:linear-gradient(135deg,#1a0a2d,#2d1a4d);
+      padding:50px 40px; text-align:center;
     }
-    .hero-overlay-bottom {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 150px;
-      background: linear-gradient(0deg, var(--bg-primary), transparent);
+    .popup-close-btn {
+      position:absolute; top:10px; right:10px; width:34px; height:34px;
+      background:rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.2);
+      border-radius:50%; color:#fff; font-size:18px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      z-index:10; transition:background .2s;
     }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      padding: 60px 50px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      max-width: 600px;
+    .popup-close-btn:hover { background:rgba(0,0,0,.9); }
+    .popup-close-btn.locked { opacity:.3; cursor:not-allowed; }
+    .popup-timer-bar {
+      position:absolute; bottom:0; left:0; height:3px;
+      background:var(--accent); transition:width 1s linear;
     }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 14px;
-      width: fit-content;
-    }
-    .hero-title {
-      font-size: 42px;
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 14px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-    .hero-meta {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-      font-size: 14px;
-    }
-    .hero-rating {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      color: var(--accent-gold);
-      font-weight: 700;
-    }
-    .hero-year, .hero-genre { color: var(--text-secondary); }
-    .hero-desc {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 24px;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .hero-btns { display: flex; gap: 12px; }
-    .btn-play {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--accent);
-      color: #fff;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-    }
-    .btn-play:hover { background: var(--accent-hover); transform: scale(1.02); }
-    .btn-more {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(10px);
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.2);
-      transition: all 0.2s;
-    }
-    .btn-more:hover { background: rgba(255,255,255,0.25); }
-    .hero-dots {
-      position: absolute;
-      bottom: 20px;
-      right: 30px;
-      display: flex;
-      gap: 8px;
-      z-index: 3;
-    }
-    .hero-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 4px;
-      background: rgba(255,255,255,0.3);
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .hero-dot.active {
-      width: 24px;
-      background: var(--accent);
+    .popup-ad-badge {
+      position:absolute; top:8px; left:10px; font-size:9px; color:rgba(255,255,255,.4);
+      text-transform:uppercase; letter-spacing:2px;
     }
 
-    /* ===== SECTION TITLES ===== */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      margin-top: 32px;
-    }
-    .section-title {
-      font-size: 20px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .section-title::before {
-      content: '';
-      display: block;
-      width: 4px;
-      height: 22px;
-      background: var(--accent);
-      border-radius: 2px;
-    }
-    .section-link {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: color 0.2s;
-    }
-    .section-link:hover { color: var(--accent); }
+    /* ===== MAIN ===== */
+    main { max-width:1600px; margin:0 auto; padding:0 24px; }
+
+    /* ===== HERO ===== */
+    .hero { position:relative; height:480px; border-radius:14px; overflow:hidden; margin:18px 0; cursor:pointer; }
+    .hero-bg { position:absolute; inset:0; background-size:cover; background-position:center top; transition:all .8s ease; }
+    .hero-overlay { position:absolute; inset:0; background:linear-gradient(90deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.1) 100%); }
+    .hero-overlay-b { position:absolute; bottom:0; left:0; right:0; height:140px; background:linear-gradient(0deg,var(--bg-primary),transparent); }
+    .hero-content { position:relative; z-index:2; padding:55px 44px; height:100%; display:flex; flex-direction:column; justify-content:center; max-width:580px; }
+    .hero-badge { display:inline-flex; align-items:center; gap:5px; background:var(--accent); color:#fff; font-size:11px; font-weight:700; padding:3px 9px; border-radius:3px; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; width:fit-content; }
+    .hero-title { font-size:38px; font-weight:800; line-height:1.1; margin-bottom:12px; text-shadow:0 2px 10px rgba(0,0,0,.5); }
+    .hero-meta { display:flex; align-items:center; gap:12px; margin-bottom:14px; font-size:14px; }
+    .hero-rating { display:flex; align-items:center; gap:4px; color:var(--accent-gold); font-weight:700; }
+    .hero-year, .hero-genre { color:var(--text-secondary); }
+    .hero-desc { font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:22px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+    .hero-btns { display:flex; gap:10px; }
+    .btn-play { display:flex; align-items:center; gap:7px; background:var(--accent); color:#fff; padding:11px 26px; border-radius:8px; font-weight:700; font-size:15px; cursor:pointer; border:none; transition:all .2s; }
+    .btn-play:hover { background:var(--accent-hover); transform:scale(1.02); }
+    .btn-more { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.12); backdrop-filter:blur(10px); color:#fff; padding:11px 22px; border-radius:8px; font-weight:600; font-size:15px; cursor:pointer; border:1px solid rgba(255,255,255,.2); transition:all .2s; }
+    .btn-more:hover { background:rgba(255,255,255,.22); }
+    .hero-dots { position:absolute; bottom:18px; right:28px; display:flex; gap:7px; z-index:3; }
+    .hero-dot { width:7px; height:7px; border-radius:4px; background:rgba(255,255,255,.3); cursor:pointer; transition:all .3s; }
+    .hero-dot.active { width:22px; background:var(--accent); }
+
+    /* ===== SECTIONS ===== */
+    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; margin-top:28px; }
+    .section-title { font-size:19px; font-weight:700; display:flex; align-items:center; gap:9px; }
+    .section-title::before { content:''; display:block; width:4px; height:20px; background:var(--accent); border-radius:2px; }
+    .section-link { color:var(--text-muted); text-decoration:none; font-size:13px; display:flex; align-items:center; gap:3px; transition:color .2s; }
+    .section-link:hover { color:var(--accent); }
 
     /* ===== MOVIE CARDS ===== */
-    .movies-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 14px;
-    }
-    .movie-card {
-      background: var(--bg-card);
-      border-radius: 10px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      position: relative;
-    }
-    .movie-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(229,9,20,0.3);
-    }
-    .movie-card:hover .card-overlay { opacity: 1; }
-    .card-poster {
-      width: 100%;
-      aspect-ratio: 2/3;
-      object-fit: cover;
-      display: block;
-      background: var(--bg-secondary);
-    }
-    .card-poster-placeholder {
-      width: 100%;
-      aspect-ratio: 2/3;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 40px;
-    }
-    .card-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.25s;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 12px;
-    }
-    .card-play {
-      width: 44px;
-      height: 44px;
-      background: var(--accent);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-      font-size: 16px;
-      box-shadow: 0 4px 15px rgba(229,9,20,0.5);
-    }
-    .card-info { padding: 10px; }
-    .card-title {
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 4px;
-    }
-    .card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11px;
-    }
-    .card-year { color: var(--text-muted); }
-    .card-rating {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      color: var(--accent-gold);
-      font-weight: 700;
-    }
-    .card-badge {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 9px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 3px;
-      text-transform: uppercase;
-    }
-    .card-badge.hd { background: #1a8a3a; }
-    .card-badge.new { background: var(--accent); }
+    .movies-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:13px; }
+    .movie-card { background:var(--bg-card); border-radius:10px; overflow:hidden; cursor:pointer; transition:all .25s; position:relative; }
+    .movie-card:hover { transform:translateY(-5px) scale(1.02); box-shadow:0 18px 38px rgba(0,0,0,.6),0 0 0 1px rgba(229,9,20,.25); }
+    .movie-card:hover .card-overlay { opacity:1; }
+    .card-poster { width:100%; aspect-ratio:2/3; object-fit:cover; display:block; background:var(--bg-secondary); }
+    .card-poster-ph { width:100%; aspect-ratio:2/3; background:linear-gradient(135deg,#1a1a2e,#16213e); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:36px; }
+    .card-overlay { position:absolute; inset:0; background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.3) 55%,transparent 100%); opacity:0; transition:opacity .25s; display:flex; flex-direction:column; justify-content:flex-end; padding:10px; }
+    .card-play { width:42px; height:42px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; font-size:15px; box-shadow:0 4px 14px rgba(229,9,20,.5); }
+    .card-info { padding:9px 10px; }
+    .card-title { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
+    .card-meta { display:flex; align-items:center; justify-content:space-between; font-size:11px; }
+    .card-year { color:var(--text-muted); }
+    .card-rating { display:flex; align-items:center; gap:3px; color:var(--accent-gold); font-weight:700; }
+    .card-badge { position:absolute; top:7px; left:7px; background:var(--accent); color:#fff; font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; text-transform:uppercase; }
+    .card-badge.hd { background:#1a8a3a; }
 
-    /* ===== AD BANNERS BETWEEN ROWS ===== */
-    .ad-section {
-      margin: 28px 0;
-      display: flex;
-      justify-content: center;
-      position: relative;
-    }
-    .ad-section .ad-label { top: -18px; left: 0; position: absolute; }
-    .ad-300x250 {
-      width: 300px;
-      height: 250px;
-      background: linear-gradient(135deg, #0d1b2a, #1b263b);
-      border-radius: 8px;
-      border: 1px solid #1e3a5f;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      gap: 12px;
-    }
-    .ad-970x90 {
-      width: 100%;
-      max-width: 970px;
-      height: 90px;
-      background: linear-gradient(135deg, #1a0a1a, #2d1b2d, #1a0a2d);
-      border-radius: 8px;
-      border: 1px solid #3d1a5f;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      gap: 20px;
-      padding: 0 30px;
-    }
-    .ad-970x90 .ad-emoji { font-size: 32px; }
-    .ad-970x90 .ad-texts { flex: 1; }
-    .ad-970x90 .ad-texts strong { color: #fff; font-size: 16px; display: block; }
-    .ad-970x90 .ad-texts span { color: #aaa; font-size: 13px; }
-    .ad-970x90 .ad-btn {
-      background: linear-gradient(135deg, #8b00ff, #4400cc);
-      color: #fff;
-      padding: 10px 24px;
-      border-radius: 6px;
-      font-weight: 700;
-      white-space: nowrap;
-      font-size: 14px;
-      border: none;
-      cursor: pointer;
-    }
-    .ad-300x250 .ad-big-emoji { font-size: 48px; }
-    .ad-300x250 .ad-text-block { text-align: center; }
-    .ad-300x250 .ad-text-block strong { color: #fff; font-size: 18px; display: block; }
-    .ad-300x250 .ad-text-block span { color: #aaa; font-size: 12px; }
-    .ad-300x250 .ad-action {
-      background: #f5a623;
-      color: #000;
-      padding: 8px 24px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 13px;
-      border: none;
-      cursor: pointer;
-    }
-    .ad-sidebar-row {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-    }
-    .ad-sidebar-row .movies-col { flex: 1; }
-    .ad-sidebar-col { flex-shrink: 0; }
+    /* ===== GENRES BAR ===== */
+    .genres-bar { display:flex; gap:7px; flex-wrap:wrap; margin:18px 0; }
+    .genre-tag { padding:5px 13px; border-radius:20px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border); color:var(--text-secondary); background:var(--bg-secondary); transition:all .2s; }
+    .genre-tag:hover, .genre-tag.active { background:var(--accent); border-color:var(--accent); color:#fff; }
 
-    /* ===== GENRE FILTER ===== */
-    .genres-bar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin: 20px 0;
-    }
-    .genre-tag {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      background: var(--bg-secondary);
-      transition: all 0.2s;
-    }
-    .genre-tag:hover, .genre-tag.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
+    /* ===== SIDEBAR ROW ===== */
+    .sidebar-row { display:flex; gap:20px; align-items:flex-start; }
+    .sidebar-row .movies-col { flex:1; min-width:0; }
+    @media (max-width:900px) { .sidebar-row { flex-direction:column; } }
 
     /* ===== FOOTER ===== */
-    footer {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      margin-top: 50px;
-      padding: 40px 20px 20px;
-    }
-    .footer-ad {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 30px;
-    }
-    .footer-grid {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 30px;
-      margin-bottom: 30px;
-    }
-    .footer-brand .logo { display: block; margin-bottom: 12px; }
-    .footer-brand p { color: var(--text-muted); font-size: 13px; line-height: 1.7; }
-    .footer-col h4 { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: #fff; }
-    .footer-col a {
-      display: block;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 13px;
-      margin-bottom: 8px;
-      transition: color 0.2s;
-    }
-    .footer-col a:hover { color: var(--accent); }
-    .footer-bottom {
-      max-width: 1400px;
-      margin: 0 auto;
-      border-top: 1px solid var(--border);
-      padding-top: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .footer-bottom p { color: var(--text-muted); font-size: 12px; }
-    .footer-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-    .footer-tag {
-      background: var(--bg-card);
-      color: var(--text-muted);
-      padding: 3px 10px;
-      border-radius: 4px;
-      font-size: 11px;
-      text-decoration: none;
-    }
+    footer { background:var(--bg-secondary); border-top:1px solid var(--border); margin-top:50px; padding:36px 24px 20px; }
+    .footer-grid { max-width:1600px; margin:0 auto 24px; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:28px; }
+    .footer-brand .logo { display:block; margin-bottom:10px; }
+    .footer-brand p { color:var(--text-muted); font-size:13px; line-height:1.7; }
+    .footer-col h4 { font-size:13px; font-weight:700; margin-bottom:12px; }
+    .footer-col a { display:block; color:var(--text-muted); text-decoration:none; font-size:13px; margin-bottom:7px; transition:color .2s; }
+    .footer-col a:hover { color:var(--accent); }
+    .footer-bottom { max-width:1600px; margin:0 auto; border-top:1px solid var(--border); padding-top:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    .footer-bottom p { color:var(--text-muted); font-size:12px; }
+    .footer-tags { display:flex; gap:6px; flex-wrap:wrap; }
+    .footer-tag { background:var(--bg-card); color:var(--text-muted); padding:3px 9px; border-radius:4px; font-size:11px; text-decoration:none; }
 
-    /* ===== POPUP AD ===== */
-    .popup-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    .popup-overlay.visible { opacity: 1; pointer-events: all; }
-    .popup-ad {
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      border-radius: 16px;
-      padding: 40px 50px;
-      max-width: 480px;
-      width: 90%;
-      position: relative;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
-      animation: popupIn 0.4s ease;
-    }
-    @keyframes popupIn {
-      from { transform: scale(0.8) translateY(30px); opacity: 0; }
-      to { transform: scale(1) translateY(0); opacity: 1; }
-    }
-    .popup-close {
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      font-size: 22px;
-      cursor: pointer;
-      color: rgba(255,255,255,0.5);
-      transition: color 0.2s;
-      background: none;
-      border: none;
-    }
-    .popup-close:hover { color: #fff; }
-    .popup-ad-badge {
-      font-size: 9px;
-      color: rgba(255,255,255,0.3);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 16px;
-    }
-    .popup-emoji { font-size: 56px; margin-bottom: 16px; }
-    .popup-ad h2 { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
-    .popup-ad p { color: #aaa; font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
-    .popup-ad-btn {
-      background: linear-gradient(135deg, #f5a623, #f77f00);
-      color: #000;
-      border: none;
-      padding: 14px 40px;
-      border-radius: 30px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.2s;
-    }
-    .popup-ad-btn:hover { transform: scale(1.03); box-shadow: 0 8px 25px rgba(245,166,35,0.5); }
-    .popup-skip {
-      display: block;
-      margin-top: 14px;
-      color: rgba(255,255,255,0.3);
-      font-size: 12px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      color: inherit;
-    }
-    .popup-timer { color: rgba(255,255,255,0.4); font-size: 12px; margin-top: 10px; }
+    /* ===== MODAL ===== */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.87); z-index:8000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; backdrop-filter:blur(6px); }
+    .modal-overlay.visible { opacity:1; pointer-events:all; }
+    .modal-box { background:var(--bg-secondary); border-radius:14px; max-width:840px; width:95%; max-height:90vh; overflow-y:auto; position:relative; border:1px solid var(--border); animation:mIn .3s ease; }
+    @keyframes mIn { from{transform:translateY(18px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-close { position:absolute; top:14px; right:14px; width:34px; height:34px; background:rgba(0,0,0,.6); border:1px solid var(--border); border-radius:50%; color:#fff; font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; transition:background .2s; }
+    .modal-close:hover { background:var(--accent); }
+    .modal-backdrop { width:100%; height:280px; object-fit:cover; border-radius:14px 14px 0 0; display:block; }
+    .modal-backdrop-ph { width:100%; height:280px; background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:14px 14px 0 0; display:flex; align-items:center; justify-content:center; font-size:72px; }
+    .modal-grad { height:70px; background:linear-gradient(0deg,var(--bg-secondary),transparent); margin-top:-70px; position:relative; }
+    .modal-body { padding:0 28px 28px; }
+    .modal-title { font-size:26px; font-weight:800; margin-bottom:9px; }
+    .modal-meta-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+    .modal-rating { color:var(--accent-gold); font-weight:700; font-size:16px; }
+    .modal-year, .modal-lang { color:var(--text-secondary); font-size:14px; }
+    .modal-genres { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:14px; }
+    .modal-genre-tag { background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); font-size:12px; padding:3px 9px; border-radius:20px; }
+    .modal-desc { color:var(--text-secondary); font-size:14px; line-height:1.8; margin-bottom:22px; }
+    .modal-actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .modal-btn-play { flex:1; background:var(--accent); color:#fff; border:none; padding:13px; border-radius:9px; font-size:15px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; min-width:140px; transition:background .2s; }
+    .modal-btn-play:hover { background:var(--accent-hover); }
+    .modal-btn-t { background:var(--bg-card); border:1px solid var(--border); color:#fff; padding:13px 22px; border-radius:9px; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:7px; transition:background .2s; }
+    .modal-btn-t:hover { background:var(--bg-hover); }
 
-    /* ===== MOVIE MODAL ===== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 8000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      backdrop-filter: blur(6px);
-    }
-    .modal-overlay.visible { opacity: 1; pointer-events: all; }
-    .modal-box {
-      background: var(--bg-secondary);
-      border-radius: 16px;
-      max-width: 860px;
-      width: 95%;
-      max-height: 90vh;
-      overflow-y: auto;
-      position: relative;
-      border: 1px solid var(--border);
-      animation: modalIn 0.3s ease;
-    }
-    @keyframes modalIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 36px;
-      height: 36px;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      transition: background 0.2s;
-    }
-    .modal-close:hover { background: var(--accent); }
-    .modal-backdrop {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      border-radius: 16px 16px 0 0;
-      display: block;
-      background: #1a1a2e;
-    }
-    .modal-backdrop-placeholder {
-      width: 100%;
-      height: 300px;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      border-radius: 16px 16px 0 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 80px;
-    }
-    .modal-gradient {
-      height: 80px;
-      background: linear-gradient(0deg, var(--bg-secondary), transparent);
-      margin-top: -80px;
-      position: relative;
-    }
-    .modal-body { padding: 0 30px 30px; }
-    .modal-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
-    .modal-meta-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-    .modal-rating { color: var(--accent-gold); font-weight: 700; font-size: 16px; }
-    .modal-year, .modal-lang { color: var(--text-secondary); font-size: 14px; }
-    .modal-genres { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-    .modal-genre-tag {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      font-size: 12px;
-      padding: 3px 10px;
-      border-radius: 20px;
-    }
-    .modal-desc {
-      color: var(--text-secondary);
-      font-size: 14px;
-      line-height: 1.8;
-      margin-bottom: 24px;
-    }
-    .modal-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-    .modal-btn-play {
-      flex: 1;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-width: 160px;
-      transition: background 0.2s;
-    }
-    .modal-btn-play:hover { background: var(--accent-hover); }
-    .modal-btn-trailer {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 14px 24px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 0.2s;
-    }
-    .modal-btn-trailer:hover { background: var(--bg-hover); }
-    .modal-ad {
-      background: var(--ad-bg);
-      border: 1px dashed var(--ad-border);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .modal-ad:hover { border-color: #555; }
-    .modal-ad .ad-label { position: relative; top: 0; left: 0; display: block; margin-bottom: 8px; }
-    .modal-ad-content { color: var(--text-secondary); font-size: 13px; }
+    /* Trailer */
+    .trailer-modal { position:fixed; inset:0; background:rgba(0,0,0,.96); z-index:9000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
+    .trailer-modal.visible { opacity:1; pointer-events:all; }
+    .trailer-box { width:90%; max-width:880px; position:relative; }
+    .trailer-close { position:absolute; top:-40px; right:0; background:none; border:none; color:#fff; font-size:26px; cursor:pointer; }
+    .trailer-box iframe { width:100%; aspect-ratio:16/9; border-radius:10px; border:none; }
 
-    /* ===== TRAILER MODAL ===== */
-    .trailer-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.95);
-      z-index: 9000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    .trailer-modal.visible { opacity: 1; pointer-events: all; }
-    .trailer-box {
-      width: 90%;
-      max-width: 900px;
-      position: relative;
-    }
-    .trailer-close {
-      position: absolute;
-      top: -44px;
-      right: 0;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 28px;
-      cursor: pointer;
-    }
-    .trailer-box iframe {
-      width: 100%;
-      aspect-ratio: 16/9;
-      border-radius: 12px;
-      border: none;
-    }
+    /* Skeleton */
+    .skeleton-card { background:var(--bg-card); border-radius:10px; overflow:hidden; animation:skPulse 1.5s infinite; }
+    .skeleton-poster { width:100%; aspect-ratio:2/3; background:var(--bg-hover); }
+    .skeleton-info { padding:9px; }
+    .skeleton-line { height:11px; background:var(--bg-hover); border-radius:4px; margin-bottom:7px; }
+    .skeleton-line.sh { width:55%; }
+    @keyframes skPulse { 0%,100%{opacity:1} 50%{opacity:.45} }
 
-    /* ===== LOADING ===== */
-    .loading-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 14px;
-    }
-    .skeleton-card {
-      background: var(--bg-card);
-      border-radius: 10px;
-      overflow: hidden;
-      animation: skeleton-pulse 1.5s infinite;
-    }
-    .skeleton-poster {
-      width: 100%;
-      aspect-ratio: 2/3;
-      background: var(--bg-hover);
-    }
-    .skeleton-info { padding: 10px; }
-    .skeleton-line {
-      height: 12px;
-      background: var(--bg-hover);
-      border-radius: 4px;
-      margin-bottom: 8px;
-    }
-    .skeleton-line.short { width: 60%; }
-    @keyframes skeleton-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
+    /* Toast & scroll */
+    .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(70px); background:#1a1a1a; color:#fff; padding:11px 22px; border-radius:8px; font-size:14px; border-left:3px solid var(--accent); z-index:9999; transition:transform .3s; white-space:nowrap; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+    #scroll-top { position:fixed; bottom:28px; right:28px; width:42px; height:42px; background:var(--accent); border-radius:50%; border:none; color:#fff; font-size:18px; cursor:pointer; z-index:500; display:none; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(229,9,20,.4); transition:all .2s; }
+    #scroll-top:hover { background:var(--accent-hover); transform:scale(1.1); }
+    #scroll-top.show { display:flex; }
 
-    /* ===== SCROLL TO TOP ===== */
-    #scroll-top {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 44px;
-      height: 44px;
-      background: var(--accent);
-      border-radius: 50%;
-      border: none;
-      color: #fff;
-      font-size: 20px;
-      cursor: pointer;
-      z-index: 500;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 15px rgba(229,9,20,0.4);
-      transition: all 0.2s;
-    }
-    #scroll-top:hover { background: var(--accent-hover); transform: scale(1.1); }
-    #scroll-top.show { display: flex; }
+    #search-results-section { display:none; }
 
-    /* ===== NOTIFICATION TOAST ===== */
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: #222;
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 14px;
-      border-left: 3px solid var(--accent);
-      z-index: 9999;
-      transition: transform 0.3s ease;
-      white-space: nowrap;
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-
-    /* ===== SEARCH RESULTS ===== */
-    #search-results-section { display: none; }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      .header-top { flex-wrap: wrap; height: auto; padding: 10px; }
-      nav { display: none; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .hero { height: 350px; }
-      .hero-title { font-size: 26px; }
-      .hero-content { padding: 30px 24px; }
-      .ad-banner-728 .ad-content { flex-direction: column; gap: 8px; }
-      .ad-sidebar-row { flex-direction: column; }
+    @media (max-width:768px) {
+      .header-top { flex-wrap:wrap; height:auto; padding:8px 14px; }
+      nav { display:none; }
+      .footer-grid { grid-template-columns:1fr 1fr; }
+      .hero { height:320px; }
+      .hero-title { font-size:24px; }
+      .hero-content { padding:26px 20px; }
+      .btn-admin-link { display:none; }
     }
   </style>
 </head>
 <body>
 
-<!-- ===== SETUP BANNER ===== -->
+<!-- Setup Banner -->
 <div id="setup-banner">
-  <span class="icon">⚙️</span>
-  <span>Введи свій <strong>TMDB API ключ</strong> для завантаження реальних фільмів:</span>
-  <input type="text" id="api-key-input" placeholder="Вставте API ключ тут..." value="">
-  <button onclick="saveApiKey()">✓ Зберегти</button>
-  <span style="color:#aaa; font-size:12px;">(<a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:#f5a623;">Отримати безкоштовно тут</a>)</span>
-  <span class="close-setup" onclick="document.getElementById('setup-banner').remove()">✕</span>
+  <span>⚙️ Введи <strong>TMDB API ключ</strong> для реальних фільмів:</span>
+  <input type="text" id="api-key-input" placeholder="Вставте API ключ...">
+  <button class="sb-btn" onclick="saveApiKey()">✓ Зберегти</button>
+  <span style="color:#aaa;font-size:11px;">(<a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:#f5a623;">Отримати безкоштовно</a>)</span>
+  <span class="sb-close" onclick="document.getElementById('setup-banner').remove()">✕</span>
 </div>
 
-<!-- ===== HEADER ===== -->
+<!-- HEADER -->
 <header>
   <div class="header-top">
     <a href="#" class="logo"><span>Кіно</span><span>База</span></a>
     <nav>
       <a href="#" class="active">Головна</a>
-      <a href="#" onclick="filterByType('movie')">Фільми</a>
-      <a href="#" onclick="filterByType('tv')">Серіали</a>
-      <a href="#" onclick="filterByGenre(16)">Мультфільми</a>
-      <a href="#" onclick="filterByGenre(99)">Документальні</a>
-      <a href="#" onclick="showTop()">Топ рейтинг</a>
+      <a href="#" onclick="filterByType('movie');return false;">Фільми</a>
+      <a href="#" onclick="filterByType('tv');return false;">Серіали</a>
+      <a href="#" onclick="filterByGenre(16);return false;">Мультфільми</a>
+      <a href="#" onclick="filterByGenre(99);return false;">Документальні</a>
+      <a href="#" onclick="showTop();return false;">Топ рейтинг</a>
     </nav>
     <div class="search-box">
       <input type="text" id="search-input" placeholder="Пошук фільмів..." onkeyup="handleSearch(event)">
@@ -1035,33 +281,21 @@
     <div class="header-actions">
       <a href="#" class="btn-login">Увійти</a>
       <a href="#" class="btn-reg">Реєстрація</a>
+      <a href="admin.html" class="btn-admin-link" target="_blank">⚙ Адмін</a>
     </div>
   </div>
-
-  <!-- TOP AD BANNER -->
-  <div class="header-ad">
-    <span class="ad-label">Реклама</span>
-    <a href="#" class="ad-banner-728" onclick="return false;">
-      <div class="ad-content">
-        <div class="ad-logo">🎰</div>
-        <div class="ad-text">
-          <strong>LUCKY CASINO — 500 безкоштовних спінів!</strong>
-          Реєструйся зараз та отримай бонус до 10 000 грн
-        </div>
-        <div class="ad-cta">ГРАТИ ЗАРАЗ</div>
-      </div>
-    </a>
-  </div>
+  <!-- HEADER AD SLOT -->
+  <div id="slot-header"></div>
 </header>
 
-<!-- ===== MAIN ===== -->
+<!-- MAIN -->
 <main>
 
-  <!-- HERO SECTION -->
+  <!-- HERO -->
   <div class="hero" id="hero" onclick="heroClick()">
-    <div class="hero-bg" id="hero-bg" style="background-image: url('https://image.tmdb.org/t/p/original/placeholder.jpg');"></div>
+    <div class="hero-bg" id="hero-bg"></div>
     <div class="hero-overlay"></div>
-    <div class="hero-overlay-bottom"></div>
+    <div class="hero-overlay-b"></div>
     <div class="hero-content">
       <div class="hero-badge">🔥 Новинка</div>
       <div class="hero-title" id="hero-title">Завантаження...</div>
@@ -1072,34 +306,34 @@
       </div>
       <div class="hero-desc" id="hero-desc">Завантажуємо інформацію про фільм...</div>
       <div class="hero-btns">
-        <button class="btn-play" onclick="event.stopPropagation(); openModalById(currentHeroId)">▶ Дивитись</button>
-        <button class="btn-more" onclick="event.stopPropagation(); openModalById(currentHeroId)">ℹ Детальніше</button>
+        <button class="btn-play" onclick="event.stopPropagation();openModalById(currentHeroId)">▶ Дивитись</button>
+        <button class="btn-more" onclick="event.stopPropagation();openModalById(currentHeroId)">ℹ Детальніше</button>
       </div>
     </div>
     <div class="hero-dots" id="hero-dots"></div>
   </div>
 
-  <!-- GENRE FILTER BAR -->
-  <div class="genres-bar" id="genres-bar">
-    <span class="genre-tag active" onclick="selectGenre(0, this)">Усі</span>
-    <span class="genre-tag" onclick="selectGenre(28, this)">Бойовик</span>
-    <span class="genre-tag" onclick="selectGenre(35, this)">Комедія</span>
-    <span class="genre-tag" onclick="selectGenre(18, this)">Драма</span>
-    <span class="genre-tag" onclick="selectGenre(27, this)">Жахи</span>
-    <span class="genre-tag" onclick="selectGenre(10749, this)">Мелодрама</span>
-    <span class="genre-tag" onclick="selectGenre(878, this)">Фантастика</span>
-    <span class="genre-tag" onclick="selectGenre(14, this)">Фентезі</span>
-    <span class="genre-tag" onclick="selectGenre(16, this)">Анімація</span>
-    <span class="genre-tag" onclick="selectGenre(99, this)">Документальні</span>
-    <span class="genre-tag" onclick="selectGenre(53, this)">Трилер</span>
-    <span class="genre-tag" onclick="selectGenre(12, this)">Пригоди</span>
+  <!-- GENRES -->
+  <div class="genres-bar">
+    <span class="genre-tag active" onclick="selectGenre(0,this)">Усі</span>
+    <span class="genre-tag" onclick="selectGenre(28,this)">Бойовик</span>
+    <span class="genre-tag" onclick="selectGenre(35,this)">Комедія</span>
+    <span class="genre-tag" onclick="selectGenre(18,this)">Драма</span>
+    <span class="genre-tag" onclick="selectGenre(27,this)">Жахи</span>
+    <span class="genre-tag" onclick="selectGenre(10749,this)">Мелодрама</span>
+    <span class="genre-tag" onclick="selectGenre(878,this)">Фантастика</span>
+    <span class="genre-tag" onclick="selectGenre(14,this)">Фентезі</span>
+    <span class="genre-tag" onclick="selectGenre(16,this)">Анімація</span>
+    <span class="genre-tag" onclick="selectGenre(99,this)">Документальні</span>
+    <span class="genre-tag" onclick="selectGenre(53,this)">Трилер</span>
+    <span class="genre-tag" onclick="selectGenre(12,this)">Пригоди</span>
   </div>
 
   <!-- SEARCH RESULTS -->
   <div id="search-results-section">
     <div class="section-header">
       <div class="section-title" id="search-section-title">Результати пошуку</div>
-      <a href="#" class="section-link" onclick="clearSearch(); return false;">✕ Закрити</a>
+      <a href="#" class="section-link" onclick="clearSearch();return false;">✕ Закрити</a>
     </div>
     <div class="movies-row" id="search-results-grid"></div>
   </div>
@@ -1110,205 +344,133 @@
     <a href="#" class="section-link">Всі →</a>
   </div>
   <div id="new-movies-grid" class="movies-row">
-    <!-- Skeleton -->
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
   </div>
 
-  <!-- AD BETWEEN ROWS -->
-  <div class="ad-section">
-    <span class="ad-label">Реклама</span>
-    <div class="ad-970x90" onclick="void(0)">
-      <div class="ad-emoji">🏆</div>
-      <div class="ad-texts">
-        <strong>Ставки на спорт — Live коефіцієнти!</strong>
-        <span>Бонус 200% на перший депозит. Починай вигравати прямо зараз!</span>
-      </div>
-      <button class="ad-btn">ЗРОБИТИ СТАВКУ</button>
-    </div>
-  </div>
+  <!-- AD SLOT: BETWEEN 1 -->
+  <div id="slot-between1"></div>
 
-  <!-- POPULAR MOVIES + SIDEBAR AD -->
-  <div class="ad-sidebar-row">
+  <!-- POPULAR + SIDEBAR -->
+  <div class="sidebar-row">
     <div class="movies-col">
       <div class="section-header">
         <div class="section-title">🌟 Популярні</div>
         <a href="#" class="section-link">Всі →</a>
       </div>
       <div id="popular-movies-grid" class="movies-row">
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
       </div>
     </div>
-    <div class="ad-sidebar-col">
-      <div style="height:52px;"></div>
-      <div class="ad-300x250" onclick="void(0)">
-        <div class="ad-big-emoji">🎮</div>
-        <div class="ad-text-block">
-          <strong>WORLD OF TANKS</strong>
-          <span>Грай безкоштовно прямо зараз!</span>
-        </div>
-        <button class="ad-action">ГРАТИ</button>
-      </div>
+    <!-- AD SLOT: SIDEBAR -->
+    <div class="ad-vertical-wrap" id="slot-sidebar-wrap">
+      <div id="slot-sidebar" style="margin-top:58px;"></div>
     </div>
   </div>
 
-  <!-- AD BETWEEN ROWS 2 -->
-  <div class="ad-section" style="margin-top: 32px;">
-    <span class="ad-label">Реклама</span>
-    <div class="ad-970x90" style="background: linear-gradient(135deg, #0a1a0a, #1a2d0a, #0a2d1a);" onclick="void(0)">
-      <div class="ad-emoji">📱</div>
-      <div class="ad-texts">
-        <strong>Завантаж KinoApp — дивись де завгодно!</strong>
-        <span>Офлайн режим • 4K якість • Без реклами всього 99 грн/місяць</span>
-      </div>
-      <button class="ad-btn" style="background: linear-gradient(135deg, #1a8a1a, #006600);">ЗАВАНТАЖИТИ</button>
-    </div>
-  </div>
+  <!-- AD SLOT: BETWEEN 2 -->
+  <div id="slot-between2"></div>
 
-  <!-- TOP RATED MOVIES -->
+  <!-- TOP RATED -->
   <div class="section-header">
     <div class="section-title">🏆 Топ рейтинг</div>
     <a href="#" class="section-link">Всі →</a>
   </div>
   <div id="top-movies-grid" class="movies-row">
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
   </div>
 
-  <!-- AD BETWEEN ROWS 3 -->
-  <div class="ad-section" style="margin-top: 32px;">
-    <span class="ad-label">Реклама</span>
-    <div class="ad-970x90" style="background: linear-gradient(135deg, #1a0000, #3d0000, #1a0000);" onclick="void(0)">
-      <div class="ad-emoji">🛒</div>
-      <div class="ad-texts">
-        <strong>ROZETKA — Знижки до -70% на електроніку!</strong>
-        <span>Безкоштовна доставка від 500 грн • Понад 1 млн товарів</span>
-      </div>
-      <button class="ad-btn" style="background: linear-gradient(135deg, #cc0000, #880000);">ПЕРЕЙТИ</button>
-    </div>
-  </div>
+  <!-- AD SLOT: BETWEEN 3 -->
+  <div id="slot-between3"></div>
 
-  <!-- SERIES SECTION -->
+  <!-- SERIES -->
   <div class="section-header">
     <div class="section-title">📺 Серіали</div>
     <a href="#" class="section-link">Всі →</a>
   </div>
   <div id="series-grid" class="movies-row">
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
   </div>
 
 </main>
 
-<!-- ===== FOOTER ===== -->
+<!-- FOOTER -->
 <footer>
-  <div class="footer-ad">
-    <div class="ad-banner-728" onclick="void(0)" style="height:80px;">
-      <div class="ad-content">
-        <div class="ad-logo">🎁</div>
-        <div class="ad-text">
-          <strong>Отримай 1000 грн бонус на перший депозит!</strong>
-          Найкращий онлайн-казино України
-        </div>
-        <div class="ad-cta">ОТРИМАТИ БОНУС</div>
-      </div>
-    </div>
-  </div>
+  <!-- AD SLOT: FOOTER -->
+  <div id="slot-footer" style="margin-bottom:28px;"></div>
   <div class="footer-grid">
     <div class="footer-brand">
       <a href="#" class="logo"><span>Кіно</span><span>База</span></a>
-      <p>Найбільша бібліотека фільмів та серіалів українською мовою. Дивись безкоштовно у HD якості без реєстрації.</p>
+      <p>Найбільша бібліотека фільмів та серіалів українською мовою. Дивись безкоштовно у HD якості.</p>
     </div>
     <div class="footer-col">
       <h4>Жанри</h4>
-      <a href="#">Бойовики</a>
-      <a href="#">Комедії</a>
-      <a href="#">Драми</a>
-      <a href="#">Жахи</a>
-      <a href="#">Фантастика</a>
-      <a href="#">Мелодрами</a>
+      <a href="#">Бойовики</a><a href="#">Комедії</a><a href="#">Драми</a>
+      <a href="#">Жахи</a><a href="#">Фантастика</a><a href="#">Мелодрами</a>
     </div>
     <div class="footer-col">
       <h4>Навігація</h4>
-      <a href="#">Головна</a>
-      <a href="#">Фільми</a>
-      <a href="#">Серіали</a>
-      <a href="#">Мультфільми</a>
-      <a href="#">Топ рейтинг</a>
-      <a href="#">Новинки</a>
+      <a href="#">Головна</a><a href="#">Фільми</a><a href="#">Серіали</a>
+      <a href="#">Мультфільми</a><a href="#">Топ рейтинг</a>
     </div>
     <div class="footer-col">
       <h4>Інформація</h4>
-      <a href="#">Про нас</a>
-      <a href="#">Контакти</a>
-      <a href="#">Реклама</a>
-      <a href="#">Умови використання</a>
-      <a href="#">Приватність</a>
-      <a href="#">DMCA</a>
+      <a href="#">Про нас</a><a href="#">Контакти</a>
+      <a href="admin.html">Адмін панель</a>
+      <a href="#">Умови</a><a href="#">DMCA</a>
     </div>
   </div>
-  <div style="max-width:1400px; margin: 0 auto;">
-    <div class="footer-tags">
-      <a href="#" class="footer-tag">дивитись фільми онлайн</a>
-      <a href="#" class="footer-tag">безкоштовно</a>
-      <a href="#" class="footer-tag">українська озвучка</a>
-      <a href="#" class="footer-tag">HD якість</a>
-      <a href="#" class="footer-tag">нові фільми 2025</a>
-      <a href="#" class="footer-tag">серіали онлайн</a>
-    </div>
+  <div class="footer-tags" style="max-width:1600px;margin:0 auto 14px;">
+    <a href="#" class="footer-tag">дивитись фільми онлайн</a>
+    <a href="#" class="footer-tag">безкоштовно</a>
+    <a href="#" class="footer-tag">українська озвучка</a>
+    <a href="#" class="footer-tag">HD якість</a>
+    <a href="#" class="footer-tag">нові фільми 2025</a>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 КіноБаза. Всі права захищені. Даний сайт не зберігає файли на своєму сервері.</p>
-    <p>Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--accent-gold); text-decoration:none;">TMDB API</a></p>
+    <p>© 2025 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--accent-gold);text-decoration:none;">TMDB API</a></p>
   </div>
 </footer>
 
-<!-- ===== SCROLL TO TOP ===== -->
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-
-<!-- ===== TOAST ===== -->
 <div class="toast" id="toast"></div>
 
-<!-- ===== POPUP AD ===== -->
+<!-- POPUP AD OVERLAY -->
 <div class="popup-overlay" id="popup-overlay">
-  <div class="popup-ad">
-    <button class="popup-close" onclick="closePopup()">✕</button>
+  <div class="popup-box" id="popup-box">
     <div class="popup-ad-badge">Реклама</div>
-    <div class="popup-emoji">🎰</div>
-    <h2>Великий виграш чекає!</h2>
-    <p>Зареєструйся в <strong>Lucky Casino</strong> і отримай <strong>500 безкоштовних спінів</strong> + бонус 200% до 10 000 грн!</p>
-    <button class="popup-ad-btn" onclick="closePopup()">🎁 ЗАБРАТИ БОНУС</button>
-    <div class="popup-timer" id="popup-timer">Пропустити через <span id="popup-countdown">5</span> сек...</div>
+    <button class="popup-close-btn locked" id="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-timer-bar" id="popup-bar" style="width:100%"></div>
   </div>
 </div>
 
-<!-- ===== MOVIE MODAL ===== -->
+<!-- MOVIE MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <div id="modal-content">
-      <!-- динамічний контент -->
-    </div>
+    <div id="modal-content"></div>
   </div>
 </div>
 
-<!-- ===== TRAILER MODAL ===== -->
+<!-- TRAILER MODAL -->
 <div class="trailer-modal" id="trailer-modal" onclick="if(event.target===this)closeTrailer()">
   <div class="trailer-box">
     <button class="trailer-close" onclick="closeTrailer()">✕</button>
@@ -1316,423 +478,378 @@
   </div>
 </div>
 
-<!-- ===== JAVASCRIPT ===== -->
 <script>
   // ========================
-  // КОНФІГУРАЦІЯ
+  // CONFIG
   // ========================
   let TMDB_KEY = localStorage.getItem('tmdb_key') || '';
   const TMDB_BASE = 'https://api.themoviedb.org/3';
-  const IMG_BASE = 'https://image.tmdb.org/t/p/';
+  const IMG_BASE  = 'https://image.tmdb.org/t/p/';
+  const ADS_KEY   = 'kb_ads';
 
-  // Якщо ключ вже збережено — приховати банер
   if (TMDB_KEY) {
-    const b = document.getElementById('setup-banner');
-    if (b) b.style.display = 'none';
+    document.getElementById('setup-banner').style.display = 'none';
     document.getElementById('api-key-input').value = TMDB_KEY;
   }
 
   function saveApiKey() {
-    const key = document.getElementById('api-key-input').value.trim();
-    if (!key) { showToast('Введіть API ключ!'); return; }
-    TMDB_KEY = key;
-    localStorage.setItem('tmdb_key', key);
+    const k = document.getElementById('api-key-input').value.trim();
+    if (!k) { showToast('Введіть API ключ!'); return; }
+    TMDB_KEY = k;
+    localStorage.setItem('tmdb_key', k);
     document.getElementById('setup-banner').style.display = 'none';
-    showToast('✅ API ключ збережено! Завантажуємо фільми...');
+    showToast('✅ API ключ збережено!');
     initSite();
   }
 
   // ========================
-  // ЖАНРИ (TMDB IDs)
+  // ADS ENGINE
   // ========================
-  const GENRE_MAP = {
-    28:'Бойовик', 12:'Пригоди', 16:'Анімація', 35:'Комедія',
-    80:'Кримінал', 99:'Документальний', 18:'Драма', 10751:'Сімейний',
-    14:'Фентезі', 36:'Історичний', 27:'Жахи', 10402:'Музичний',
-    9648:'Детектив', 10749:'Мелодрама', 878:'Фантастика', 10770:'ТВ фільм',
-    53:'Трилер', 10752:'Воєнний', 37:'Вестерн'
-  };
-
-  function getGenreNames(ids) {
-    if (!ids || !ids.length) return '—';
-    return ids.slice(0,3).map(id => GENRE_MAP[id] || '').filter(Boolean).join(', ');
+  function getActiveAds(slot) {
+    const raw = localStorage.getItem(ADS_KEY);
+    if (!raw) return [];
+    try { return JSON.parse(raw).filter(a => a.active && a.slot === slot); }
+    catch { return []; }
   }
 
-  // ========================
-  // HERO SLIDER
-  // ========================
-  let heroMovies = [];
-  let currentHeroIndex = 0;
-  let currentHeroId = null;
-  let heroTimer = null;
-
-  function setHero(movie) {
-    currentHeroId = movie.id;
-    const bg = document.getElementById('hero-bg');
-    const title = document.getElementById('hero-title');
-    const rating = document.getElementById('hero-rating');
-    const year = document.getElementById('hero-year');
-    const genre = document.getElementById('hero-genre');
-    const desc = document.getElementById('hero-desc');
-
-    if (movie.backdrop_path) {
-      bg.style.backgroundImage = `url('${IMG_BASE}original${movie.backdrop_path}')`;
+  function buildHorizontalAd(ad) {
+    const wrap = document.createElement('div');
+    wrap.className = 'ad-slot-wrap in-page';
+    wrap.innerHTML = `<span class="ad-label-tag">Реклама</span>`;
+    if (ad.html) {
+      const inner = document.createElement('div');
+      inner.style.cssText = 'width:100%;';
+      inner.innerHTML = ad.html;
+      wrap.appendChild(inner);
+    } else {
+      const a = document.createElement('a');
+      a.href = ad.linkUrl || '#';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.className = 'ad-horizontal';
+      const img = document.createElement('img');
+      img.src = ad.imageUrl;
+      img.alt = ad.altText || 'Реклама';
+      img.style.cssText = 'width:100%;display:block;max-height:160px;object-fit:cover;';
+      a.appendChild(img);
+      wrap.appendChild(a);
     }
-    title.textContent = movie.title || movie.name || 'Без назви';
-    rating.textContent = `⭐ ${movie.vote_average ? movie.vote_average.toFixed(1) : '—'}`;
-    year.textContent = (movie.release_date || movie.first_air_date || '').slice(0,4) || '—';
-    genre.textContent = getGenreNames(movie.genre_ids);
-    desc.textContent = movie.overview || 'Опис відсутній.';
+    return wrap;
+  }
 
-    // Dots
-    const dots = document.getElementById('hero-dots');
-    dots.querySelectorAll('.hero-dot').forEach((d,i) => {
-      d.classList.toggle('active', i === currentHeroIndex);
+  function buildVerticalAd(ad) {
+    const wrap = document.createElement('div');
+    if (ad.html) {
+      wrap.innerHTML = ad.html;
+    } else {
+      const a = document.createElement('a');
+      a.href = ad.linkUrl || '#';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.className = 'ad-vertical';
+      const img = document.createElement('img');
+      img.src = ad.imageUrl;
+      img.alt = ad.altText || 'Реклама';
+      a.appendChild(img);
+      wrap.appendChild(a);
+    }
+    return wrap;
+  }
+
+  function renderAdSlots() {
+    // Header
+    const headerEl = document.getElementById('slot-header');
+    headerEl.innerHTML = '';
+    const hAds = getActiveAds('header');
+    if (hAds.length) {
+      const w = document.createElement('div');
+      w.style.cssText = 'background:#0a0a0a;border-top:1px solid #1a1a1a;';
+      const lbl = document.createElement('span');
+      lbl.className = 'ad-label-tag';
+      lbl.style.cssText = 'display:block;padding:2px 8px;font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1px;';
+      lbl.textContent = 'Реклама';
+      w.appendChild(lbl);
+      hAds.forEach(ad => {
+        if (ad.html) { const d = document.createElement('div'); d.innerHTML = ad.html; w.appendChild(d); }
+        else {
+          const a = document.createElement('a');
+          a.href = ad.linkUrl||'#'; a.target='_blank'; a.rel='noopener';
+          a.className = 'ad-horizontal';
+          const img = document.createElement('img');
+          img.src = ad.imageUrl; img.alt = ad.altText||'Реклама';
+          a.appendChild(img); w.appendChild(a);
+        }
+      });
+      headerEl.appendChild(w);
+    }
+
+    // Between slots (horizontal)
+    ['between1','between2','between3'].forEach(slot => {
+      const el = document.getElementById('slot-' + slot);
+      if (!el) return;
+      el.innerHTML = '';
+      const ads = getActiveAds(slot);
+      ads.forEach(ad => el.appendChild(buildHorizontalAd(ad)));
     });
-  }
 
-  function startHeroSlider(movies) {
-    heroMovies = movies.slice(0,8);
-    const dots = document.getElementById('hero-dots');
-    dots.innerHTML = heroMovies.map((_,i) =>
-      `<div class="hero-dot ${i===0?'active':''}" onclick="goHero(${i})"></div>`
-    ).join('');
-    setHero(heroMovies[0]);
-    clearInterval(heroTimer);
-    heroTimer = setInterval(() => {
-      currentHeroIndex = (currentHeroIndex + 1) % heroMovies.length;
-      setHero(heroMovies[currentHeroIndex]);
-    }, 6000);
-  }
-
-  function goHero(i) {
-    currentHeroIndex = i;
-    setHero(heroMovies[i]);
-    clearInterval(heroTimer);
-    heroTimer = setInterval(() => {
-      currentHeroIndex = (currentHeroIndex + 1) % heroMovies.length;
-      setHero(heroMovies[currentHeroIndex]);
-    }, 6000);
-  }
-
-  function heroClick() { openModalById(currentHeroId); }
-
-  // ========================
-  // MOVIE CARD HTML
-  // ========================
-  function movieCard(movie, badge) {
-    const title = movie.title || movie.name || 'Без назви';
-    const year = (movie.release_date || movie.first_air_date || '').slice(0,4);
-    const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '—';
-    const poster = movie.poster_path
-      ? `<img class="card-poster" src="${IMG_BASE}w300${movie.poster_path}" alt="${title}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-         <div class="card-poster-placeholder" style="display:none;">🎬</div>`
-      : `<div class="card-poster-placeholder">🎬</div>`;
-
-    return `
-      <div class="movie-card" onclick="openModalById(${movie.id}, '${movie.media_type || 'movie'}')">
-        ${poster}
-        <div class="card-overlay">
-          <div class="card-play">▶</div>
-        </div>
-        ${badge ? `<div class="card-badge ${badge.cls}">${badge.text}</div>` : ''}
-        <div class="card-info">
-          <div class="card-title">${title}</div>
-          <div class="card-meta">
-            <span class="card-year">${year}</span>
-            <span class="card-rating">⭐ ${rating}</span>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // ========================
-  // API CALLS
-  // ========================
-  async function tmdb(endpoint, params = {}) {
-    if (!TMDB_KEY) return null;
-    const url = new URL(`${TMDB_BASE}${endpoint}`);
-    url.searchParams.set('api_key', TMDB_KEY);
-    url.searchParams.set('language', 'uk-UA');
-    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
-    try {
-      const res = await fetch(url.toString());
-      if (!res.ok) throw new Error(res.status);
-      return res.json();
-    } catch(e) {
-      console.error('TMDB error:', e);
-      return null;
-    }
-  }
-
-  async function loadGrid(gridId, endpoint, params = {}, badge = null) {
-    const grid = document.getElementById(gridId);
-    const data = await tmdb(endpoint, params);
-    if (!data || !data.results) {
-      grid.innerHTML = '<div style="color:#666; padding: 20px; grid-column:1/-1; text-align:center;">Введіть API ключ для завантаження фільмів ↑</div>';
-      return [];
-    }
-    const movies = data.results.slice(0,12);
-    grid.innerHTML = movies.map(m => movieCard(m, badge)).join('');
-    return movies;
-  }
-
-  // ========================
-  // INIT
-  // ========================
-  async function initSite() {
-    // Now playing → Hero
-    const nowPlaying = await tmdb('/movie/now_playing');
-    if (nowPlaying && nowPlaying.results) {
-      startHeroSlider(nowPlaying.results);
-      loadGrid('new-movies-grid', '/movie/now_playing', {}, {text:'NEW', cls:'new'});
+    // Sidebar (vertical)
+    const sideEl = document.getElementById('slot-sidebar');
+    const sideWrap = document.getElementById('slot-sidebar-wrap');
+    sideEl.innerHTML = '';
+    const sAds = getActiveAds('sidebar');
+    if (sAds.length) {
+      sAds.forEach(ad => sideEl.appendChild(buildVerticalAd(ad)));
+      sideWrap.style.display = '';
+    } else {
+      sideWrap.style.display = 'none';
     }
 
-    // Popular
-    loadGrid('popular-movies-grid', '/movie/popular', {}, {text:'HD', cls:'hd'});
+    // Footer
+    const footerEl = document.getElementById('slot-footer');
+    footerEl.innerHTML = '';
+    const fAds = getActiveAds('footer');
+    fAds.forEach(ad => footerEl.appendChild(buildHorizontalAd(ad)));
 
-    // Top rated
-    loadGrid('top-movies-grid', '/movie/top_rated', {page:1}, null);
-
-    // Series
-    loadGrid('series-grid', '/tv/popular', {}, {text:'СЕРІАЛ', cls:'hd'});
-  }
-
-  // ========================
-  // SEARCH
-  // ========================
-  let searchTimeout = null;
-  function handleSearch(e) {
-    if (e.key === 'Enter') { doSearch(); return; }
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(doSearch, 600);
-  }
-
-  async function doSearch() {
-    const q = document.getElementById('search-input').value.trim();
-    if (!q) { clearSearch(); return; }
-
-    const section = document.getElementById('search-results-section');
-    const grid = document.getElementById('search-results-grid');
-    const title = document.getElementById('search-section-title');
-
-    section.style.display = 'block';
-    grid.innerHTML = '<div class="skeleton-card"><div class="skeleton-poster"></div></div>'.repeat(6);
-    title.textContent = `Пошук: "${q}"`;
-
-    const data = await tmdb('/search/multi', {query: q});
-    if (!data || !data.results || !data.results.length) {
-      grid.innerHTML = '<div style="color:#666; padding:30px; grid-column:1/-1; text-align:center;">Нічого не знайдено 🔍</div>';
-      return;
-    }
-    grid.innerHTML = data.results.filter(m => m.media_type !== 'person').slice(0,12).map(m => movieCard(m)).join('');
-  }
-
-  function clearSearch() {
-    document.getElementById('search-results-section').style.display = 'none';
-    document.getElementById('search-input').value = '';
-  }
-
-  // ========================
-  // GENRE FILTER
-  // ========================
-  async function selectGenre(genreId, el) {
-    document.querySelectorAll('.genre-tag').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-
-    if (genreId === 0) {
-      loadGrid('new-movies-grid', '/movie/now_playing', {}, {text:'NEW', cls:'new'});
-      loadGrid('popular-movies-grid', '/movie/popular', {}, {text:'HD', cls:'hd'});
-      loadGrid('top-movies-grid', '/movie/top_rated', {}, null);
-      return;
-    }
-
-    const params = {with_genres: genreId, sort_by: 'popularity.desc'};
-    loadGrid('new-movies-grid', '/discover/movie', {...params, primary_release_year: 2024}, {text:'NEW', cls:'new'});
-    loadGrid('popular-movies-grid', '/discover/movie', params, {text:'HD', cls:'hd'});
-    loadGrid('top-movies-grid', '/discover/movie', {...params, sort_by: 'vote_average.desc', 'vote_count.gte': 1000}, null);
-  }
-
-  function filterByType(type) {
-    if (type === 'tv') {
-      loadGrid('popular-movies-grid', '/tv/popular', {}, {text:'СЕРІАЛ', cls:'hd'});
-      loadGrid('top-movies-grid', '/tv/top_rated', {}, null);
-    }
-  }
-
-  function filterByGenre(genreId) {
-    const tag = [...document.querySelectorAll('.genre-tag')].find(t => t.getAttribute('onclick')?.includes(genreId));
-    if (tag) selectGenre(genreId, tag);
-  }
-
-  function showTop() {
-    loadGrid('top-movies-grid', '/movie/top_rated', {page:1}, {text:'ТОП', cls:'hd'});
-    document.getElementById('top-movies-grid').scrollIntoView({behavior:'smooth'});
-  }
-
-  // ========================
-  // MOVIE MODAL
-  // ========================
-  let currentMovieData = null;
-
-  async function openModalById(id, type = 'movie') {
-    if (!id) return;
-    const overlay = document.getElementById('modal-overlay');
-    const content = document.getElementById('modal-content');
-
-    overlay.classList.add('visible');
-    content.innerHTML = '<div style="padding:40px; text-align:center; color:#666;">Завантаження...</div>';
-
-    // Fetch details
-    const endpoint = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
-    const data = await tmdb(endpoint, {append_to_response: 'videos,credits'});
-
-    if (!data) {
-      content.innerHTML = '<div style="padding:40px; text-align:center; color:#666;">Помилка завантаження</div>';
-      return;
-    }
-
-    currentMovieData = data;
-    const title = data.title || data.name || 'Без назви';
-    const year = (data.release_date || data.first_air_date || '').slice(0,4);
-    const rating = data.vote_average ? data.vote_average.toFixed(1) : '—';
-    const genres = (data.genres || []).map(g => `<span class="modal-genre-tag">${g.name}</span>`).join('');
-    const desc = data.overview || 'Опис відсутній.';
-
-    // Find trailer
-    const videos = (data.videos && data.videos.results) || [];
-    const trailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube') || videos[0];
-    const trailerKey = trailer ? trailer.key : null;
-
-    const backdrop = data.backdrop_path
-      ? `<img class="modal-backdrop" src="${IMG_BASE}w1280${data.backdrop_path}" alt="${title}">`
-      : `<div class="modal-backdrop-placeholder">🎬</div>`;
-
-    content.innerHTML = `
-      ${backdrop}
-      <div class="modal-gradient"></div>
-      <div class="modal-body">
-        <div class="modal-title">${title}</div>
-        <div class="modal-meta-row">
-          <span class="modal-rating">⭐ ${rating}</span>
-          <span class="modal-year">📅 ${year}</span>
-          ${data.original_language ? `<span class="modal-lang">🌍 ${data.original_language.toUpperCase()}</span>` : ''}
-          ${data.runtime ? `<span class="modal-year">⏱ ${data.runtime} хв</span>` : ''}
-        </div>
-        <div class="modal-genres">${genres}</div>
-        <div class="modal-desc">${desc}</div>
-        <div class="modal-actions">
-          <button class="modal-btn-play" onclick="openPlayer()">▶ Дивитись</button>
-          ${trailerKey ? `<button class="modal-btn-trailer" onclick="openTrailer('${trailerKey}')">🎬 Трейлер</button>` : ''}
-        </div>
-        <div class="modal-ad" onclick="void(0)">
-          <span class="ad-label">Реклама</span>
-          <div class="modal-ad-content">
-            <strong style="color:#fff; font-size:15px;">🎁 Дивись фільми в HD без реклами!</strong>
-            <p style="margin-top:6px;">Підписка КіноБаза Premium — всього 99 грн/місяць</p>
-            <button style="background:var(--accent);color:#fff;border:none;padding:8px 20px;border-radius:6px;font-weight:700;margin-top:10px;cursor:pointer;">СПРОБУВАТИ 7 ДНІВ БЕЗКОШТОВНО</button>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('visible');
-    currentMovieData = null;
-  }
-
-  function openPlayer() {
-    closeModal();
-    showToast('🎬 Підключення до відеосервера...');
-    setTimeout(() => showToast('✅ Починаємо відтворення!'), 1500);
-  }
-
-  function openTrailer(key) {
-    const modal = document.getElementById('trailer-modal');
-    const iframe = document.getElementById('trailer-iframe');
-    iframe.src = `https://www.youtube.com/embed/${key}?autoplay=1`;
-    modal.classList.add('visible');
-  }
-
-  function closeTrailer() {
-    const modal = document.getElementById('trailer-modal');
-    const iframe = document.getElementById('trailer-iframe');
-    modal.classList.remove('visible');
-    iframe.src = '';
+    // Popup
+    initPopupAd();
   }
 
   // ========================
   // POPUP AD
   // ========================
   let popupCountdown = 5;
-  let popupInterval = null;
+  let popupInt = null;
 
-  function showPopup() {
-    const overlay = document.getElementById('popup-overlay');
-    overlay.classList.add('visible');
-    popupInterval = setInterval(() => {
-      popupCountdown--;
-      const el = document.getElementById('popup-countdown');
-      if (el) el.textContent = popupCountdown;
-      if (popupCountdown <= 0) {
-        clearInterval(popupInterval);
-        const timer = document.getElementById('popup-timer');
-        if (timer) {
-          timer.innerHTML = '<span onclick="closePopup()" style="cursor:pointer;color:#aaa;text-decoration:underline;">Пропустити рекламу</span>';
+  function initPopupAd() {
+    const ads = getActiveAds('popup');
+    if (!ads.length) return;
+    const ad = ads[0];
+    const box = document.getElementById('popup-box');
+    const closeBtn = document.getElementById('popup-close');
+    const bar = document.getElementById('popup-bar');
+
+    if (ad.html) {
+      box.innerHTML = `<div class="popup-ad-badge">Реклама</div><button class="popup-close-btn locked" id="popup-close" onclick="closePopup()">✕</button>${ad.html}<div class="popup-timer-bar" id="popup-bar" style="width:100%"></div>`;
+    } else if (ad.imageUrl) {
+      box.innerHTML = `
+        <div class="popup-ad-badge">Реклама</div>
+        <button class="popup-close-btn locked" id="popup-close" onclick="closePopup()">✕</button>
+        <a href="${ad.linkUrl||'#'}" target="_blank" rel="noopener" onclick="closePopup()">
+          <img src="${ad.imageUrl}" alt="${ad.altText||'Реклама'}" style="width:100%;display:block;border-radius:14px;">
+        </a>
+        <div class="popup-timer-bar" id="popup-bar" style="width:100%"></div>
+      `;
+    }
+
+    setTimeout(() => {
+      document.getElementById('popup-overlay').classList.add('visible');
+      const b = document.getElementById('popup-bar');
+      if (b) b.style.width = '0';
+      popupInt = setInterval(() => {
+        popupCountdown--;
+        if (popupCountdown <= 0) {
+          clearInterval(popupInt);
+          const c = document.getElementById('popup-close');
+          if (c) { c.classList.remove('locked'); }
         }
-      }
-    }, 1000);
+      }, 1000);
+    }, 4000);
   }
 
   function closePopup() {
     if (popupCountdown > 0) return;
-    clearInterval(popupInterval);
+    clearInterval(popupInt);
     document.getElementById('popup-overlay').classList.remove('visible');
   }
 
   // ========================
-  // TOAST
+  // GENRES
   // ========================
-  let toastTimer = null;
-  function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+  const GENRE_MAP = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'Комедія',80:'Кримінал',99:'Документальний',18:'Драма',10751:'Сімейний',14:'Фентезі',36:'Історичний',27:'Жахи',10749:'Мелодрама',878:'Фантастика',53:'Трилер',10752:'Воєнний',37:'Вестерн'};
+  function getGenreNames(ids) {
+    if (!ids||!ids.length) return '—';
+    return ids.slice(0,3).map(id=>GENRE_MAP[id]||'').filter(Boolean).join(', ');
   }
 
   // ========================
-  // SCROLL TO TOP
+  // HERO SLIDER
   // ========================
-  window.addEventListener('scroll', () => {
-    const btn = document.getElementById('scroll-top');
-    btn.classList.toggle('show', window.scrollY > 400);
-  });
+  let heroMovies=[], currentHeroIndex=0, currentHeroId=null, heroTimer=null;
+
+  function setHero(movie) {
+    currentHeroId = movie.id;
+    if (movie.backdrop_path) document.getElementById('hero-bg').style.backgroundImage=`url('${IMG_BASE}original${movie.backdrop_path}')`;
+    document.getElementById('hero-title').textContent = movie.title||movie.name||'—';
+    document.getElementById('hero-rating').textContent = `⭐ ${movie.vote_average?movie.vote_average.toFixed(1):'—'}`;
+    document.getElementById('hero-year').textContent = (movie.release_date||movie.first_air_date||'').slice(0,4)||'—';
+    document.getElementById('hero-genre').textContent = getGenreNames(movie.genre_ids);
+    document.getElementById('hero-desc').textContent = movie.overview||'Опис відсутній.';
+    document.querySelectorAll('.hero-dot').forEach((d,i)=>d.classList.toggle('active',i===currentHeroIndex));
+  }
+
+  function startHeroSlider(movies) {
+    heroMovies = movies.slice(0,8);
+    document.getElementById('hero-dots').innerHTML = heroMovies.map((_,i)=>`<div class="hero-dot ${i===0?'active':''}" onclick="goHero(${i})"></div>`).join('');
+    setHero(heroMovies[0]);
+    clearInterval(heroTimer);
+    heroTimer = setInterval(()=>{ currentHeroIndex=(currentHeroIndex+1)%heroMovies.length; setHero(heroMovies[currentHeroIndex]); },6000);
+  }
+
+  function goHero(i) {
+    currentHeroIndex=i; setHero(heroMovies[i]);
+    clearInterval(heroTimer);
+    heroTimer=setInterval(()=>{ currentHeroIndex=(currentHeroIndex+1)%heroMovies.length; setHero(heroMovies[currentHeroIndex]); },6000);
+  }
+  function heroClick(){ openModalById(currentHeroId); }
 
   // ========================
-  // ESC KEY
+  // MOVIE CARD
   // ========================
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      closeTrailer();
-      closeModal();
-    }
-  });
+  function movieCard(movie, badge) {
+    const title=movie.title||movie.name||'Без назви';
+    const year=(movie.release_date||movie.first_air_date||'').slice(0,4);
+    const rating=movie.vote_average?movie.vote_average.toFixed(1):'—';
+    const mtype=movie.media_type||'movie';
+    const poster=movie.poster_path
+      ?`<img class="card-poster" src="${IMG_BASE}w300${movie.poster_path}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-poster-ph" style="display:none">🎬</div>`
+      :`<div class="card-poster-ph">🎬</div>`;
+    return `<div class="movie-card" onclick="openModalById(${movie.id},'${mtype}')">
+      ${poster}
+      <div class="card-overlay"><div class="card-play">▶</div></div>
+      ${badge?`<div class="card-badge ${badge.cls}">${badge.text}</div>`:''}
+      <div class="card-info">
+        <div class="card-title">${title}</div>
+        <div class="card-meta"><span class="card-year">${year}</span><span class="card-rating">⭐ ${rating}</span></div>
+      </div>
+    </div>`;
+  }
+
+  // ========================
+  // TMDB API
+  // ========================
+  async function tmdb(endpoint, params={}) {
+    if (!TMDB_KEY) return null;
+    const url=new URL(`${TMDB_BASE}${endpoint}`);
+    url.searchParams.set('api_key',TMDB_KEY);
+    url.searchParams.set('language','uk-UA');
+    Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+    try { const r=await fetch(url); if(!r.ok) throw new Error(r.status); return r.json(); }
+    catch(e){ console.error('TMDB:',e); return null; }
+  }
+
+  async function loadGrid(gridId, endpoint, params={}, badge=null) {
+    const grid=document.getElementById(gridId);
+    const data=await tmdb(endpoint,params);
+    if (!data||!data.results){ grid.innerHTML='<div style="color:#555;padding:20px;grid-column:1/-1;text-align:center;">Введіть API ключ ↑</div>'; return []; }
+    grid.innerHTML=data.results.slice(0,12).map(m=>movieCard(m,badge)).join('');
+    return data.results;
+  }
+
+  // ========================
+  // INIT
+  // ========================
+  async function initSite() {
+    const np=await tmdb('/movie/now_playing');
+    if (np&&np.results) { startHeroSlider(np.results); loadGrid('new-movies-grid','/movie/now_playing',{},{text:'NEW',cls:'new'}); }
+    loadGrid('popular-movies-grid','/movie/popular',{},{text:'HD',cls:'hd'});
+    loadGrid('top-movies-grid','/movie/top_rated',{},null);
+    loadGrid('series-grid','/tv/popular',{},{text:'СЕРІАЛ',cls:'hd'});
+  }
+
+  // ========================
+  // SEARCH
+  // ========================
+  let sTimeout=null;
+  function handleSearch(e){ if(e.key==='Enter'){doSearch();return;} clearTimeout(sTimeout); sTimeout=setTimeout(doSearch,600); }
+  async function doSearch(){
+    const q=document.getElementById('search-input').value.trim();
+    if(!q){clearSearch();return;}
+    const sec=document.getElementById('search-results-section');
+    const grid=document.getElementById('search-results-grid');
+    sec.style.display='block';
+    grid.innerHTML='<div class="skeleton-card"><div class="skeleton-poster"></div></div>'.repeat(6);
+    document.getElementById('search-section-title').textContent=`Пошук: "${q}"`;
+    const data=await tmdb('/search/multi',{query:q});
+    if(!data||!data.results||!data.results.length){grid.innerHTML='<div style="color:#555;padding:30px;grid-column:1/-1;text-align:center;">Нічого не знайдено</div>';return;}
+    grid.innerHTML=data.results.filter(m=>m.media_type!=='person').slice(0,12).map(m=>movieCard(m)).join('');
+  }
+  function clearSearch(){ document.getElementById('search-results-section').style.display='none'; document.getElementById('search-input').value=''; }
+
+  // ========================
+  // GENRE FILTER
+  // ========================
+  async function selectGenre(genreId,el){
+    document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('active')); el.classList.add('active');
+    if(genreId===0){ loadGrid('new-movies-grid','/movie/now_playing',{},{text:'NEW',cls:'new'}); loadGrid('popular-movies-grid','/movie/popular',{},{text:'HD',cls:'hd'}); loadGrid('top-movies-grid','/movie/top_rated',{},null); return; }
+    const p={with_genres:genreId,sort_by:'popularity.desc'};
+    loadGrid('new-movies-grid','/discover/movie',{...p,primary_release_year:2024},{text:'NEW',cls:'new'});
+    loadGrid('popular-movies-grid','/discover/movie',p,{text:'HD',cls:'hd'});
+    loadGrid('top-movies-grid','/discover/movie',{...p,sort_by:'vote_average.desc','vote_count.gte':1000},null);
+  }
+  function filterByType(type){ if(type==='tv'){loadGrid('popular-movies-grid','/tv/popular',{},{text:'СЕРІАЛ',cls:'hd'});loadGrid('top-movies-grid','/tv/top_rated',{},null);} }
+  function filterByGenre(id){ const t=[...document.querySelectorAll('.genre-tag')].find(t=>t.getAttribute('onclick')?.includes(id)); if(t)selectGenre(id,t); }
+  function showTop(){ loadGrid('top-movies-grid','/movie/top_rated',{page:1},{text:'ТОП',cls:'hd'}); document.getElementById('top-movies-grid').scrollIntoView({behavior:'smooth'}); }
+
+  // ========================
+  // MOVIE MODAL
+  // ========================
+  async function openModalById(id, type='movie'){
+    if(!id) return;
+    const overlay=document.getElementById('modal-overlay');
+    const content=document.getElementById('modal-content');
+    overlay.classList.add('visible');
+    content.innerHTML='<div style="padding:40px;text-align:center;color:#555;">Завантаження...</div>';
+    const endpoint=type==='tv'?`/tv/${id}`:`/movie/${id}`;
+    const data=await tmdb(endpoint,{append_to_response:'videos'});
+    if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:#555;">Помилка</div>';return;}
+    const title=data.title||data.name||'—';
+    const year=(data.release_date||data.first_air_date||'').slice(0,4);
+    const rating=data.vote_average?data.vote_average.toFixed(1):'—';
+    const genres=(data.genres||[]).map(g=>`<span class="modal-genre-tag">${g.name}</span>`).join('');
+    const videos=(data.videos&&data.videos.results)||[];
+    const trailer=videos.find(v=>v.type==='Trailer'&&v.site==='YouTube')||videos[0];
+    const backdrop=data.backdrop_path?`<img class="modal-backdrop" src="${IMG_BASE}w1280${data.backdrop_path}" alt="${title}">`:`<div class="modal-backdrop-ph">🎬</div>`;
+    content.innerHTML=`${backdrop}<div class="modal-grad"></div>
+    <div class="modal-body">
+      <div class="modal-title">${title}</div>
+      <div class="modal-meta-row">
+        <span class="modal-rating">⭐ ${rating}</span>
+        <span class="modal-year">📅 ${year}</span>
+        ${data.original_language?`<span class="modal-lang">🌍 ${data.original_language.toUpperCase()}</span>`:''}
+        ${data.runtime?`<span class="modal-year">⏱ ${data.runtime} хв</span>`:''}
+      </div>
+      <div class="modal-genres">${genres}</div>
+      <div class="modal-desc">${data.overview||'Опис відсутній.'}</div>
+      <div class="modal-actions">
+        <button class="modal-btn-play" onclick="openPlayer()">▶ Дивитись</button>
+        ${trailer?`<button class="modal-btn-t" onclick="openTrailer('${trailer.key}')">🎬 Трейлер</button>`:''}
+      </div>
+    </div>`;
+  }
+  function closeModal(){ document.getElementById('modal-overlay').classList.remove('visible'); }
+  function openPlayer(){ closeModal(); showToast('🎬 Підключення до відеосервера...'); setTimeout(()=>showToast('✅ Починаємо відтворення!'),1500); }
+  function openTrailer(k){ const m=document.getElementById('trailer-modal'); document.getElementById('trailer-iframe').src=`https://www.youtube.com/embed/${k}?autoplay=1`; m.classList.add('visible'); }
+  function closeTrailer(){ document.getElementById('trailer-modal').classList.remove('visible'); document.getElementById('trailer-iframe').src=''; }
+
+  // ========================
+  // UTILS
+  // ========================
+  let toastT=null;
+  function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),3000); }
+  window.addEventListener('scroll',()=>{ document.getElementById('scroll-top').classList.toggle('show',scrollY>400); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeTrailer();closeModal();} });
 
   // ========================
   // START
   // ========================
-  window.addEventListener('DOMContentLoaded', () => {
-    // Popup ad after 4 seconds
-    setTimeout(showPopup, 4000);
+  window.addEventListener('DOMContentLoaded',()=>{
+    renderAdSlots();
+    if(TMDB_KEY) initSite();
+  });
 
-    // Load content
-    if (TMDB_KEY) {
-      initSite();
-    }
+  // Reload ads if changed in admin (storage event for same-origin cross-tab)
+  window.addEventListener('storage', e => {
+    if (e.key === ADS_KEY) renderAdSlots();
   });
 </script>
 </body>
