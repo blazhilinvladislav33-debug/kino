@@ -334,6 +334,19 @@
     .cat-chip-del:hover{opacity:1;}
     .cat-count{font-size:12px;color:var(--muted);margin-top:2px;}
 
+    /* ===== ANTI-ADBLOCK ===== */
+    #adblock-wall{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:999999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+    .adblock-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:44px 36px;max-width:460px;width:94%;text-align:center;}
+    .adblock-icon{font-size:52px;margin-bottom:20px;}
+    .adblock-title{font-size:22px;font-weight:800;margin-bottom:10px;}
+    .adblock-sub{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:28px;}
+    .adblock-steps{text-align:left;background:var(--bg3);border-radius:10px;padding:16px 20px;margin-bottom:24px;}
+    .adblock-steps li{color:var(--muted);font-size:13px;margin-bottom:8px;line-height:1.5;}
+    .adblock-steps li:last-child{margin-bottom:0;}
+    .adblock-btn{background:var(--accent);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;}
+    .adblock-btn:hover{background:var(--ah);}
+    /* Video ad */
+    .ad-video{width:100%;display:block;max-height:160px;object-fit:cover;cursor:pointer;}
     /* ===== FOOTER ===== */
     footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:50px;padding:32px 24px 18px;}
     .ft-grid{max-width:1600px;margin:0 auto 22px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:26px;}
@@ -403,12 +416,12 @@
           <div class="user-dropdown">
             <div class="ud-name" id="ud-name">Користувач</div>
             <div class="ud-divider"></div>
-            <div class="ud-item" onclick="showLibrary('fav')">❤️ Улюблені</div>
-            <div class="ud-item" onclick="showLibrary('wl')">🕐 Дивитись пізніше</div>
-            <div class="ud-item" onclick="showLibrary('watched')">✅ Переглянуто</div>
+            <div class="ud-item" onclick="showLibrary('fav')">Улюблені</div>
+            <div class="ud-item" onclick="showLibrary('wl')">Дивитись пізніше</div>
+            <div class="ud-item" onclick="showLibrary('watched')">Переглянуто</div>
             <div class="ud-divider"></div>
-            <div class="ud-item" id="ud-admin" style="display:none;" onclick="location.href='admin.html'">⚙️ Адміністрування</div>
-            <div class="ud-item" onclick="doLogout()">🚪 Вийти</div>
+            <div class="ud-item" id="ud-admin" style="display:none;" onclick="location.href='admin.html'">Адміністрування</div>
+            <div class="ud-item" onclick="doLogout()">Вийти</div>
           </div>
         </div>
       </div>
@@ -425,7 +438,7 @@
     <div class="hero-bg" id="hero-bg"></div>
     <div class="hero-ov"></div><div class="hero-ob"></div>
     <div class="hero-c">
-      <div class="hero-badge">🔥 Новинка</div>
+      <div class="hero-badge">Новинка</div>
       <div class="hero-title" id="hero-title">Завантаження...</div>
       <div class="hero-meta">
         <span class="hero-r" id="hero-r">⭐ —</span>
@@ -434,8 +447,8 @@
       </div>
       <div class="hero-desc" id="hero-d">Завантажуємо...</div>
       <div class="hero-btns">
-        <button class="btn-play" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,true)">▶ Дивитись</button>
-        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,false)">ℹ Детальніше</button>
+        <button class="btn-play" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,true)">Дивитись</button>
+        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,false)">Детальніше</button>
       </div>
     </div>
     <div class="hero-dots" id="hero-dots"></div>
@@ -467,9 +480,9 @@
       <a href="#" class="sec-more" onclick="clearSearch();return false;">✕ Закрити</a>
     </div>
     <div class="srch-filters">
-      <button class="sf-btn act" id="sf-all"   onclick="doSearch('all')">🔍 Все</button>
-      <button class="sf-btn"     id="sf-movie" onclick="doSearch('movie')">🎬 Фільми</button>
-      <button class="sf-btn"     id="sf-tv"    onclick="doSearch('tv')">📺 Серіали</button>
+      <button class="sf-btn act" id="sf-all"   onclick="doSearch('all')">Все</button>
+      <button class="sf-btn"     id="sf-movie" onclick="doSearch('movie')">Фільми</button>
+      <button class="sf-btn"     id="sf-tv"    onclick="doSearch('tv')">Серіали</button>
     </div>
     <div class="movies-grid" id="srch-grid"></div>
     <div style="text-align:center;margin-top:24px;display:none;" id="srch-more">
@@ -577,13 +590,13 @@
   <!-- LIBRARY -->
   <div id="lib-section">
     <div class="sec-hdr">
-      <div class="sec-title">📚 Моя бібліотека</div>
+      <div class="sec-title">Моя бібліотека</div>
       <a href="#" class="sec-more" onclick="showHome();return false;">← Назад</a>
     </div>
     <div class="lib-tabs">
-      <div class="lib-tab act" id="lib-tab-fav"     onclick="switchLibTab('fav')">❤️ Улюблені</div>
-      <div class="lib-tab"     id="lib-tab-wl"      onclick="switchLibTab('wl')">🕐 Дивитись пізніше</div>
-      <div class="lib-tab"     id="lib-tab-watched" onclick="switchLibTab('watched')">✅ Переглянуто</div>
+      <div class="lib-tab act" id="lib-tab-fav"     onclick="switchLibTab('fav')">Улюблені</div>
+      <div class="lib-tab"     id="lib-tab-wl"      onclick="switchLibTab('wl')">Дивитись пізніше</div>
+      <div class="lib-tab"     id="lib-tab-watched" onclick="switchLibTab('watched')">Переглянуто</div>
     </div>
     <div class="movies-grid" id="lib-grid"></div>
   </div>
@@ -594,7 +607,7 @@
     <!-- CONTINUE WATCHING -->
     <div id="continue-section">
       <div class="sec-hdr">
-        <div class="sec-title">▶️ Продовжити перегляд</div>
+        <div class="sec-title">Продовжити перегляд</div>
         <a href="#" class="sec-more" onclick="showLibrary('watched');return false;">Всі переглянуті →</a>
       </div>
       <div class="movies-grid" id="continue-grid"></div>
@@ -602,7 +615,7 @@
 
     <!-- NEW MOVIES -->
     <div class="sec-hdr">
-      <div class="sec-title">🔥 Нові фільми</div>
+      <div class="sec-title">Нові фільми</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'release_date.desc'});return false;">Всі →</a>
     </div>
     <div id="new-grid" class="movies-grid">
@@ -621,7 +634,7 @@
     <div class="sidebar-row">
       <div class="mv-col">
         <div class="sec-hdr">
-          <div class="sec-title">🌟 Популярні</div>
+          <div class="sec-title">Популярні</div>
           <a href="#" class="sec-more" onclick="showCatalog({type:'movie'});return false;">Всі →</a>
         </div>
         <div id="pop-grid" class="movies-grid">
@@ -642,7 +655,7 @@
 
     <!-- TOP RATED -->
     <div class="sec-hdr">
-      <div class="sec-title">🏆 Топ рейтинг</div>
+      <div class="sec-title">Топ рейтинг</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});return false;">Всі →</a>
     </div>
     <div id="top-grid" class="movies-grid">
@@ -659,7 +672,7 @@
 
     <!-- SERIES -->
     <div class="sec-hdr">
-      <div class="sec-title">📺 Серіали</div>
+      <div class="sec-title">Серіали</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'tv'});return false;">Всі →</a>
     </div>
     <div id="series-grid" class="movies-grid">
@@ -673,7 +686,7 @@
 
     <!-- CLASSICS -->
     <div class="sec-hdr" style="margin-top:28px;">
-      <div class="sec-title">🎞️ Класика кіно</div>
+      <div class="sec-title">Класика кіно</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});return false;">Всі →</a>
     </div>
     <div id="classic-grid" class="movies-grid">
@@ -687,7 +700,7 @@
 
     <!-- 90s -->
     <div class="sec-hdr">
-      <div class="sec-title">📼 Кіно 90-х</div>
+      <div class="sec-title">Кіно 90-х</div>
       <a href="#" class="sec-more">Всі →</a>
     </div>
     <div id="nineties-grid" class="movies-grid">
@@ -701,7 +714,7 @@
 
     <!-- 2000s -->
     <div class="sec-hdr">
-      <div class="sec-title">💿 Кіно 2000-х</div>
+      <div class="sec-title">Кіно 2000-х</div>
       <a href="#" class="sec-more">Всі →</a>
     </div>
     <div id="noughts-grid" class="movies-grid">
@@ -814,6 +827,21 @@
   <div class="trailer-wrap">
     <button class="trailer-close" onclick="closeTrailer()">✕</button>
     <div class="trailer-frame" id="trailer-frame"></div>
+  </div>
+</div>
+
+<!-- ===== ADBLOCK WALL ===== -->
+<div id="adblock-wall">
+  <div class="adblock-box">
+    <div class="adblock-icon">&#128683;</div>
+    <div class="adblock-title">Вимкніть блокувальник реклами</div>
+    <div class="adblock-sub">Ми надаємо контент безкоштовно завдяки рекламі. Будь ласка, вимкніть AdBlock для нашого сайту.</div>
+    <ol class="adblock-steps">
+      <li>Натисніть на іконку AdBlock у браузері</li>
+      <li>Виберіть "Вимкнути на цьому сайті"</li>
+      <li>Оновіть сторінку</li>
+    </ol>
+    <button class="adblock-btn" onclick="document.getElementById('adblock-wall').style.display='none'">Я вимкнув AdBlock</button>
   </div>
 </div>
 
@@ -948,7 +976,7 @@ function setHero(m) {
   currentHeroId=m.id; currentHeroType=m.media_type||'movie';
   if(m.backdrop_path) document.getElementById('hero-bg').style.backgroundImage=`url('${IMG}original${m.backdrop_path}')`;
   document.getElementById('hero-title').textContent=m.title||m.name||'—';
-  document.getElementById('hero-r').textContent=`⭐ ${m.vote_average?m.vote_average.toFixed(1):'—'}`;
+  document.getElementById('hero-r').textContent=`★ ${m.vote_average?m.vote_average.toFixed(1):'—'}`;
   document.getElementById('hero-y').textContent=(m.release_date||m.first_air_date||'').slice(0,4)||'—';
   document.getElementById('hero-g').textContent=gNames(m.genre_ids);
   document.getElementById('hero-d').textContent=m.overview||'Опис відсутній.';
@@ -1084,7 +1112,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
     const realSeasons=data.seasons.filter(s=>s.season_number>0);
     const seasonOpts=realSeasons.map(s=>`<option value="${s.season_number}" ${s.season_number===currentSeason?'selected':''}>Сезон ${s.season_number} (${s.episode_count} епізодів)</option>`).join('');
     tvSelector=`<div class="ep-selector">
-      <h4>🎬 Оберіть епізод</h4>
+      <h4>Оберіть епізод</h4>
       <div class="ep-row">
         <select class="ep-select" id="season-sel" onchange="changeSeason(this.value)">${seasonOpts}</select>
         <span style="color:var(--muted);font-size:13px;">Епізод:</span>
@@ -1095,7 +1123,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
   // Dubbing note
   const dubNote=`<div class="dub-bar">
-    <span class="dub-label">🎙 Озвучка на серверах:</span>
+    <span class="dub-label">Озвучка на серверах:</span>
     <span class="dub-btn act">Оригінал</span>
     <span class="dub-btn">Англійська</span>
     <span class="dub-btn">Залежить від сервера</span>
@@ -1127,11 +1155,11 @@ async function openMovie(id, type='movie', autoPlay=false) {
     <div class="m-body">
       <div class="m-title">${title}</div>
       <div class="m-metas">
-        <span class="m-rat">⭐ ${rat}</span>
-        <span class="m-y">📅 ${year}</span>
-        ${data.original_language?`<span class="m-lang">🌍 ${data.original_language.toUpperCase()}</span>`:''}
-        ${data.runtime?`<span class="m-dur">⏱ ${data.runtime} хв</span>`:''}
-        ${data.number_of_seasons?`<span class="m-dur">📺 ${data.number_of_seasons} сез.</span>`:''}
+        <span class="m-rat">★ ${rat}</span>
+        <span class="m-y">${year}</span>
+        ${data.original_language?`<span class="m-lang">${data.original_language.toUpperCase()}</span>`:''}
+        ${data.runtime?`<span class="m-dur">${data.runtime} хв</span>`:''}
+        ${data.number_of_seasons?`<span class="m-dur">${data.number_of_seasons} сез.</span>`:''}
       </div>
       <div class="m-genres">${genres}</div>
       <div class="m-desc">${desc}</div>
@@ -1154,13 +1182,13 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
       <div class="m-actions">
         <button class="m-btn-fav ${isFav?'faved':''}" id="modal-fav-btn" onclick="toggleFavModal(${id},'${type}')">
-          ${isFav?'❤️ В улюблених':'🤍 В улюблені'}
+          ${isFav?'В улюблених':'В улюблені'}
         </button>
         <button class="m-btn-wl ${isWL?'saved':''}" id="modal-wl-btn" onclick="toggleWatchLaterModal(${id},'${type}')">
-          ${isWL?'🕐 Збережено':'🕐 Дивитись пізніше'}
+          ${isWL?'Збережено':'Дивитись пізніше'}
         </button>
-        ${isWtch?`<button class="m-btn-wl saved" style="pointer-events:none;">✅ Переглянуто</button>`:''}
-        ${_trailer?`<button class="btn-trailer" onclick="openTrailer('${_trailer.key}')">▶ Трейлер</button>`:''}
+        ${isWtch?`<button class="m-btn-wl saved" style="pointer-events:none;">Переглянуто</button>`:''}
+        ${_trailer?`<button class="btn-trailer" onclick="openTrailer('${_trailer.key}')">Трейлер</button>`:''}
       </div>
 
       <!-- EXTRA INFO -->
@@ -1389,8 +1417,8 @@ function toggleFavModal(id, type) {
   const was = isFavorite(id);
   _setLibField(id, type, 'favorite', !was);
   const btn = document.getElementById('modal-fav-btn');
-  if (btn) { btn.className = 'm-btn-fav' + (!was ? ' faved' : ''); btn.innerHTML = !was ? '❤️ В улюблених' : '🤍 В улюблені'; }
-  showToast(!was ? 'Додано до улюблених ❤️' : 'Видалено з улюблених');
+  if (btn) { btn.className = 'm-btn-fav' + (!was ? ' faved' : ''); btn.innerHTML = !was ? 'В улюблених' : 'В улюблені'; }
+  showToast(!was ? 'Додано до улюблених' : 'Видалено з улюблених');
 }
 
 function toggleWatchLaterModal(id, type) {
@@ -1398,8 +1426,8 @@ function toggleWatchLaterModal(id, type) {
   const was = isWatchLater(id);
   _setLibField(id, type, 'watchLater', !was);
   const btn = document.getElementById('modal-wl-btn');
-  if (btn) { btn.className = 'm-btn-wl' + (!was ? ' saved' : ''); btn.innerHTML = !was ? '🕐 Збережено' : '🕐 Дивитись пізніше'; }
-  showToast(!was ? 'Додано до "Дивитись пізніше" 🕐' : 'Видалено зі списку');
+  if (btn) { btn.className = 'm-btn-wl' + (!was ? ' saved' : ''); btn.innerHTML = !was ? 'Збережено' : 'Дивитись пізніше'; }
+  showToast(!was ? 'Додано до "Дивитись пізніше"' : 'Видалено зі списку');
 }
 
 function markWatched(id, type) {
@@ -1619,7 +1647,7 @@ function doLogin() {
   errEl.classList.remove('show');
   if (!email || !pass) { errEl.textContent = 'Заповніть всі поля'; errEl.classList.add('show'); return; }
   auth.signInWithEmailAndPassword(email, pass)
-    .then(() => { closeAuth(); showToast('👋 Ласкаво просимо!'); })
+    .then(() => { closeAuth(); showToast('Ласкаво просимо!'); })
     .catch(e => {
       const msgs = {
         'auth/user-not-found':    'Користувача не знайдено',
@@ -1651,7 +1679,7 @@ function doRegister() {
         }).catch(()=>{});
       }
       closeAuth();
-      showToast(`✅ Акаунт створено! Ласкаво просимо, ${name}!`);
+      showToast(`Акаунт створено! Ласкаво просимо, ${name}!`);
     })
     .catch(e => {
       const msgs = {
@@ -1681,7 +1709,7 @@ function doGoogleLogin() {
         }
       }
       closeAuth();
-      showToast(`👋 Ласкаво просимо, ${cred.user.displayName || ''}!`);
+      showToast(`Ласкаво просимо, ${cred.user.displayName || ''}!`);
     })
     .catch(e => {
       if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
@@ -1702,7 +1730,7 @@ function resetPassword() {
     return;
   }
   auth.sendPasswordResetEmail(email)
-    .then(() => { closeAuth(); showToast(`📧 Лист для скидання пароля надіслано на ${email}`); })
+    .then(() => { closeAuth(); showToast(`Лист для скидання пароля надіслано на ${email}`); })
     .catch(() => {
       errEl.textContent = 'Не вдалось надіслати лист. Перевірте email.';
       errEl.classList.add('show');
@@ -1712,7 +1740,7 @@ function resetPassword() {
 function doLogout() {
   if (auth) auth.signOut().catch(()=>{});
   showHome();
-  showToast('До побачення! 👋');
+  showToast('До побачення!');
 }
 
 // =====================================================================
@@ -1851,7 +1879,7 @@ async function doSearch(filter) {
   document.getElementById('home-content').style.display = 'none';
   document.getElementById('lib-section').style.display = 'none';
   document.getElementById('cat-section').style.display = 'none';
-  document.getElementById('srch-title').textContent = `🔍 «${q}»`;
+  document.getElementById('srch-title').textContent = `«${q}»`;
   document.getElementById('srch-count').textContent = '';
   document.getElementById('srch-more').style.display = 'none';
 
@@ -1868,7 +1896,7 @@ async function _loadSrchPage(reset) {
   const grid = document.getElementById('srch-grid');
 
   if (!data || !data.results || !data.results.length) {
-    if (reset) grid.innerHTML = '<div style="color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;">😔 Нічого не знайдено</div>';
+    if (reset) grid.innerHTML = '<div style="color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;">Нічого не знайдено</div>';
     return;
   }
 
@@ -2088,46 +2116,114 @@ function removeCatFilter(key) {
 }
 
 // =====================================================================
-// ADS
+// ADS — Block 8: video, pop-under, anti-adblock
 // =====================================================================
 function getAds(slot){ return adsCache.filter(a=>a.active&&a.slot===slot); }
+
 function buildH(ad){
   const w=document.createElement('div');
   w.className='ad-wrap inline';
   const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
   if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
+  else if(ad.type==='video'){
+    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
+    const vid=document.createElement('video');
+    vid.src=ad.videoUrl||ad.imageUrl||'';
+    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+    vid.className='ad-video';
+    a.appendChild(vid);w.appendChild(a);
+  }
   else{
     const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';
-    const img=document.createElement('img');img.src=ad.imageUrl;img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);
+    const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);
   }
   return w;
 }
+
 function buildV(ad){
   const w=document.createElement('div');
   if(ad.html){w.innerHTML=ad.html;}
-  else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-v';const img=document.createElement('img');img.src=ad.imageUrl;img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);}
+  else if(ad.type==='video'){
+    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
+    const vid=document.createElement('video');
+    vid.src=ad.videoUrl||ad.imageUrl||'';
+    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+    vid.style.cssText='width:100%;display:block;object-fit:cover;';
+    a.appendChild(vid);w.appendChild(a);
+  }
+  else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-v';const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);}
   return w;
 }
+
 function renderAds(){
   // Header
   const hEl=document.getElementById('slot-header');
-  hEl.innerHTML='';
-  getAds('header').forEach(ad=>{
-    const w=document.createElement('div');w.className='ad-wrap';
-    const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
-    if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
-    else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';const img=document.createElement('img');img.src=ad.imageUrl;img.alt='Реклама';a.appendChild(img);w.appendChild(a);}
-    hEl.appendChild(w);
-  });
+  if(hEl){
+    hEl.innerHTML='';
+    getAds('header').forEach(ad=>{
+      const w=document.createElement('div');w.className='ad-wrap';
+      const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
+      if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
+      else if(ad.type==='video'){
+        const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
+        const vid=document.createElement('video');vid.src=ad.videoUrl||ad.imageUrl||'';
+        vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;vid.className='ad-video';
+        a.appendChild(vid);w.appendChild(a);
+      }
+      else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt='Реклама';a.appendChild(img);w.appendChild(a);}
+      hEl.appendChild(w);
+    });
+  }
   ['between1','between2','between3'].forEach(s=>{
     const el=document.getElementById('slot-'+s);if(!el)return;el.innerHTML='';
     getAds(s).forEach(ad=>el.appendChild(buildH(ad)));
   });
-  const sEl=document.getElementById('slot-sidebar');sEl.innerHTML='';
-  getAds('sidebar').forEach(ad=>sEl.appendChild(buildV(ad)));
-  const fEl=document.getElementById('slot-footer');fEl.innerHTML='';
-  getAds('footer').forEach(ad=>fEl.appendChild(buildH(ad)));
+  const sEl=document.getElementById('slot-sidebar');if(sEl){sEl.innerHTML='';getAds('sidebar').forEach(ad=>sEl.appendChild(buildV(ad)));}
+  const fEl=document.getElementById('slot-footer');if(fEl){fEl.innerHTML='';getAds('footer').forEach(ad=>fEl.appendChild(buildH(ad)));}
   initPopup();
+  initPopUnder();
+}
+
+// =====================================================================
+// POP-UNDER — один раз за сесію, на першому кліку
+// =====================================================================
+function initPopUnder(){
+  const ads=adsCache.filter(a=>a.active&&a.slot==='popunder');
+  if(!ads.length||sessionStorage.getItem('kb_pu'))return;
+  const ad=ads[0];
+  if(!ad.linkUrl)return;
+  document.addEventListener('click',function _pu(){
+    document.removeEventListener('click',_pu);
+    if(!sessionStorage.getItem('kb_pu')){
+      sessionStorage.setItem('kb_pu','1');
+      try{ window.open(ad.linkUrl,'_blank','noopener,noreferrer'); }catch(e){}
+    }
+  },{once:true});
+}
+
+// =====================================================================
+// ANTI-ADBLOCK
+// =====================================================================
+function detectAdblock(){
+  const bait=document.createElement('div');
+  bait.className='pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads ad-slot adsbox adsbygoogle ad-banner';
+  bait.style.cssText='position:absolute;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+  document.body.appendChild(bait);
+  setTimeout(()=>{
+    const h=bait.offsetHeight;
+    const s=window.getComputedStyle(bait);
+    const blocked=!h||s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)<0.1;
+    try{document.body.removeChild(bait);}catch(e){}
+    if(blocked){
+      // Перевіримо чи антиадблок увімкнено в налаштуваннях
+      const cfg=adsCache.find(a=>a.slot==='__config__');
+      const antiAdblockEnabled=cfg?cfg.antiAdblock:false;
+      if(antiAdblockEnabled){
+        const wall=document.getElementById('adblock-wall');
+        if(wall)wall.style.display='flex';
+      }
+    }
+  },300);
 }
 
 // =====================================================================
@@ -2188,6 +2284,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   updateAuthUI(); // початковий стан (auth змінить через onAuthStateChanged)
   initFirestore(); // підключаємо Firestore (завантажує рекламу і ключі)
   initSite();
+  setTimeout(detectAdblock, 1500); // перевірка адблоку
 });
 </script>
 </body>
