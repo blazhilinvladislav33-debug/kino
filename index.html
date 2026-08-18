@@ -223,6 +223,14 @@
     .lib-empty{color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;}
     .lib-empty span{font-size:40px;display:block;margin-bottom:12px;}
     .watched-badge{position:absolute;bottom:8px;left:8px;background:rgba(29,185,84,.85);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;backdrop-filter:blur(4px);}
+    /* ===== CONTINUE WATCHING ===== */
+    #continue-section{display:none;}
+    .c-ep-badge{position:absolute;bottom:8px;right:48px;background:rgba(0,0,0,.8);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px);white-space:nowrap;}
+    /* Episode highlight */
+    .ep-num.last{position:relative;outline:2px solid var(--accent);outline-offset:1px;}
+    .ep-num.last::before{content:'▶';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:7px;color:var(--accent);}
+    /* Server indicator */
+    .srv-saved{font-size:10px;color:var(--green);margin-left:4px;}
     /* Watch later button in modal */
     .m-btn-wl{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
     .m-btn-wl:hover{border-color:#fff;color:#fff;}
@@ -376,6 +384,16 @@
 
   <!-- HOME CONTENT -->
   <div id="home-content">
+
+    <!-- CONTINUE WATCHING -->
+    <div id="continue-section">
+      <div class="sec-hdr">
+        <div class="sec-title">▶️ Продовжити перегляд</div>
+        <a href="#" class="sec-more" onclick="showLibrary('watched');return false;">Всі переглянуті →</a>
+      </div>
+      <div class="movies-grid" id="continue-grid"></div>
+    </div>
+
     <!-- NEW MOVIES -->
     <div class="sec-hdr">
       <div class="sec-title">🔥 Нові фільми</div>
@@ -796,7 +814,17 @@ let currentModalId=null, currentModalType='movie', currentSeason=1, currentEpiso
 
 async function openMovie(id, type='movie', autoPlay=false) {
   if(!id) return;
-  currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1; currentPlayer=0;
+  currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1;
+
+  // Відновлення прогресу: сервер із localStorage (глобальний) або з Firestore
+  currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0');
+  const _prog = libraryCache[String(id)];
+  if (_prog) {
+    if (type === 'tv' && _prog.lastSeason)  currentSeason  = _prog.lastSeason;
+    if (type === 'tv' && _prog.lastEpisode) currentEpisode = _prog.lastEpisode;
+    if (_prog.lastServer != null)           currentPlayer  = _prog.lastServer;
+  }
+
   const modal=document.getElementById('movie-modal');
   const content=document.getElementById('movie-modal-content');
   modal.classList.add('open');
@@ -821,12 +849,13 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
   // TV: seasons
   const players = type==='tv' ? TV_PLAYERS : MOVIE_PLAYERS;
-  const srvBtns = players.map((p,i)=>`<button class="srv-btn ${i===0?'act':''}" onclick="switchPlayer(${i})">${p.name}</button>`).join('');
+  // Підсвічуємо збережений сервер
+  const srvBtns = players.map((p,i)=>`<button class="srv-btn ${i===currentPlayer?'act':''}" onclick="switchPlayer(${i})">${p.name}${i===currentPlayer&&_prog?'<span class="srv-saved">✓</span>':''}</button>`).join('');
 
   let tvSelector='';
   if(type==='tv' && data.seasons) {
     const realSeasons=data.seasons.filter(s=>s.season_number>0);
-    const seasonOpts=realSeasons.map(s=>`<option value="${s.season_number}">Сезон ${s.season_number} (${s.episode_count} епізодів)</option>`).join('');
+    const seasonOpts=realSeasons.map(s=>`<option value="${s.season_number}" ${s.season_number===currentSeason?'selected':''}>Сезон ${s.season_number} (${s.episode_count} епізодів)</option>`).join('');
     tvSelector=`<div class="ep-selector">
       <h4>🎬 Оберіть епізод</h4>
       <div class="ep-row">
@@ -889,10 +918,23 @@ async function openMovie(id, type='movie', autoPlay=false) {
       </div>
     </div>`;
 
-  // Init player & TV
+  // Init player & TV — завантажуємо епізоди потрібного сезону
   if(type==='tv' && data.seasons) {
-    const firstReal=data.seasons.find(s=>s.season_number>0);
-    if(firstReal) { currentSeason=firstReal.season_number; loadEpisodes(firstReal.episode_count); }
+    const realSeasons = data.seasons.filter(s=>s.season_number>0);
+    // Знайти сезон який треба відновити
+    const targetSeason = realSeasons.find(s=>s.season_number===currentSeason) || realSeasons[0];
+    if(targetSeason) {
+      currentSeason = targetSeason.season_number;
+      // Якщо в API вже є к-сть епізодів — використати
+      if(targetSeason.episode_count) {
+        loadEpisodes(targetSeason.episode_count);
+      } else {
+        // Завантажити з TMDB
+        tmdb(`/tv/${id}/season/${currentSeason}`).then(sd=>{
+          if(sd&&sd.episodes) loadEpisodes(sd.episodes.length);
+        });
+      }
+    }
   }
 
   if(autoPlay || type==='movie') loadPlayer();
@@ -914,8 +956,8 @@ function loadPlayer() {
     ?p.url(currentModalId,currentSeason,currentEpisode)
     :p.url(currentModalId);
 
-  // Позначити як переглянуте при запуску плеєра
-  markWatched(currentModalId, currentModalType);
+  // Зберегти прогрес перегляду (сервер, сезон, епізод) + позначити переглянутим
+  savePlayerProgress();
 
   iframe.src='';
   setTimeout(()=>{
@@ -931,6 +973,7 @@ function loadPlayer() {
 
 function switchPlayer(idx) {
   currentPlayer=idx;
+  localStorage.setItem('kb_pref_srv', idx); // запам'ятати глобально
   document.querySelectorAll('.srv-btn').forEach((b,i)=>b.classList.toggle('act',i===idx));
   loadPlayer();
 }
@@ -947,9 +990,13 @@ function changeSeason(s) {
 function loadEpisodes(count) {
   const el=document.getElementById('ep-nums');
   if(!el) return;
+  const prog = libraryCache[String(currentModalId)] || {};
+  const lastEp = (prog.lastSeason === currentSeason) ? (prog.lastEpisode || 0) : 0;
   el.innerHTML=Array.from({length:count},(_,i)=>{
     const n=i+1;
-    return `<button class="ep-num ${n===currentEpisode?'act':''}" onclick="selectEp(${n})">${n}</button>`;
+    const isAct = n===currentEpisode;
+    const isLast = n===lastEp && !isAct;
+    return `<button class="ep-num${isAct?' act':''}${isLast?' last':''}" onclick="selectEp(${n})" title="${isLast?'Зупинились тут':''}">${n}</button>`;
   }).join('');
 }
 
@@ -983,6 +1030,7 @@ function initLibrary() {
       libraryCache = {};
       snap.docs.forEach(d => { libraryCache[d.id] = { ...d.data(), _docId: d.id }; });
       refreshCardFavButtons();
+      renderContinueWatching();
       // Оновити відкриту бібліотеку
       if (document.getElementById('lib-section').style.display !== 'none') renderLibGrid(currentLibTab);
     }, () => { _loadLibLS(); });
@@ -1077,6 +1125,83 @@ function markWatched(id, type) {
   _setLibField(id, type, 'watched', true);
 }
 
+// Зберегти прогрес плеєра (сервер, сезон, епізод, позначити переглянутим)
+async function savePlayerProgress() {
+  if (!currentUser || !db || !currentModalId) return;
+  const docId = String(currentModalId);
+  const now   = new Date().toISOString();
+  const updates = {
+    watched:    true,
+    lastServer: currentPlayer,
+    updatedAt:  now
+  };
+  if (currentModalType === 'tv') {
+    updates.lastSeason  = currentSeason;
+    updates.lastEpisode = currentEpisode;
+  }
+  // Оновити кеш локально
+  if (!libraryCache[docId]) libraryCache[docId] = { id: currentModalId, type: currentModalType };
+  Object.assign(libraryCache[docId], updates);
+  // Підтягнути метадані якщо їх ще немає
+  if (!libraryCache[docId].title) {
+    const data = await tmdb(`/${currentModalType}/${currentModalId}`).catch(()=>null);
+    if (data) {
+      Object.assign(libraryCache[docId], {
+        title:  data.title || data.name || '',
+        poster: data.poster_path || '',
+        rating: data.vote_average || 0,
+        year:   (data.release_date || data.first_air_date || '').slice(0,4)
+      });
+    }
+  }
+  // Записати у Firestore
+  try {
+    await db.collection('users').doc(currentUser.uid)
+      .collection('library').doc(docId)
+      .set(libraryCache[docId], { merge: true });
+    renderContinueWatching();
+    refreshCardFavButtons();
+  } catch(e) { console.error('Progress save error', e); }
+}
+
+// Секція "Продовжити перегляд" на головній
+function renderContinueWatching() {
+  const sec  = document.getElementById('continue-section');
+  const grid = document.getElementById('continue-grid');
+  if (!sec || !grid) return;
+
+  const items = Object.values(libraryCache)
+    .filter(m => m.watched && m.title)
+    .sort((a,b) => (b.updatedAt||'') > (a.updatedAt||'') ? 1 : -1)
+    .slice(0, 8);
+
+  if (!items.length || !currentUser) { sec.style.display='none'; return; }
+  sec.style.display = 'block';
+
+  grid.innerHTML = items.map(m => {
+    const type   = m.type || 'movie';
+    const epBadge = (type==='tv' && m.lastSeason)
+      ? `<div class="c-ep-badge">S${m.lastSeason} E${m.lastEpisode||1}</div>` : '';
+    const isFav  = isFavorite(m.id);
+    return `<div class="m-card" onclick="openMovie(${m.id},'${type}',true)">
+      ${m.poster
+        ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title||''}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>`
+        : '<div class="c-ph">🎬</div>'}
+      <div class="c-ov"><div class="c-play-btn">▶</div></div>
+      ${epBadge}
+      <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}"
+        onclick="event.stopPropagation();toggleFav(${m.id},'${type}',this)">${isFav?'❤️':'🤍'}</button>
+      <div class="c-info">
+        <div class="c-title">${m.title||'—'}</div>
+        <div class="c-meta">
+          <span class="c-year">${m.year||'—'}</span>
+          <span class="c-rat">⭐ ${m.rating?Number(m.rating).toFixed(1):'—'}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function refreshCardFavButtons() {
   document.querySelectorAll('[data-fav-id]').forEach(btn => {
     const f = isFavorite(btn.dataset.favId);
@@ -1169,6 +1294,7 @@ if (auth) {
       if (libUnsubscribe) { libUnsubscribe(); libUnsubscribe = null; }
       libraryCache = {};
       refreshCardFavButtons();
+      renderContinueWatching(); // сховає секцію
     }
     updateAuthUI();
   });
