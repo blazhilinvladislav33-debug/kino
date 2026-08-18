@@ -3,2338 +3,1575 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>КіноБаза — Дивитись фільми онлайн</title>
-  <meta name="description" content="Дивитись фільми та серіали онлайн безкоштовно. HD якість, українська озвучка.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>КіноБаза — Адмін Панель</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <style>
     :root {
-      --bg: #0d0d0d; --bg2: #141414; --bg3: #1a1a1a; --bg4: #222;
-      --accent: #e50914; --ah: #b20710; --gold: #f5c518;
-      --text: #fff; --muted: #999; --dim: #555; --border: #2a2a2a;
-      --green: #1db954; --blue: #1a8cff;
+      --bg: #0d0d0d; --bg2: #151515; --bg3: #1a1a1a; --bg4: #222;
+      --accent: #e50914; --gold: #f5c518;
+      --text: #fff; --muted: #888; --border: #2a2a2a;
+      --green: #1db954; --blue: #1a8cff; --orange: #f5a623;
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-    a{text-decoration:none;color:inherit;}
-    button{font-family:inherit;}
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-    /* ===== HEADER ===== */
-    header{background:rgba(13,13,13,.97);backdrop-filter:blur(12px);position:sticky;top:0;z-index:900;border-bottom:1px solid var(--border);}
-    .hdr{display:flex;align-items:center;padding:0 24px;height:58px;max-width:1600px;margin:0 auto;gap:16px;}
-    .logo{font-size:23px;font-weight:800;letter-spacing:-1px;flex-shrink:0;}
-    .logo b{color:var(--accent);}
-    nav{display:flex;gap:2px;flex:1;}
-    nav a{color:var(--muted);font-size:13px;font-weight:500;padding:6px 11px;border-radius:6px;transition:all .2s;white-space:nowrap;}
-    nav a:hover,nav a.act{color:#fff;background:var(--bg4);}
-    .srch-wrap{position:relative;flex:0 1 340px;}
-    .srch{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;width:100%;}
-    .srch input{background:none;border:none;outline:none;color:#fff;padding:8px 12px;font-size:14px;width:100%;font-family:inherit;}
-    .srch input::placeholder{color:var(--dim);}
-    .srch button{background:var(--accent);border:none;color:#fff;padding:8px 13px;cursor:pointer;font-size:15px;flex-shrink:0;}
-    .srch button:hover{background:var(--ah);}
-    /* ===== AUTOCOMPLETE ===== */
-    #ac-drop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,.7);display:none;max-height:440px;overflow-y:auto;}
-    #ac-drop.open{display:block;}
-    .ac-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .12s;}
-    .ac-item:hover,.ac-item.sel{background:var(--bg3);}
-    .ac-thumb{width:34px;height:50px;border-radius:4px;object-fit:cover;flex-shrink:0;background:var(--bg4);}
-    .ac-thumb-ph{width:34px;height:50px;border-radius:4px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
-    .ac-inf{flex:1;min-width:0;}
-    .ac-ttl{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;}
-    .ac-sub{font-size:11px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:8px;}
-    .ac-badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;}
-    .ac-badge.m{background:rgba(26,140,255,.2);color:var(--blue);}
-    .ac-badge.t{background:rgba(29,185,84,.2);color:var(--green);}
-    .ac-rat{color:var(--gold);font-size:11px;}
-    .ac-sep{padding:6px 14px;font-size:11px;color:var(--dim);border-top:1px solid var(--border);margin-top:2px;}
-    .ac-all{padding:11px;text-align:center;font-size:13px;color:var(--accent);cursor:pointer;border-top:1px solid var(--border);font-weight:600;}
-    .ac-all:hover{background:var(--bg3);}
-    .ac-recent-row{display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s;}
-    .ac-recent-row:hover{background:var(--bg3);color:#fff;}
-    .ac-recent-row span{flex:1;}
-    .ac-del{color:var(--dim);font-size:16px;padding:0 4px;line-height:1;}
-    .ac-del:hover{color:var(--accent);}
-    /* ===== SEARCH FILTERS ===== */
-    .srch-filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
-    .sf-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
-    .sf-btn:hover{border-color:#fff;color:#fff;}
-    .sf-btn.act{background:var(--accent);border-color:var(--accent);color:#fff;}
-    .srch-count{font-size:12px;color:var(--muted);margin-top:2px;}
-    .hdr-right{display:flex;gap:8px;align-items:center;flex-shrink:0;}
-    .btn-sm{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .2s;}
-    .btn-sm:hover{border-color:#fff;color:#fff;}
-    .btn-sm.red{background:var(--accent);border-color:var(--accent);color:#fff;}
-    .btn-sm.red:hover{background:var(--ah);}
-    /* User avatar */
-    .user-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer;position:relative;flex-shrink:0;}
-    .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
-    .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown{display:block;}
-    .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;gap:8px;}
-    .ud-item:hover{background:var(--bg4);color:#fff;}
-    .ud-divider{border-top:1px solid var(--border);margin:4px 0;}
-    .ud-name{padding:8px 12px;font-weight:600;color:#fff;font-size:14px;}
-    /* Header ad slot */
-    #slot-header{width:100%;}
+    /* ===== LOGIN ===== */
+    #login-screen {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background: radial-gradient(ellipse at center, #1a0505 0%, #0d0d0d 70%);
+    }
+    .login-box {
+      background:var(--bg2); border:1px solid var(--border); border-radius:16px;
+      padding:48px 40px; width:360px; text-align:center;
+    }
+    .login-logo { font-size:32px; font-weight:800; margin-bottom:8px; }
+    .login-logo span:first-child { color:var(--accent); }
+    .login-sub { color:var(--muted); font-size:13px; margin-bottom:32px; }
+    .form-group { margin-bottom:16px; text-align:left; }
+    .form-group label { font-size:12px; color:var(--muted); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:8px;
+      color:var(--text); padding:10px 14px; font-size:14px; font-family:inherit; outline:none;
+      transition:border-color .2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--accent); }
+    .form-group textarea { resize:vertical; min-height:80px; }
+    .btn-primary {
+      width:100%; background:var(--accent); color:#fff; border:none; border-radius:8px;
+      padding:12px; font-size:15px; font-weight:700; cursor:pointer; transition:background .2s;
+    }
+    .btn-primary:hover { background:#b20710; }
+    .login-error { color:var(--accent); font-size:13px; margin-top:10px; display:none; }
 
-    /* ===== MAIN ===== */
-    main{max-width:1600px;margin:0 auto;padding:0 24px;}
+    /* ===== ADMIN LAYOUT ===== */
+    #admin-screen { display:none; }
+    .admin-header {
+      background:var(--bg2); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 28px; height:56px; position:sticky; top:0; z-index:100;
+    }
+    .admin-logo { font-size:18px; font-weight:800; }
+    .admin-logo span:first-child { color:var(--accent); }
+    .admin-logo .badge {
+      background:var(--bg3); color:var(--muted); font-size:11px; font-weight:500;
+      padding:2px 8px; border-radius:4px; margin-left:8px; vertical-align:middle;
+    }
+    .admin-header-right { display:flex; align-items:center; gap:12px; }
+    .btn-site { color:var(--muted); font-size:13px; text-decoration:none; }
+    .btn-site:hover { color:#fff; }
+    .btn-logout {
+      background:transparent; border:1px solid var(--border); color:var(--muted);
+      padding:6px 14px; border-radius:6px; cursor:pointer; font-size:13px; transition:all .2s;
+    }
+    .btn-logout:hover { border-color:#fff; color:#fff; }
 
-    /* ===== HERO ===== */
-    .hero{position:relative;height:480px;border-radius:14px;overflow:hidden;margin:18px 0;cursor:pointer;}
-    .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:background-image .6s;}
-    .hero-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.05) 100%);}
-    .hero-ob{position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(0,var(--bg),transparent);}
-    .hero-c{position:relative;z-index:2;padding:50px 44px;height:100%;display:flex;flex-direction:column;justify-content:center;max-width:580px;}
-    .hero-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:3px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;width:fit-content;}
-    .hero-title{font-size:36px;font-weight:800;line-height:1.1;margin-bottom:11px;}
-    .hero-meta{display:flex;align-items:center;gap:11px;margin-bottom:13px;font-size:13px;}
-    .hero-r{color:var(--gold);font-weight:700;}
-    .hero-y,.hero-g{color:var(--muted);}
-    .hero-desc{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:22px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-    .hero-btns{display:flex;gap:10px;}
-    .btn-play{display:flex;align-items:center;gap:7px;background:var(--accent);color:#fff;padding:11px 26px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;border:none;transition:all .2s;}
-    .btn-play:hover{background:var(--ah);transform:scale(1.02);}
-    .btn-info{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.13);backdrop-filter:blur(8px);color:#fff;padding:11px 22px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;border:1px solid rgba(255,255,255,.2);transition:all .2s;}
-    .btn-info:hover{background:rgba(255,255,255,.22);}
-    .hero-dots{position:absolute;bottom:16px;right:26px;display:flex;gap:6px;z-index:3;}
-    .h-dot{width:7px;height:7px;border-radius:4px;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;}
-    .h-dot.act{width:22px;background:var(--accent);}
+    .admin-body { display:flex; min-height:calc(100vh - 56px); }
 
-    /* ===== GENRES BAR ===== */
-    .g-bar{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0;}
-    .g-tag{padding:5px 13px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--bg2);transition:all .2s;}
-    .g-tag:hover,.g-tag.act{background:var(--accent);border-color:var(--accent);color:#fff;}
+    /* Sidebar */
+    .admin-sidebar {
+      width:220px; background:var(--bg2); border-right:1px solid var(--border);
+      padding:20px 0; flex-shrink:0;
+    }
+    .sidebar-section { padding:0 16px; margin-bottom:20px; }
+    .sidebar-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; padding:0 12px; margin-bottom:8px; }
+    .sidebar-link {
+      display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px;
+      color:var(--muted); font-size:14px; font-weight:500; cursor:pointer;
+      text-decoration:none; transition:all .2s; margin-bottom:2px;
+    }
+    .sidebar-link:hover { background:var(--bg3); color:#fff; }
+    .sidebar-link.active { background:rgba(229,9,20,.15); color:var(--accent); }
+    .sidebar-link .icon { width:20px; text-align:center; }
+    .sidebar-count {
+      margin-left:auto; background:var(--bg4); color:var(--muted);
+      font-size:11px; padding:1px 7px; border-radius:10px;
+    }
+    .sidebar-link.active .sidebar-count { background:rgba(229,9,20,.3); color:var(--accent); }
 
-    /* ===== SECTION ===== */
-    .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;margin-top:26px;}
-    .sec-title{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;}
-    .sec-title::before{content:'';display:block;width:4px;height:19px;background:var(--accent);border-radius:2px;}
-    .sec-more{color:var(--dim);font-size:13px;display:flex;align-items:center;gap:3px;transition:color .2s;}
-    .sec-more:hover{color:var(--accent);}
+    /* Main content */
+    .admin-main { flex:1; padding:28px; overflow-x:hidden; }
 
-    /* ===== MOVIE CARDS ===== */
-    .movies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:12px;}
-    .m-card{background:var(--bg3);border-radius:9px;overflow:hidden;cursor:pointer;transition:all .25s;position:relative;}
-    .m-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 18px 36px rgba(0,0,0,.6),0 0 0 1px rgba(229,9,20,.2);}
-    .m-card:hover .c-ov{opacity:1;}
-    .c-poster{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--bg2);}
-    .c-ph{width:100%;aspect-ratio:2/3;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:34px;}
-    .c-ov{position:absolute;inset:0;background:linear-gradient(0,rgba(0,0,0,.92) 0%,rgba(0,0,0,.3) 55%,transparent 100%);opacity:0;transition:opacity .25s;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;}
-    .c-play-btn{width:40px;height:40px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 9px;font-size:15px;box-shadow:0 4px 14px rgba(229,9,20,.5);}
-    .c-info{padding:9px 10px;}
-    .c-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
-    .c-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;}
-    .c-year{color:var(--dim);}
-    .c-rat{display:flex;align-items:center;gap:2px;color:var(--gold);font-weight:700;}
-    .c-badge{position:absolute;top:7px;left:7px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
-    .c-badge.g{background:#1a7a3a;}
-    .c-badge.b{background:#1a4a8a;}
-    .c-fav{position:absolute;top:7px;right:7px;background:rgba(0,0,0,.6);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .2s;}
-    .m-card:hover .c-fav{display:flex;}
-    .c-fav.faved{display:flex;color:var(--accent);}
+    /* Page header */
+    .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .page-title { font-size:22px; font-weight:700; }
+    .page-sub { color:var(--muted); font-size:13px; margin-top:2px; }
+    .btn-add {
+      background:var(--accent); color:#fff; border:none; border-radius:8px;
+      padding:10px 20px; font-size:14px; font-weight:600; cursor:pointer;
+      display:flex; align-items:center; gap:6px; transition:background .2s;
+    }
+    .btn-add:hover { background:#b20710; }
 
-    /* ===== AD SLOTS ===== */
-    .ad-wrap{width:100%;background:#0a0a0a;position:relative;overflow:hidden;}
-    .ad-wrap.inline{margin:24px 0;border-radius:8px;border:1px solid #1a1a1a;}
-    .ad-lbl{font-size:9px;color:#333;text-transform:uppercase;letter-spacing:1px;padding:2px 8px;display:block;}
-    .ad-h{display:block;width:100%;max-height:160px;overflow:hidden;}
-    .ad-h img{width:100%;display:block;max-height:160px;object-fit:cover;}
-    .ad-v{display:block;width:100%;}
-    .ad-v img{width:100%;display:block;object-fit:cover;}
-    .sidebar-row{display:flex;gap:18px;align-items:flex-start;}
-    .sidebar-row .mv-col{flex:1;min-width:0;}
-    .sidebar-ad-col{width:190px;flex-shrink:0;margin-top:58px;}
-    @media(max-width:900px){.sidebar-row{flex-direction:column;}.sidebar-ad-col{width:100%;margin-top:0;}}
+    /* Stats row */
+    .stats-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:28px; }
+    .stat-card {
+      background:var(--bg2); border:1px solid var(--border); border-radius:12px;
+      padding:20px; display:flex; align-items:center; gap:16px;
+    }
+    .stat-icon { font-size:28px; }
+    .stat-num { font-size:26px; font-weight:800; }
+    .stat-label { color:var(--muted); font-size:12px; margin-top:2px; }
 
-    /* ===== PLAYER MODAL ===== */
-    .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
-    .modal-ov.open{opacity:1;pointer-events:all;}
-    .modal-box{background:var(--bg2);border-radius:14px;max-width:960px;width:97%;max-height:96vh;overflow-y:auto;position:relative;border:1px solid var(--border);animation:mIn .3s ease;}
-    @keyframes mIn{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
-    .m-close{position:absolute;top:13px;right:13px;width:34px;height:34px;background:rgba(0,0,0,.7);border:1px solid var(--border);border-radius:50%;color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .2s;}
-    .m-close:hover{background:var(--accent);}
-    .m-backdrop{width:100%;height:260px;object-fit:cover;border-radius:14px 14px 0 0;display:block;}
-    .m-backdrop-ph{width:100%;height:260px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:14px 14px 0 0;display:flex;align-items:center;justify-content:center;font-size:64px;}
-    .m-grad{height:60px;background:linear-gradient(0,var(--bg2),transparent);margin-top:-60px;position:relative;}
-    .m-body{padding:0 26px 26px;}
-    .m-title{font-size:24px;font-weight:800;margin-bottom:9px;}
-    .m-metas{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
-    .m-rat{color:var(--gold);font-weight:700;font-size:15px;}
-    .m-y,.m-lang,.m-dur{color:var(--muted);font-size:13px;}
-    .m-genres{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
-    .m-gtag{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:12px;padding:3px 9px;border-radius:20px;}
-    .m-desc{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:20px;}
+    /* Filters */
+    .filters-bar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+    .filter-btn {
+      padding:6px 14px; border-radius:20px; border:1px solid var(--border);
+      background:var(--bg2); color:var(--muted); font-size:13px; cursor:pointer;
+      transition:all .2s; font-family:inherit;
+    }
+    .filter-btn:hover, .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .search-filter {
+      margin-left:auto; background:var(--bg2); border:1px solid var(--border);
+      border-radius:8px; padding:6px 12px; color:var(--text); font-size:13px;
+      font-family:inherit; outline:none; width:200px;
+    }
+    .search-filter:focus { border-color:var(--accent); }
 
-    /* PLAYER AREA */
-    .player-section{margin-bottom:20px;}
-    .player-servers{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
-    .srv-btn{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--bg3);transition:all .2s;}
-    .srv-btn:hover{border-color:#555;color:#fff;}
-    .srv-btn.act{background:var(--accent);border-color:var(--accent);color:#fff;}
-    .player-frame-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;}
-    .player-frame-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
-    .player-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;border-radius:10px;flex-direction:column;gap:12px;}
-    .player-loading .spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .dub-bar{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
-    .dub-label{font-size:12px;color:var(--muted);}
-    .dub-btn{padding:4px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .2s;}
-    .dub-btn:hover,.dub-btn.act{background:var(--bg4);border-color:#555;color:#fff;}
-    /* TV episode selector */
-    .ep-selector{margin-bottom:14px;}
-    .ep-selector h4{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--muted);}
-    .ep-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-    .ep-select{background:var(--bg3);border:1px solid var(--border);color:#fff;padding:7px 12px;border-radius:6px;font-size:13px;font-family:inherit;outline:none;cursor:pointer;}
-    .ep-select:focus{border-color:var(--accent);}
-    .ep-nums{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;max-height:100px;overflow-y:auto;}
-    .ep-num{width:36px;height:36px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-    .ep-num:hover,.ep-num.act{background:var(--accent);border-color:var(--accent);color:#fff;}
-    /* Modal actions */
-    .m-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px;}
-    .m-btn-fav{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;}
-    .m-btn-fav:hover{border-color:var(--accent);color:var(--accent);}
-    .m-btn-fav.faved{background:rgba(229,9,20,.12);border-color:var(--accent);color:var(--accent);}
+    /* Ads table */
+    .ads-table { width:100%; border-collapse:collapse; }
+    .ads-table th {
+      text-align:left; padding:10px 14px; font-size:11px; color:var(--muted);
+      text-transform:uppercase; letter-spacing:.5px; border-bottom:1px solid var(--border);
+    }
+    .ads-table td { padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; }
+    .ads-table tr:hover td { background:rgba(255,255,255,.02); }
 
-    /* ===== AUTH MODAL ===== */
-    .auth-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:8000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
-    .auth-ov.open{opacity:1;pointer-events:all;}
-    .auth-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:420px;max-width:95vw;position:relative;animation:mIn .3s ease;}
-    .auth-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
-    .auth-close:hover{color:#fff;}
-    .auth-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid var(--border);}
-    .auth-tab{flex:1;padding:10px;text-align:center;font-size:15px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-1px;}
-    .auth-tab.act{color:#fff;border-bottom-color:var(--accent);}
-    .auth-form{display:none;}
-    .auth-form.act{display:block;}
-    .f-group{margin-bottom:14px;}
-    .f-group label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-    .f-group input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:#fff;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;}
-    .f-group input:focus{border-color:var(--accent);}
-    .f-err{color:var(--accent);font-size:13px;margin-top:8px;display:none;}
-    .f-err.show{display:block;}
-    .btn-full{width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:4px;}
-    .btn-full:hover{background:var(--ah);}
-    .auth-note{color:var(--muted);font-size:12px;text-align:center;margin-top:14px;}
-    .auth-note span{color:var(--accent);cursor:pointer;}
-    .auth-note span:hover{text-decoration:underline;}
-    .auth-divider{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:12px;margin:14px 0;}
-    .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-    .btn-google{background:var(--bg3)!important;border:1px solid var(--border)!important;color:#fff!important;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:0;}
-    .btn-google:hover{background:var(--bg4)!important;border-color:#555!important;}
-    .auth-forgot{text-align:right;margin-top:6px;margin-bottom:-4px;}
-    .auth-forgot span{color:var(--dim);font-size:12px;cursor:pointer;transition:color .2s;}
-    .auth-forgot span:hover{color:var(--muted);}
+    .ad-thumb {
+      width:80px; height:45px; border-radius:6px; object-fit:cover;
+      background:var(--bg3); display:flex; align-items:center; justify-content:center;
+      font-size:20px; flex-shrink:0;
+    }
+    .ad-thumb img { width:100%; height:100%; object-fit:cover; border-radius:6px; }
+    .ad-name { font-weight:600; font-size:14px; }
+    .ad-link { color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px; }
 
-    /* ===== POPUP AD ===== */
-    .pop-ov{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
-    .pop-ov.open{opacity:1;pointer-events:all;}
-    .pop-box{position:relative;max-width:500px;width:93%;border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.8);animation:mIn .35s ease;}
-    .pop-close{position:absolute;top:10px;right:10px;width:32px;height:32px;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.2);border-radius:50%;color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
-    .pop-close.locked{opacity:.35;cursor:not-allowed;}
-    .pop-adlbl{position:absolute;top:7px;left:10px;font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:2px;}
-    .pop-bar{position:absolute;bottom:0;left:0;height:3px;background:var(--accent);transition:width 1s linear;}
-    .pop-box img{width:100%;display:block;border-radius:12px;}
-    .pop-fallback{background:linear-gradient(135deg,#1a0a2d,#2d1a4d);padding:50px 36px;text-align:center;}
-    .pop-fallback h2{font-size:22px;margin-bottom:10px;}
-    .pop-fallback p{color:var(--muted);font-size:14px;margin-bottom:20px;}
-    .pop-fallback .pop-cta{background:var(--gold);color:#000;border:none;padding:12px 36px;border-radius:24px;font-size:15px;font-weight:800;cursor:pointer;}
+    .slot-badge {
+      display:inline-flex; align-items:center; gap:4px; padding:3px 10px;
+      border-radius:20px; font-size:12px; font-weight:600;
+    }
+    .slot-header { background:rgba(26,140,255,.15); color:var(--blue); }
+    .slot-between { background:rgba(29,185,84,.15); color:var(--green); }
+    .slot-popup { background:rgba(229,9,20,.15); color:var(--accent); }
+    .slot-sidebar { background:rgba(245,166,35,.15); color:var(--orange); }
+    .slot-footer { background:rgba(128,128,128,.15); color:#aaa; }
 
-    /* ===== LIBRARY PAGE ===== */
-    #lib-section{display:none;}
-    .lib-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0;}
-    .lib-tab{padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap;}
-    .lib-tab.act{color:#fff;border-bottom-color:var(--accent);}
-    .lib-tab:hover{color:#fff;}
-    .lib-empty{color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;}
-    .lib-empty span{font-size:40px;display:block;margin-bottom:12px;}
-    .watched-badge{position:absolute;bottom:8px;left:8px;background:rgba(29,185,84,.85);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;backdrop-filter:blur(4px);}
-    /* ===== CONTINUE WATCHING ===== */
-    #continue-section{display:none;}
-    .c-ep-badge{position:absolute;bottom:8px;right:48px;background:rgba(0,0,0,.8);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px);white-space:nowrap;}
-    /* Episode highlight */
-    .ep-num.last{position:relative;outline:2px solid var(--accent);outline-offset:1px;}
-    .ep-num.last::before{content:'▶';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:7px;color:var(--accent);}
-    /* Server indicator */
-    .srv-saved{font-size:10px;color:var(--green);margin-left:4px;}
-    /* Watch later button in modal */
-    .m-btn-wl{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
-    .m-btn-wl:hover{border-color:#fff;color:#fff;}
-    .m-btn-wl.saved{background:rgba(26,140,255,.12);border-color:var(--blue);color:var(--blue);}
+    .type-badge {
+      display:inline-flex; align-items:center; gap:4px; padding:2px 8px;
+      border-radius:4px; font-size:11px; background:var(--bg3); color:var(--muted);
+    }
 
-    /* ===== CAST ===== */
-    .cast-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-    .cast-row::-webkit-scrollbar{height:4px;}
-    .cast-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-    .cast-card{flex-shrink:0;width:80px;text-align:center;}
-    .cast-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;background:var(--bg4);display:block;margin-bottom:6px;}
-    .cast-photo-ph{width:80px;height:80px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 6px;}
-    .cast-name{font-size:11px;color:var(--muted);line-height:1.3;word-break:break-word;}
-    .cast-char{font-size:10px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    /* ===== TRAILER ===== */
-    .btn-trailer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
-    .btn-trailer:hover{background:rgba(255,255,255,.16);}
-    .trailer-ov{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:7000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(8px);}
-    .trailer-ov.open{opacity:1;pointer-events:all;}
-    .trailer-wrap{position:relative;width:92%;max-width:900px;}
-    .trailer-close{position:absolute;top:-40px;right:0;background:none;border:none;color:#fff;font-size:26px;cursor:pointer;line-height:1;}
-    .trailer-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;}
-    .trailer-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
-    /* ===== SIMILAR ===== */
-    .sim-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-    .sim-row::-webkit-scrollbar{height:4px;}
-    .sim-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-    .sim-card{flex-shrink:0;width:120px;cursor:pointer;border-radius:7px;overflow:hidden;background:var(--bg3);transition:transform .2s;}
-    .sim-card:hover{transform:scale(1.04);}
-    .sim-poster{width:120px;height:180px;object-fit:cover;display:block;background:var(--bg4);}
-    .sim-poster-ph{width:120px;height:180px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:28px;}
-    .sim-info{padding:6px 8px;}
-    .sim-title{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .sim-year{font-size:10px;color:var(--dim);margin-top:2px;}
-    /* ===== EXTRA INFO GRID ===== */
-    .m-extra{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:16px 0 20px;}
-    .m-extra-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;}
-    .m-extra-lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
-    .m-extra-val{font-size:13px;font-weight:600;color:#fff;}
-    /* ===== SKELETON ===== */
-    .sk-card{background:var(--bg3);border-radius:9px;overflow:hidden;animation:skP 1.5s infinite;}
-    .sk-poster{width:100%;aspect-ratio:2/3;background:var(--bg4);}
-    .sk-info{padding:9px;}
-    .sk-line{height:11px;background:var(--bg4);border-radius:4px;margin-bottom:7px;}
-    .sk-s{width:55%;}
-    @keyframes skP{0%,100%{opacity:1}50%{opacity:.45}}
+    .toggle-switch {
+      position:relative; width:42px; height:24px; display:inline-block; cursor:pointer;
+    }
+    .toggle-switch input { opacity:0; width:0; height:0; }
+    .toggle-slider {
+      position:absolute; inset:0; background:#333; border-radius:12px; transition:.3s;
+    }
+    .toggle-slider::before {
+      content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px;
+      background:#fff; border-radius:50%; transition:.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background:var(--green); }
+    .toggle-switch input:checked + .toggle-slider::before { transform:translateX(18px); }
 
-    /* ===== CATALOG ===== */
-    #cat-section{display:none;}
-    .cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;margin-top:10px;}
-    .cat-filters{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;}
-    .cat-fg{display:flex;flex-direction:column;gap:5px;min-width:0;}
-    .cat-fg label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
-    .cat-sel{background:var(--bg3);border:1px solid var(--border);color:#fff;padding:8px 12px;border-radius:7px;font-size:13px;font-family:inherit;outline:none;cursor:pointer;min-width:130px;}
-    .cat-sel:focus{border-color:var(--accent);}
-    .cat-sel option{background:var(--bg3);}
-    .cat-pill-row{display:flex;gap:5px;flex-wrap:wrap;}
-    .cat-pill{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit;}
-    .cat-pill:hover{border-color:#fff;color:#fff;}
-    .cat-pill.act{background:var(--accent);border-color:var(--accent);color:#fff;}
-    .cat-yr-wrap{display:flex;gap:6px;align-items:center;}
-    .cat-yr-inp{background:var(--bg3);border:1px solid var(--border);color:#fff;padding:8px 10px;border-radius:7px;font-size:13px;font-family:inherit;outline:none;width:76px;text-align:center;}
-    .cat-yr-inp:focus{border-color:var(--accent);}
-    .cat-yr-inp::placeholder{color:var(--dim);}
-    .cat-btn-apply{background:var(--accent);border:none;color:#fff;padding:9px 20px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;align-self:flex-end;}
-    .cat-btn-apply:hover{background:var(--ah);}
-    .cat-btn-reset{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 16px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;align-self:flex-end;}
-    .cat-btn-reset:hover{border-color:#555;color:#fff;}
-    .cat-active{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-    .cat-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(229,9,20,.15);border:1px solid rgba(229,9,20,.35);color:var(--accent);font-size:12px;padding:4px 10px;border-radius:20px;}
-    .cat-chip-del{cursor:pointer;font-size:14px;line-height:1;opacity:.7;}
-    .cat-chip-del:hover{opacity:1;}
-    .cat-count{font-size:12px;color:var(--muted);margin-top:2px;}
+    .action-btn {
+      background:none; border:1px solid var(--border); color:var(--muted);
+      width:32px; height:32px; border-radius:6px; cursor:pointer; font-size:14px;
+      display:inline-flex; align-items:center; justify-content:center; transition:all .2s;
+    }
+    .action-btn:hover { border-color:#fff; color:#fff; }
+    .action-btn.del:hover { border-color:var(--accent); color:var(--accent); }
+    .action-btn.edit:hover { border-color:var(--blue); color:var(--blue); }
 
-    /* ===== ANTI-ADBLOCK ===== */
-    #adblock-wall{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:999999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
-    .adblock-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:44px 36px;max-width:460px;width:94%;text-align:center;}
-    .adblock-icon{font-size:52px;margin-bottom:20px;}
-    .adblock-title{font-size:22px;font-weight:800;margin-bottom:10px;}
-    .adblock-sub{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:28px;}
-    .adblock-steps{text-align:left;background:var(--bg3);border-radius:10px;padding:16px 20px;margin-bottom:24px;}
-    .adblock-steps li{color:var(--muted);font-size:13px;margin-bottom:8px;line-height:1.5;}
-    .adblock-steps li:last-child{margin-bottom:0;}
-    .adblock-btn{background:var(--accent);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;}
-    .adblock-btn:hover{background:var(--ah);}
-    /* Video ad */
-    .ad-video{width:100%;display:block;max-height:160px;object-fit:cover;cursor:pointer;}
-    /* ===== PAGE MODAL (Про нас / Контакти / Умови / DMCA) ===== */
-    .page-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:8500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
-    .page-modal-ov.open{opacity:1;pointer-events:all;}
-    .page-modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:700px;max-width:95vw;max-height:85vh;overflow-y:auto;position:relative;animation:mIn .3s ease;}
-    .page-modal-title{font-size:22px;font-weight:800;margin-bottom:20px;padding-right:30px;}
-    .page-modal-content{color:var(--muted);font-size:15px;line-height:1.8;}
-    .page-modal-content p{margin-bottom:12px;}
-    .page-modal-content h2,.page-modal-content h3{color:#fff;margin:18px 0 8px;}
-    .page-modal-content a{color:var(--accent);}
-    .page-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
-    .page-modal-close:hover{color:#fff;}
-    /* ===== FOOTER ===== */
-    footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:50px;padding:32px 24px 18px;}
-    .ft-grid{max-width:1600px;margin:0 auto 22px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:26px;}
-    .ft-brand .logo{display:block;margin-bottom:10px;}
-    .ft-brand p{color:var(--muted);font-size:13px;line-height:1.7;}
-    .ft-col h4{font-size:13px;font-weight:700;margin-bottom:11px;}
-    .ft-col a{display:block;color:var(--muted);font-size:13px;margin-bottom:7px;transition:color .2s;}
-    .ft-col a:hover{color:var(--accent);}
-    .ft-btm{max-width:1600px;margin:0 auto;border-top:1px solid var(--border);padding-top:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-    .ft-btm p{color:var(--muted);font-size:12px;}
-    .ft-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
-    .ft-tag{background:var(--bg3);color:var(--muted);padding:3px 9px;border-radius:4px;font-size:11px;}
+    /* Empty state */
+    .empty-state { text-align:center; padding:60px 20px; color:var(--muted); }
+    .empty-state .empty-icon { font-size:56px; margin-bottom:16px; }
+    .empty-state h3 { font-size:18px; color:#fff; margin-bottom:8px; }
 
-    /* ===== UTILS ===== */
-    .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--bg3);color:#fff;padding:11px 22px;border-radius:8px;font-size:14px;border-left:3px solid var(--accent);z-index:99999;transition:transform .3s;white-space:nowrap;}
-    .toast.show{transform:translateX(-50%) translateY(0);}
-    #scroll-top{position:fixed;bottom:26px;right:26px;width:42px;height:42px;background:var(--accent);border-radius:50%;border:none;color:#fff;font-size:18px;cursor:pointer;z-index:500;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(229,9,20,.4);transition:all .2s;}
-    #scroll-top:hover{background:var(--ah);transform:scale(1.1);}
-    #scroll-top.show{display:flex;}
-    #srch-sec{display:none;}
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:1000;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity .25s;
+      backdrop-filter:blur(4px);
+    }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal {
+      background:var(--bg2); border:1px solid var(--border); border-radius:16px;
+      padding:32px; width:560px; max-width:95vw; max-height:90vh;
+      overflow-y:auto; position:relative;
+      animation: modalIn .25s ease;
+    }
+    @keyframes modalIn { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-title { font-size:18px; font-weight:700; margin-bottom:24px; }
+    .modal-close {
+      position:absolute; top:16px; right:16px; background:none; border:none;
+      color:var(--muted); font-size:22px; cursor:pointer;
+    }
+    .modal-close:hover { color:#fff; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-hint { font-size:11px; color:var(--muted); margin-top:4px; }
+    .modal-footer { display:flex; gap:10px; margin-top:24px; justify-content:flex-end; }
+    .btn-cancel {
+      background:transparent; border:1px solid var(--border); color:var(--muted);
+      padding:10px 20px; border-radius:8px; cursor:pointer; font-size:14px;
+      font-family:inherit; transition:all .2s;
+    }
+    .btn-cancel:hover { border-color:#fff; color:#fff; }
+    .btn-save {
+      background:var(--green); color:#fff; border:none; border-radius:8px;
+      padding:10px 24px; font-size:14px; font-weight:700; cursor:pointer;
+      font-family:inherit; transition:background .2s;
+    }
+    .btn-save:hover { background:#17a845; }
 
-    @media(max-width:768px){
-      .hdr{flex-wrap:wrap;height:auto;padding:8px 14px;}
-      nav{display:none;}
-      .hero{height:310px;}
-      .hero-title{font-size:22px;}
-      .hero-c{padding:24px 18px;}
-      .ft-grid{grid-template-columns:1fr 1fr;}
+    /* Preview */
+    .preview-box {
+      background:var(--bg3); border:1px dashed var(--border); border-radius:8px;
+      padding:12px; margin-top:6px; text-align:center; overflow:hidden;
+    }
+    .preview-box img { max-width:100%; max-height:150px; border-radius:4px; object-fit:contain; }
+    .preview-placeholder { color:var(--muted); font-size:13px; padding:20px; }
+
+    /* Slots guide */
+    .slots-guide { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:20px; }
+    .slots-guide h3 { font-size:15px; margin-bottom:14px; }
+    .slot-row {
+      display:flex; align-items:center; gap:14px; padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.04);
+    }
+    .slot-row:last-child { border:none; }
+    .slot-row .slot-icon { font-size:20px; width:32px; text-align:center; }
+    .slot-row .slot-info { flex:1; }
+    .slot-row .slot-name { font-size:14px; font-weight:600; }
+    .slot-row .slot-desc { font-size:12px; color:var(--muted); margin-top:2px; }
+    .slot-row .slot-dim { font-size:11px; color:var(--blue); }
+
+    .toast-admin {
+      position:fixed; bottom:24px; right:24px; background:#222; color:#fff;
+      padding:12px 20px; border-radius:8px; font-size:14px;
+      border-left:3px solid var(--green); z-index:9999;
+      transform:translateY(60px); transition:transform .3s; opacity:0;
+    }
+    .toast-admin.show { transform:translateY(0); opacity:1; }
+    .toast-admin.error { border-left-color:var(--accent); }
+
+    .section-page { display:none; }
+    .section-page.active { display:block; }
+
+    /* ===== BLOCK 9: PAGES EDITOR ===== */
+    .pages-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);}
+    .pages-tab{padding:10px 18px;cursor:pointer;color:var(--muted);font-size:14px;font-weight:600;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
+    .pages-tab:hover{color:#fff;}
+    .pages-tab.active{color:#fff;border-bottom-color:var(--accent);}
+    .page-editor{display:none;}
+    .page-editor.active{display:block;}
+    .page-editor textarea{min-height:260px;font-family:monospace;font-size:13px;line-height:1.6;}
+    .page-save-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;}
+    .page-save-btn:hover{background:#17a845;}
+    /* ===== BLOCK 9: USERS ===== */
+    .role-badge{display:inline-flex;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:700;}
+    .role-admin{background:rgba(229,9,20,.15);color:var(--accent);}
+    .role-user{background:rgba(26,140,255,.15);color:var(--blue);}
+    .user-email{color:var(--muted);font-size:12px;margin-top:2px;}
+
+    @media (max-width:768px) {
+      .admin-sidebar { display:none; }
+      .stats-row { grid-template-columns:1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <div class="hdr">
-    <a href="#" class="logo"><b>Кіно</b>База</a>
-    <nav>
-      <a href="#" class="act" id="nav-home" onclick="showHome();return false;">Головна</a>
-      <a href="#" id="nav-catalog" onclick="showCatalog({type:'movie'});return false;">Фільми</a>
-      <a href="#" onclick="showCatalog({type:'tv'});return false;">Серіали</a>
-      <a href="#" onclick="showCatalog({type:'movie',genre:'16'});return false;">Мультфільми</a>
-      <a href="#" onclick="showCatalog({type:'movie',genre:'99'});return false;">Документальні</a>
-      <a href="#" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});return false;">Топ рейтинг</a>
-      <a href="#" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});return false;">Класика</a>
-    </nav>
-    <div class="srch-wrap">
-      <div class="srch">
-        <input type="text" id="si" placeholder="Пошук фільмів, серіалів..."
-          autocomplete="off" spellcheck="false"
-          oninput="handleSrch(event)"
-          onkeydown="acKeydown(event)"
-          onfocus="acFocus()"
-          onblur="setTimeout(hideAutocomplete,200)">
-        <button onclick="doSearch()">🔍</button>
-      </div>
-      <div id="ac-drop"></div>
+<!-- ===== LOGIN ===== -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><span>Кіно</span><span>База</span></div>
+    <div class="login-sub">Вхід для адміністраторів</div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="admin@example.com" onkeyup="if(event.key==='Enter')doLogin()">
     </div>
-    <div class="hdr-right">
-      <div id="auth-btns">
-        <button class="btn-sm" onclick="openAuth('login')" style="margin-right:6px;">Увійти</button>
-        <button class="btn-sm red" onclick="openAuth('register')">Реєстрація</button>
+    <div class="form-group">
+      <label>Пароль</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeyup="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Увійти</button>
+    <div class="login-error" id="login-error">Невірний email або пароль</div>
+    <div style="text-align:center;margin-top:12px;">
+      <span onclick="doForgotPassword()" style="color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">Забули пароль?</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="admin-screen">
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="admin-logo">
+      <span>Кіно</span><span>База</span>
+      <span class="badge">Admin</span>
+    </div>
+    <div class="admin-header-right">
+      <a href="index.html" target="_blank" class="btn-site">↗ Переглянути сайт</a>
+      <button class="btn-logout" onclick="logout()">Вийти</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Меню</div>
+        <div class="sidebar-link active" onclick="showPage('ads')" id="nav-ads">
+          <span class="icon">📢</span> Реклама
+          <span class="sidebar-count" id="count-ads">0</span>
+        </div>
+        <div class="sidebar-link" onclick="showPage('apikeys')" id="nav-apikeys">
+          <span class="icon">🔑</span> API Ключі
+          <span class="sidebar-count" id="count-keys">0</span>
+        </div>
+        <div class="sidebar-link" onclick="showPage('slots')" id="nav-slots">
+          <span class="icon">🗺️</span> Слоти
+        </div>
+        <div class="sidebar-link" onclick="showPage('settings')" id="nav-settings">
+          <span class="icon">⚙️</span> Налаштування
+        </div>
+        <div class="sidebar-link" onclick="showPage('pages')" id="nav-pages">
+          <span class="icon">📄</span> Сторінки
+        </div>
+        <div class="sidebar-link" onclick="showPage('users');loadUsersData();" id="nav-users">
+          <span class="icon">👥</span> Користувачі
+          <span class="sidebar-count" id="count-users">0</span>
+        </div>
       </div>
-      <div id="user-menu" style="display:none;">
-        <div class="user-avatar" id="user-av" tabindex="0">
-          <span id="user-initial">U</span>
-          <div class="user-dropdown">
-            <div class="ud-name" id="ud-name">Користувач</div>
-            <div class="ud-divider"></div>
-            <div class="ud-item" onclick="showLibrary('fav')">Улюблені</div>
-            <div class="ud-item" onclick="showLibrary('wl')">Дивитись пізніше</div>
-            <div class="ud-item" onclick="showLibrary('watched')">Переглянуто</div>
-            <div class="ud-divider"></div>
-            <div class="ud-item" id="ud-admin" style="display:none;" onclick="location.href='admin.html'">Адміністрування</div>
-            <div class="ud-item" onclick="doLogout()">Вийти</div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Статистика</div>
+        <div style="padding:0 12px; color:var(--muted); font-size:12px; line-height:1.8;">
+          <div>🟢 Активних: <span id="sb-active">0</span></div>
+          <div>🔴 Вимкнених: <span id="sb-inactive">0</span></div>
+          <div>🎯 Слотів: 6</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="admin-main">
+
+      <!-- === PAGE: ADS === -->
+      <div class="section-page active" id="page-ads">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Рекламні банери</div>
+            <div class="page-sub">Керуйте рекламними оголошеннями на сайті</div>
+          </div>
+          <button class="btn-add" onclick="openModal()">+ Додати банер</button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">📢</div>
+            <div><div class="stat-num" id="s-total">0</div><div class="stat-label">Всього банерів</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div><div class="stat-num" id="s-active" style="color:var(--green)">0</div><div class="stat-label">Активних</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔴</div>
+            <div><div class="stat-num" id="s-inactive" style="color:var(--accent)">0</div><div class="stat-label">Вимкнених</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div><div class="stat-num" id="s-slots" style="color:var(--blue)">0</div><div class="stat-label">Зайнятих слотів</div></div>
+          </div>
+        </div>
+
+        <div class="filters-bar">
+          <button class="filter-btn active" onclick="filterAds('all',this)">Всі</button>
+          <button class="filter-btn" onclick="filterAds('active',this)">Активні</button>
+          <button class="filter-btn" onclick="filterAds('inactive',this)">Вимкнені</button>
+          <button class="filter-btn" onclick="filterAds('header',this)">Шапка</button>
+          <button class="filter-btn" onclick="filterAds('popup',this)">Pop-up</button>
+          <input class="search-filter" type="text" placeholder="🔍 Пошук..." oninput="filterBySearch(this.value)">
+        </div>
+
+        <div id="ads-list-container">
+          <table class="ads-table">
+            <thead>
+              <tr>
+                <th>Банер</th>
+                <th>Назва / Посилання</th>
+                <th>Слот</th>
+                <th>Тип</th>
+                <th>Статус</th>
+                <th style="text-align:right">Дії</th>
+              </tr>
+            </thead>
+            <tbody id="ads-tbody"></tbody>
+          </table>
+          <div id="ads-empty" class="empty-state" style="display:none">
+            <div class="empty-icon">📭</div>
+            <h3>Немає банерів</h3>
+            <p>Додайте перший рекламний банер натиснувши кнопку вище</p>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div id="slot-header"></div>
-</header>
 
-<!-- MAIN -->
-<main>
+      <!-- === PAGE: API KEYS === -->
+      <div class="section-page" id="page-apikeys">
+        <div class="page-header">
+          <div>
+            <div class="page-title">API Ключі TMDB</div>
+            <div class="page-sub">Ключі для завантаження інформації про фільми. При ліміті 429 — автоматична ротація.</div>
+          </div>
+          <button class="btn-add" onclick="openKeyModal()">+ Додати ключ</button>
+        </div>
 
-  <!-- HERO -->
-  <div class="hero" id="hero" onclick="heroClick()">
-    <div class="hero-bg" id="hero-bg"></div>
-    <div class="hero-ov"></div><div class="hero-ob"></div>
-    <div class="hero-c">
-      <div class="hero-badge">Новинка</div>
-      <div class="hero-title" id="hero-title">Завантаження...</div>
-      <div class="hero-meta">
-        <span class="hero-r" id="hero-r">⭐ —</span>
-        <span class="hero-y" id="hero-y">—</span>
-        <span class="hero-g" id="hero-g">—</span>
-      </div>
-      <div class="hero-desc" id="hero-d">Завантажуємо...</div>
-      <div class="hero-btns">
-        <button class="btn-play" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,true)">Дивитись</button>
-        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,false)">Детальніше</button>
-      </div>
-    </div>
-    <div class="hero-dots" id="hero-dots"></div>
-  </div>
+        <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+          <div class="stat-card">
+            <div class="stat-icon">🔑</div>
+            <div><div class="stat-num" id="ks-total">0</div><div class="stat-label">Всього ключів</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div><div class="stat-num" id="ks-active" style="color:var(--green)">0</div><div class="stat-label">Активних</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔄</div>
+            <div><div class="stat-num" id="ks-rotate" style="color:var(--blue)">Авто</div><div class="stat-label">Ротація при 429</div></div>
+          </div>
+        </div>
 
-  <!-- GENRES -->
-  <div class="g-bar">
-    <span class="g-tag act" onclick="selGenre(0,this)">Усі</span>
-    <span class="g-tag" onclick="selGenre(28,this)">Бойовик</span>
-    <span class="g-tag" onclick="selGenre(35,this)">Комедія</span>
-    <span class="g-tag" onclick="selGenre(18,this)">Драма</span>
-    <span class="g-tag" onclick="selGenre(27,this)">Жахи</span>
-    <span class="g-tag" onclick="selGenre(10749,this)">Мелодрама</span>
-    <span class="g-tag" onclick="selGenre(878,this)">Фантастика</span>
-    <span class="g-tag" onclick="selGenre(14,this)">Фентезі</span>
-    <span class="g-tag" onclick="selGenre(16,this)">Анімація</span>
-    <span class="g-tag" onclick="selGenre(99,this)">Документальні</span>
-    <span class="g-tag" onclick="selGenre(53,this)">Трилер</span>
-    <span class="g-tag" onclick="selGenre(12,this)">Пригоди</span>
-  </div>
+        <div class="slots-guide" style="margin-bottom:20px;">
+          <h3 style="margin-bottom:10px;">ℹ️ Як отримати безкоштовний ключ TMDB</h3>
+          <div style="color:var(--muted);font-size:13px;line-height:1.8;">
+            1. Зареєструйтесь на <a href="https://www.themoviedb.org/signup" target="_blank" style="color:var(--blue)">themoviedb.org</a><br>
+            2. Перейдіть до <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--blue)">Налаштування → API</a><br>
+            3. Натисніть "Create" → виберіть "Developer"<br>
+            4. Скопіюйте "API Key (v3 auth)" та вставте нижче<br>
+            <span style="color:var(--orange)">💡 Можна додати кілька ключів — система буде чергувати їх автоматично</span>
+          </div>
+        </div>
 
-  <!-- SEARCH RESULTS -->
-  <div id="srch-sec">
-    <div class="sec-hdr">
-      <div>
-        <div class="sec-title" id="srch-title">Пошук</div>
-        <div class="srch-count" id="srch-count"></div>
-      </div>
-      <a href="#" class="sec-more" onclick="clearSearch();return false;">✕ Закрити</a>
-    </div>
-    <div class="srch-filters">
-      <button class="sf-btn act" id="sf-all"   onclick="doSearch('all')">Все</button>
-      <button class="sf-btn"     id="sf-movie" onclick="doSearch('movie')">Фільми</button>
-      <button class="sf-btn"     id="sf-tv"    onclick="doSearch('tv')">Серіали</button>
-    </div>
-    <div class="movies-grid" id="srch-grid"></div>
-    <div style="text-align:center;margin-top:24px;display:none;" id="srch-more">
-      <button class="btn-sm" onclick="loadMoreSearch()" style="padding:10px 32px;font-size:14px;">Завантажити ще</button>
-    </div>
-  </div>
-
-  <!-- CATALOG -->
-  <div id="cat-section">
-    <div class="cat-head">
-      <div>
-        <div class="sec-title" id="cat-title">Каталог фільмів</div>
-        <div class="cat-count" id="cat-count"></div>
-      </div>
-      <a href="#" class="sec-more" onclick="showHome();return false;">← Головна</a>
-    </div>
-    <div class="cat-filters">
-      <div class="cat-fg">
-        <label>Тип</label>
-        <div class="cat-pill-row">
-          <button class="cat-pill act" id="cpt-movie" onclick="setCatType('movie')">Фільми</button>
-          <button class="cat-pill"     id="cpt-tv"    onclick="setCatType('tv')">Серіали</button>
+        <div id="keys-list-container">
+          <table class="ads-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Назва / Ключ</th>
+                <th>Статус</th>
+                <th>Додано</th>
+                <th style="text-align:right">Дії</th>
+              </tr>
+            </thead>
+            <tbody id="keys-tbody"></tbody>
+          </table>
+          <div id="keys-empty" class="empty-state" style="display:none">
+            <div class="empty-icon">🔑</div>
+            <h3>Немає API ключів</h3>
+            <p>Додайте ключ TMDB щоб сайт міг завантажувати інформацію про фільми</p>
+          </div>
         </div>
       </div>
-      <div class="cat-fg">
-        <label>Жанр</label>
-        <select class="cat-sel" id="cat-genre" onchange="applyCatFilters()">
-          <option value="">Всі жанри</option>
-          <option value="28">Бойовик</option>
-          <option value="12">Пригоди</option>
-          <option value="16">Анімація</option>
-          <option value="35">Комедія</option>
-          <option value="80">Кримінал</option>
-          <option value="99">Документальний</option>
-          <option value="18">Драма</option>
-          <option value="10751">Сімейний</option>
-          <option value="14">Фентезі</option>
-          <option value="36">Історичний</option>
-          <option value="27">Жахи</option>
-          <option value="10749">Мелодрама</option>
-          <option value="878">Фантастика</option>
-          <option value="53">Трилер</option>
-          <option value="10752">Воєнний</option>
-          <option value="37">Вестерн</option>
-        </select>
-      </div>
-      <div class="cat-fg">
-        <label>Країна</label>
-        <select class="cat-sel" id="cat-country" onchange="applyCatFilters()">
-          <option value="">Всі країни</option>
-          <option value="US">США</option>
-          <option value="GB">Велика Британія</option>
-          <option value="FR">Франція</option>
-          <option value="DE">Німеччина</option>
-          <option value="IT">Італія</option>
-          <option value="JP">Японія</option>
-          <option value="KR">Корея</option>
-          <option value="CN">Китай</option>
-          <option value="ES">Іспанія</option>
-          <option value="IN">Індія</option>
-          <option value="AU">Австралія</option>
-          <option value="CA">Канада</option>
-          <option value="UA">Україна</option>
-        </select>
-      </div>
-      <div class="cat-fg">
-        <label>Рік</label>
-        <div class="cat-yr-wrap">
-          <input class="cat-yr-inp" type="text" id="cat-yr-from" placeholder="Від" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')">
-          <span style="color:var(--dim)">—</span>
-          <input class="cat-yr-inp" type="text" id="cat-yr-to" placeholder="До" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')">
+
+      <!-- === PAGE: SLOTS === -->
+      <div class="section-page" id="page-slots">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Рекламні слоти</div>
+            <div class="page-sub">Розташування реклами на сайті</div>
+          </div>
+        </div>
+        <div class="slots-guide">
+          <h3>📍 Доступні позиції для реклами</h3>
+          <div class="slot-row">
+            <div class="slot-icon">🔝</div>
+            <div class="slot-info">
+              <div class="slot-name">header — Шапка сайту</div>
+              <div class="slot-desc">Банер під навігаційним меню, перший що бачить користувач</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-150px висота</div>
+            </div>
+            <div class="slot-badge slot-header">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">📌</div>
+            <div class="slot-info">
+              <div class="slot-name">between1 — Між рядами 1</div>
+              <div class="slot-desc">Після секції "Нові фільми"</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
+            </div>
+            <div class="slot-badge slot-between">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">📐</div>
+            <div class="slot-info">
+              <div class="slot-name">sidebar — Бокова панель</div>
+              <div class="slot-desc">Збоку від секції "Популярні фільми"</div>
+              <div class="slot-dim">Вертикальний • 200px ширина • 400-600px висота (мобільний: горизонт.)</div>
+            </div>
+            <div class="slot-badge slot-sidebar">вертикал.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">📌</div>
+            <div class="slot-info">
+              <div class="slot-name">between2 — Між рядами 2</div>
+              <div class="slot-desc">Після секції "Популярні"</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
+            </div>
+            <div class="slot-badge slot-between">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">📌</div>
+            <div class="slot-info">
+              <div class="slot-name">between3 — Між рядами 3</div>
+              <div class="slot-desc">Після секції "Топ рейтинг"</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
+            </div>
+            <div class="slot-badge slot-between">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">⬇️</div>
+            <div class="slot-info">
+              <div class="slot-name">footer — Підвал сайту</div>
+              <div class="slot-desc">У нижній частині сторінки</div>
+              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
+            </div>
+            <div class="slot-badge slot-footer">горизонт.</div>
+          </div>
+          <div class="slot-row">
+            <div class="slot-icon">💬</div>
+            <div class="slot-info">
+              <div class="slot-name">popup — Pop-up вікно</div>
+              <div class="slot-desc">Спливаюче вікно через 4 секунди після відкриття сайту</div>
+              <div class="slot-dim">Зображення 400×300px • Таймер 5 сек перед закриттям</div>
+            </div>
+            <div class="slot-badge slot-popup">pop-up</div>
+          </div>
         </div>
       </div>
-      <div class="cat-fg">
-        <label>Рейтинг</label>
-        <select class="cat-sel" id="cat-rating" onchange="applyCatFilters()">
-          <option value="">Будь-який</option>
-          <option value="6">6+</option>
-          <option value="7">7+</option>
-          <option value="7.5">7.5+</option>
-          <option value="8">8+</option>
-          <option value="8.5">8.5+</option>
-        </select>
-      </div>
-      <div class="cat-fg">
-        <label>Сортування</label>
-        <select class="cat-sel" id="cat-sort" onchange="applyCatFilters()">
-          <option value="popularity.desc">За популярністю</option>
-          <option value="vote_average.desc">За рейтингом</option>
-          <option value="release_date.desc">Новинки спочатку</option>
-          <option value="vote_count.desc">За кількістю голосів</option>
-          <option value="revenue.desc">За касовими зборами</option>
-        </select>
-      </div>
-      <button class="cat-btn-apply" onclick="applyCatFilters()">Застосувати</button>
-      <button class="cat-btn-reset" onclick="resetCatFilters()">Скинути</button>
-    </div>
-    <div class="cat-active" id="cat-active"></div>
-    <div class="movies-grid" id="cat-grid"></div>
-    <div style="text-align:center;margin-top:24px;display:none;" id="cat-more">
-      <button class="btn-sm" onclick="loadMoreCatalog()" style="padding:10px 32px;font-size:14px;">Завантажити ще</button>
-    </div>
-  </div>
 
-  <!-- LIBRARY -->
-  <div id="lib-section">
-    <div class="sec-hdr">
-      <div class="sec-title">Моя бібліотека</div>
-      <a href="#" class="sec-more" onclick="showHome();return false;">← Назад</a>
-    </div>
-    <div class="lib-tabs">
-      <div class="lib-tab act" id="lib-tab-fav"     onclick="switchLibTab('fav')">Улюблені</div>
-      <div class="lib-tab"     id="lib-tab-wl"      onclick="switchLibTab('wl')">Дивитись пізніше</div>
-      <div class="lib-tab"     id="lib-tab-watched" onclick="switchLibTab('watched')">Переглянуто</div>
-    </div>
-    <div class="movies-grid" id="lib-grid"></div>
-  </div>
-
-  <!-- HOME CONTENT -->
-  <div id="home-content">
-
-    <!-- CONTINUE WATCHING -->
-    <div id="continue-section">
-      <div class="sec-hdr">
-        <div class="sec-title">Продовжити перегляд</div>
-        <a href="#" class="sec-more" onclick="showLibrary('watched');return false;">Всі переглянуті →</a>
-      </div>
-      <div class="movies-grid" id="continue-grid"></div>
-    </div>
-
-    <!-- NEW MOVIES -->
-    <div class="sec-hdr">
-      <div class="sec-title">Нові фільми</div>
-      <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'release_date.desc'});return false;">Всі →</a>
-    </div>
-    <div id="new-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-    </div>
-
-    <!-- AD SLOT: BETWEEN 1 -->
-    <div id="slot-between1"></div>
-
-    <!-- POPULAR + SIDEBAR -->
-    <div class="sidebar-row">
-      <div class="mv-col">
-        <div class="sec-hdr">
-          <div class="sec-title">Популярні</div>
-          <a href="#" class="sec-more" onclick="showCatalog({type:'movie'});return false;">Всі →</a>
+      <!-- === PAGE: SETTINGS === -->
+      <div class="section-page" id="page-settings">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Налаштування</div>
+            <div class="page-sub">Конфігурація адмін-панелі</div>
+          </div>
         </div>
-        <div id="pop-grid" class="movies-grid">
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+        <div style="max-width:480px;">
+          <div class="slots-guide">
+            <h3 style="margin-bottom:20px;">🔐 Зміна пароля</h3>
+            <div class="form-group">
+              <label>Поточний пароль</label>
+              <input type="password" id="cur-pass" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label>Новий пароль</label>
+              <input type="password" id="new-pass" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label>Повторіть новий пароль</label>
+              <input type="password" id="rep-pass" placeholder="••••••••">
+            </div>
+            <button class="btn-primary" onclick="changePassword()" style="width:auto;padding:10px 24px;">Змінити пароль</button>
+          </div>
+          <div class="slots-guide" style="margin-top:16px;">
+            <h3 style="margin-bottom:16px;">Дані</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn-add" onclick="exportData()" style="font-size:13px;padding:8px 16px;">Експорт JSON</button>
+              <button class="btn-add" onclick="document.getElementById('import-file').click()" style="background:var(--blue);font-size:13px;padding:8px 16px;">Імпорт JSON</button>
+              <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
+              <button class="btn-add" onclick="clearAllAds()" style="background:var(--accent);font-size:13px;padding:8px 16px;">Очистити всі</button>
+            </div>
+          </div>
+          <div class="slots-guide" style="margin-top:16px;">
+            <h3 style="margin-bottom:16px;">Захист від AdBlock</h3>
+            <div style="color:var(--muted);font-size:13px;margin-bottom:14px;line-height:1.7;">
+              Показує повідомлення з проханням вимкнути блокувальник реклами.<br>
+              Перевірка спрацьовує через 1.5 сек після завантаження сторінки.
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+              <label class="toggle-switch">
+                <input type="checkbox" id="ab-toggle" onchange="saveAntiAdblock(this.checked)">
+                <div class="toggle-slider"></div>
+              </label>
+              <span style="font-size:14px;" id="ab-label">Вимкнено</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="sidebar-ad-col">
-        <div id="slot-sidebar"></div>
+
+      <!-- === PAGE: PAGES === -->
+      <div class="section-page" id="page-pages">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Сторінки сайту</div>
+            <div class="page-sub">Редагуйте контент Про нас, Контакти, Умови, DMCA — посилання у футері сайту</div>
+          </div>
+        </div>
+        <div class="slots-guide">
+          <div class="pages-tabs">
+            <div class="pages-tab active" onclick="switchPageTab('about',this)">Про нас</div>
+            <div class="pages-tab" onclick="switchPageTab('contacts',this)">Контакти</div>
+            <div class="pages-tab" onclick="switchPageTab('terms',this)">Умови</div>
+            <div class="pages-tab" onclick="switchPageTab('dmca',this)">DMCA</div>
+          </div>
+          <div class="page-editor active" id="pe-about">
+            <div class="form-group"><label>Заголовок сторінки</label><input type="text" id="pt-about" placeholder="Про нас"></div>
+            <div class="form-group"><label>Контент (підтримується HTML)</label><textarea id="pc-about" placeholder="Текст сторінки..."></textarea></div>
+            <div class="form-hint" style="margin-bottom:14px;">HTML теги: &lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;ul&gt; &lt;li&gt; &lt;a href="..."&gt; &lt;b&gt; &lt;br&gt;</div>
+            <button class="page-save-btn" onclick="savePage('about')">Зберегти</button>
+          </div>
+          <div class="page-editor" id="pe-contacts">
+            <div class="form-group"><label>Заголовок сторінки</label><input type="text" id="pt-contacts" placeholder="Контакти"></div>
+            <div class="form-group"><label>Контент (підтримується HTML)</label><textarea id="pc-contacts" placeholder="Текст сторінки..."></textarea></div>
+            <div class="form-hint" style="margin-bottom:14px;">HTML теги: &lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;ul&gt; &lt;li&gt; &lt;a href="..."&gt; &lt;b&gt; &lt;br&gt;</div>
+            <button class="page-save-btn" onclick="savePage('contacts')">Зберегти</button>
+          </div>
+          <div class="page-editor" id="pe-terms">
+            <div class="form-group"><label>Заголовок сторінки</label><input type="text" id="pt-terms" placeholder="Умови використання"></div>
+            <div class="form-group"><label>Контент (підтримується HTML)</label><textarea id="pc-terms" placeholder="Текст сторінки..."></textarea></div>
+            <div class="form-hint" style="margin-bottom:14px;">HTML теги: &lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;ul&gt; &lt;li&gt; &lt;a href="..."&gt; &lt;b&gt; &lt;br&gt;</div>
+            <button class="page-save-btn" onclick="savePage('terms')">Зберегти</button>
+          </div>
+          <div class="page-editor" id="pe-dmca">
+            <div class="form-group"><label>Заголовок сторінки</label><input type="text" id="pt-dmca" placeholder="DMCA"></div>
+            <div class="form-group"><label>Контент (підтримується HTML)</label><textarea id="pc-dmca" placeholder="Текст сторінки..."></textarea></div>
+            <div class="form-hint" style="margin-bottom:14px;">HTML теги: &lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;ul&gt; &lt;li&gt; &lt;a href="..."&gt; &lt;b&gt; &lt;br&gt;</div>
+            <button class="page-save-btn" onclick="savePage('dmca')">Зберегти</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- === PAGE: USERS === -->
+      <div class="section-page" id="page-users">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Користувачі</div>
+            <div class="page-sub">Список зареєстрованих користувачів. Зміна ролей — миттєво.</div>
+          </div>
+          <button class="btn-add" onclick="loadUsersData()" style="background:var(--blue);">Оновити</button>
+        </div>
+        <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div><div class="stat-num" id="us-total">0</div><div class="stat-label">Всього</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔑</div>
+            <div><div class="stat-num" id="us-admins" style="color:var(--accent)">0</div><div class="stat-label">Адмінів</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👤</div>
+            <div><div class="stat-num" id="us-users" style="color:var(--blue)">0</div><div class="stat-label">Звичайних</div></div>
+          </div>
+        </div>
+        <div id="users-list-container">
+          <div id="users-loading" style="text-align:center;padding:40px;color:var(--muted);display:block;">Натисніть "Оновити" для завантаження</div>
+          <table class="ads-table" id="users-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Ім'я / Email</th>
+                <th>Роль</th>
+                <th>Зареєстровано</th>
+                <th style="text-align:right">Дії</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+          <div id="users-empty" class="empty-state" style="display:none">
+            <div class="empty-icon">👥</div>
+            <h3>Немає користувачів</h3>
+            <p>Зареєстровані користувачі з'являться тут</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADD/EDIT MODAL ===== -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title">Додати банер</div>
+
+    <input type="hidden" id="edit-id">
+
+    <div class="form-group">
+      <label>Назва банера *</label>
+      <input type="text" id="f-name" placeholder="Наприклад: Casino Banner шапка">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Слот (позиція) *</label>
+        <select id="f-slot" onchange="updateTypeHint()">
+          <option value="header">Шапка (header)</option>
+          <option value="between1">Між рядами 1</option>
+          <option value="sidebar">Бокова панель (sidebar)</option>
+          <option value="between2">Між рядами 2</option>
+          <option value="between3">Між рядами 3</option>
+          <option value="footer">Підвал (footer)</option>
+          <option value="popup">Pop-up вікно</option>
+          <option value="popunder">Pop-under вкладка</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Тип банера</label>
+        <select id="f-type" onchange="updateTypeHint()">
+          <option value="horizontal">Горизонтальний</option>
+          <option value="vertical">Вертикальний</option>
+          <option value="popup">Pop-up</option>
+          <option value="video">Відео (MP4/GIF)</option>
+          <option value="popunder">Pop-under</option>
+        </select>
+        <div class="form-hint" id="type-hint">Горизонтальний: розтягується на всю ширину</div>
       </div>
     </div>
 
-    <!-- AD SLOT: BETWEEN 2 -->
-    <div id="slot-between2"></div>
-
-    <!-- TOP RATED -->
-    <div class="sec-hdr">
-      <div class="sec-title">Топ рейтинг</div>
-      <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});return false;">Всі →</a>
+    <div class="form-group">
+      <label>URL зображення *</label>
+      <input type="url" id="f-img" placeholder="https://example.com/banner.jpg" oninput="previewImage(this.value)">
+      <div class="form-hint">Рекомендовано: JPG, PNG, GIF, WebP</div>
     </div>
-    <div id="top-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    <div class="preview-box" id="img-preview">
+      <div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>
     </div>
 
-    <!-- AD SLOT: BETWEEN 3 -->
-    <div id="slot-between3"></div>
-
-    <!-- SERIES -->
-    <div class="sec-hdr">
-      <div class="sec-title">Серіали</div>
-      <a href="#" class="sec-more" onclick="showCatalog({type:'tv'});return false;">Всі →</a>
-    </div>
-    <div id="series-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    <div class="form-group" id="video-url-group" style="display:none;margin-top:14px;">
+      <label>URL відео (MP4/WebM/GIF) *</label>
+      <input type="url" id="f-video" placeholder="https://example.com/video.mp4">
+      <div class="form-hint">Для типу "Відео". MP4 файл або GIF анімація.</div>
     </div>
 
-    <!-- CLASSICS -->
-    <div class="sec-hdr" style="margin-top:28px;">
-      <div class="sec-title">Класика кіно</div>
-      <a href="#" class="sec-more" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});return false;">Всі →</a>
-    </div>
-    <div id="classic-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    <div class="form-group" style="margin-top:14px;">
+      <label>URL посилання *</label>
+      <input type="url" id="f-link" placeholder="https://example.com">
     </div>
 
-    <!-- 90s -->
-    <div class="sec-hdr">
-      <div class="sec-title">Кіно 90-х</div>
-      <a href="#" class="sec-more">Всі →</a>
-    </div>
-    <div id="nineties-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    <div class="form-group">
+      <label>Альтернативний текст</label>
+      <input type="text" id="f-alt" placeholder="Опис реклами для SEO">
     </div>
 
-    <!-- 2000s -->
-    <div class="sec-hdr">
-      <div class="sec-title">Кіно 2000-х</div>
-      <a href="#" class="sec-more">Всі →</a>
-    </div>
-    <div id="noughts-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    <div class="form-group">
+      <label>HTML код (необов'язково)</label>
+      <textarea id="f-html" placeholder="Вставте готовий HTML код банера (якщо є). Перевага над зображенням."></textarea>
+      <div class="form-hint">Якщо вказати HTML — він буде використаний замість зображення</div>
     </div>
 
-  </div><!-- /#home-content -->
-</main>
-
-<!-- FOOTER -->
-<footer>
-  <div id="slot-footer" style="margin-bottom:22px;"></div>
-  <div class="ft-grid">
-    <div class="ft-brand">
-      <a href="#" class="logo"><b>Кіно</b>База</a>
-      <p>Найбільша бібліотека фільмів та серіалів. HD якість, кілька серверів відтворення, різна озвучка.</p>
-    </div>
-    <div class="ft-col">
-      <h4>Жанри</h4>
-      <a href="#">Бойовики</a><a href="#">Комедії</a><a href="#">Драми</a>
-      <a href="#">Жахи</a><a href="#">Фантастика</a><a href="#">Мелодрами</a>
-    </div>
-    <div class="ft-col">
-      <h4>Навігація</h4>
-      <a href="#">Головна</a><a href="#">Фільми</a><a href="#">Серіали</a>
-      <a href="#">Класика</a><a href="#">Топ рейтинг</a>
-    </div>
-    <div class="ft-col">
-      <h4>Сервіс</h4>
-      <a href="#" onclick="openPage('about');return false;">Про нас</a>
-      <a href="#" onclick="openPage('contacts');return false;">Контакти</a>
-      <a href="#" onclick="openPage('terms');return false;">Умови</a>
-      <a href="#" onclick="openPage('dmca');return false;">DMCA</a>
-    </div>
-  </div>
-  <div style="max-width:1600px;margin:0 auto;">
-    <div class="ft-tags">
-      <span class="ft-tag">дивитись фільми онлайн</span>
-      <span class="ft-tag">безкоштовно</span>
-      <span class="ft-tag">українська озвучка</span>
-      <span class="ft-tag">HD якість</span>
-      <span class="ft-tag">нові фільми 2025</span>
-      <span class="ft-tag">класика кіно</span>
-    </div>
-  </div>
-  <div class="ft-btm">
-    <p>© 2025 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--gold);">TMDB</a></p>
-    <p style="color:var(--dim);font-size:11px;">Сайт не зберігає відеофайли. Всі відео надаються третіми особами.</p>
-  </div>
-</footer>
-
-<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-<div class="toast" id="toast"></div>
-
-<!-- ===== MOVIE MODAL ===== -->
-<div class="modal-ov" id="movie-modal" onclick="if(event.target===this)closeMovieModal()">
-  <div class="modal-box">
-    <button class="m-close" onclick="closeMovieModal()">✕</button>
-    <div id="movie-modal-content"></div>
-  </div>
-</div>
-
-<!-- ===== AUTH MODAL ===== -->
-<div class="auth-ov" id="auth-modal" onclick="if(event.target===this)closeAuth()">
-  <div class="auth-box">
-    <button class="auth-close" onclick="closeAuth()">✕</button>
-    <div class="auth-tabs">
-      <div class="auth-tab act" id="tab-login" onclick="switchTab('login')">Вхід</div>
-      <div class="auth-tab" id="tab-register" onclick="switchTab('register')">Реєстрація</div>
-    </div>
-    <!-- Login -->
-    <div class="auth-form act" id="form-login">
-      <div class="f-group"><label>Email</label><input type="email" id="l-email" placeholder="email@example.com"></div>
-      <div class="f-group">
-        <label>Пароль</label>
-        <input type="password" id="l-pass" placeholder="••••••••" onkeyup="if(event.key==='Enter')doLogin()">
-        <div class="auth-forgot"><span onclick="resetPassword()">Забули пароль?</span></div>
-      </div>
-      <div class="f-err" id="l-err"></div>
-      <button class="btn-full" onclick="doLogin()">Увійти</button>
-      <div class="auth-divider">або</div>
-      <button class="btn-full btn-google" onclick="doGoogleLogin()">
-        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-        Увійти через Google
-      </button>
-      <div class="auth-note">Немає акаунту? <span onclick="switchTab('register')">Зареєструватись</span></div>
-    </div>
-    <!-- Register -->
-    <div class="auth-form" id="form-register">
-      <div class="f-group"><label>Ім'я</label><input type="text" id="r-name" placeholder="Ваше ім'я"></div>
-      <div class="f-group"><label>Email</label><input type="email" id="r-email" placeholder="email@example.com"></div>
-      <div class="f-group"><label>Пароль</label><input type="password" id="r-pass" placeholder="Мін. 6 символів" onkeyup="if(event.key==='Enter')doRegister()"></div>
-      <div class="f-err" id="r-err"></div>
-      <button class="btn-full" onclick="doRegister()">Зареєструватись</button>
-      <div class="auth-divider">або</div>
-      <button class="btn-full btn-google" onclick="doGoogleLogin()">
-        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-        Зареєструватись через Google
-      </button>
-      <div class="auth-note">Вже є акаунт? <span onclick="switchTab('login')">Увійти</span></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Скасувати</button>
+      <button class="btn-save" onclick="saveAd()">💾 Зберегти</button>
     </div>
   </div>
 </div>
 
-<!-- ===== TRAILER MODAL ===== -->
-<div class="trailer-ov" id="trailer-ov" onclick="if(event.target===this)closeTrailer()">
-  <div class="trailer-wrap">
-    <button class="trailer-close" onclick="closeTrailer()">✕</button>
-    <div class="trailer-frame" id="trailer-frame"></div>
+<!-- ===== API KEY MODAL ===== -->
+<div class="modal-overlay" id="key-modal-overlay" onclick="if(event.target===this)closeKeyModal()">
+  <div class="modal" style="width:480px;">
+    <button class="modal-close" onclick="closeKeyModal()">✕</button>
+    <div class="modal-title">Додати API ключ TMDB</div>
+
+    <div class="form-group">
+      <label>Назва (необов'язково)</label>
+      <input type="text" id="k-name" placeholder="Наприклад: Основний ключ, Запасний 1...">
+    </div>
+
+    <div class="form-group">
+      <label>API Key (v3) *</label>
+      <input type="text" id="k-value" placeholder="Вставте ключ TMDB тут...">
+      <div class="form-hint">32-символьний ключ з themoviedb.org/settings/api</div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeKeyModal()">Скасувати</button>
+      <button class="btn-save" onclick="saveKey()">💾 Зберегти</button>
+    </div>
   </div>
 </div>
 
-<!-- ===== PAGE MODAL ===== -->
-<div class="page-modal-ov" id="page-modal" onclick="if(event.target===this)closePage()">
-  <div class="page-modal-box">
-    <button class="page-modal-close" onclick="closePage()">✕</button>
-    <div class="page-modal-title" id="page-modal-title"></div>
-    <div class="page-modal-content" id="page-modal-content"></div>
-  </div>
-</div>
-
-<!-- ===== ADBLOCK WALL ===== -->
-<div id="adblock-wall">
-  <div class="adblock-box">
-    <div class="adblock-icon">&#128683;</div>
-    <div class="adblock-title">Вимкніть блокувальник реклами</div>
-    <div class="adblock-sub">Ми надаємо контент безкоштовно завдяки рекламі. Будь ласка, вимкніть AdBlock для нашого сайту.</div>
-    <ol class="adblock-steps">
-      <li>Натисніть на іконку AdBlock у браузері</li>
-      <li>Виберіть "Вимкнути на цьому сайті"</li>
-      <li>Оновіть сторінку</li>
-    </ol>
-    <button class="adblock-btn" onclick="document.getElementById('adblock-wall').style.display='none'">Я вимкнув AdBlock</button>
-  </div>
-</div>
-
-<!-- ===== POPUP AD ===== -->
-<div class="pop-ov" id="pop-ov">
-  <div class="pop-box" id="pop-box">
-    <div class="pop-adlbl">Реклама</div>
-    <button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>
-    <div class="pop-bar" id="pop-bar" style="width:100%"></div>
-  </div>
-</div>
+<!-- Toast -->
+<div class="toast-admin" id="toast"></div>
 
 <script>
-// =====================================================================
-// FIREBASE CONFIG — вставте ваші дані з Firebase Console
-// Project Settings → General → Your apps → Firebase SDK snippet → Config
-// =====================================================================
-const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
-  authDomain:        "kinobaza-6c109.firebaseapp.com",
-  projectId:         "kinobaza-6c109",
-  storageBucket:     "kinobaza-6c109.firebasestorage.app",
-  messagingSenderId: "639150355070",
-  appId:             "1:639150355070:web:772f863f075d4d1d839e2f",
-  measurementId:     "G-GKVZ2JJDJN"
-};
-
-let db = null;
-try {
-  if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-  db = firebase.firestore();
-} catch(e) { console.warn('Firebase init failed, using localStorage fallback'); }
-
-// =====================================================================
-// GLOBAL CACHES — оновлюються в реальному часі через Firestore
-// =====================================================================
-let adsCache  = [];
-let keysCache = [];
-let pagesCache = {};
-let dbReady   = false;
-
-function initFirestore() {
-  if (!db) { loadFallback(); return; }
-
-  // Real-time слухач для реклами
-  db.collection('ads').onSnapshot(snap => {
-    adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderAds();
-  }, () => { loadFallback(); });
-
-  // Real-time слухач для API ключів
-  db.collection('apiKeys').onSnapshot(snap => {
-    keysCache = snap.docs.map(d => d.data().value).filter(Boolean);
-    if (!dbReady) { dbReady = true; initSite(); } // перший раз — запускаємо сайт
-  }, () => {
-    const raw = localStorage.getItem('kb_api_keys');
-    try {
-      const arr = raw ? JSON.parse(raw) : [];
-      keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
-    } catch {}
-    if (!dbReady) { dbReady = true; initSite(); }
-  });
-
-  // Завантаження сторінок (Про нас / Контакти / Умови / DMCA)
-  ['about','contacts','terms','dmca'].forEach(id => {
-    db.collection('pages').doc(id).onSnapshot(doc => {
-      if (doc.exists) pagesCache[id] = doc.data();
-    }, () => {});
-  });
-}
-
-function loadFallback() {
-  // localStorage fallback якщо Firebase недоступний
-  try { adsCache = JSON.parse(localStorage.getItem('kb_ads') || '[]'); } catch {}
-  try {
-    const raw = localStorage.getItem('kb_api_keys');
-    const arr = raw ? JSON.parse(raw) : [];
-    keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
-  } catch {}
-  renderAds();
-}
-
-// =====================================================================
-// TMDB API — multiple keys with rotation
-// =====================================================================
-const TMDB_BASE = 'https://api.themoviedb.org/3';
-const IMG = 'https://image.tmdb.org/t/p/';
-let keyIdx = 0;
-
-function getKeys() { return keysCache; }
-
-async function tmdb(ep, params={}) {
-  const keys = getKeys();
-  if (!keys.length) return null;
-  for (let i=0; i<keys.length; i++) {
-    const key = keys[(keyIdx+i) % keys.length];
-    const url = new URL(TMDB_BASE + ep);
-    url.searchParams.set('api_key', key);
-    url.searchParams.set('language', 'uk-UA');
-    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, String(v)));
-    try {
-      const r = await fetch(url);
-      if (r.status === 429) { keyIdx = (keyIdx+1) % keys.length; continue; }
-      if (!r.ok) throw new Error(r.status);
-      return r.json();
-    } catch { continue; }
-  }
-  return null;
-}
-
-// =====================================================================
-// GENRE MAP
-// =====================================================================
-const GM = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'Комедія',80:'Кримінал',99:'Документальний',18:'Драма',10751:'Сімейний',14:'Фентезі',36:'Історичний',27:'Жахи',10749:'Мелодрама',878:'Фантастика',53:'Трилер',10752:'Воєнний',37:'Вестерн'};
-const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).join(', ') : '—';
-
-// =====================================================================
-// PLAYERS
-// =====================================================================
-const MOVIE_PLAYERS = [
-  { id:'vs1', name:'▶ Сервер 1', url: id => `https://vidsrc.to/embed/movie/${id}` },
-  { id:'vs2', name:'▶ Сервер 2', url: id => `https://vidsrc.xyz/embed/movie?tmdb=${id}` },
-  { id:'em3', name:'▶ Сервер 3', url: id => `https://www.2embed.cc/embed/${id}` },
-  { id:'em4', name:'▶ Сервер 4', url: id => `https://embed.su/embed/movie/${id}` },
-  { id:'em5', name:'▶ Сервер 5', url: id => `https://multiembed.mov/?video_id=${id}&tmdb=1` },
-];
-const TV_PLAYERS = [
-  { id:'vs1', name:'▶ Сервер 1', url: (id,s,e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
-  { id:'vs2', name:'▶ Сервер 2', url: (id,s,e) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}` },
-  { id:'em3', name:'▶ Сервер 3', url: (id,s,e) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
-  { id:'em4', name:'▶ Сервер 4', url: (id,s,e) => `https://embed.su/embed/tv/${id}/${s}/${e}` },
-];
-
-// =====================================================================
-// HERO SLIDER
-// =====================================================================
-let heroMovies=[], heroIdx=0, currentHeroId=null, currentHeroType='movie', heroTimer=null;
-
-function setHero(m) {
-  currentHeroId=m.id; currentHeroType=m.media_type||'movie';
-  if(m.backdrop_path) document.getElementById('hero-bg').style.backgroundImage=`url('${IMG}original${m.backdrop_path}')`;
-  document.getElementById('hero-title').textContent=m.title||m.name||'—';
-  document.getElementById('hero-r').textContent=`★ ${m.vote_average?m.vote_average.toFixed(1):'—'}`;
-  document.getElementById('hero-y').textContent=(m.release_date||m.first_air_date||'').slice(0,4)||'—';
-  document.getElementById('hero-g').textContent=gNames(m.genre_ids);
-  document.getElementById('hero-d').textContent=m.overview||'Опис відсутній.';
-  document.querySelectorAll('.h-dot').forEach((d,i)=>d.classList.toggle('act',i===heroIdx));
-}
-function startHero(movies) {
-  heroMovies=movies.slice(0,8);
-  document.getElementById('hero-dots').innerHTML=heroMovies.map((_,i)=>`<div class="h-dot ${i===0?'act':''}" onclick="goHero(${i})"></div>`).join('');
-  setHero(heroMovies[0]);
-  clearInterval(heroTimer);
-  heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroMovies.length; setHero(heroMovies[heroIdx]); },6000);
-}
-function goHero(i){ heroIdx=i; setHero(heroMovies[i]); clearInterval(heroTimer); heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroMovies.length; setHero(heroMovies[heroIdx]); },6000); }
-function heroClick(){ openMovie(currentHeroId,currentHeroType,false); }
-
-// =====================================================================
-// CARD HTML
-// =====================================================================
-function card(m, badge) {
-  const title=m.title||m.name||'—';
-  const year=(m.release_date||m.first_air_date||'').slice(0,4);
-  const rat=m.vote_average?m.vote_average.toFixed(1):'—';
-  const mtype=m.media_type||'movie';
-  const isFav=isFavorite(m.id);
-  const poster=m.poster_path
-    ?`<img class="c-poster" src="${IMG}w300${m.poster_path}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-    :'';
-  const ph=m.poster_path?`<div class="c-ph" style="display:none">🎬</div>`:`<div class="c-ph">🎬</div>`;
-  return `<div class="m-card" onclick="openMovie(${m.id},'${mtype}',false)">
-    ${poster}${ph}
-    <div class="c-ov"><div class="c-play-btn">▶</div></div>
-    ${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}
-    <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)" title="${isFav?'Видалити':'В улюблені'}">${isFav?'❤️':'🤍'}</button>
-    <div class="c-info">
-      <div class="c-title">${title}</div>
-      <div class="c-meta"><span class="c-year">${year}</span><span class="c-rat">⭐ ${rat}</span></div>
-    </div>
-  </div>`;
-}
-
-async function loadGrid(id, ep, params={}, badge=null, limit=12) {
-  const el=document.getElementById(id);
-  const data=await tmdb(ep,params);
-  if(!data||!data.results){
-    el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">
-      Немає API ключа. <a href="admin.html" style="color:var(--accent);">Додати в адмін-панелі →</a></div>`;
-    return [];
-  }
-  el.innerHTML=data.results.slice(0,limit).map(m=>card(m,badge)).join('');
-  return data.results;
-}
-
-// =====================================================================
-// INIT SITE
-// =====================================================================
-async function initSite() {
-  const np=await tmdb('/movie/now_playing');
-  if(np&&np.results) {
-    startHero(np.results);
-    loadGrid('new-grid','/movie/now_playing',{},{txt:'NEW',cls:''},12);
-  }
-  loadGrid('pop-grid','/movie/popular',{},{txt:'HD',cls:'g'},12);
-  loadGrid('top-grid','/movie/top_rated',{},null,12);
-  loadGrid('series-grid','/tv/popular',{},{txt:'СЕРІАЛ',cls:'b'},12);
-  // Classics: top rated movies before 2000
-  loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,12);
-  // 90s
-  loadGrid('nineties-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
-  // 2000s
-  loadGrid('noughts-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
-}
-
-// =====================================================================
-// MOVIE MODAL
-// =====================================================================
-let currentModalId=null, currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
-
-async function openMovie(id, type='movie', autoPlay=false) {
-  if(!id) return;
-  currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1;
-
-  // Відновлення прогресу: сервер із localStorage (глобальний) або з Firestore
-  currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0');
-  const _prog = libraryCache[String(id)];
-  if (_prog) {
-    if (type === 'tv' && _prog.lastSeason)  currentSeason  = _prog.lastSeason;
-    if (type === 'tv' && _prog.lastEpisode) currentEpisode = _prog.lastEpisode;
-    if (_prog.lastServer != null)           currentPlayer  = _prog.lastServer;
-  }
-
-  const modal=document.getElementById('movie-modal');
-  const content=document.getElementById('movie-modal-content');
-  modal.classList.add('open');
-  content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Завантаження...</div>';
-
-  const ep=type==='tv'?`/tv/${id}`:`/movie/${id}`;
-  const data=await tmdb(ep,{append_to_response:'videos,seasons,credits'});
-  if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Помилка завантаження</div>';return;}
-
-  // Трейлер
-  const _vids    = (data.videos && data.videos.results) || [];
-  const _trailer = _vids.find(v=>v.type==='Trailer'&&v.site==='YouTube') || _vids.find(v=>v.site==='YouTube') || null;
-
-  // Акторський склад
-  const _cast = ((data.credits && data.credits.cast) || []).slice(0, 16);
-
-  // Додаткова інформація
-  const _budget  = data.budget  && data.budget  > 0 ? '$' + (data.budget /1e6).toFixed(1) + 'M' : null;
-  const _revenue = data.revenue && data.revenue > 0 ? '$' + (data.revenue/1e6).toFixed(1) + 'M' : null;
-  const _country = (data.production_countries||[]).slice(0,2).map(c=>c.name).join(', ') || null;
-  const _studio  = (data.production_companies||[]).slice(0,2).map(c=>c.name).join(', ') || null;
-
-  const title=data.title||data.name||'—';
-  const year=(data.release_date||data.first_air_date||'').slice(0,4);
-  const rat=data.vote_average?data.vote_average.toFixed(1):'—';
-  const genres=(data.genres||[]).map(g=>`<span class="m-gtag">${g.name}</span>`).join('');
-  const desc=data.overview||'Опис відсутній.';
-  const isFav = isFavorite(id);
-  const isWL  = isWatchLater(id);
-  const isWtch= isWatched(id);
-
-  const backdrop=data.backdrop_path
-    ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}" alt="${title}">`
-    :`<div class="m-backdrop-ph">🎬</div>`;
-
-  // TV: seasons
-  const players = type==='tv' ? TV_PLAYERS : MOVIE_PLAYERS;
-  // Підсвічуємо збережений сервер
-  const srvBtns = players.map((p,i)=>`<button class="srv-btn ${i===currentPlayer?'act':''}" onclick="switchPlayer(${i})">${p.name}${i===currentPlayer&&_prog?'<span class="srv-saved">✓</span>':''}</button>`).join('');
-
-  let tvSelector='';
-  if(type==='tv' && data.seasons) {
-    const realSeasons=data.seasons.filter(s=>s.season_number>0);
-    const seasonOpts=realSeasons.map(s=>`<option value="${s.season_number}" ${s.season_number===currentSeason?'selected':''}>Сезон ${s.season_number} (${s.episode_count} епізодів)</option>`).join('');
-    tvSelector=`<div class="ep-selector">
-      <h4>Оберіть епізод</h4>
-      <div class="ep-row">
-        <select class="ep-select" id="season-sel" onchange="changeSeason(this.value)">${seasonOpts}</select>
-        <span style="color:var(--muted);font-size:13px;">Епізод:</span>
-      </div>
-      <div class="ep-nums" id="ep-nums"></div>
-    </div>`;
-  }
-
-  // Dubbing note
-  const dubNote=`<div class="dub-bar">
-    <span class="dub-label">Озвучка на серверах:</span>
-    <span class="dub-btn act">Оригінал</span>
-    <span class="dub-btn">Англійська</span>
-    <span class="dub-btn">Залежить від сервера</span>
-  </div>`;
-
-  // Акторський склад HTML
-  const _castHtml = _cast.length ? `
-    <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div>
-    <div class="cast-row">
-      ${_cast.map(a=>{
-        const ph=a.profile_path?`<img class="cast-photo" src="${IMG}w185${a.profile_path}" alt="${a.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cast-photo-ph" style="display:none">👤</div>`:`<div class="cast-photo-ph">👤</div>`;
-        return `<div class="cast-card">${ph}<div class="cast-name">${a.name}</div><div class="cast-char">${a.character||''}</div></div>`;
-      }).join('')}
-    </div>` : '';
-
-  // Додаткова інформація HTML
-  const _extraItems=[];
-  if(_budget)  _extraItems.push({lbl:'Бюджет',          val:_budget});
-  if(_revenue) _extraItems.push({lbl:'Касові збори',     val:_revenue});
-  if(_country) _extraItems.push({lbl:'Країна',           val:_country});
-  if(_studio)  _extraItems.push({lbl:'Студія',           val:_studio});
-  if(data.original_language) _extraItems.push({lbl:'Мова оригіналу',val:data.original_language.toUpperCase()});
-  if(type==='tv'&&data.status) _extraItems.push({lbl:'Статус',val:({'Returning Series':'Виходить','Ended':'Завершено','Canceled':'Скасовано','In Production':'Виробництво'}[data.status]||data.status)});
-  const _extraHtml = _extraItems.length ? `<div class="m-extra">${_extraItems.map(it=>`<div class="m-extra-item"><div class="m-extra-lbl">${it.lbl}</div><div class="m-extra-val">${it.val}</div></div>`).join('')}</div>` : '';
-
-  content.innerHTML=`
-    ${backdrop}
-    <div class="m-grad"></div>
-    <div class="m-body">
-      <div class="m-title">${title}</div>
-      <div class="m-metas">
-        <span class="m-rat">★ ${rat}</span>
-        <span class="m-y">${year}</span>
-        ${data.original_language?`<span class="m-lang">${data.original_language.toUpperCase()}</span>`:''}
-        ${data.runtime?`<span class="m-dur">${data.runtime} хв</span>`:''}
-        ${data.number_of_seasons?`<span class="m-dur">${data.number_of_seasons} сез.</span>`:''}
-      </div>
-      <div class="m-genres">${genres}</div>
-      <div class="m-desc">${desc}</div>
-
-      <!-- PLAYER -->
-      <div class="player-section">
-        <div style="font-size:14px;font-weight:600;margin-bottom:8px;">Відеоплеєр</div>
-        <div class="player-servers" id="srv-btns">${srvBtns}</div>
-        ${tvSelector}
-        <div class="player-frame-wrap" id="player-wrap">
-          <div class="player-loading" id="player-loading">
-            <div class="spin"></div>
-            <div style="color:var(--muted);font-size:13px;">Завантаження відео...</div>
-          </div>
-          <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" referrerpolicy="no-referrer-when-downgrade" style="opacity:0;transition:opacity .3s;"></iframe>
-        </div>
-        ${dubNote}
-        <div style="color:var(--dim);font-size:11px;margin-top:8px;">Якщо відео не завантажилось — спробуйте інший сервер</div>
-      </div>
-
-      <div class="m-actions">
-        <button class="m-btn-fav ${isFav?'faved':''}" id="modal-fav-btn" onclick="toggleFavModal(${id},'${type}')">
-          ${isFav?'В улюблених':'В улюблені'}
-        </button>
-        <button class="m-btn-wl ${isWL?'saved':''}" id="modal-wl-btn" onclick="toggleWatchLaterModal(${id},'${type}')">
-          ${isWL?'Збережено':'Дивитись пізніше'}
-        </button>
-        ${isWtch?`<button class="m-btn-wl saved" style="pointer-events:none;">Переглянуто</button>`:''}
-        ${_trailer?`<button class="btn-trailer" onclick="openTrailer('${_trailer.key}')">Трейлер</button>`:''}
-      </div>
-
-      <!-- EXTRA INFO -->
-      ${_extraHtml}
-
-      <!-- CAST -->
-      ${_castHtml}
-
-      <!-- SIMILAR (завантажується асинхронно) -->
-      <div id="modal-sim"></div>
-    </div>`;
-
-  // Init player & TV — завантажуємо епізоди потрібного сезону
-  if(type==='tv' && data.seasons) {
-    const realSeasons = data.seasons.filter(s=>s.season_number>0);
-    // Знайти сезон який треба відновити
-    const targetSeason = realSeasons.find(s=>s.season_number===currentSeason) || realSeasons[0];
-    if(targetSeason) {
-      currentSeason = targetSeason.season_number;
-      // Якщо в API вже є к-сть епізодів — використати
-      if(targetSeason.episode_count) {
-        loadEpisodes(targetSeason.episode_count);
-      } else {
-        // Завантажити з TMDB
-        tmdb(`/tv/${id}/season/${currentSeason}`).then(sd=>{
-          if(sd&&sd.episodes) loadEpisodes(sd.episodes.length);
-        });
-      }
-    }
-  }
-
-  if(autoPlay || type==='movie') loadPlayer();
-  else {
-    document.getElementById('player-loading').innerHTML='<div style="color:var(--muted);font-size:14px;">Натисніть кнопку сервера щоб дивитись</div>';
-  }
-
-  // Схожі фільми/серіали — завантажуємо після рендеру
-  tmdb(`/${type}/${id}/similar`,{page:1}).then(sim=>{
-    const simEl=document.getElementById('modal-sim');
-    if(!simEl||!sim||!sim.results||!sim.results.length) return;
-    const items=sim.results.slice(0,14);
-    const label=type==='tv'?'Схожі серіали':'Схожі фільми';
-    simEl.innerHTML=`
-      <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>${label}</div>
-      <div class="sim-row">
-        ${items.map(m=>{
-          const t=m.title||m.name||'—';
-          const y=(m.release_date||m.first_air_date||'').slice(0,4);
-          const rat=m.vote_average?m.vote_average.toFixed(1):'';
-          const poster=m.poster_path
-            ?`<img class="sim-poster" src="${IMG}w185${m.poster_path}" alt="${t}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sim-poster-ph" style="display:none">🎬</div>`
-            :`<div class="sim-poster-ph">🎬</div>`;
-          return `<div class="sim-card" onclick="openMovie(${m.id},'${type}',false)">
-            ${poster}
-            <div class="sim-info">
-              <div class="sim-title">${t}</div>
-              <div class="sim-year">${y}${rat?' · '+rat:''}</div>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>`;
-  }).catch(()=>{});
-}
-
-function loadPlayer() {
-  const loading=document.getElementById('player-loading');
-  const iframe=document.getElementById('player-iframe');
-  if(!loading||!iframe) return;
-  loading.style.display='flex';
-  iframe.style.opacity='0';
-
-  const players=currentModalType==='tv'?TV_PLAYERS:MOVIE_PLAYERS;
-  const p=players[currentPlayer];
-  const src=currentModalType==='tv'
-    ?p.url(currentModalId,currentSeason,currentEpisode)
-    :p.url(currentModalId);
-
-  // Зберегти прогрес перегляду (сервер, сезон, епізод) + позначити переглянутим
-  savePlayerProgress();
-
-  iframe.src='';
-  setTimeout(()=>{
-    iframe.src=src;
-    iframe.onload=()=>{
-      loading.style.display='none';
-      iframe.style.opacity='1';
-    };
-    // fallback
-    setTimeout(()=>{ if(loading.style.display!=='none'){ loading.innerHTML='<div style="color:var(--muted);font-size:13px;">Відео завантажено. Якщо не грає — спробуйте інший сервер.</div>'; iframe.style.opacity='1'; } },3000);
-  },100);
-}
-
-function switchPlayer(idx) {
-  currentPlayer=idx;
-  localStorage.setItem('kb_pref_srv', idx); // запам'ятати глобально
-  document.querySelectorAll('.srv-btn').forEach((b,i)=>b.classList.toggle('act',i===idx));
-  loadPlayer();
-}
-
-function changeSeason(s) {
-  currentSeason=parseInt(s); currentEpisode=1;
-  // Load episode count for this season
-  tmdb(`/tv/${currentModalId}/season/${s}`).then(data=>{
-    if(data&&data.episodes) loadEpisodes(data.episodes.length);
-  });
-  loadPlayer();
-}
-
-function loadEpisodes(count) {
-  const el=document.getElementById('ep-nums');
-  if(!el) return;
-  const prog = libraryCache[String(currentModalId)] || {};
-  const lastEp = (prog.lastSeason === currentSeason) ? (prog.lastEpisode || 0) : 0;
-  el.innerHTML=Array.from({length:count},(_,i)=>{
-    const n=i+1;
-    const isAct = n===currentEpisode;
-    const isLast = n===lastEp && !isAct;
-    return `<button class="ep-num${isAct?' act':''}${isLast?' last':''}" onclick="selectEp(${n})" title="${isLast?'Зупинились тут':''}">${n}</button>`;
-  }).join('');
-}
-
-function selectEp(n) {
-  currentEpisode=n;
-  document.querySelectorAll('.ep-num').forEach((b,i)=>b.classList.toggle('act',i+1===n));
-  loadPlayer();
-}
-
-function closeMovieModal() {
-  document.getElementById('movie-modal').classList.remove('open');
-  const iframe=document.getElementById('player-iframe');
-  if(iframe) iframe.src='';
-}
-
-// =====================================================================
-// FAVORITES
-// =====================================================================
-// LIBRARY — Firestore /users/{uid}/library subcollection
-// =====================================================================
-let libraryCache = {}; // { "tmdbId": { favorite, watchLater, watched, title, poster, ... } }
-let libUnsubscribe = null;
-let currentLibTab = 'fav';
-
-function initLibrary() {
-  if (libUnsubscribe) { libUnsubscribe(); libUnsubscribe = null; }
-  const user = currentUser;
-  if (!user || !db) { _loadLibLS(); return; }
-  libUnsubscribe = db.collection('users').doc(user.uid).collection('library')
-    .onSnapshot(snap => {
-      libraryCache = {};
-      snap.docs.forEach(d => { libraryCache[d.id] = { ...d.data(), _docId: d.id }; });
-      refreshCardFavButtons();
-      renderContinueWatching();
-      // Оновити відкриту бібліотеку
-      if (document.getElementById('lib-section').style.display !== 'none') renderLibGrid(currentLibTab);
-    }, () => { _loadLibLS(); });
-}
-
-function _loadLibLS() {
-  // Міграція зі старого localStorage
-  try {
-    const old = JSON.parse(localStorage.getItem('kb_favorites') || '[]');
-    libraryCache = {};
-    old.forEach(m => { libraryCache[String(m.id)] = { ...m, favorite: true, watchLater: false, watched: false }; });
-  } catch {}
-}
-
-function isInLib(id, field) {
-  const item = libraryCache[String(id)];
-  return item ? !!item[field] : false;
-}
-function isFavorite(id)  { return isInLib(id, 'favorite'); }
-function isWatchLater(id){ return isInLib(id, 'watchLater'); }
-function isWatched(id)   { return isInLib(id, 'watched'); }
-
-async function _setLibField(id, type, field, value) {
-  const user = currentUser;
-  if (!user) { openAuth('login'); showToast('Увійдіть для використання бібліотеки'); return; }
-  const docId = String(id);
-  // Оптимістичне оновлення
-  if (!libraryCache[docId]) libraryCache[docId] = {};
-  libraryCache[docId][field] = value;
-
-  if (!db) { return; }
-
-  const ref = db.collection('users').doc(user.uid).collection('library').doc(docId);
-  const cur = libraryCache[docId] || {};
-  const allFalse = !cur.favorite && !cur.watchLater && !cur.watched;
-
-  try {
-    if (allFalse) {
-      await ref.delete();
-      delete libraryCache[docId];
-    } else {
-      // Якщо метадані ще не завантажені — підтягнути з TMDB
-      if (!cur.title) {
-        const data = await tmdb(`/${type}/${id}`).catch(() => null);
-        if (data) {
-          libraryCache[docId] = {
-            ...libraryCache[docId],
-            id: data.id, type,
-            title:  data.title || data.name || '',
-            poster: data.poster_path || '',
-            rating: data.vote_average || 0,
-            year:   (data.release_date || data.first_air_date || '').slice(0, 4),
-            updatedAt: new Date().toISOString()
-          };
-        }
-      } else {
-        libraryCache[docId].updatedAt = new Date().toISOString();
-      }
-      await ref.set(libraryCache[docId], { merge: true });
-    }
-  } catch(e) { console.error('Library write error', e); }
-}
-
-function toggleFav(id, type, btn) {
-  if (!getUser()) { openAuth('login'); showToast('Увійдіть щоб зберігати улюблені'); return; }
-  const was = isFavorite(id);
-  _setLibField(id, type, 'favorite', !was);
-  if (btn) { btn.classList.toggle('faved', !was); btn.textContent = !was ? '❤️' : '🤍'; }
-  showToast(!was ? 'Додано до улюблених ❤️' : 'Видалено з улюблених');
-}
-
-function toggleFavModal(id, type) {
-  if (!getUser()) { openAuth('login'); showToast('Увійдіть щоб зберігати улюблені'); return; }
-  const was = isFavorite(id);
-  _setLibField(id, type, 'favorite', !was);
-  const btn = document.getElementById('modal-fav-btn');
-  if (btn) { btn.className = 'm-btn-fav' + (!was ? ' faved' : ''); btn.innerHTML = !was ? 'В улюблених' : 'В улюблені'; }
-  showToast(!was ? 'Додано до улюблених' : 'Видалено з улюблених');
-}
-
-function toggleWatchLaterModal(id, type) {
-  if (!getUser()) { openAuth('login'); showToast('Увійдіть щоб зберігати список'); return; }
-  const was = isWatchLater(id);
-  _setLibField(id, type, 'watchLater', !was);
-  const btn = document.getElementById('modal-wl-btn');
-  if (btn) { btn.className = 'm-btn-wl' + (!was ? ' saved' : ''); btn.innerHTML = !was ? 'Збережено' : 'Дивитись пізніше'; }
-  showToast(!was ? 'Додано до "Дивитись пізніше"' : 'Видалено зі списку');
-}
-
-function markWatched(id, type) {
-  if (!getUser() || isWatched(id)) return;
-  _setLibField(id, type, 'watched', true);
-}
-
-// Зберегти прогрес плеєра (сервер, сезон, епізод, позначити переглянутим)
-async function savePlayerProgress() {
-  if (!currentUser || !db || !currentModalId) return;
-  const docId = String(currentModalId);
-  const now   = new Date().toISOString();
-  const updates = {
-    watched:    true,
-    lastServer: currentPlayer,
-    updatedAt:  now
+  // ========================
+  // FIREBASE
+  // ========================
+  // ⚠️ Вставте ваш конфіг з Firebase Console (той самий що в index.html)
+  const FIREBASE_CONFIG = {
+    apiKey:            "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
+    authDomain:        "kinobaza-6c109.firebaseapp.com",
+    projectId:         "kinobaza-6c109",
+    storageBucket:     "kinobaza-6c109.firebasestorage.app",
+    messagingSenderId: "639150355070",
+    appId:             "1:639150355070:web:772f863f075d4d1d839e2f",
+    measurementId:     "G-GKVZ2JJDJN"
   };
-  if (currentModalType === 'tv') {
-    updates.lastSeason  = currentSeason;
-    updates.lastEpisode = currentEpisode;
-  }
-  // Оновити кеш локально
-  if (!libraryCache[docId]) libraryCache[docId] = { id: currentModalId, type: currentModalType };
-  Object.assign(libraryCache[docId], updates);
-  // Підтягнути метадані якщо їх ще немає
-  if (!libraryCache[docId].title) {
-    const data = await tmdb(`/${currentModalType}/${currentModalId}`).catch(()=>null);
-    if (data) {
-      Object.assign(libraryCache[docId], {
-        title:  data.title || data.name || '',
-        poster: data.poster_path || '',
-        rating: data.vote_average || 0,
-        year:   (data.release_date || data.first_air_date || '').slice(0,4)
-      });
-    }
-  }
-  // Записати у Firestore
+
+  let db = null;
   try {
-    await db.collection('users').doc(currentUser.uid)
-      .collection('library').doc(docId)
-      .set(libraryCache[docId], { merge: true });
-    renderContinueWatching();
-    refreshCardFavButtons();
-  } catch(e) { console.error('Progress save error', e); }
-}
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+  } catch(e) { console.warn('Firebase init failed'); }
 
-// Секція "Продовжити перегляд" на головній
-function renderContinueWatching() {
-  const sec  = document.getElementById('continue-section');
-  const grid = document.getElementById('continue-grid');
-  if (!sec || !grid) return;
+  // ========================
+  // AUTH — Firebase Auth
+  // ========================
+  let auth = null;
+  try { auth = firebase.auth(); } catch(e) { console.warn('Firebase Auth init failed'); }
 
-  const items = Object.values(libraryCache)
-    .filter(m => m.watched && m.title)
-    .sort((a,b) => (b.updatedAt||'') > (a.updatedAt||'') ? 1 : -1)
-    .slice(0, 8);
-
-  if (!items.length || !currentUser) { sec.style.display='none'; return; }
-  sec.style.display = 'block';
-
-  grid.innerHTML = items.map(m => {
-    const type   = m.type || 'movie';
-    const epBadge = (type==='tv' && m.lastSeason)
-      ? `<div class="c-ep-badge">S${m.lastSeason} E${m.lastEpisode||1}</div>` : '';
-    const isFav  = isFavorite(m.id);
-    return `<div class="m-card" onclick="openMovie(${m.id},'${type}',true)">
-      ${m.poster
-        ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title||''}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>`
-        : '<div class="c-ph">🎬</div>'}
-      <div class="c-ov"><div class="c-play-btn">▶</div></div>
-      ${epBadge}
-      <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}"
-        onclick="event.stopPropagation();toggleFav(${m.id},'${type}',this)">${isFav?'❤️':'🤍'}</button>
-      <div class="c-info">
-        <div class="c-title">${m.title||'—'}</div>
-        <div class="c-meta">
-          <span class="c-year">${m.year||'—'}</span>
-          <span class="c-rat">⭐ ${m.rating?Number(m.rating).toFixed(1):'—'}</span>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function refreshCardFavButtons() {
-  document.querySelectorAll('[data-fav-id]').forEach(btn => {
-    const f = isFavorite(btn.dataset.favId);
-    btn.classList.toggle('faved', f);
-    btn.textContent = f ? '❤️' : '🤍';
-  });
-}
-
-// ---- Library UI ----
-function showLibrary(tab = 'fav') {
-  currentLibTab = tab;
-  document.getElementById('lib-section').style.display = 'block';
-  document.getElementById('home-content').style.display = 'none';
-  document.getElementById('srch-sec').style.display = 'none';
-  document.getElementById('cat-section').style.display = 'none';
-  switchLibTab(tab);
-}
-
-function switchLibTab(tab) {
-  currentLibTab = tab;
-  ['fav','wl','watched'].forEach(t => {
-    document.getElementById('lib-tab-'+t).classList.toggle('act', t === tab);
-  });
-  renderLibGrid(tab);
-}
-
-function renderLibGrid(tab) {
-  const field = tab === 'fav' ? 'favorite' : tab === 'wl' ? 'watchLater' : 'watched';
-  const items = Object.values(libraryCache).filter(m => m[field]);
-  const grid = document.getElementById('lib-grid');
-
-  const emptyMsg = {
-    fav:     { icon:'❤️', text:'Тут поки порожньо.<br>Натисніть 🤍 на будь-якому фільмі, щоб додати.' },
-    wl:      { icon:'🕐', text:'Тут поки порожньо.<br>Натисніть "Дивитись пізніше" у картці фільму.' },
-    watched: { icon:'✅', text:"Тут поки порожньо.<br>Фільми з'являються тут коли ви починаєте перегляд." }
-  }[tab];
-
-  if (!items.length) {
-    grid.innerHTML = `<div class="lib-empty"><span>${emptyMsg.icon}</span>${emptyMsg.text}</div>`;
-    return;
-  }
-
-  // Сортування: найновіші зверху
-  items.sort((a,b) => (b.updatedAt||'') > (a.updatedAt||'') ? 1 : -1);
-
-  grid.innerHTML = items.map(m => {
-    const type = m.type || 'movie';
-    const wtch = isWatched(m.id) ? '<div class="watched-badge">✅ Переглянуто</div>' : '';
-    return `<div class="m-card" onclick="openMovie(${m.id},'${type}',false)">
-      ${m.poster ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title||''}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>` : '<div class="c-ph">🎬</div>'}
-      <div class="c-ov"><div class="c-play-btn">▶</div></div>
-      ${wtch}
-      <button class="c-fav ${isFavorite(m.id)?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${type}',this)">${isFavorite(m.id)?'❤️':'🤍'}</button>
-      <div class="c-info">
-        <div class="c-title">${m.title||'—'}</div>
-        <div class="c-meta"><span class="c-year">${m.year||'—'}</span><span class="c-rat">⭐ ${m.rating?Number(m.rating).toFixed(1):'—'}</span></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function showHome(){
-  document.getElementById('lib-section').style.display='none';
-  document.getElementById('cat-section').style.display='none';
-  document.getElementById('home-content').style.display='block';
-  document.getElementById('srch-sec').style.display='none';
-  // Підсвітити "Головна" в навігації
-  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
-  const nh=document.getElementById('nav-home');if(nh)nh.classList.add('act');
-}
-
-// =====================================================================
-// AUTH — Firebase Authentication
-// =====================================================================
-let auth = null;
-let currentUser = null;
-let currentUserRole = 'user';
-
-try { auth = firebase.auth(); } catch(e) { console.warn('Firebase Auth init failed'); }
-
-function getUser() { return currentUser; }
-
-if (auth) {
-  auth.onAuthStateChanged(async (user) => {
-    currentUser = user;
-    currentUserRole = 'user';
-    if (user && db) {
-      try {
-        const doc = await db.collection('users').doc(user.uid).get();
-        if (doc.exists) currentUserRole = doc.data().role || 'user';
-      } catch(e) {}
-      initLibrary(); // запускаємо Firestore listener для бібліотеки
-    } else {
-      // Вийшов — зупинити listener і очистити кеш
-      if (libUnsubscribe) { libUnsubscribe(); libUnsubscribe = null; }
-      libraryCache = {};
-      refreshCardFavButtons();
-      renderContinueWatching(); // сховає секцію
-    }
-    updateAuthUI();
-  });
-}
-
-function updateAuthUI() {
-  const user = currentUser;
-  document.getElementById('auth-btns').style.display = user ? 'none' : 'flex';
-  document.getElementById('user-menu').style.display = user ? 'block' : 'none';
-  if (user) {
-    document.getElementById('user-initial').textContent = (user.displayName || user.email || 'U')[0].toUpperCase();
-    document.getElementById('ud-name').textContent = user.displayName || user.email;
-  }
-  const adminLink = document.getElementById('ud-admin');
-  if (adminLink) adminLink.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
-}
-
-function openAuth(tab='login') {
-  switchTab(tab);
-  document.getElementById('auth-modal').classList.add('open');
-}
-function closeAuth() { document.getElementById('auth-modal').classList.remove('open'); }
-
-// =====================================================================
-// STATIC PAGES — Про нас / Контакти / Умови / DMCA
-// =====================================================================
-const PAGE_DEFAULTS = {
-  about:    { title:'Про нас',            content:'<p>КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості, кілька серверів відтворення, українська озвучка.</p>' },
-  contacts: { title:'Контакти',           content:'<p>З питань співпраці та реклами звертайтесь на нашу електронну пошту.</p>' },
-  terms:    { title:'Умови використання', content:'<p>Використовуючи сайт, ви погоджуєтесь з умовами використання. Сайт не зберігає відеофайли — всі відео надаються третіми особами.</p>' },
-  dmca:     { title:'DMCA',              content:'<p>Якщо ви є правовласником і вважаєте що контент порушує ваші права, зверніться до нас для видалення. Ми дотримуємось законодавства про авторське право.</p>' }
-};
-
-function openPage(id) {
-  const data = pagesCache[id] || PAGE_DEFAULTS[id] || { title: id, content: '' };
-  document.getElementById('page-modal-title').textContent = data.title || '';
-  document.getElementById('page-modal-content').innerHTML = data.content || '';
-  document.getElementById('page-modal').classList.add('open');
-}
-function closePage() { document.getElementById('page-modal').classList.remove('open'); }
-function switchTab(t) {
-  document.getElementById('tab-login').classList.toggle('act', t==='login');
-  document.getElementById('tab-register').classList.toggle('act', t==='register');
-  document.getElementById('form-login').classList.toggle('act', t==='login');
-  document.getElementById('form-register').classList.toggle('act', t==='register');
-}
-
-function doLogin() {
-  if (!auth) { showToast('Firebase Auth недоступний'); return; }
-  const email = document.getElementById('l-email').value.trim();
-  const pass  = document.getElementById('l-pass').value;
-  const errEl = document.getElementById('l-err');
-  errEl.classList.remove('show');
-  if (!email || !pass) { errEl.textContent = 'Заповніть всі поля'; errEl.classList.add('show'); return; }
-  auth.signInWithEmailAndPassword(email, pass)
-    .then(() => { closeAuth(); showToast('Ласкаво просимо!'); })
-    .catch(e => {
-      const msgs = {
-        'auth/user-not-found':    'Користувача не знайдено',
-        'auth/wrong-password':    'Невірний пароль',
-        'auth/invalid-email':     'Невірний формат email',
-        'auth/invalid-credential':'Невірний email або пароль',
-        'auth/too-many-requests': 'Забагато спроб. Спробуйте пізніше'
-      };
-      errEl.textContent = msgs[e.code] || 'Помилка входу';
-      errEl.classList.add('show');
-    });
-}
-
-function doRegister() {
-  if (!auth) { showToast('Firebase Auth недоступний'); return; }
-  const name  = document.getElementById('r-name').value.trim();
-  const email = document.getElementById('r-email').value.trim();
-  const pass  = document.getElementById('r-pass').value;
-  const errEl = document.getElementById('r-err');
-  errEl.classList.remove('show');
-  if (!name || !email || !pass) { errEl.textContent = 'Заповніть всі поля'; errEl.classList.add('show'); return; }
-  if (pass.length < 6) { errEl.textContent = 'Пароль мінімум 6 символів'; errEl.classList.add('show'); return; }
-  auth.createUserWithEmailAndPassword(email, pass)
-    .then(async cred => {
-      await cred.user.updateProfile({ displayName: name }).catch(()=>{});
-      if (db) {
-        await db.collection('users').doc(cred.user.uid).set({
-          name, email, role: 'user', createdAt: new Date().toISOString()
-        }).catch(()=>{});
+  // Реакція на зміну стану авторизації
+  if (auth) {
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        // Не залогінений — показати форму входу
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('admin-screen').style.display = 'none';
+        return;
       }
-      closeAuth();
-      showToast(`Акаунт створено! Ласкаво просимо, ${name}!`);
-    })
-    .catch(e => {
-      const msgs = {
-        'auth/email-already-in-use':'Цей email вже зареєстровано',
-        'auth/invalid-email':       'Невірний формат email',
-        'auth/weak-password':       'Пароль занадто простий'
-      };
-      errEl.textContent = msgs[e.code] || 'Помилка реєстрації';
-      errEl.classList.add('show');
-    });
-}
-
-function doGoogleLogin() {
-  if (!auth) return;
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider)
-    .then(async cred => {
+      // Залогінений — перевірити роль у Firestore
+      let role = 'user';
+      let firestoreError = false;
       if (db) {
-        const doc = await db.collection('users').doc(cred.user.uid).get().catch(()=>({exists:false}));
-        if (!doc.exists) {
-          await db.collection('users').doc(cred.user.uid).set({
-            name: cred.user.displayName || '',
-            email: cred.user.email || '',
-            role: 'user',
-            createdAt: new Date().toISOString()
-          }).catch(()=>{});
+        try {
+          const doc = await db.collection('users').doc(user.uid).get();
+          if (doc.exists) role = doc.data().role || 'user';
+          else role = 'not_found'; // документ не існує
+        } catch(e) {
+          firestoreError = true;
+          console.warn('Firestore role check failed:', e);
         }
+      } else {
+        firestoreError = true;
       }
-      closeAuth();
-      showToast(`Ласкаво просимо, ${cred.user.displayName || ''}!`);
-    })
-    .catch(e => {
-      if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
-        const errEl = document.getElementById('l-err');
-        errEl.textContent = 'Помилка входу через Google';
-        errEl.classList.add('show');
+      if (firestoreError) {
+        // Не вдалось перевірити роль — показати помилку без виходу
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('admin-screen').style.display = 'none';
+        const errEl = document.getElementById('login-error');
+        errEl.textContent = 'Помилка з\'єднання з базою даних. Перевірте інтернет і спробуйте ще раз.';
+        errEl.style.display = 'block';
+        return;
       }
-    });
-}
-
-function resetPassword() {
-  if (!auth) return;
-  const email = document.getElementById('l-email').value.trim();
-  const errEl = document.getElementById('l-err');
-  if (!email) {
-    errEl.textContent = 'Введіть email вище для скидання пароля';
-    errEl.classList.add('show');
-    return;
-  }
-  auth.sendPasswordResetEmail(email)
-    .then(() => { closeAuth(); showToast(`Лист для скидання пароля надіслано на ${email}`); })
-    .catch(() => {
-      errEl.textContent = 'Не вдалось надіслати лист. Перевірте email.';
-      errEl.classList.add('show');
-    });
-}
-
-function doLogout() {
-  if (auth) auth.signOut().catch(()=>{});
-  showHome();
-  showToast('До побачення!');
-}
-
-// =====================================================================
-// SEARCH
-// =====================================================================
-// SEARCH — автодоповнення + фільтри + пагінація
-// =====================================================================
-const RECENT_KEY = 'kb_recent_srch';
-let sT = null, acT = null, acIdx = -1, acResults = [];
-let srchPage = 1, srchQuery = '', srchFilter = 'all', srchTotalPages = 1;
-
-// ---- Обробка вводу ----
-function handleSrch(e) {
-  const q = document.getElementById('si').value.trim();
-  clearTimeout(sT); clearTimeout(acT);
-  if (!q) { hideAutocomplete(); return; }
-  acT = setTimeout(() => showAutocomplete(q), 280);
-  sT  = setTimeout(() => {}, 600); // пошук лише через Enter або 🔍
-}
-
-function acKeydown(e) {
-  const drop = document.getElementById('ac-drop');
-  if (e.key === 'Enter')       { e.preventDefault(); if(acIdx>=0 && acResults[acIdx]) { const r=acResults[acIdx]; openMovie(r.id, r.media_type||'movie', true); hideAutocomplete(); document.getElementById('si').value=''; } else { doSearch(); } return; }
-  if (e.key === 'Escape')      { hideAutocomplete(); return; }
-  if (e.key === 'ArrowDown')   { e.preventDefault(); acIdx = Math.min(acIdx+1, acResults.length-1); acHighlight(); return; }
-  if (e.key === 'ArrowUp')     { e.preventDefault(); acIdx = Math.max(acIdx-1, -1); acHighlight(); return; }
-}
-
-function acHighlight() {
-  document.querySelectorAll('.ac-item').forEach((el,i) => el.classList.toggle('sel', i===acIdx));
-}
-
-function acFocus() {
-  const q = document.getElementById('si').value.trim();
-  if (q) showAutocomplete(q);
-  else   showRecentSearches();
-}
-
-// ---- Автодоповнення ----
-async function showAutocomplete(q) {
-  acIdx = -1;
-  const data = await tmdb('/search/multi', { query: q, page: 1 });
-  if (!data || !data.results) return;
-  acResults = data.results.filter(m => m.media_type !== 'person').slice(0, 6);
-  if (!acResults.length) { hideAutocomplete(); return; }
-
-  const html = acResults.map((m, i) => {
-    const type   = m.media_type === 'tv' ? 'tv' : 'movie';
-    const title  = m.title || m.name || '—';
-    const year   = (m.release_date || m.first_air_date || '').slice(0, 4);
-    const rat    = m.vote_average ? m.vote_average.toFixed(1) : '';
-    const poster = m.poster_path
-      ? `<img class="ac-thumb" src="${IMG}w92${m.poster_path}" alt="">`
-      : `<div class="ac-thumb-ph">🎬</div>`;
-    return `<div class="ac-item" onclick="acSelect(${m.id},'${type}','${title.replace(/'/g,"\\'")}')">
-      ${poster}
-      <div class="ac-inf">
-        <div class="ac-ttl">${title}</div>
-        <div class="ac-sub">
-          <span class="ac-badge ${type==='tv'?'t':'m'}">${type==='tv'?'Серіал':'Фільм'}</span>
-          ${year ? `<span>${year}</span>` : ''}
-          ${rat  ? `<span class="ac-rat">⭐ ${rat}</span>` : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  const drop = document.getElementById('ac-drop');
-  drop.innerHTML = html + `<div class="ac-all" onclick="doSearch()">Показати всі результати для «${q}»</div>`;
-  drop.classList.add('open');
-}
-
-function showRecentSearches() {
-  const recent = getRecentSearches();
-  if (!recent.length) return;
-  const drop = document.getElementById('ac-drop');
-  drop.innerHTML = `<div class="ac-sep">Нещодавні пошуки</div>`
-    + recent.map(r => `<div class="ac-recent-row">
-        <span onclick="acUseRecent('${r.replace(/'/g,"\\'")}')" style="flex:1">🕐 ${r}</span>
-        <span class="ac-del" onclick="event.stopPropagation();removeRecent('${r.replace(/'/g,"\\'")}')">✕</span>
-      </div>`).join('');
-  drop.classList.add('open');
-}
-
-function hideAutocomplete() {
-  document.getElementById('ac-drop').classList.remove('open');
-  acIdx = -1;
-}
-
-function acSelect(id, type, title) {
-  saveRecent(title);
-  hideAutocomplete();
-  document.getElementById('si').value = '';
-  openMovie(id, type, true);
-}
-
-function acUseRecent(q) {
-  document.getElementById('si').value = q;
-  hideAutocomplete();
-  doSearch();
-}
-
-// ---- Останні пошуки ----
-function getRecentSearches() {
-  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch { return []; }
-}
-function saveRecent(q) {
-  if (!q) return;
-  let r = getRecentSearches().filter(x => x !== q);
-  r.unshift(q);
-  localStorage.setItem(RECENT_KEY, JSON.stringify(r.slice(0, 5)));
-}
-function removeRecent(q) {
-  localStorage.setItem(RECENT_KEY, JSON.stringify(getRecentSearches().filter(x => x !== q)));
-  showRecentSearches();
-}
-
-// ---- Пошук ----
-async function doSearch(filter) {
-  const q = document.getElementById('si').value.trim();
-  if (!q) { clearSearch(); return; }
-  hideAutocomplete();
-  saveRecent(q);
-
-  if (filter !== undefined) srchFilter = filter;
-  else srchFilter = 'all';
-  srchQuery = q; srchPage = 1;
-
-  // Оновити активний фільтр
-  ['all','movie','tv'].forEach(f => {
-    const btn = document.getElementById('sf-'+f);
-    if (btn) btn.classList.toggle('act', f === srchFilter);
-  });
-
-  document.getElementById('srch-sec').style.display = 'block';
-  document.getElementById('home-content').style.display = 'none';
-  document.getElementById('lib-section').style.display = 'none';
-  document.getElementById('cat-section').style.display = 'none';
-  document.getElementById('srch-title').textContent = `«${q}»`;
-  document.getElementById('srch-count').textContent = '';
-  document.getElementById('srch-more').style.display = 'none';
-
-  const grid = document.getElementById('srch-grid');
-  grid.innerHTML = '<div class="sk-card"><div class="sk-poster"></div></div>'.repeat(6);
-  await _loadSrchPage(true);
-}
-
-async function _loadSrchPage(reset) {
-  const ep = srchFilter === 'movie' ? '/search/movie'
-           : srchFilter === 'tv'    ? '/search/tv'
-           :                          '/search/multi';
-  const data = await tmdb(ep, { query: srchQuery, page: srchPage });
-  const grid = document.getElementById('srch-grid');
-
-  if (!data || !data.results || !data.results.length) {
-    if (reset) grid.innerHTML = '<div style="color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;">Нічого не знайдено</div>';
-    return;
-  }
-
-  srchTotalPages = data.total_pages || 1;
-  const total    = data.total_results || 0;
-  let items = data.results;
-  if (srchFilter === 'all') items = items.filter(m => m.media_type !== 'person');
-  else items = items.map(m => ({ ...m, media_type: srchFilter }));
-
-  const html = items.map(m => card(m)).join('');
-  if (reset) grid.innerHTML = html; else grid.innerHTML += html;
-
-  document.getElementById('srch-count').textContent = `${total.toLocaleString('uk-UA')} результатів`;
-  const moreBtn = document.getElementById('srch-more');
-  moreBtn.style.display = (srchPage < srchTotalPages && srchPage < 8) ? 'block' : 'none';
-}
-
-function loadMoreSearch() {
-  srchPage++;
-  _loadSrchPage(false);
-}
-
-function clearSearch() {
-  hideAutocomplete();
-  document.getElementById('srch-sec').style.display = 'none';
-  document.getElementById('home-content').style.display = 'block';
-  document.getElementById('lib-section').style.display = 'none';
-  document.getElementById('cat-section').style.display = 'none';
-  document.getElementById('si').value = '';
-}
-
-// =====================================================================
-// GENRE FILTER
-// =====================================================================
-async function selGenre(genreId,el){
-  document.querySelectorAll('.g-tag').forEach(t=>t.classList.remove('act'));el.classList.add('act');
-  if(genreId===0){initSite();return;}
-  const p={with_genres:genreId,sort_by:'popularity.desc'};
-  loadGrid('new-grid','/discover/movie',{...p,'primary_release_date.gte':'2023-01-01'},{txt:'NEW',cls:''},12);
-  loadGrid('pop-grid','/discover/movie',p,{txt:'HD',cls:'g'},12);
-  loadGrid('top-grid','/discover/movie',{...p,sort_by:'vote_average.desc','vote_count.gte':500},null,12);
-  loadGrid('classic-grid','/discover/movie',{...p,'primary_release_date.lte':'2000-12-31'},null,12);
-  loadGrid('nineties-grid','/discover/movie',{...p,'primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
-  loadGrid('noughts-grid','/discover/movie',{...p,'primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
-}
-function quickFilter(ep,params){
-  showHome();clearSearch();
-  loadGrid('pop-grid',ep,params,{txt:'HD',cls:'g'},12);
-  document.getElementById('pop-grid').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function showClassics(){
-  quickFilter('/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'});
-  loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,24);
-}
-
-// =====================================================================
-// CATALOG — каталог з фільтрами
-// =====================================================================
-let catPage = 1, catTotalPages = 1, catType = 'movie';
-
-const GENRE_NAMES = {
-  '28':'Бойовик','12':'Пригоди','16':'Анімація','35':'Комедія','80':'Кримінал',
-  '99':'Документальний','18':'Драма','10751':'Сімейний','14':'Фентезі',
-  '36':'Історичний','27':'Жахи','10749':'Мелодрама','878':'Фантастика',
-  '53':'Трилер','10752':'Воєнний','37':'Вестерн'
-};
-const COUNTRY_NAMES = {
-  'US':'США','GB':'Велика Британія','FR':'Франція','DE':'Німеччина',
-  'IT':'Італія','JP':'Японія','KR':'Корея','CN':'Китай','ES':'Іспанія',
-  'IN':'Індія','AU':'Австралія','CA':'Канада','UA':'Україна'
-};
-
-function showCatalog(preset = {}) {
-  document.getElementById('home-content').style.display = 'none';
-  document.getElementById('srch-sec').style.display    = 'none';
-  document.getElementById('lib-section').style.display = 'none';
-  document.getElementById('cat-section').style.display = 'block';
-
-  // Скидуємо поля до дефолтних, потім застосовуємо пресет
-  document.getElementById('cat-genre').value   = '';
-  document.getElementById('cat-country').value = '';
-  document.getElementById('cat-yr-from').value = '';
-  document.getElementById('cat-yr-to').value   = '';
-  document.getElementById('cat-rating').value  = '';
-  document.getElementById('cat-sort').value    = 'popularity.desc';
-
-  if (preset.type)    catType = preset.type;
-  if (preset.genre)   document.getElementById('cat-genre').value   = String(preset.genre);
-  if (preset.sort)    document.getElementById('cat-sort').value    = preset.sort;
-  if (preset.rating)  document.getElementById('cat-rating').value  = String(preset.rating);
-  if (preset.yearFrom)document.getElementById('cat-yr-from').value = String(preset.yearFrom);
-  if (preset.yearTo)  document.getElementById('cat-yr-to').value   = String(preset.yearTo);
-  if (preset.country) document.getElementById('cat-country').value = preset.country;
-
-  document.getElementById('cpt-movie').classList.toggle('act', catType === 'movie');
-  document.getElementById('cpt-tv').classList.toggle('act', catType === 'tv');
-  document.getElementById('cat-title').textContent = catType === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
-
-  // Підсвітити в навігації
-  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
-  const nc = document.getElementById('nav-catalog'); if(nc) nc.classList.add('act');
-
-  applyCatFilters();
-  document.getElementById('cat-section').scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-function setCatType(type) {
-  catType = type;
-  document.getElementById('cpt-movie').classList.toggle('act', type === 'movie');
-  document.getElementById('cpt-tv').classList.toggle('act', type === 'tv');
-  document.getElementById('cat-title').textContent = type === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
-  // При зміні типу скидаємо sort опції (для серіалів немає revenue)
-  const sortEl = document.getElementById('cat-sort');
-  if (type === 'tv' && sortEl.value === 'revenue.desc') sortEl.value = 'popularity.desc';
-  applyCatFilters();
-}
-
-function applyCatFilters() {
-  catPage = 1;
-  const grid = document.getElementById('cat-grid');
-  grid.innerHTML = '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(12);
-  document.getElementById('cat-more').style.display = 'none';
-  document.getElementById('cat-count').textContent  = '';
-  renderCatChips();
-  _loadCatPage(true);
-}
-
-function _buildCatParams() {
-  const genre    = document.getElementById('cat-genre').value;
-  const country  = document.getElementById('cat-country').value;
-  const yearFrom = document.getElementById('cat-yr-from').value.trim();
-  const yearTo   = document.getElementById('cat-yr-to').value.trim();
-  const rating   = document.getElementById('cat-rating').value;
-  const sort     = document.getElementById('cat-sort').value || 'popularity.desc';
-
-  const p = { sort_by: sort, 'vote_count.gte': 50 };
-  if (genre)   p.with_genres         = genre;
-  if (country) p.with_origin_country = country;
-  if (rating)  p['vote_average.gte'] = rating;
-  if (sort === 'vote_average.desc' && !rating) p['vote_count.gte'] = 300;
-
-  if (catType === 'movie') {
-    if (yearFrom) p['primary_release_date.gte'] = `${yearFrom}-01-01`;
-    if (yearTo)   p['primary_release_date.lte'] = `${yearTo}-12-31`;
-  } else {
-    if (yearFrom) p['first_air_date.gte'] = `${yearFrom}-01-01`;
-    if (yearTo)   p['first_air_date.lte'] = `${yearTo}-12-31`;
-  }
-  return p;
-}
-
-async function _loadCatPage(reset) {
-  const ep   = catType === 'tv' ? '/discover/tv' : '/discover/movie';
-  const data = await tmdb(ep, { ..._buildCatParams(), page: catPage });
-  const grid = document.getElementById('cat-grid');
-
-  if (!data || !data.results || !data.results.length) {
-    if (reset) grid.innerHTML = '<div style="color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;">Нічого не знайдено за цими фільтрами</div>';
-    document.getElementById('cat-more').style.display = 'none';
-    document.getElementById('cat-count').textContent  = '';
-    return;
-  }
-
-  catTotalPages = Math.min(data.total_pages || 1, 500);
-  const total   = data.total_results || 0;
-  const html    = data.results.map(m => card({ ...m, media_type: catType })).join('');
-  if (reset) grid.innerHTML = html; else grid.innerHTML += html;
-
-  document.getElementById('cat-count').textContent = `${total.toLocaleString('uk-UA')} результатів`;
-  document.getElementById('cat-more').style.display = (catPage < catTotalPages && catPage < 15) ? 'block' : 'none';
-}
-
-function loadMoreCatalog() { catPage++; _loadCatPage(false); }
-
-function resetCatFilters() {
-  document.getElementById('cat-genre').value   = '';
-  document.getElementById('cat-country').value = '';
-  document.getElementById('cat-yr-from').value = '';
-  document.getElementById('cat-yr-to').value   = '';
-  document.getElementById('cat-rating').value  = '';
-  document.getElementById('cat-sort').value    = 'popularity.desc';
-  applyCatFilters();
-}
-
-function renderCatChips() {
-  const genre    = document.getElementById('cat-genre').value;
-  const country  = document.getElementById('cat-country').value;
-  const yearFrom = document.getElementById('cat-yr-from').value.trim();
-  const yearTo   = document.getElementById('cat-yr-to').value.trim();
-  const rating   = document.getElementById('cat-rating').value;
-  const sort     = document.getElementById('cat-sort').value;
-
-  const chips = [];
-  if (genre)   chips.push({ key:'genre',   label: GENRE_NAMES[genre]     || genre });
-  if (country) chips.push({ key:'country', label: COUNTRY_NAMES[country] || country });
-  if (yearFrom && yearTo)  chips.push({ key:'year', label: `${yearFrom}–${yearTo}` });
-  else if (yearFrom)       chips.push({ key:'year', label: `Від ${yearFrom}` });
-  else if (yearTo)         chips.push({ key:'year', label: `До ${yearTo}` });
-  if (rating)  chips.push({ key:'rating', label: `Рейтинг ${rating}+` });
-  if (sort && sort !== 'popularity.desc') {
-    const sn = {'vote_average.desc':'За рейтингом','release_date.desc':'Новинки','vote_count.desc':'За голосами','revenue.desc':'За зборами'};
-    chips.push({ key:'sort', label: sn[sort] || sort });
-  }
-
-  document.getElementById('cat-active').innerHTML = chips.map(c =>
-    `<span class="cat-chip">${c.label}<span class="cat-chip-del" onclick="removeCatFilter('${c.key}')">×</span></span>`
-  ).join('');
-}
-
-function removeCatFilter(key) {
-  if (key === 'genre')   document.getElementById('cat-genre').value   = '';
-  if (key === 'country') document.getElementById('cat-country').value = '';
-  if (key === 'year')  { document.getElementById('cat-yr-from').value = ''; document.getElementById('cat-yr-to').value = ''; }
-  if (key === 'rating')  document.getElementById('cat-rating').value  = '';
-  if (key === 'sort')    document.getElementById('cat-sort').value    = 'popularity.desc';
-  applyCatFilters();
-}
-
-// =====================================================================
-// ADS — Block 8: video, pop-under, anti-adblock
-// =====================================================================
-function getAds(slot){ return adsCache.filter(a=>a.active&&a.slot===slot); }
-
-function buildH(ad){
-  const w=document.createElement('div');
-  w.className='ad-wrap inline';
-  const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
-  if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
-  else if(ad.type==='video'){
-    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
-    const vid=document.createElement('video');
-    vid.src=ad.videoUrl||ad.imageUrl||'';
-    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-    vid.className='ad-video';
-    a.appendChild(vid);w.appendChild(a);
-  }
-  else{
-    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';
-    const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);
-  }
-  return w;
-}
-
-function buildV(ad){
-  const w=document.createElement('div');
-  if(ad.html){w.innerHTML=ad.html;}
-  else if(ad.type==='video'){
-    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
-    const vid=document.createElement('video');
-    vid.src=ad.videoUrl||ad.imageUrl||'';
-    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-    vid.style.cssText='width:100%;display:block;object-fit:cover;';
-    a.appendChild(vid);w.appendChild(a);
-  }
-  else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-v';const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);}
-  return w;
-}
-
-function renderAds(){
-  // Header
-  const hEl=document.getElementById('slot-header');
-  if(hEl){
-    hEl.innerHTML='';
-    getAds('header').forEach(ad=>{
-      const w=document.createElement('div');w.className='ad-wrap';
-      const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
-      if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
-      else if(ad.type==='video'){
-        const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
-        const vid=document.createElement('video');vid.src=ad.videoUrl||ad.imageUrl||'';
-        vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;vid.className='ad-video';
-        a.appendChild(vid);w.appendChild(a);
+      if (role !== 'admin') {
+        // Не адмін — вийти і показати помилку
+        await auth.signOut();
+        const errEl = document.getElementById('login-error');
+        errEl.textContent = role === 'not_found'
+          ? 'Акаунт не налаштований. Зверніться до власника проекту.'
+          : 'У вас немає прав адміністратора.';
+        errEl.style.display = 'block';
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('admin-screen').style.display = 'none';
+        return;
       }
-      else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt='Реклама';a.appendChild(img);w.appendChild(a);}
-      hEl.appendChild(w);
+      // Адмін — відкрити панель
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      initAdmin();
     });
   }
-  ['between1','between2','between3'].forEach(s=>{
-    const el=document.getElementById('slot-'+s);if(!el)return;el.innerHTML='';
-    getAds(s).forEach(ad=>el.appendChild(buildH(ad)));
-  });
-  const sEl=document.getElementById('slot-sidebar');if(sEl){sEl.innerHTML='';getAds('sidebar').forEach(ad=>sEl.appendChild(buildV(ad)));}
-  const fEl=document.getElementById('slot-footer');if(fEl){fEl.innerHTML='';getAds('footer').forEach(ad=>fEl.appendChild(buildH(ad)));}
-  initPopup();
-  initPopUnder();
-}
 
-// =====================================================================
-// POP-UNDER — один раз за сесію, на першому кліку
-// =====================================================================
-function initPopUnder(){
-  const ads=adsCache.filter(a=>a.active&&a.slot==='popunder');
-  if(!ads.length||sessionStorage.getItem('kb_pu'))return;
-  const ad=ads[0];
-  if(!ad.linkUrl)return;
-  document.addEventListener('click',function _pu(){
-    document.removeEventListener('click',_pu);
-    if(!sessionStorage.getItem('kb_pu')){
-      sessionStorage.setItem('kb_pu','1');
-      try{ window.open(ad.linkUrl,'_blank','noopener,noreferrer'); }catch(e){}
+  function doLogin() {
+    if (!auth) { alert('Firebase Auth недоступний'); return; }
+    const email = document.getElementById('login-email').value.trim();
+    const pass  = document.getElementById('login-pass').value;
+    const errEl = document.getElementById('login-error');
+    errEl.style.display = 'none';
+    if (!email || !pass) {
+      errEl.textContent = 'Заповніть всі поля';
+      errEl.style.display = 'block';
+      return;
     }
-  },{once:true});
-}
-
-// =====================================================================
-// ANTI-ADBLOCK
-// =====================================================================
-function detectAdblock(){
-  const bait=document.createElement('div');
-  bait.className='pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads ad-slot adsbox adsbygoogle ad-banner';
-  bait.style.cssText='position:absolute;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
-  document.body.appendChild(bait);
-  setTimeout(()=>{
-    const h=bait.offsetHeight;
-    const s=window.getComputedStyle(bait);
-    const blocked=!h||s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)<0.1;
-    try{document.body.removeChild(bait);}catch(e){}
-    if(blocked){
-      // Перевіримо чи антиадблок увімкнено в налаштуваннях
-      const cfg=adsCache.find(a=>a.slot==='__config__');
-      const antiAdblockEnabled=cfg?cfg.antiAdblock:false;
-      if(antiAdblockEnabled){
-        const wall=document.getElementById('adblock-wall');
-        if(wall)wall.style.display='flex';
-      }
-    }
-  },300);
-}
-
-// =====================================================================
-// POPUP AD
-// =====================================================================
-let popCnt=5,popT=null;
-function initPopup(){
-  const ads=getAds('popup'); if(!ads.length)return;
-  const ad=ads[0];
-  const box=document.getElementById('pop-box');
-  const bar=document.getElementById('pop-bar');
-  const closeBtn=document.getElementById('pop-close');
-  if(ad.html) box.innerHTML=`<div class="pop-adlbl">Реклама</div><button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>${ad.html}<div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
-  else if(ad.imageUrl){
-    const isFallback=!ad.imageUrl;
-    box.innerHTML=`<div class="pop-adlbl">Реклама</div>
-      <button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>
-      <a href="${ad.linkUrl||'#'}" target="_blank" rel="noopener" onclick="closePopup()"><img src="${ad.imageUrl}" alt="Реклама" style="width:100%;display:block;border-radius:12px;"></a>
-      <div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
+    auth.signInWithEmailAndPassword(email, pass)
+      .catch(e => {
+        const msgs = {
+          'auth/user-not-found':    'Користувача не знайдено',
+          'auth/wrong-password':    'Невірний пароль',
+          'auth/invalid-email':     'Невірний формат email',
+          'auth/invalid-credential':'Невірний email або пароль',
+          'auth/too-many-requests': 'Забагато спроб. Спробуйте пізніше'
+        };
+        errEl.textContent = msgs[e.code] || 'Помилка входу';
+        errEl.style.display = 'block';
+      });
   }
-  setTimeout(()=>{
-    document.getElementById('pop-ov').classList.add('open');
-    const b=document.getElementById('pop-bar');if(b)b.style.width='0';
-    popT=setInterval(()=>{
-      popCnt--;
-      if(popCnt<=0){clearInterval(popT);const c=document.getElementById('pop-close');if(c)c.classList.remove('locked');}
-    },1000);
-  },4000);
-}
-function closePopup(){if(popCnt>0)return;clearInterval(popT);document.getElementById('pop-ov').classList.remove('open');}
 
-// =====================================================================
-// TRAILER
-// =====================================================================
-function openTrailer(key) {
-  const f = document.getElementById('trailer-frame');
-  if (!f) return;
-  f.innerHTML = `<iframe src="https://www.youtube.com/embed/${key}?autoplay=1&rel=0" allowfullscreen allow="autoplay; fullscreen" style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`;
-  document.getElementById('trailer-ov').classList.add('open');
-}
-function closeTrailer() {
-  document.getElementById('trailer-ov').classList.remove('open');
-  document.getElementById('trailer-frame').innerHTML = '';
-}
+  function logout() {
+    if (auth) auth.signOut();
+  }
 
-// =====================================================================
-// UTILS
-// =====================================================================
-let tT=null;
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3000);}
-window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('show',scrollY>400);});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();closeTrailer();}});
+  function doForgotPassword() {
+    if (!auth) return;
+    const email = document.getElementById('login-email').value.trim();
+    const errEl = document.getElementById('login-error');
+    if (!email) {
+      errEl.textContent = 'Введіть email вище';
+      errEl.style.display = 'block';
+      return;
+    }
+    auth.sendPasswordResetEmail(email)
+      .then(() => {
+        errEl.style.color = 'var(--green)';
+        errEl.textContent = `Лист надіслано на ${email}`;
+        errEl.style.display = 'block';
+        setTimeout(() => { errEl.style.color = ''; }, 5000);
+      })
+      .catch(() => {
+        errEl.textContent = 'Не вдалось надіслати лист';
+        errEl.style.display = 'block';
+      });
+  }
 
-// =====================================================================
-// START
-// =====================================================================
-window.addEventListener('DOMContentLoaded',()=>{
-  updateAuthUI(); // початковий стан (auth змінить через onAuthStateChanged)
-  initFirestore(); // підключаємо Firestore → після завантаження ключів викликає initSite()
-  setTimeout(detectAdblock, 1500); // перевірка адблоку
-  // Fallback: якщо Firestore не відповів за 5 сек — запустити сайт без ключів
-  setTimeout(()=>{ if(!dbReady){ dbReady=true; initSite(); } }, 5000);
-});
+  function changePassword() {
+    const nw  = document.getElementById('new-pass').value;
+    const rep = document.getElementById('rep-pass').value;
+    if (!nw || nw.length < 6) { showToast('Пароль мінімум 6 символів', true); return; }
+    if (nw !== rep) { showToast('Паролі не співпадають', true); return; }
+    const user = auth && auth.currentUser;
+    if (!user) { showToast('Не авторизовано', true); return; }
+    user.updatePassword(nw)
+      .then(() => {
+        showToast('✅ Пароль успішно змінено!');
+        ['cur-pass','new-pass','rep-pass'].forEach(id => {
+          const el = document.getElementById(id); if(el) el.value = '';
+        });
+      })
+      .catch(e => {
+        if (e.code === 'auth/requires-recent-login') {
+          showToast('Для зміни пароля виконайте повторний вхід', true);
+        } else {
+          showToast('Помилка зміни пароля', true);
+        }
+      });
+  }
+
+  // ========================
+  // ADS DATA — Firestore
+  // ========================
+  let adsCache = [];
+
+  function startAdsListener() {
+    if (!db) { loadAdsFromLocalStorage(); return; }
+    db.collection('ads').orderBy('createdAt', 'desc').onSnapshot(snap => {
+      adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAds();
+    }, () => loadAdsFromLocalStorage());
+  }
+
+  function loadAdsFromLocalStorage() {
+    try { adsCache = JSON.parse(localStorage.getItem('kb_ads') || '[]'); } catch { adsCache = []; }
+    renderAds();
+  }
+
+  function getAds() { return adsCache; }
+
+  // ========================
+  // RENDER
+  // ========================
+  const SLOT_LABELS = {
+    header:   ['Шапка',        'slot-header'],
+    between1: ['Між рядами 1', 'slot-between'],
+    between2: ['Між рядами 2', 'slot-between'],
+    between3: ['Між рядами 3', 'slot-between'],
+    sidebar:  ['Бокова панель','slot-sidebar'],
+    footer:   ['Підвал',       'slot-footer'],
+    popup:    ['Pop-up',       'slot-popup'],
+    popunder: ['Pop-under',    'slot-popup'],
+  };
+
+  let currentFilter = 'all';
+  let currentSearch = '';
+
+  function renderAds() {
+    const ads = getAds();
+    const active = ads.filter(a=>a.active).length;
+    const inactive = ads.filter(a=>!a.active).length;
+    const slots = new Set(ads.filter(a=>a.active).map(a=>a.slot)).size;
+
+    // Stats
+    document.getElementById('s-total').textContent = ads.length;
+    document.getElementById('s-active').textContent = active;
+    document.getElementById('s-inactive').textContent = inactive;
+    document.getElementById('s-slots').textContent = slots;
+    document.getElementById('count-ads').textContent = ads.length;
+    document.getElementById('sb-active').textContent = active;
+    document.getElementById('sb-inactive').textContent = inactive;
+
+    // Filter
+    let filtered = ads;
+    if (currentFilter === 'active') filtered = ads.filter(a=>a.active);
+    else if (currentFilter === 'inactive') filtered = ads.filter(a=>!a.active);
+    else if (['header','popup','between1','between2','between3','sidebar','footer'].includes(currentFilter))
+      filtered = ads.filter(a=>a.slot===currentFilter);
+
+    if (currentSearch)
+      filtered = filtered.filter(a =>
+        a.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+        (a.linkUrl||'').toLowerCase().includes(currentSearch.toLowerCase())
+      );
+
+    const tbody = document.getElementById('ads-tbody');
+    const empty = document.getElementById('ads-empty');
+
+    if (!filtered.length) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = filtered.map(ad => {
+      const [slotLabel, slotClass] = SLOT_LABELS[ad.slot] || ['—', ''];
+      const thumb = ad.imageUrl
+        ? `<div class="ad-thumb"><img src="${ad.imageUrl}" onerror="this.parentNode.innerHTML='🖼️'"></div>`
+        : `<div class="ad-thumb">🖼️</div>`;
+      return `
+        <tr>
+          <td>${thumb}</td>
+          <td>
+            <div class="ad-name">${ad.name}</div>
+            <div class="ad-link">${ad.linkUrl || '—'}</div>
+          </td>
+          <td><span class="slot-badge ${slotClass}">${slotLabel}</span></td>
+          <td><span class="type-badge">${
+            ad.type==='vertical'?'Верт.':
+            ad.type==='popup'?'Pop-up':
+            ad.type==='video'?'Відео':
+            ad.type==='popunder'?'Pop-under':
+            'Горизонт.'
+          }</span></td>
+          <td>
+            <label class="toggle-switch">
+              <input type="checkbox" ${ad.active?'checked':''} onchange="toggleAd('${ad.id}',this.checked)">
+              <div class="toggle-slider"></div>
+            </label>
+          </td>
+          <td style="text-align:right;">
+            <button class="action-btn edit" onclick="editAd('${ad.id}')" title="Редагувати">✏️</button>
+            <button class="action-btn del" onclick="deleteAd('${ad.id}')" title="Видалити">🗑</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // ========================
+  // AD ACTIONS — Firestore
+  // ========================
+  function toggleAd(id, val) {
+    if (db) {
+      db.collection('ads').doc(id).update({ active: val })
+        .then(() => showToast(val ? '✅ Банер увімкнено' : '⏸ Банер вимкнено'))
+        .catch(() => showToast('Помилка оновлення', true));
+    } else {
+      const ads = getAds(); const ad = ads.find(a=>a.id===id);
+      if (ad) { ad.active = val; localStorage.setItem('kb_ads', JSON.stringify(ads)); renderAds(); }
+      showToast(val ? '✅ Банер увімкнено' : '⏸ Банер вимкнено');
+    }
+  }
+
+  function deleteAd(id) {
+    if (!confirm('Видалити цей банер?')) return;
+    if (db) {
+      db.collection('ads').doc(id).delete()
+        .then(() => showToast('🗑 Банер видалено'))
+        .catch(() => showToast('Помилка видалення', true));
+    } else {
+      const ads = getAds().filter(a=>a.id!==id);
+      localStorage.setItem('kb_ads', JSON.stringify(ads)); renderAds();
+      showToast('🗑 Банер видалено');
+    }
+  }
+
+  function editAd(id) {
+    const ad = getAds().find(a=>a.id===id);
+    if (!ad) return;
+    document.getElementById('edit-id').value = id;
+    document.getElementById('modal-title').textContent = 'Редагувати банер';
+    document.getElementById('f-name').value = ad.name;
+    document.getElementById('f-slot').value = ad.slot;
+    document.getElementById('f-type').value = ad.type;
+    document.getElementById('f-img').value = ad.imageUrl || '';
+    document.getElementById('f-video').value = ad.videoUrl || '';
+    document.getElementById('f-link').value = ad.linkUrl || '';
+    document.getElementById('f-alt').value = ad.altText || '';
+    document.getElementById('f-html').value = ad.html || '';
+    previewImage(ad.imageUrl || '');
+    updateTypeHint();
+    openModal();
+  }
+
+  function saveAd() {
+    const name = document.getElementById('f-name').value.trim();
+    const slot = document.getElementById('f-slot').value;
+    const type = document.getElementById('f-type').value;
+    const imageUrl = document.getElementById('f-img').value.trim();
+    const linkUrl = document.getElementById('f-link').value.trim();
+    const altText = document.getElementById('f-alt').value.trim();
+    const html = document.getElementById('f-html').value.trim();
+    const videoUrl = document.getElementById('f-video').value.trim();
+
+    if (!name) { showToast('Введіть назву банера', true); return; }
+    const isPopunder = slot === 'popunder' || type === 'popunder';
+    if (!isPopunder && !imageUrl && !html && type !== 'video') { showToast('Вкажіть URL зображення або HTML код', true); return; }
+    if (type === 'video' && !videoUrl && !imageUrl) { showToast('Вкажіть URL відео', true); return; }
+    if (!linkUrl && !html && !isPopunder) { showToast('Вкажіть URL посилання', true); return; }
+    if (isPopunder && !linkUrl) { showToast('Вкажіть URL посилання для pop-under', true); return; }
+
+    const editId = document.getElementById('edit-id').value;
+    const payload = { name, slot, type, imageUrl, videoUrl, linkUrl, altText, html };
+
+    if (db) {
+      if (editId) {
+        db.collection('ads').doc(editId).update(payload)
+          .then(() => { showToast('✅ Банер оновлено!'); closeModal(); })
+          .catch(() => showToast('Помилка збереження', true));
+      } else {
+        db.collection('ads').add({ ...payload, active: true, createdAt: new Date().toISOString() })
+          .then(() => { showToast('✅ Банер додано!'); closeModal(); })
+          .catch(() => showToast('Помилка збереження', true));
+      }
+    } else {
+      // localStorage fallback
+      const ads = getAds();
+      if (editId) { const ad = ads.find(a=>a.id===editId); if(ad) Object.assign(ad, payload); showToast('✅ Банер оновлено!'); }
+      else { ads.push({ id:'ad_'+Date.now(), ...payload, active:true, createdAt:new Date().toISOString() }); showToast('✅ Банер додано!'); }
+      localStorage.setItem('kb_ads', JSON.stringify(ads)); adsCache = ads; renderAds(); closeModal();
+    }
+  }
+
+  function clearAllAds() {
+    if (!confirm('Видалити ВСІ банери? Цю дію не можна скасувати.')) return;
+    if (db) {
+      const batch = db.batch();
+      adsCache.forEach(ad => batch.delete(db.collection('ads').doc(ad.id)));
+      batch.commit().then(() => showToast('🗑 Всі банери видалено')).catch(() => showToast('Помилка', true));
+    } else {
+      localStorage.setItem('kb_ads', '[]'); adsCache = []; renderAds();
+      showToast('🗑 Всі банери видалено');
+    }
+  }
+
+  // ========================
+  // FILTERS
+  // ========================
+  function filterAds(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderAds();
+  }
+
+  function filterBySearch(q) {
+    currentSearch = q;
+    renderAds();
+  }
+
+  // ========================
+  // MODAL
+  // ========================
+  function openModal() {
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.getElementById('edit-id').value = '';
+    document.getElementById('modal-title').textContent = 'Додати банер';
+    ['f-name','f-img','f-video','f-link','f-alt','f-html'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-slot').value = 'header';
+    document.getElementById('f-type').value = 'horizontal';
+    document.getElementById('img-preview').innerHTML = '<div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>';
+    updateTypeHint();
+  }
+
+  function previewImage(url) {
+    const box = document.getElementById('img-preview');
+    if (!url) {
+      box.innerHTML = '<div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>';
+      return;
+    }
+    box.innerHTML = `<img src="${url}" onerror="this.parentNode.innerHTML='<div class=preview-placeholder>❌ Не вдалося завантажити зображення</div>'">`;
+  }
+
+  function updateTypeHint() {
+    const slot = document.getElementById('f-slot').value;
+    const type = document.getElementById('f-type').value;
+    const hints = {
+      header:    'Горизонтальний або відео • 100% ширина • 90-150px висота',
+      between1:  'Горизонтальний • повна ширина між рядами фільмів',
+      between2:  'Горизонтальний • повна ширина між рядами фільмів',
+      between3:  'Горизонтальний • повна ширина між рядами фільмів',
+      sidebar:   'Вертикальний • 200px ширина на десктопі, горизонт. на мобільному',
+      footer:    'Горизонтальний • повна ширина у підвалі',
+      popup:     "Pop-up • 480px • з'являється через 4 сек",
+      popunder:  'Відкриває посилання у новій вкладці при першому кліку (1 раз за сесію)',
+    };
+    const typeMap = {
+      header:'horizontal', between1:'horizontal', between2:'horizontal',
+      between3:'horizontal', sidebar:'vertical', footer:'horizontal',
+      popup:'popup', popunder:'popunder'
+    };
+    const auto = typeMap[slot];
+    if (auto) document.getElementById('f-type').value = auto;
+    document.getElementById('type-hint').textContent = hints[slot] || '';
+    // Показати/сховати поле відео URL
+    const showVideo = type === 'video' || document.getElementById('f-type').value === 'video';
+    document.getElementById('video-url-group').style.display = showVideo ? 'block' : 'none';
+  }
+
+  // ========================
+  // NAVIGATION
+  // ========================
+  function showPage(page) {
+    document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('nav-' + page).classList.add('active');
+  }
+
+  // ========================
+  // EXPORT / IMPORT
+  // ========================
+  function exportData() {
+    const data = { ads: getAds(), apiKeys: getKeys(), exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'kinobaza-backup.json';
+    a.click();
+    showToast('✅ Дані експортовано!');
+  }
+
+  function importData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        let msg = [];
+        if (data.ads && Array.isArray(data.ads) && db) {
+          const batch = db.batch();
+          data.ads.forEach(ad => {
+            const ref = ad.id ? db.collection('ads').doc(ad.id) : db.collection('ads').doc();
+            batch.set(ref, ad);
+          });
+          await batch.commit();
+          msg.push(`${data.ads.length} банерів`);
+        }
+        if (data.apiKeys && Array.isArray(data.apiKeys) && db) {
+          const batch = db.batch();
+          data.apiKeys.forEach(k => {
+            const ref = k.id ? db.collection('apiKeys').doc(k.id) : db.collection('apiKeys').doc();
+            batch.set(ref, k);
+          });
+          await batch.commit();
+          msg.push(`${data.apiKeys.length} ключів`);
+        }
+        if (msg.length) showToast(`✅ Імпортовано: ${msg.join(', ')}!`);
+        else showToast('❌ Невірний формат або Firebase недоступний', true);
+      } catch { showToast('❌ Помилка читання файлу', true); }
+    };
+    reader.readAsText(file);
+    input.value = '';
+  }
+
+  // ========================
+  // ANTI-ADBLOCK SETTINGS
+  // ========================
+  function loadAntiAdblockSetting() {
+    if (!db) return;
+    db.collection('ads').doc('__config__').get().then(doc => {
+      const enabled = doc.exists ? (doc.data().antiAdblock || false) : false;
+      const toggle = document.getElementById('ab-toggle');
+      const label  = document.getElementById('ab-label');
+      if (toggle) toggle.checked = enabled;
+      if (label)  label.textContent = enabled ? 'Увімкнено' : 'Вимкнено';
+    }).catch(() => {});
+  }
+
+  function saveAntiAdblock(val) {
+    const label = document.getElementById('ab-label');
+    if (label) label.textContent = val ? 'Увімкнено' : 'Вимкнено';
+    if (!db) { showToast('Firebase недоступний', true); return; }
+    db.collection('ads').doc('__config__').set({ antiAdblock: val, updatedAt: new Date().toISOString() }, { merge: true })
+      .then(() => showToast(val ? 'Захист від AdBlock увімкнено' : 'Захист від AdBlock вимкнено'))
+      .catch(() => showToast('Помилка збереження', true));
+  }
+
+  // ========================
+  // TOAST
+  // ========================
+  let toastT = null;
+  function showToast(msg, error = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast-admin show' + (error ? ' error' : '');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ========================
+  // API KEYS — Firestore
+  // ========================
+  let keysCache = [];
+
+  function startKeysListener() {
+    if (!db) { loadKeysFromLocalStorage(); return; }
+    db.collection('apiKeys').orderBy('addedAt', 'desc').onSnapshot(snap => {
+      keysCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderKeys();
+    }, () => loadKeysFromLocalStorage());
+  }
+
+  function loadKeysFromLocalStorage() {
+    try {
+      const raw = localStorage.getItem('kb_api_keys');
+      const arr = raw ? JSON.parse(raw) : [];
+      keysCache = arr.map((k,i) => typeof k === 'string'
+        ? { id:'k_'+i, name:'Ключ '+(i+1), value:k, addedAt:new Date().toISOString() }
+        : k);
+      // backward compat
+      if (!keysCache.length) {
+        const old = localStorage.getItem('tmdb_key');
+        if (old) keysCache = [{ id:'k_legacy', name:'Імпортовано', value:old, addedAt:new Date().toISOString() }];
+      }
+    } catch { keysCache = []; }
+    renderKeys();
+  }
+
+  function getKeys() { return keysCache; }
+
+  function renderKeys() {
+    const keys = getKeys();
+    document.getElementById('ks-total').textContent = keys.length;
+    document.getElementById('ks-active').textContent = keys.length;
+    document.getElementById('count-keys').textContent = keys.length;
+
+    const tbody = document.getElementById('keys-tbody');
+    const empty = document.getElementById('keys-empty');
+
+    if (!keys.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = keys.map((k, i) => {
+      const masked = k.value && k.value.length > 10
+        ? k.value.slice(0, 6) + '••••••••••••••••••••' + k.value.slice(-4)
+        : (k.value || '—');
+      const date = k.addedAt ? new Date(k.addedAt).toLocaleDateString('uk-UA') : '—';
+      return `
+        <tr>
+          <td style="color:var(--muted);font-weight:700;">#${i+1}</td>
+          <td>
+            <div style="font-weight:600;font-size:14px;">${k.name || 'Ключ ' + (i+1)}</div>
+            <div style="font-family:monospace;font-size:12px;color:var(--muted);">${masked}</div>
+          </td>
+          <td><span style="color:var(--green);font-size:13px;">✅ Активний</span></td>
+          <td style="color:var(--muted);font-size:13px;">${date}</td>
+          <td style="text-align:right;">
+            <button class="action-btn" onclick="copyKey('${k.id}')" title="Копіювати">📋</button>
+            <button class="action-btn del" onclick="deleteKey('${k.id}')" title="Видалити">🗑</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function openKeyModal() {
+    document.getElementById('k-name').value = '';
+    document.getElementById('k-value').value = '';
+    document.getElementById('key-modal-overlay').classList.add('open');
+  }
+
+  function closeKeyModal() {
+    document.getElementById('key-modal-overlay').classList.remove('open');
+  }
+
+  function saveKey() {
+    const name = document.getElementById('k-name').value.trim();
+    const value = document.getElementById('k-value').value.trim();
+    if (!value) { showToast('Введіть API ключ', true); return; }
+    if (getKeys().find(k => k.value === value)) { showToast('Такий ключ вже існує', true); return; }
+    const payload = { name: name || ('Ключ ' + (getKeys().length + 1)), value, addedAt: new Date().toISOString() };
+    if (db) {
+      db.collection('apiKeys').add(payload)
+        .then(() => { showToast('✅ Ключ додано!'); closeKeyModal(); })
+        .catch(() => showToast('Помилка збереження', true));
+    } else {
+      keysCache.push({ id:'k_'+Date.now(), ...payload });
+      localStorage.setItem('kb_api_keys', JSON.stringify(keysCache));
+      renderKeys(); closeKeyModal(); showToast('✅ Ключ додано!');
+    }
+  }
+
+  function deleteKey(id) {
+    if (!confirm('Видалити цей API ключ?')) return;
+    if (db) {
+      db.collection('apiKeys').doc(id).delete()
+        .then(() => showToast('🗑 Ключ видалено'))
+        .catch(() => showToast('Помилка видалення', true));
+    } else {
+      keysCache = keysCache.filter(k => k.id !== id);
+      localStorage.setItem('kb_api_keys', JSON.stringify(keysCache));
+      renderKeys(); showToast('🗑 Ключ видалено');
+    }
+  }
+
+  function copyKey(id) {
+    const key = getKeys().find(k => k.id === id);
+    if (!key) return;
+    navigator.clipboard.writeText(key.value)
+      .then(() => showToast('📋 Ключ скопійовано!'))
+      .catch(() => showToast('Не вдалося скопіювати', true));
+  }
+
+  // ========================
+  // BLOCK 9: PAGES
+  // ========================
+  function switchPageTab(id, el) {
+    document.querySelectorAll('.pages-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page-editor').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('pe-' + id).classList.add('active');
+  }
+
+  function loadPagesData() {
+    if (!db) return;
+    ['about','contacts','terms','dmca'].forEach(id => {
+      db.collection('pages').doc(id).get().then(doc => {
+        if (!doc.exists) return;
+        const d = doc.data();
+        const ti = document.getElementById('pt-' + id);
+        const co = document.getElementById('pc-' + id);
+        if (ti) ti.value = d.title || '';
+        if (co) co.value = d.content || '';
+      }).catch(() => {});
+    });
+  }
+
+  function savePage(id) {
+    if (!db) { showToast('Firebase недоступний', true); return; }
+    const title   = (document.getElementById('pt-' + id).value || '').trim();
+    const content = (document.getElementById('pc-' + id).value || '').trim();
+    if (!title) { showToast('Введіть заголовок', true); return; }
+    db.collection('pages').doc(id).set(
+      { title, content, updatedAt: new Date().toISOString() },
+      { merge: true }
+    ).then(() => showToast('Сторінку збережено'))
+     .catch(() => showToast('Помилка збереження', true));
+  }
+
+  // ========================
+  // BLOCK 9: USERS
+  // ========================
+  let usersCache = [];
+
+  function loadUsersData() {
+    if (!db) { showToast('Firebase недоступний', true); return; }
+    const loading = document.getElementById('users-loading');
+    const table   = document.getElementById('users-table');
+    const empty   = document.getElementById('users-empty');
+    loading.textContent = 'Завантаження...';
+    loading.style.display = 'block';
+    table.style.display   = 'none';
+    empty.style.display   = 'none';
+
+    db.collection('users').orderBy('createdAt','desc').limit(200).get()
+      .then(snap => { usersCache = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderUsers(); })
+      .catch(() => {
+        // fallback without orderBy (якщо немає індексу)
+        db.collection('users').limit(200).get()
+          .then(snap => { usersCache = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderUsers(); })
+          .catch(() => { loading.textContent = 'Помилка завантаження. Перевірте правила Firestore.'; });
+      });
+  }
+
+  function renderUsers() {
+    const loading = document.getElementById('users-loading');
+    const table   = document.getElementById('users-table');
+    const empty   = document.getElementById('users-empty');
+    const tbody   = document.getElementById('users-tbody');
+    const users   = usersCache;
+    const admins  = users.filter(u => u.role === 'admin').length;
+
+    document.getElementById('us-total').textContent  = users.length;
+    document.getElementById('us-admins').textContent = admins;
+    document.getElementById('us-users').textContent  = users.length - admins;
+    document.getElementById('count-users').textContent = users.length;
+
+    loading.style.display = 'none';
+    if (!users.length) { empty.style.display = 'block'; table.style.display = 'none'; return; }
+    empty.style.display = 'none';
+    table.style.display = 'table';
+
+    const me = auth && auth.currentUser ? auth.currentUser.uid : null;
+    tbody.innerHTML = users.map((u, i) => {
+      const isMe    = u.id === me;
+      const roleAdm = u.role === 'admin';
+      const date    = u.createdAt ? new Date(u.createdAt).toLocaleDateString('uk-UA') : '—';
+      return `
+        <tr>
+          <td style="color:var(--muted);font-weight:700;">${i + 1}</td>
+          <td>
+            <div style="font-weight:600;font-size:14px;">${u.name || '—'}${isMe ? ' <span style="color:var(--muted);font-size:11px;">(ви)</span>' : ''}</div>
+            <div class="user-email">${u.email || '—'}</div>
+          </td>
+          <td><span class="role-badge ${roleAdm ? 'role-admin' : 'role-user'}">${roleAdm ? 'Адмін' : 'Юзер'}</span></td>
+          <td style="color:var(--muted);font-size:13px;">${date}</td>
+          <td style="text-align:right;">
+            ${isMe ? '<span style="color:var(--muted);font-size:12px;">—</span>' : `
+              <button class="action-btn" onclick="toggleUserRole('${u.id}','${u.role}')" title="${roleAdm ? 'Понизити до юзера' : 'Зробити адміном'}" style="font-size:12px;width:auto;padding:0 10px;">
+                ${roleAdm ? 'Юзер' : 'Адмін'}
+              </button>
+              <button class="action-btn del" onclick="deleteUserRecord('${u.id}')" title="Видалити запис">🗑</button>
+            `}
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  function toggleUserRole(uid, currentRole) {
+    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+    const msg = newRole === 'admin' ? 'Надати права адміна?' : 'Забрати права адміна?';
+    if (!confirm(msg)) return;
+    db.collection('users').doc(uid).update({ role: newRole })
+      .then(() => { showToast(newRole === 'admin' ? 'Роль: Адмін' : 'Роль: Юзер'); loadUsersData(); })
+      .catch(() => showToast('Помилка зміни ролі', true));
+  }
+
+  function deleteUserRecord(uid) {
+    if (!confirm('Видалити запис цього юзера з Firestore? Акаунт Firebase Auth збережеться.')) return;
+    db.collection('users').doc(uid).delete()
+      .then(() => { showToast('Запис видалено'); loadUsersData(); })
+      .catch(() => showToast('Помилка видалення', true));
+  }
+
+  // ========================
+  // INIT
+  // ========================
+  function initAdmin() {
+    startAdsListener();
+    startKeysListener();
+    loadAntiAdblockSetting();
+    loadPagesData();
+  }
+
+  // Сесія керується через Firebase onAuthStateChanged (вище)
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
 </script>
 </body>
 </html>
