@@ -347,6 +347,17 @@
     .adblock-btn:hover{background:var(--ah);}
     /* Video ad */
     .ad-video{width:100%;display:block;max-height:160px;object-fit:cover;cursor:pointer;}
+    /* ===== PAGE MODAL (Про нас / Контакти / Умови / DMCA) ===== */
+    .page-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:8500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
+    .page-modal-ov.open{opacity:1;pointer-events:all;}
+    .page-modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:700px;max-width:95vw;max-height:85vh;overflow-y:auto;position:relative;animation:mIn .3s ease;}
+    .page-modal-title{font-size:22px;font-weight:800;margin-bottom:20px;padding-right:30px;}
+    .page-modal-content{color:var(--muted);font-size:15px;line-height:1.8;}
+    .page-modal-content p{margin-bottom:12px;}
+    .page-modal-content h2,.page-modal-content h3{color:#fff;margin:18px 0 8px;}
+    .page-modal-content a{color:var(--accent);}
+    .page-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
+    .page-modal-close:hover{color:#fff;}
     /* ===== FOOTER ===== */
     footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:50px;padding:32px 24px 18px;}
     .ft-grid{max-width:1600px;margin:0 auto 22px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:26px;}
@@ -749,8 +760,10 @@
     </div>
     <div class="ft-col">
       <h4>Сервіс</h4>
-      <a href="#">Про нас</a><a href="#">Контакти</a>
-      <a href="#">Умови</a><a href="#">DMCA</a>
+      <a href="#" onclick="openPage('about');return false;">Про нас</a>
+      <a href="#" onclick="openPage('contacts');return false;">Контакти</a>
+      <a href="#" onclick="openPage('terms');return false;">Умови</a>
+      <a href="#" onclick="openPage('dmca');return false;">DMCA</a>
     </div>
   </div>
   <div style="max-width:1600px;margin:0 auto;">
@@ -830,6 +843,15 @@
   </div>
 </div>
 
+<!-- ===== PAGE MODAL ===== -->
+<div class="page-modal-ov" id="page-modal" onclick="if(event.target===this)closePage()">
+  <div class="page-modal-box">
+    <button class="page-modal-close" onclick="closePage()">✕</button>
+    <div class="page-modal-title" id="page-modal-title"></div>
+    <div class="page-modal-content" id="page-modal-content"></div>
+  </div>
+</div>
+
 <!-- ===== ADBLOCK WALL ===== -->
 <div id="adblock-wall">
   <div class="adblock-box">
@@ -880,6 +902,7 @@ try {
 // =====================================================================
 let adsCache  = [];
 let keysCache = [];
+let pagesCache = {};
 let dbReady   = false;
 
 function initFirestore() {
@@ -894,14 +917,21 @@ function initFirestore() {
   // Real-time слухач для API ключів
   db.collection('apiKeys').onSnapshot(snap => {
     keysCache = snap.docs.map(d => d.data().value).filter(Boolean);
-    dbReady = true;
+    if (!dbReady) { dbReady = true; initSite(); } // перший раз — запускаємо сайт
   }, () => {
     const raw = localStorage.getItem('kb_api_keys');
     try {
       const arr = raw ? JSON.parse(raw) : [];
       keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
     } catch {}
-    dbReady = true;
+    if (!dbReady) { dbReady = true; initSite(); }
+  });
+
+  // Завантаження сторінок (Про нас / Контакти / Умови / DMCA)
+  ['about','contacts','terms','dmca'].forEach(id => {
+    db.collection('pages').doc(id).onSnapshot(doc => {
+      if (doc.exists) pagesCache[id] = doc.data();
+    }, () => {});
   });
 }
 
@@ -1632,6 +1662,24 @@ function openAuth(tab='login') {
   document.getElementById('auth-modal').classList.add('open');
 }
 function closeAuth() { document.getElementById('auth-modal').classList.remove('open'); }
+
+// =====================================================================
+// STATIC PAGES — Про нас / Контакти / Умови / DMCA
+// =====================================================================
+const PAGE_DEFAULTS = {
+  about:    { title:'Про нас',            content:'<p>КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості, кілька серверів відтворення, українська озвучка.</p>' },
+  contacts: { title:'Контакти',           content:'<p>З питань співпраці та реклами звертайтесь на нашу електронну пошту.</p>' },
+  terms:    { title:'Умови використання', content:'<p>Використовуючи сайт, ви погоджуєтесь з умовами використання. Сайт не зберігає відеофайли — всі відео надаються третіми особами.</p>' },
+  dmca:     { title:'DMCA',              content:'<p>Якщо ви є правовласником і вважаєте що контент порушує ваші права, зверніться до нас для видалення. Ми дотримуємось законодавства про авторське право.</p>' }
+};
+
+function openPage(id) {
+  const data = pagesCache[id] || PAGE_DEFAULTS[id] || { title: id, content: '' };
+  document.getElementById('page-modal-title').textContent = data.title || '';
+  document.getElementById('page-modal-content').innerHTML = data.content || '';
+  document.getElementById('page-modal').classList.add('open');
+}
+function closePage() { document.getElementById('page-modal').classList.remove('open'); }
 function switchTab(t) {
   document.getElementById('tab-login').classList.toggle('act', t==='login');
   document.getElementById('tab-register').classList.toggle('act', t==='register');
@@ -2282,9 +2330,10 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();c
 // =====================================================================
 window.addEventListener('DOMContentLoaded',()=>{
   updateAuthUI(); // початковий стан (auth змінить через onAuthStateChanged)
-  initFirestore(); // підключаємо Firestore (завантажує рекламу і ключі)
-  initSite();
+  initFirestore(); // підключаємо Firestore → після завантаження ключів викликає initSite()
   setTimeout(detectAdblock, 1500); // перевірка адблоку
+  // Fallback: якщо Firestore не відповів за 5 сек — запустити сайт без ключів
+  setTimeout(()=>{ if(!dbReady){ dbReady=true; initSite(); } }, 5000);
 });
 </script>
 </body>
