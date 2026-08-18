@@ -657,7 +657,7 @@
           </div>
           <button class="btn-add" onclick="loadUsersData()" style="background:var(--blue);">Оновити</button>
         </div>
-        <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+        <div class="stats-row" style="grid-template-columns:repeat(4,1fr);">
           <div class="stat-card">
             <div class="stat-icon">👥</div>
             <div><div class="stat-num" id="us-total">0</div><div class="stat-label">Всього</div></div>
@@ -670,6 +670,10 @@
             <div class="stat-icon">👤</div>
             <div><div class="stat-num" id="us-users" style="color:var(--blue)">0</div><div class="stat-label">Звичайних</div></div>
           </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div><div class="stat-num" id="us-subs" style="color:var(--gold)">0</div><div class="stat-label">Premium</div></div>
+          </div>
         </div>
         <div id="users-list-container">
           <div id="users-loading" style="text-align:center;padding:40px;color:var(--muted);display:block;">Натисніть "Оновити" для завантаження</div>
@@ -679,6 +683,7 @@
                 <th>#</th>
                 <th>Ім'я / Email</th>
                 <th>Роль</th>
+                <th>Підписка</th>
                 <th>Зареєстровано</th>
                 <th style="text-align:right">Дії</th>
               </tr>
@@ -1515,10 +1520,13 @@
     empty.style.display = 'none';
     table.style.display = 'table';
 
-    const me = auth && auth.currentUser ? auth.currentUser.uid : null;
+    const me   = auth && auth.currentUser ? auth.currentUser.uid : null;
+    const subs = users.filter(u => u.subscribed).length;
+    document.getElementById('us-subs').textContent = subs;
     tbody.innerHTML = users.map((u, i) => {
       const isMe    = u.id === me;
       const roleAdm = u.role === 'admin';
+      const isSub   = u.subscribed === true;
       const date    = u.createdAt ? new Date(u.createdAt).toLocaleDateString('uk-UA') : '—';
       return `
         <tr>
@@ -1528,11 +1536,15 @@
             <div class="user-email">${u.email || '—'}</div>
           </td>
           <td><span class="role-badge ${roleAdm ? 'role-admin' : 'role-user'}">${roleAdm ? 'Адмін' : 'Юзер'}</span></td>
+          <td>${isSub ? '<span style="color:var(--gold);font-weight:700;">⭐ Premium</span>' : '<span style="color:var(--muted);">—</span>'}</td>
           <td style="color:var(--muted);font-size:13px;">${date}</td>
           <td style="text-align:right;">
             ${isMe ? '<span style="color:var(--muted);font-size:12px;">—</span>' : `
               <button class="action-btn" onclick="toggleUserRole('${u.id}','${u.role}')" title="${roleAdm ? 'Понизити до юзера' : 'Зробити адміном'}" style="font-size:12px;width:auto;padding:0 10px;">
                 ${roleAdm ? 'Юзер' : 'Адмін'}
+              </button>
+              <button class="action-btn" onclick="toggleSubscription('${u.id}',${isSub})" title="${isSub ? 'Скасувати Premium' : 'Дати Premium'}" style="font-size:12px;width:auto;padding:0 10px;background:${isSub ? '#333' : 'rgba(245,197,24,.2)'};color:${isSub ? 'var(--muted)' : 'var(--gold)'};">
+                ${isSub ? 'Скасувати' : '⭐ Premium'}
               </button>
               <button class="action-btn del" onclick="deleteUserRecord('${u.id}')" title="Видалити запис">🗑</button>
             `}
@@ -1548,6 +1560,14 @@
     db.collection('users').doc(uid).update({ role: newRole })
       .then(() => { showToast(newRole === 'admin' ? 'Роль: Адмін' : 'Роль: Юзер'); loadUsersData(); })
       .catch(() => showToast('Помилка зміни ролі', true));
+  }
+
+  function toggleSubscription(uid, current) {
+    const msg = current ? 'Скасувати Premium підписку?' : 'Надати Premium підписку (без реклами)?';
+    if (!confirm(msg)) return;
+    db.collection('users').doc(uid).update({ subscribed: !current })
+      .then(() => { showToast(current ? 'Підписку скасовано' : 'Premium надано'); loadUsersData(); })
+      .catch(() => showToast('Помилка', true));
   }
 
   function deleteUserRecord(uid) {
