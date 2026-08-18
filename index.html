@@ -61,6 +61,8 @@
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Google AdSense — замініть ca-pub-XXXXXXXX на свій Publisher ID з adsense.google.com -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXX" crossorigin="anonymous"></script> -->
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -89,8 +91,11 @@
     .srch{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;width:100%;}
     .srch input{background:none;border:none;outline:none;color:#fff;padding:8px 12px;font-size:14px;width:100%;font-family:inherit;}
     .srch input::placeholder{color:var(--dim);}
-    .srch button{background:var(--accent);border:none;color:#fff;padding:8px 13px;cursor:pointer;font-size:15px;flex-shrink:0;}
-    .srch button:hover{background:var(--ah);}
+    .lang-sw{display:flex;gap:2px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px;flex-shrink:0;}
+    .lang-btn{background:none;border:none;color:var(--muted);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;cursor:pointer;transition:all .15s;font-family:inherit;}
+    .lang-btn.act{background:var(--accent);color:#fff;}
+    .lang-btn:hover:not(.act){color:#fff;background:var(--bg4);}
+    .sub-badge{display:inline-block;background:rgba(245,197,24,.18);color:var(--gold);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
     /* ===== AUTOCOMPLETE ===== */
     #ac-drop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,.7);display:none;max-height:440px;overflow-y:auto;}
     #ac-drop.open{display:block;}
@@ -545,17 +550,21 @@
     </nav>
     <div class="srch-wrap">
       <div class="srch">
-        <input type="text" id="si" placeholder="Пошук фільмів, серіалів..."
+        <input type="text" id="si" placeholder="Пошук фільмів"
           autocomplete="off" spellcheck="false"
           oninput="handleSrch(event)"
           onkeydown="acKeydown(event)"
           onfocus="acFocus()"
           onblur="setTimeout(hideAutocomplete,200)">
-        <button onclick="doSearch()">🔍</button>
       </div>
       <div id="ac-drop"></div>
     </div>
     <div class="hdr-right">
+      <div class="lang-sw" id="lang-sw">
+        <button class="lang-btn act" id="lbtn-uk" onclick="setSiteLang('uk')">UA</button>
+        <button class="lang-btn" id="lbtn-ru" onclick="setSiteLang('ru')">RU</button>
+        <button class="lang-btn" id="lbtn-en" onclick="setSiteLang('en')">EN</button>
+      </div>
       <button id="pwa-install-btn" class="btn-sm" onclick="pwaInstall()" style="display:none;align-items:center;gap:5px;" title="Встановити додаток">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
         Додаток
@@ -1152,6 +1161,22 @@ function getKeys() {
   return k;
 }
 
+// Мова сайту (метадані фільмів: назви, описи)
+let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
+function getSiteLangParam() {
+  return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA';
+}
+function setSiteLang(lang) {
+  siteLang = lang;
+  localStorage.setItem('kb_site_lang', lang);
+  ['uk','ru','en'].forEach(l => {
+    const btn = document.getElementById('lbtn-' + l);
+    if (btn) btn.classList.toggle('act', l === lang);
+  });
+  // Перезавантажити контент з новою мовою
+  if (dbReady) initSite();
+}
+
 async function tmdb(ep, params={}) {
   const keys = getKeys();
   if (!keys.length) return null;
@@ -1159,7 +1184,7 @@ async function tmdb(ep, params={}) {
     const key = keys[(keyIdx+i) % keys.length];
     const url = new URL(TMDB_BASE + ep);
     url.searchParams.set('api_key', key);
-    url.searchParams.set('language', 'uk-UA');
+    url.searchParams.set('language', getSiteLangParam());
     Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, String(v)));
     try {
       const r = await fetch(url);
@@ -1931,6 +1956,7 @@ function showHome(){
 let auth = null;
 let currentUser = null;
 let currentUserRole = 'user';
+let currentUserSubscribed = false;
 
 try { auth = firebase.auth(); } catch(e) { console.warn('Firebase Auth init failed'); }
 
@@ -1940,10 +1966,14 @@ if (auth) {
   auth.onAuthStateChanged(async (user) => {
     currentUser = user;
     currentUserRole = 'user';
+    currentUserSubscribed = false;
     if (user && db) {
       try {
         const doc = await db.collection('users').doc(user.uid).get();
-        if (doc.exists) currentUserRole = doc.data().role || 'user';
+        if (doc.exists) {
+          currentUserRole = doc.data().role || 'user';
+          currentUserSubscribed = doc.data().subscribed === true;
+        }
       } catch(e) {}
       initLibrary(); // запускаємо Firestore listener для бібліотеки
     } else {
@@ -1963,10 +1993,14 @@ function updateAuthUI() {
   document.getElementById('user-menu').style.display = user ? 'block' : 'none';
   if (user) {
     document.getElementById('user-initial').textContent = (user.displayName || user.email || 'U')[0].toUpperCase();
-    document.getElementById('ud-name').textContent = user.displayName || user.email;
+    const nameEl = document.getElementById('ud-name');
+    if (nameEl) nameEl.innerHTML = (user.displayName || user.email) +
+      (currentUserSubscribed ? '<span class="sub-badge">Premium</span>' : '');
   }
   const adminLink = document.getElementById('ud-admin');
   if (adminLink) adminLink.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
+  // Перерендерити рекламу (підписка може змінити видимість)
+  renderAds();
   // Sync mobile drawer auth section whenever auth state changes
   updateMobileDrawerAuth();
 }
@@ -2481,7 +2515,10 @@ function removeCatFilter(key) {
 // =====================================================================
 // ADS — Block 8: video, pop-under, anti-adblock
 // =====================================================================
-function getAds(slot){ return adsCache.filter(a=>a.active&&a.slot===slot); }
+function getAds(slot){
+  if (currentUserSubscribed) return []; // підписники не бачать реклами
+  return adsCache.filter(a=>a.active&&a.slot===slot);
+}
 
 function buildH(ad){
   const w=document.createElement('div');
@@ -2664,6 +2701,11 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(ds) ds.classList.remove('open');
   });
 
+  // Ініціалізація кнопок мови
+  ['uk','ru','en'].forEach(l => {
+    const btn = document.getElementById('lbtn-' + l);
+    if (btn) btn.classList.toggle('act', l === siteLang);
+  });
   initFirestore(); // підключаємо Firestore → після завантаження ключів викликає initSite()
   setTimeout(detectAdblock, 1500); // перевірка адблоку
   // Fallback: якщо Firestore не відповів за 5 сек — запустити сайт без ключів
