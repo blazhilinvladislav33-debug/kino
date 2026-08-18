@@ -6,6 +6,9 @@
   <title>КіноБаза — Дивитись фільми онлайн</title>
   <meta name="description" content="Дивитись фільми та серіали онлайн безкоштовно. HD якість, українська озвучка.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <style>
     :root {
       --bg: #0d0d0d; --bg2: #141414; --bg3: #1a1a1a; --bg4: #222;
@@ -484,7 +487,6 @@
     <div class="ft-col">
       <h4>Сервіс</h4>
       <a href="#">Про нас</a><a href="#">Контакти</a>
-      <a href="admin.html" target="_blank">Адмін</a>
       <a href="#">Умови</a><a href="#">DMCA</a>
     </div>
   </div>
@@ -554,21 +556,74 @@
 
 <script>
 // =====================================================================
+// FIREBASE CONFIG — вставте ваші дані з Firebase Console
+// Project Settings → General → Your apps → Firebase SDK snippet → Config
+// =====================================================================
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
+  authDomain:        "kinobaza-6c109.firebaseapp.com",
+  projectId:         "kinobaza-6c109",
+  storageBucket:     "kinobaza-6c109.firebasestorage.app",
+  messagingSenderId: "639150355070",
+  appId:             "1:639150355070:web:772f863f075d4d1d839e2f",
+  measurementId:     "G-GKVZ2JJDJN"
+};
+
+let db = null;
+try {
+  if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  db = firebase.firestore();
+} catch(e) { console.warn('Firebase init failed, using localStorage fallback'); }
+
+// =====================================================================
+// GLOBAL CACHES — оновлюються в реальному часі через Firestore
+// =====================================================================
+let adsCache  = [];
+let keysCache = [];
+let dbReady   = false;
+
+function initFirestore() {
+  if (!db) { loadFallback(); return; }
+
+  // Real-time слухач для реклами
+  db.collection('ads').onSnapshot(snap => {
+    adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderAds();
+  }, () => { loadFallback(); });
+
+  // Real-time слухач для API ключів
+  db.collection('apiKeys').onSnapshot(snap => {
+    keysCache = snap.docs.map(d => d.data().value).filter(Boolean);
+    dbReady = true;
+  }, () => {
+    const raw = localStorage.getItem('kb_api_keys');
+    try {
+      const arr = raw ? JSON.parse(raw) : [];
+      keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
+    } catch {}
+    dbReady = true;
+  });
+}
+
+function loadFallback() {
+  // localStorage fallback якщо Firebase недоступний
+  try { adsCache = JSON.parse(localStorage.getItem('kb_ads') || '[]'); } catch {}
+  try {
+    const raw = localStorage.getItem('kb_api_keys');
+    const arr = raw ? JSON.parse(raw) : [];
+    keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
+  } catch {}
+  renderAds();
+}
+
+// =====================================================================
 // TMDB API — multiple keys with rotation
 // =====================================================================
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 const IMG = 'https://image.tmdb.org/t/p/';
-const KEYS_KEY = 'kb_api_keys';
-const ADS_KEY  = 'kb_ads';
 let keyIdx = 0;
 
-function getKeys() {
-  const raw = localStorage.getItem(KEYS_KEY);
-  if (raw) { try { return JSON.parse(raw); } catch{} }
-  // backward compat
-  const old = localStorage.getItem('tmdb_key');
-  return old ? [old] : [];
-}
+function getKeys() { return keysCache; }
 
 async function tmdb(ep, params={}) {
   const keys = getKeys();
@@ -1031,7 +1086,7 @@ function showClassics(){
 // =====================================================================
 // ADS
 // =====================================================================
-function getAds(slot){try{return(JSON.parse(localStorage.getItem(ADS_KEY)||'[]')).filter(a=>a.active&&a.slot===slot);}catch{return[];}}
+function getAds(slot){ return adsCache.filter(a=>a.active&&a.slot===slot); }
 function buildH(ad){
   const w=document.createElement('div');
   w.className='ad-wrap inline';
@@ -1107,14 +1162,13 @@ let tT=null;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3000);}
 window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('show',scrollY>400);});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();}});
-window.addEventListener('storage',e=>{if(e.key===ADS_KEY)renderAds();});
 
 // =====================================================================
 // START
 // =====================================================================
 window.addEventListener('DOMContentLoaded',()=>{
   updateAuthUI();
-  renderAds();
+  initFirestore(); // підключаємо Firestore (завантажує рекламу і ключі)
   initSite();
 });
 </script>
