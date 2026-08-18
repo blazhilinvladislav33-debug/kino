@@ -265,6 +265,40 @@
     .m-btn-wl:hover{border-color:#fff;color:#fff;}
     .m-btn-wl.saved{background:rgba(26,140,255,.12);border-color:var(--blue);color:var(--blue);}
 
+    /* ===== CAST ===== */
+    .cast-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+    .cast-row::-webkit-scrollbar{height:4px;}
+    .cast-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+    .cast-card{flex-shrink:0;width:80px;text-align:center;}
+    .cast-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;background:var(--bg4);display:block;margin-bottom:6px;}
+    .cast-photo-ph{width:80px;height:80px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 6px;}
+    .cast-name{font-size:11px;color:var(--muted);line-height:1.3;word-break:break-word;}
+    .cast-char{font-size:10px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    /* ===== TRAILER ===== */
+    .btn-trailer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
+    .btn-trailer:hover{background:rgba(255,255,255,.16);}
+    .trailer-ov{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:7000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(8px);}
+    .trailer-ov.open{opacity:1;pointer-events:all;}
+    .trailer-wrap{position:relative;width:92%;max-width:900px;}
+    .trailer-close{position:absolute;top:-40px;right:0;background:none;border:none;color:#fff;font-size:26px;cursor:pointer;line-height:1;}
+    .trailer-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;}
+    .trailer-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+    /* ===== SIMILAR ===== */
+    .sim-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+    .sim-row::-webkit-scrollbar{height:4px;}
+    .sim-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+    .sim-card{flex-shrink:0;width:120px;cursor:pointer;border-radius:7px;overflow:hidden;background:var(--bg3);transition:transform .2s;}
+    .sim-card:hover{transform:scale(1.04);}
+    .sim-poster{width:120px;height:180px;object-fit:cover;display:block;background:var(--bg4);}
+    .sim-poster-ph{width:120px;height:180px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:28px;}
+    .sim-info{padding:6px 8px;}
+    .sim-title{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .sim-year{font-size:10px;color:var(--dim);margin-top:2px;}
+    /* ===== EXTRA INFO GRID ===== */
+    .m-extra{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:16px 0 20px;}
+    .m-extra-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;}
+    .m-extra-lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+    .m-extra-val{font-size:13px;font-weight:600;color:#fff;}
     /* ===== SKELETON ===== */
     .sk-card{background:var(--bg3);border-radius:9px;overflow:hidden;animation:skP 1.5s infinite;}
     .sk-poster{width:100%;aspect-ratio:2/3;background:var(--bg4);}
@@ -775,6 +809,14 @@
   </div>
 </div>
 
+<!-- ===== TRAILER MODAL ===== -->
+<div class="trailer-ov" id="trailer-ov" onclick="if(event.target===this)closeTrailer()">
+  <div class="trailer-wrap">
+    <button class="trailer-close" onclick="closeTrailer()">✕</button>
+    <div class="trailer-frame" id="trailer-frame"></div>
+  </div>
+</div>
+
 <!-- ===== POPUP AD ===== -->
 <div class="pop-ov" id="pop-ov">
   <div class="pop-box" id="pop-box">
@@ -1003,8 +1045,21 @@ async function openMovie(id, type='movie', autoPlay=false) {
   content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Завантаження...</div>';
 
   const ep=type==='tv'?`/tv/${id}`:`/movie/${id}`;
-  const data=await tmdb(ep,{append_to_response:'videos,seasons'});
+  const data=await tmdb(ep,{append_to_response:'videos,seasons,credits'});
   if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Помилка завантаження</div>';return;}
+
+  // Трейлер
+  const _vids    = (data.videos && data.videos.results) || [];
+  const _trailer = _vids.find(v=>v.type==='Trailer'&&v.site==='YouTube') || _vids.find(v=>v.site==='YouTube') || null;
+
+  // Акторський склад
+  const _cast = ((data.credits && data.credits.cast) || []).slice(0, 16);
+
+  // Додаткова інформація
+  const _budget  = data.budget  && data.budget  > 0 ? '$' + (data.budget /1e6).toFixed(1) + 'M' : null;
+  const _revenue = data.revenue && data.revenue > 0 ? '$' + (data.revenue/1e6).toFixed(1) + 'M' : null;
+  const _country = (data.production_countries||[]).slice(0,2).map(c=>c.name).join(', ') || null;
+  const _studio  = (data.production_companies||[]).slice(0,2).map(c=>c.name).join(', ') || null;
 
   const title=data.title||data.name||'—';
   const year=(data.release_date||data.first_air_date||'').slice(0,4);
@@ -1046,6 +1101,26 @@ async function openMovie(id, type='movie', autoPlay=false) {
     <span class="dub-btn">Залежить від сервера</span>
   </div>`;
 
+  // Акторський склад HTML
+  const _castHtml = _cast.length ? `
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div>
+    <div class="cast-row">
+      ${_cast.map(a=>{
+        const ph=a.profile_path?`<img class="cast-photo" src="${IMG}w185${a.profile_path}" alt="${a.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cast-photo-ph" style="display:none">👤</div>`:`<div class="cast-photo-ph">👤</div>`;
+        return `<div class="cast-card">${ph}<div class="cast-name">${a.name}</div><div class="cast-char">${a.character||''}</div></div>`;
+      }).join('')}
+    </div>` : '';
+
+  // Додаткова інформація HTML
+  const _extraItems=[];
+  if(_budget)  _extraItems.push({lbl:'Бюджет',          val:_budget});
+  if(_revenue) _extraItems.push({lbl:'Касові збори',     val:_revenue});
+  if(_country) _extraItems.push({lbl:'Країна',           val:_country});
+  if(_studio)  _extraItems.push({lbl:'Студія',           val:_studio});
+  if(data.original_language) _extraItems.push({lbl:'Мова оригіналу',val:data.original_language.toUpperCase()});
+  if(type==='tv'&&data.status) _extraItems.push({lbl:'Статус',val:({'Returning Series':'Виходить','Ended':'Завершено','Canceled':'Скасовано','In Production':'Виробництво'}[data.status]||data.status)});
+  const _extraHtml = _extraItems.length ? `<div class="m-extra">${_extraItems.map(it=>`<div class="m-extra-item"><div class="m-extra-lbl">${it.lbl}</div><div class="m-extra-val">${it.val}</div></div>`).join('')}</div>` : '';
+
   content.innerHTML=`
     ${backdrop}
     <div class="m-grad"></div>
@@ -1056,16 +1131,14 @@ async function openMovie(id, type='movie', autoPlay=false) {
         <span class="m-y">📅 ${year}</span>
         ${data.original_language?`<span class="m-lang">🌍 ${data.original_language.toUpperCase()}</span>`:''}
         ${data.runtime?`<span class="m-dur">⏱ ${data.runtime} хв</span>`:''}
-        ${data.number_of_seasons?`<span class="m-dur">📺 ${data.number_of_seasons} сезонів</span>`:''}
+        ${data.number_of_seasons?`<span class="m-dur">📺 ${data.number_of_seasons} сез.</span>`:''}
       </div>
       <div class="m-genres">${genres}</div>
       <div class="m-desc">${desc}</div>
 
       <!-- PLAYER -->
       <div class="player-section">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <div style="font-size:14px;font-weight:600;">🎬 Відеоплеєр</div>
-        </div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:8px;">Відеоплеєр</div>
         <div class="player-servers" id="srv-btns">${srvBtns}</div>
         ${tvSelector}
         <div class="player-frame-wrap" id="player-wrap">
@@ -1076,7 +1149,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
           <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="opacity:0;transition:opacity .3s;"></iframe>
         </div>
         ${dubNote}
-        <div style="color:var(--dim);font-size:11px;margin-top:8px;">⚠️ Якщо відео не завантажилось — спробуйте інший сервер</div>
+        <div style="color:var(--dim);font-size:11px;margin-top:8px;">Якщо відео не завантажилось — спробуйте інший сервер</div>
       </div>
 
       <div class="m-actions">
@@ -1087,7 +1160,17 @@ async function openMovie(id, type='movie', autoPlay=false) {
           ${isWL?'🕐 Збережено':'🕐 Дивитись пізніше'}
         </button>
         ${isWtch?`<button class="m-btn-wl saved" style="pointer-events:none;">✅ Переглянуто</button>`:''}
+        ${_trailer?`<button class="btn-trailer" onclick="openTrailer('${_trailer.key}')">▶ Трейлер</button>`:''}
       </div>
+
+      <!-- EXTRA INFO -->
+      ${_extraHtml}
+
+      <!-- CAST -->
+      ${_castHtml}
+
+      <!-- SIMILAR (завантажується асинхронно) -->
+      <div id="modal-sim"></div>
     </div>`;
 
   // Init player & TV — завантажуємо епізоди потрібного сезону
@@ -1113,6 +1196,33 @@ async function openMovie(id, type='movie', autoPlay=false) {
   else {
     document.getElementById('player-loading').innerHTML='<div style="color:var(--muted);font-size:14px;">Натисніть кнопку сервера щоб дивитись</div>';
   }
+
+  // Схожі фільми/серіали — завантажуємо після рендеру
+  tmdb(`/${type}/${id}/similar`,{page:1}).then(sim=>{
+    const simEl=document.getElementById('modal-sim');
+    if(!simEl||!sim||!sim.results||!sim.results.length) return;
+    const items=sim.results.slice(0,14);
+    const label=type==='tv'?'Схожі серіали':'Схожі фільми';
+    simEl.innerHTML=`
+      <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>${label}</div>
+      <div class="sim-row">
+        ${items.map(m=>{
+          const t=m.title||m.name||'—';
+          const y=(m.release_date||m.first_air_date||'').slice(0,4);
+          const rat=m.vote_average?m.vote_average.toFixed(1):'';
+          const poster=m.poster_path
+            ?`<img class="sim-poster" src="${IMG}w185${m.poster_path}" alt="${t}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sim-poster-ph" style="display:none">🎬</div>`
+            :`<div class="sim-poster-ph">🎬</div>`;
+          return `<div class="sim-card" onclick="openMovie(${m.id},'${type}',false)">
+            ${poster}
+            <div class="sim-info">
+              <div class="sim-title">${t}</div>
+              <div class="sim-year">${y}${rat?' · '+rat:''}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }).catch(()=>{});
 }
 
 function loadPlayer() {
@@ -2050,12 +2160,26 @@ function initPopup(){
 function closePopup(){if(popCnt>0)return;clearInterval(popT);document.getElementById('pop-ov').classList.remove('open');}
 
 // =====================================================================
+// TRAILER
+// =====================================================================
+function openTrailer(key) {
+  const f = document.getElementById('trailer-frame');
+  if (!f) return;
+  f.innerHTML = `<iframe src="https://www.youtube.com/embed/${key}?autoplay=1&rel=0" allowfullscreen allow="autoplay; fullscreen" style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`;
+  document.getElementById('trailer-ov').classList.add('open');
+}
+function closeTrailer() {
+  document.getElementById('trailer-ov').classList.remove('open');
+  document.getElementById('trailer-frame').innerHTML = '';
+}
+
+// =====================================================================
 // UTILS
 // =====================================================================
 let tT=null;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3000);}
 window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('show',scrollY>400);});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();closeTrailer();}});
 
 // =====================================================================
 // START
