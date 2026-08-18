@@ -558,12 +558,26 @@
             <button class="btn-primary" onclick="changePassword()" style="width:auto;padding:10px 24px;">Змінити пароль</button>
           </div>
           <div class="slots-guide" style="margin-top:16px;">
-            <h3 style="margin-bottom:16px;">📊 Дані</h3>
+            <h3 style="margin-bottom:16px;">Дані</h3>
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <button class="btn-add" onclick="exportData()" style="font-size:13px;padding:8px 16px;">⬇ Експорт JSON</button>
-              <button class="btn-add" onclick="document.getElementById('import-file').click()" style="background:var(--blue);font-size:13px;padding:8px 16px;">⬆ Імпорт JSON</button>
+              <button class="btn-add" onclick="exportData()" style="font-size:13px;padding:8px 16px;">Експорт JSON</button>
+              <button class="btn-add" onclick="document.getElementById('import-file').click()" style="background:var(--blue);font-size:13px;padding:8px 16px;">Імпорт JSON</button>
               <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
-              <button class="btn-add" onclick="clearAllAds()" style="background:var(--accent);font-size:13px;padding:8px 16px;">🗑 Очистити всі</button>
+              <button class="btn-add" onclick="clearAllAds()" style="background:var(--accent);font-size:13px;padding:8px 16px;">Очистити всі</button>
+            </div>
+          </div>
+          <div class="slots-guide" style="margin-top:16px;">
+            <h3 style="margin-bottom:16px;">Захист від AdBlock</h3>
+            <div style="color:var(--muted);font-size:13px;margin-bottom:14px;line-height:1.7;">
+              Показує повідомлення з проханням вимкнути блокувальник реклами.<br>
+              Перевірка спрацьовує через 1.5 сек після завантаження сторінки.
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+              <label class="toggle-switch">
+                <input type="checkbox" id="ab-toggle" onchange="saveAntiAdblock(this.checked)">
+                <div class="toggle-slider"></div>
+              </label>
+              <span style="font-size:14px;" id="ab-label">Вимкнено</span>
             </div>
           </div>
         </div>
@@ -590,21 +604,24 @@
       <div class="form-group">
         <label>Слот (позиція) *</label>
         <select id="f-slot" onchange="updateTypeHint()">
-          <option value="header">🔝 Шапка (header)</option>
-          <option value="between1">📌 Між рядами 1</option>
-          <option value="sidebar">📐 Бокова панель (sidebar)</option>
-          <option value="between2">📌 Між рядами 2</option>
-          <option value="between3">📌 Між рядами 3</option>
-          <option value="footer">⬇️ Підвал (footer)</option>
-          <option value="popup">💬 Pop-up вікно</option>
+          <option value="header">Шапка (header)</option>
+          <option value="between1">Між рядами 1</option>
+          <option value="sidebar">Бокова панель (sidebar)</option>
+          <option value="between2">Між рядами 2</option>
+          <option value="between3">Між рядами 3</option>
+          <option value="footer">Підвал (footer)</option>
+          <option value="popup">Pop-up вікно</option>
+          <option value="popunder">Pop-under вкладка</option>
         </select>
       </div>
       <div class="form-group">
         <label>Тип банера</label>
-        <select id="f-type">
-          <option value="horizontal">↔ Горизонтальний</option>
-          <option value="vertical">↕ Вертикальний</option>
-          <option value="popup">🪟 Pop-up</option>
+        <select id="f-type" onchange="updateTypeHint()">
+          <option value="horizontal">Горизонтальний</option>
+          <option value="vertical">Вертикальний</option>
+          <option value="popup">Pop-up</option>
+          <option value="video">Відео (MP4/GIF)</option>
+          <option value="popunder">Pop-under</option>
         </select>
         <div class="form-hint" id="type-hint">Горизонтальний: розтягується на всю ширину</div>
       </div>
@@ -617,6 +634,12 @@
     </div>
     <div class="preview-box" id="img-preview">
       <div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>
+    </div>
+
+    <div class="form-group" id="video-url-group" style="display:none;margin-top:14px;">
+      <label>URL відео (MP4/WebM/GIF) *</label>
+      <input type="url" id="f-video" placeholder="https://example.com/video.mp4">
+      <div class="form-hint">Для типу "Відео". MP4 файл або GIF анімація.</div>
     </div>
 
     <div class="form-group" style="margin-top:14px;">
@@ -826,13 +849,14 @@
   // RENDER
   // ========================
   const SLOT_LABELS = {
-    header: ['Шапка', 'slot-header'],
+    header:   ['Шапка',        'slot-header'],
     between1: ['Між рядами 1', 'slot-between'],
     between2: ['Між рядами 2', 'slot-between'],
     between3: ['Між рядами 3', 'slot-between'],
-    sidebar: ['Бокова панель', 'slot-sidebar'],
-    footer: ['Підвал', 'slot-footer'],
-    popup: ['Pop-up', 'slot-popup'],
+    sidebar:  ['Бокова панель','slot-sidebar'],
+    footer:   ['Підвал',       'slot-footer'],
+    popup:    ['Pop-up',       'slot-popup'],
+    popunder: ['Pop-under',    'slot-popup'],
   };
 
   let currentFilter = 'all';
@@ -889,7 +913,13 @@
             <div class="ad-link">${ad.linkUrl || '—'}</div>
           </td>
           <td><span class="slot-badge ${slotClass}">${slotLabel}</span></td>
-          <td><span class="type-badge">${ad.type === 'vertical' ? '↕ Верт.' : ad.type === 'popup' ? '🪟 Pop-up' : '↔ Горизонт.'}</span></td>
+          <td><span class="type-badge">${
+            ad.type==='vertical'?'Верт.':
+            ad.type==='popup'?'Pop-up':
+            ad.type==='video'?'Відео':
+            ad.type==='popunder'?'Pop-under':
+            'Горизонт.'
+          }</span></td>
           <td>
             <label class="toggle-switch">
               <input type="checkbox" ${ad.active?'checked':''} onchange="toggleAd('${ad.id}',this.checked)">
@@ -942,6 +972,7 @@
     document.getElementById('f-slot').value = ad.slot;
     document.getElementById('f-type').value = ad.type;
     document.getElementById('f-img').value = ad.imageUrl || '';
+    document.getElementById('f-video').value = ad.videoUrl || '';
     document.getElementById('f-link').value = ad.linkUrl || '';
     document.getElementById('f-alt').value = ad.altText || '';
     document.getElementById('f-html').value = ad.html || '';
@@ -958,13 +989,17 @@
     const linkUrl = document.getElementById('f-link').value.trim();
     const altText = document.getElementById('f-alt').value.trim();
     const html = document.getElementById('f-html').value.trim();
+    const videoUrl = document.getElementById('f-video').value.trim();
 
     if (!name) { showToast('Введіть назву банера', true); return; }
-    if (!imageUrl && !html) { showToast('Вкажіть URL зображення або HTML код', true); return; }
-    if (!linkUrl && !html) { showToast('Вкажіть URL посилання', true); return; }
+    const isPopunder = slot === 'popunder' || type === 'popunder';
+    if (!isPopunder && !imageUrl && !html && type !== 'video') { showToast('Вкажіть URL зображення або HTML код', true); return; }
+    if (type === 'video' && !videoUrl && !imageUrl) { showToast('Вкажіть URL відео', true); return; }
+    if (!linkUrl && !html && !isPopunder) { showToast('Вкажіть URL посилання', true); return; }
+    if (isPopunder && !linkUrl) { showToast('Вкажіть URL посилання для pop-under', true); return; }
 
     const editId = document.getElementById('edit-id').value;
-    const payload = { name, slot, type, imageUrl, linkUrl, altText, html };
+    const payload = { name, slot, type, imageUrl, videoUrl, linkUrl, altText, html };
 
     if (db) {
       if (editId) {
@@ -1023,7 +1058,7 @@
     document.getElementById('modal-overlay').classList.remove('open');
     document.getElementById('edit-id').value = '';
     document.getElementById('modal-title').textContent = 'Додати банер';
-    ['f-name','f-img','f-link','f-alt','f-html'].forEach(id => document.getElementById(id).value = '');
+    ['f-name','f-img','f-video','f-link','f-alt','f-html'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-slot').value = 'header';
     document.getElementById('f-type').value = 'horizontal';
     document.getElementById('img-preview').innerHTML = '<div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>';
@@ -1041,18 +1076,28 @@
 
   function updateTypeHint() {
     const slot = document.getElementById('f-slot').value;
+    const type = document.getElementById('f-type').value;
     const hints = {
-      header: 'Горизонтальний • 100% ширина • 90-150px висота',
-      between1: 'Горизонтальний • повна ширина між рядами фільмів',
-      between2: 'Горизонтальний • повна ширина між рядами фільмів',
-      between3: 'Горизонтальний • повна ширина між рядами фільмів',
-      sidebar: 'Вертикальний • 200px ширина на десктопі, горизонт. на мобільному',
-      footer: 'Горизонтальний • повна ширина у підвалі',
-      popup: 'Pop-up • 480px • з'являється через 4 сек',
+      header:    'Горизонтальний або відео • 100% ширина • 90-150px висота',
+      between1:  'Горизонтальний • повна ширина між рядами фільмів',
+      between2:  'Горизонтальний • повна ширина між рядами фільмів',
+      between3:  'Горизонтальний • повна ширина між рядами фільмів',
+      sidebar:   'Вертикальний • 200px ширина на десктопі, горизонт. на мобільному',
+      footer:    'Горизонтальний • повна ширина у підвалі',
+      popup:     "Pop-up • 480px • з'являється через 4 сек",
+      popunder:  'Відкриває посилання у новій вкладці при першому кліку (1 раз за сесію)',
     };
-    const typeMap = { header:'horizontal', between1:'horizontal', between2:'horizontal', between3:'horizontal', sidebar:'vertical', footer:'horizontal', popup:'popup' };
-    document.getElementById('f-type').value = typeMap[slot] || 'horizontal';
+    const typeMap = {
+      header:'horizontal', between1:'horizontal', between2:'horizontal',
+      between3:'horizontal', sidebar:'vertical', footer:'horizontal',
+      popup:'popup', popunder:'popunder'
+    };
+    const auto = typeMap[slot];
+    if (auto) document.getElementById('f-type').value = auto;
     document.getElementById('type-hint').textContent = hints[slot] || '';
+    // Показати/сховати поле відео URL
+    const showVideo = type === 'video' || document.getElementById('f-type').value === 'video';
+    document.getElementById('video-url-group').style.display = showVideo ? 'block' : 'none';
   }
 
   // ========================
@@ -1110,6 +1155,29 @@
     };
     reader.readAsText(file);
     input.value = '';
+  }
+
+  // ========================
+  // ANTI-ADBLOCK SETTINGS
+  // ========================
+  function loadAntiAdblockSetting() {
+    if (!db) return;
+    db.collection('ads').doc('__config__').get().then(doc => {
+      const enabled = doc.exists ? (doc.data().antiAdblock || false) : false;
+      const toggle = document.getElementById('ab-toggle');
+      const label  = document.getElementById('ab-label');
+      if (toggle) toggle.checked = enabled;
+      if (label)  label.textContent = enabled ? 'Увімкнено' : 'Вимкнено';
+    }).catch(() => {});
+  }
+
+  function saveAntiAdblock(val) {
+    const label = document.getElementById('ab-label');
+    if (label) label.textContent = val ? 'Увімкнено' : 'Вимкнено';
+    if (!db) { showToast('Firebase недоступний', true); return; }
+    db.collection('ads').doc('__config__').set({ antiAdblock: val, updatedAt: new Date().toISOString() }, { merge: true })
+      .then(() => showToast(val ? 'Захист від AdBlock увімкнено' : 'Захист від AdBlock вимкнено'))
+      .catch(() => showToast('Помилка збереження', true));
   }
 
   // ========================
@@ -1244,6 +1312,7 @@
   function initAdmin() {
     startAdsListener();
     startKeysListener();
+    loadAntiAdblockSetting();
   }
 
   // Сесія керується через Firebase onAuthStateChanged (вище)
@@ -1254,4 +1323,3 @@
 </script>
 </body>
 </html>
-
