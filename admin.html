@@ -309,6 +309,10 @@
           <span class="icon">📢</span> Реклама
           <span class="sidebar-count" id="count-ads">0</span>
         </div>
+        <div class="sidebar-link" onclick="showPage('apikeys')" id="nav-apikeys">
+          <span class="icon">🔑</span> API Ключі
+          <span class="sidebar-count" id="count-keys">0</span>
+        </div>
         <div class="sidebar-link" onclick="showPage('slots')" id="nav-slots">
           <span class="icon">🗺️</span> Слоти
         </div>
@@ -385,6 +389,63 @@
             <div class="empty-icon">📭</div>
             <h3>Немає банерів</h3>
             <p>Додайте перший рекламний банер натиснувши кнопку вище</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- === PAGE: API KEYS === -->
+      <div class="section-page" id="page-apikeys">
+        <div class="page-header">
+          <div>
+            <div class="page-title">API Ключі TMDB</div>
+            <div class="page-sub">Ключі для завантаження інформації про фільми. При ліміті 429 — автоматична ротація.</div>
+          </div>
+          <button class="btn-add" onclick="openKeyModal()">+ Додати ключ</button>
+        </div>
+
+        <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+          <div class="stat-card">
+            <div class="stat-icon">🔑</div>
+            <div><div class="stat-num" id="ks-total">0</div><div class="stat-label">Всього ключів</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div><div class="stat-num" id="ks-active" style="color:var(--green)">0</div><div class="stat-label">Активних</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔄</div>
+            <div><div class="stat-num" id="ks-rotate" style="color:var(--blue)">Авто</div><div class="stat-label">Ротація при 429</div></div>
+          </div>
+        </div>
+
+        <div class="slots-guide" style="margin-bottom:20px;">
+          <h3 style="margin-bottom:10px;">ℹ️ Як отримати безкоштовний ключ TMDB</h3>
+          <div style="color:var(--muted);font-size:13px;line-height:1.8;">
+            1. Зареєструйтесь на <a href="https://www.themoviedb.org/signup" target="_blank" style="color:var(--blue)">themoviedb.org</a><br>
+            2. Перейдіть до <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--blue)">Налаштування → API</a><br>
+            3. Натисніть "Create" → виберіть "Developer"<br>
+            4. Скопіюйте "API Key (v3 auth)" та вставте нижче<br>
+            <span style="color:var(--orange)">💡 Можна додати кілька ключів — система буде чергувати їх автоматично</span>
+          </div>
+        </div>
+
+        <div id="keys-list-container">
+          <table class="ads-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Назва / Ключ</th>
+                <th>Статус</th>
+                <th>Додано</th>
+                <th style="text-align:right">Дії</th>
+              </tr>
+            </thead>
+            <tbody id="keys-tbody"></tbody>
+          </table>
+          <div id="keys-empty" class="empty-state" style="display:none">
+            <div class="empty-icon">🔑</div>
+            <h3>Немає API ключів</h3>
+            <p>Додайте ключ TMDB щоб сайт міг завантажувати інформацію про фільми</p>
           </div>
         </div>
       </div>
@@ -571,6 +632,30 @@
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal()">Скасувати</button>
       <button class="btn-save" onclick="saveAd()">💾 Зберегти</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== API KEY MODAL ===== -->
+<div class="modal-overlay" id="key-modal-overlay" onclick="if(event.target===this)closeKeyModal()">
+  <div class="modal" style="width:480px;">
+    <button class="modal-close" onclick="closeKeyModal()">✕</button>
+    <div class="modal-title">Додати API ключ TMDB</div>
+
+    <div class="form-group">
+      <label>Назва (необов'язково)</label>
+      <input type="text" id="k-name" placeholder="Наприклад: Основний ключ, Запасний 1...">
+    </div>
+
+    <div class="form-group">
+      <label>API Key (v3) *</label>
+      <input type="text" id="k-value" placeholder="Вставте ключ TMDB тут...">
+      <div class="form-hint">32-символьний ключ з themoviedb.org/settings/api</div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeKeyModal()">Скасувати</button>
+      <button class="btn-save" onclick="saveKey()">💾 Зберегти</button>
     </div>
   </div>
 </div>
@@ -867,11 +952,11 @@
   // EXPORT / IMPORT
   // ========================
   function exportData() {
-    const data = { ads: getAds(), exportedAt: new Date().toISOString() };
+    const data = { ads: getAds(), apiKeys: getKeys(), exportedAt: new Date().toISOString() };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'kinobaza-ads.json';
+    a.download = 'kinobaza-backup.json';
     a.click();
     showToast('✅ Дані експортовано!');
   }
@@ -883,13 +968,11 @@
     reader.onload = e => {
       try {
         const data = JSON.parse(e.target.result);
-        if (data.ads && Array.isArray(data.ads)) {
-          saveAds(data.ads);
-          renderAds();
-          showToast(`✅ Імпортовано ${data.ads.length} банерів!`);
-        } else {
-          showToast('❌ Невірний формат файлу', true);
-        }
+        let msg = [];
+        if (data.ads && Array.isArray(data.ads)) { saveAds(data.ads); renderAds(); msg.push(`${data.ads.length} банерів`); }
+        if (data.apiKeys && Array.isArray(data.apiKeys)) { saveKeys(data.apiKeys); renderKeys(); msg.push(`${data.apiKeys.length} ключів`); }
+        if (msg.length) showToast(`✅ Імпортовано: ${msg.join(', ')}!`);
+        else showToast('❌ Невірний формат файлу', true);
       } catch { showToast('❌ Помилка читання файлу', true); }
     };
     reader.readAsText(file);
@@ -909,10 +992,110 @@
   }
 
   // ========================
+  // API KEYS
+  // ========================
+  const KEYS_KEY = 'kb_api_keys';
+
+  function getKeys() {
+    const raw = localStorage.getItem(KEYS_KEY);
+    let keys = raw ? JSON.parse(raw) : [];
+    // backward compat: if old single key exists and no array yet
+    if (!keys.length) {
+      const old = localStorage.getItem('tmdb_key');
+      if (old) keys = [{ id: 'k_legacy', name: 'Імпортовано', value: old, addedAt: new Date().toISOString() }];
+    }
+    return keys;
+  }
+
+  function saveKeys(keys) {
+    localStorage.setItem(KEYS_KEY, JSON.stringify(keys));
+    // also keep first key in legacy field for compatibility
+    if (keys.length) localStorage.setItem('tmdb_key', keys[0].value);
+    else localStorage.removeItem('tmdb_key');
+  }
+
+  function renderKeys() {
+    const keys = getKeys();
+    document.getElementById('ks-total').textContent = keys.length;
+    document.getElementById('ks-active').textContent = keys.length;
+    document.getElementById('count-keys').textContent = keys.length;
+
+    const tbody = document.getElementById('keys-tbody');
+    const empty = document.getElementById('keys-empty');
+
+    if (!keys.length) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = keys.map((k, i) => {
+      const masked = k.value.length > 10
+        ? k.value.slice(0, 6) + '••••••••••••••••••••' + k.value.slice(-4)
+        : k.value;
+      const date = k.addedAt ? new Date(k.addedAt).toLocaleDateString('uk-UA') : '—';
+      return `
+        <tr>
+          <td style="color:var(--muted);font-weight:700;">#${i+1}</td>
+          <td>
+            <div style="font-weight:600;font-size:14px;">${k.name || 'Ключ ' + (i+1)}</div>
+            <div style="font-family:monospace;font-size:12px;color:var(--muted);">${masked}</div>
+          </td>
+          <td><span style="color:var(--green);font-size:13px;">✅ Активний</span></td>
+          <td style="color:var(--muted);font-size:13px;">${date}</td>
+          <td style="text-align:right;">
+            <button class="action-btn" onclick="copyKey('${k.id}')" title="Копіювати">📋</button>
+            <button class="action-btn del" onclick="deleteKey('${k.id}')" title="Видалити">🗑</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function openKeyModal() {
+    document.getElementById('k-name').value = '';
+    document.getElementById('k-value').value = '';
+    document.getElementById('key-modal-overlay').classList.add('open');
+  }
+
+  function closeKeyModal() {
+    document.getElementById('key-modal-overlay').classList.remove('open');
+  }
+
+  function saveKey() {
+    const name = document.getElementById('k-name').value.trim();
+    const value = document.getElementById('k-value').value.trim();
+    if (!value) { showToast('Введіть API ключ', true); return; }
+    const keys = getKeys();
+    if (keys.find(k => k.value === value)) { showToast('Такий ключ вже існує', true); return; }
+    keys.push({ id: 'k_' + Date.now(), name: name || ('Ключ ' + (keys.length + 1)), value, addedAt: new Date().toISOString() });
+    saveKeys(keys);
+    renderKeys();
+    closeKeyModal();
+    showToast('✅ Ключ додано!');
+  }
+
+  function deleteKey(id) {
+    if (!confirm('Видалити цей API ключ?')) return;
+    const keys = getKeys().filter(k => k.id !== id);
+    saveKeys(keys);
+    renderKeys();
+    showToast('🗑 Ключ видалено');
+  }
+
+  function copyKey(id) {
+    const key = getKeys().find(k => k.id === id);
+    if (!key) return;
+    navigator.clipboard.writeText(key.value).then(() => showToast('📋 Ключ скопійовано!')).catch(() => showToast('Не вдалося скопіювати', true));
+  }
+
+  // ========================
   // INIT
   // ========================
   function initAdmin() {
     renderAds();
+    renderKeys();
   }
 
   // Check session
