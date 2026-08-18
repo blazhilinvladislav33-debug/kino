@@ -127,7 +127,7 @@
     /* User avatar */
     .user-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer;position:relative;flex-shrink:0;}
     .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
-    .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown{display:block;}
+    .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown,.user-avatar.open .user-dropdown{display:block;}
     .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;gap:8px;}
     .ud-item:hover{background:var(--bg4);color:#fff;}
     .ud-divider{border-top:1px solid var(--border);margin:4px 0;}
@@ -1904,6 +1904,8 @@ function updateAuthUI() {
   }
   const adminLink = document.getElementById('ud-admin');
   if (adminLink) adminLink.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
+  // Sync mobile drawer auth section whenever auth state changes
+  updateMobileDrawerAuth();
 }
 
 function openAuth(tab='login') {
@@ -2585,6 +2587,17 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();c
 // =====================================================================
 window.addEventListener('DOMContentLoaded',()=>{
   updateAuthUI(); // початковий стан (auth змінить через onAuthStateChanged)
+
+  // User avatar dropdown — toggle on click (works on touch devices too)
+  const av = document.getElementById('user-av');
+  if (av) {
+    av.addEventListener('click', e => {
+      e.stopPropagation();
+      av.classList.toggle('open');
+    });
+    document.addEventListener('click', () => av.classList.remove('open'));
+  }
+
   initFirestore(); // підключаємо Firestore → після завантаження ключів викликає initSite()
   setTimeout(detectAdblock, 1500); // перевірка адблоку
   // Fallback: якщо Firestore не відповів за 5 сек — запустити сайт без ключів
