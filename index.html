@@ -3,288 +3,287 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>КіноБаза — Дивитись фільми онлайн безкоштовно</title>
-  <meta name="description" content="Дивитись фільми та серіали онлайн безкоштовно у хорошій якості.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>КіноБаза — Дивитись фільми онлайн</title>
+  <meta name="description" content="Дивитись фільми та серіали онлайн безкоштовно. HD якість, українська озвучка.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #0d0d0d; --bg-secondary: #151515; --bg-card: #1a1a1a; --bg-hover: #252525;
-      --accent: #e50914; --accent-hover: #b20710; --accent-gold: #f5c518;
-      --text-primary: #ffffff; --text-secondary: #aaaaaa; --text-muted: #666666;
-      --border: #2a2a2a;
+      --bg: #0d0d0d; --bg2: #141414; --bg3: #1a1a1a; --bg4: #222;
+      --accent: #e50914; --ah: #b20710; --gold: #f5c518;
+      --text: #fff; --muted: #999; --dim: #555; --border: #2a2a2a;
+      --green: #1db954; --blue: #1a8cff;
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Inter',sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; overflow-x:hidden; }
-
-    /* ===== SETUP BANNER ===== */
-    #setup-banner {
-      background:linear-gradient(135deg,#1a0a00,#2d1500);
-      border-bottom:2px solid #f5a623; padding:10px 20px;
-      display:flex; align-items:center; justify-content:center; gap:12px;
-      font-size:13px; flex-wrap:wrap; text-align:center;
-    }
-    #setup-banner strong { color:#f5a623; }
-    #setup-banner input {
-      background:#0d0d0d; border:1px solid #f5a623; color:#fff;
-      padding:4px 10px; border-radius:4px; font-size:13px; width:220px; font-family:monospace;
-    }
-    #setup-banner .sb-btn { background:#f5a623; color:#000; border:none; padding:5px 14px; border-radius:4px; cursor:pointer; font-weight:700; font-size:13px; }
-    #setup-banner .sb-close { cursor:pointer; color:#f5a623; margin-left:10px; font-size:18px; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+    a{text-decoration:none;color:inherit;}
+    button{font-family:inherit;}
 
     /* ===== HEADER ===== */
-    header { background:linear-gradient(180deg,rgba(0,0,0,.97),rgba(0,0,0,.88)); backdrop-filter:blur(10px); position:sticky; top:0; z-index:1000; border-bottom:1px solid var(--border); }
-    .header-top { display:flex; align-items:center; padding:0 24px; height:58px; max-width:1600px; margin:0 auto; gap:18px; }
-    .logo { font-size:24px; font-weight:800; text-decoration:none; letter-spacing:-1px; flex-shrink:0; }
-    .logo span:first-child { color:var(--accent); }
-    .logo span:last-child { color:#fff; }
-    nav { display:flex; gap:2px; flex:1; }
-    nav a { color:var(--text-secondary); text-decoration:none; font-size:13px; font-weight:500; padding:6px 11px; border-radius:6px; transition:all .2s; white-space:nowrap; }
-    nav a:hover, nav a.active { color:#fff; background:var(--bg-hover); }
-    .search-box { display:flex; align-items:center; background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px; overflow:hidden; flex:0 1 280px; }
-    .search-box input { background:none; border:none; outline:none; color:#fff; padding:8px 12px; font-size:14px; width:100%; font-family:inherit; }
-    .search-box input::placeholder { color:var(--text-muted); }
-    .search-box button { background:var(--accent); border:none; color:#fff; padding:8px 14px; cursor:pointer; font-size:16px; transition:background .2s; flex-shrink:0; }
-    .search-box button:hover { background:var(--accent-hover); }
-    .header-actions { display:flex; gap:8px; align-items:center; flex-shrink:0; }
-    .btn-login, .btn-reg { padding:7px 14px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; transition:all .2s; }
-    .btn-login { background:transparent; border:1px solid var(--border); color:var(--text-secondary); }
-    .btn-login:hover { border-color:#fff; color:#fff; }
-    .btn-reg { background:var(--accent); border:1px solid var(--accent); color:#fff; }
-    .btn-reg:hover { background:var(--accent-hover); }
-    .btn-admin-link { color:var(--text-muted); font-size:11px; padding:5px 8px; border:1px solid var(--border); border-radius:4px; text-decoration:none; }
-    .btn-admin-link:hover { color:#fff; border-color:#555; }
-
-    /* ===== AD SLOT: HORIZONTAL ===== */
-    .ad-slot-wrap {
-      width:100%; background:#111; border-bottom:1px solid #1a1a1a;
-      position:relative; overflow:hidden;
-    }
-    .ad-slot-wrap.in-page { border-top:1px solid #1a1a1a; border-bottom:1px solid #1a1a1a; margin:28px 0; }
-    .ad-label-tag {
-      position:absolute; top:3px; left:8px; font-size:9px; color:#444;
-      text-transform:uppercase; letter-spacing:1px; z-index:2; pointer-events:none;
-    }
-    /* Horizontal banner: full width, fits image */
-    .ad-horizontal {
-      width:100%; display:block; cursor:pointer; text-decoration:none;
-      display:flex; align-items:center; justify-content:center; overflow:hidden;
-      min-height:70px; max-height:160px;
-    }
-    .ad-horizontal img { width:100%; height:100%; object-fit:cover; display:block; max-height:160px; }
-
-    /* Vertical sidebar ad */
-    .ad-vertical-wrap { width:200px; flex-shrink:0; }
-    .ad-vertical {
-      width:100%; display:block; cursor:pointer; text-decoration:none;
-      overflow:hidden; border-radius:8px; border:1px solid var(--border);
-    }
-    .ad-vertical img { width:100%; display:block; object-fit:cover; max-height:600px; }
-    @media (max-width:900px) {
-      .ad-vertical-wrap { width:100%; }
-      .ad-vertical img { max-height:120px; object-fit:cover; width:100%; }
-    }
-
-    /* Popup ad */
-    .popup-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:9999;
-      display:flex; align-items:center; justify-content:center;
-      opacity:0; pointer-events:none; transition:opacity .3s; backdrop-filter:blur(4px);
-    }
-    .popup-overlay.visible { opacity:1; pointer-events:all; }
-    .popup-box {
-      position:relative; max-width:500px; width:93%; border-radius:14px;
-      overflow:hidden; cursor:pointer; box-shadow:0 30px 80px rgba(0,0,0,.8);
-      animation:popIn .35s ease;
-    }
-    @keyframes popIn { from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
-    .popup-box img { width:100%; display:block; }
-    .popup-box .popup-fallback {
-      background:linear-gradient(135deg,#1a0a2d,#2d1a4d);
-      padding:50px 40px; text-align:center;
-    }
-    .popup-close-btn {
-      position:absolute; top:10px; right:10px; width:34px; height:34px;
-      background:rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.2);
-      border-radius:50%; color:#fff; font-size:18px; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      z-index:10; transition:background .2s;
-    }
-    .popup-close-btn:hover { background:rgba(0,0,0,.9); }
-    .popup-close-btn.locked { opacity:.3; cursor:not-allowed; }
-    .popup-timer-bar {
-      position:absolute; bottom:0; left:0; height:3px;
-      background:var(--accent); transition:width 1s linear;
-    }
-    .popup-ad-badge {
-      position:absolute; top:8px; left:10px; font-size:9px; color:rgba(255,255,255,.4);
-      text-transform:uppercase; letter-spacing:2px;
-    }
+    header{background:rgba(13,13,13,.97);backdrop-filter:blur(12px);position:sticky;top:0;z-index:900;border-bottom:1px solid var(--border);}
+    .hdr{display:flex;align-items:center;padding:0 24px;height:58px;max-width:1600px;margin:0 auto;gap:16px;}
+    .logo{font-size:23px;font-weight:800;letter-spacing:-1px;flex-shrink:0;}
+    .logo b{color:var(--accent);}
+    nav{display:flex;gap:2px;flex:1;}
+    nav a{color:var(--muted);font-size:13px;font-weight:500;padding:6px 11px;border-radius:6px;transition:all .2s;white-space:nowrap;}
+    nav a:hover,nav a.act{color:#fff;background:var(--bg4);}
+    .srch{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;flex:0 1 260px;}
+    .srch input{background:none;border:none;outline:none;color:#fff;padding:8px 12px;font-size:14px;width:100%;font-family:inherit;}
+    .srch input::placeholder{color:var(--dim);}
+    .srch button{background:var(--accent);border:none;color:#fff;padding:8px 13px;cursor:pointer;font-size:15px;flex-shrink:0;}
+    .srch button:hover{background:var(--ah);}
+    .hdr-right{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+    .btn-sm{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .2s;}
+    .btn-sm:hover{border-color:#fff;color:#fff;}
+    .btn-sm.red{background:var(--accent);border-color:var(--accent);color:#fff;}
+    .btn-sm.red:hover{background:var(--ah);}
+    /* User avatar */
+    .user-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer;position:relative;flex-shrink:0;}
+    .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
+    .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown{display:block;}
+    .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;gap:8px;}
+    .ud-item:hover{background:var(--bg4);color:#fff;}
+    .ud-divider{border-top:1px solid var(--border);margin:4px 0;}
+    .ud-name{padding:8px 12px;font-weight:600;color:#fff;font-size:14px;}
+    /* Header ad slot */
+    #slot-header{width:100%;}
 
     /* ===== MAIN ===== */
-    main { max-width:1600px; margin:0 auto; padding:0 24px; }
+    main{max-width:1600px;margin:0 auto;padding:0 24px;}
 
     /* ===== HERO ===== */
-    .hero { position:relative; height:480px; border-radius:14px; overflow:hidden; margin:18px 0; cursor:pointer; }
-    .hero-bg { position:absolute; inset:0; background-size:cover; background-position:center top; transition:all .8s ease; }
-    .hero-overlay { position:absolute; inset:0; background:linear-gradient(90deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.1) 100%); }
-    .hero-overlay-b { position:absolute; bottom:0; left:0; right:0; height:140px; background:linear-gradient(0deg,var(--bg-primary),transparent); }
-    .hero-content { position:relative; z-index:2; padding:55px 44px; height:100%; display:flex; flex-direction:column; justify-content:center; max-width:580px; }
-    .hero-badge { display:inline-flex; align-items:center; gap:5px; background:var(--accent); color:#fff; font-size:11px; font-weight:700; padding:3px 9px; border-radius:3px; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; width:fit-content; }
-    .hero-title { font-size:38px; font-weight:800; line-height:1.1; margin-bottom:12px; text-shadow:0 2px 10px rgba(0,0,0,.5); }
-    .hero-meta { display:flex; align-items:center; gap:12px; margin-bottom:14px; font-size:14px; }
-    .hero-rating { display:flex; align-items:center; gap:4px; color:var(--accent-gold); font-weight:700; }
-    .hero-year, .hero-genre { color:var(--text-secondary); }
-    .hero-desc { font-size:14px; color:var(--text-secondary); line-height:1.6; margin-bottom:22px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-    .hero-btns { display:flex; gap:10px; }
-    .btn-play { display:flex; align-items:center; gap:7px; background:var(--accent); color:#fff; padding:11px 26px; border-radius:8px; font-weight:700; font-size:15px; cursor:pointer; border:none; transition:all .2s; }
-    .btn-play:hover { background:var(--accent-hover); transform:scale(1.02); }
-    .btn-more { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.12); backdrop-filter:blur(10px); color:#fff; padding:11px 22px; border-radius:8px; font-weight:600; font-size:15px; cursor:pointer; border:1px solid rgba(255,255,255,.2); transition:all .2s; }
-    .btn-more:hover { background:rgba(255,255,255,.22); }
-    .hero-dots { position:absolute; bottom:18px; right:28px; display:flex; gap:7px; z-index:3; }
-    .hero-dot { width:7px; height:7px; border-radius:4px; background:rgba(255,255,255,.3); cursor:pointer; transition:all .3s; }
-    .hero-dot.active { width:22px; background:var(--accent); }
-
-    /* ===== SECTIONS ===== */
-    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; margin-top:28px; }
-    .section-title { font-size:19px; font-weight:700; display:flex; align-items:center; gap:9px; }
-    .section-title::before { content:''; display:block; width:4px; height:20px; background:var(--accent); border-radius:2px; }
-    .section-link { color:var(--text-muted); text-decoration:none; font-size:13px; display:flex; align-items:center; gap:3px; transition:color .2s; }
-    .section-link:hover { color:var(--accent); }
-
-    /* ===== MOVIE CARDS ===== */
-    .movies-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:13px; }
-    .movie-card { background:var(--bg-card); border-radius:10px; overflow:hidden; cursor:pointer; transition:all .25s; position:relative; }
-    .movie-card:hover { transform:translateY(-5px) scale(1.02); box-shadow:0 18px 38px rgba(0,0,0,.6),0 0 0 1px rgba(229,9,20,.25); }
-    .movie-card:hover .card-overlay { opacity:1; }
-    .card-poster { width:100%; aspect-ratio:2/3; object-fit:cover; display:block; background:var(--bg-secondary); }
-    .card-poster-ph { width:100%; aspect-ratio:2/3; background:linear-gradient(135deg,#1a1a2e,#16213e); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:36px; }
-    .card-overlay { position:absolute; inset:0; background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.3) 55%,transparent 100%); opacity:0; transition:opacity .25s; display:flex; flex-direction:column; justify-content:flex-end; padding:10px; }
-    .card-play { width:42px; height:42px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; font-size:15px; box-shadow:0 4px 14px rgba(229,9,20,.5); }
-    .card-info { padding:9px 10px; }
-    .card-title { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
-    .card-meta { display:flex; align-items:center; justify-content:space-between; font-size:11px; }
-    .card-year { color:var(--text-muted); }
-    .card-rating { display:flex; align-items:center; gap:3px; color:var(--accent-gold); font-weight:700; }
-    .card-badge { position:absolute; top:7px; left:7px; background:var(--accent); color:#fff; font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; text-transform:uppercase; }
-    .card-badge.hd { background:#1a8a3a; }
+    .hero{position:relative;height:480px;border-radius:14px;overflow:hidden;margin:18px 0;cursor:pointer;}
+    .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:background-image .6s;}
+    .hero-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.05) 100%);}
+    .hero-ob{position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(0,var(--bg),transparent);}
+    .hero-c{position:relative;z-index:2;padding:50px 44px;height:100%;display:flex;flex-direction:column;justify-content:center;max-width:580px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:3px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;width:fit-content;}
+    .hero-title{font-size:36px;font-weight:800;line-height:1.1;margin-bottom:11px;}
+    .hero-meta{display:flex;align-items:center;gap:11px;margin-bottom:13px;font-size:13px;}
+    .hero-r{color:var(--gold);font-weight:700;}
+    .hero-y,.hero-g{color:var(--muted);}
+    .hero-desc{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:22px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .hero-btns{display:flex;gap:10px;}
+    .btn-play{display:flex;align-items:center;gap:7px;background:var(--accent);color:#fff;padding:11px 26px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;border:none;transition:all .2s;}
+    .btn-play:hover{background:var(--ah);transform:scale(1.02);}
+    .btn-info{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.13);backdrop-filter:blur(8px);color:#fff;padding:11px 22px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;border:1px solid rgba(255,255,255,.2);transition:all .2s;}
+    .btn-info:hover{background:rgba(255,255,255,.22);}
+    .hero-dots{position:absolute;bottom:16px;right:26px;display:flex;gap:6px;z-index:3;}
+    .h-dot{width:7px;height:7px;border-radius:4px;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;}
+    .h-dot.act{width:22px;background:var(--accent);}
 
     /* ===== GENRES BAR ===== */
-    .genres-bar { display:flex; gap:7px; flex-wrap:wrap; margin:18px 0; }
-    .genre-tag { padding:5px 13px; border-radius:20px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border); color:var(--text-secondary); background:var(--bg-secondary); transition:all .2s; }
-    .genre-tag:hover, .genre-tag.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .g-bar{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0;}
+    .g-tag{padding:5px 13px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--bg2);transition:all .2s;}
+    .g-tag:hover,.g-tag.act{background:var(--accent);border-color:var(--accent);color:#fff;}
 
-    /* ===== SIDEBAR ROW ===== */
-    .sidebar-row { display:flex; gap:20px; align-items:flex-start; }
-    .sidebar-row .movies-col { flex:1; min-width:0; }
-    @media (max-width:900px) { .sidebar-row { flex-direction:column; } }
+    /* ===== SECTION ===== */
+    .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;margin-top:26px;}
+    .sec-title{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;}
+    .sec-title::before{content:'';display:block;width:4px;height:19px;background:var(--accent);border-radius:2px;}
+    .sec-more{color:var(--dim);font-size:13px;display:flex;align-items:center;gap:3px;transition:color .2s;}
+    .sec-more:hover{color:var(--accent);}
+
+    /* ===== MOVIE CARDS ===== */
+    .movies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:12px;}
+    .m-card{background:var(--bg3);border-radius:9px;overflow:hidden;cursor:pointer;transition:all .25s;position:relative;}
+    .m-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 18px 36px rgba(0,0,0,.6),0 0 0 1px rgba(229,9,20,.2);}
+    .m-card:hover .c-ov{opacity:1;}
+    .c-poster{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--bg2);}
+    .c-ph{width:100%;aspect-ratio:2/3;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:34px;}
+    .c-ov{position:absolute;inset:0;background:linear-gradient(0,rgba(0,0,0,.92) 0%,rgba(0,0,0,.3) 55%,transparent 100%);opacity:0;transition:opacity .25s;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;}
+    .c-play-btn{width:40px;height:40px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 9px;font-size:15px;box-shadow:0 4px 14px rgba(229,9,20,.5);}
+    .c-info{padding:9px 10px;}
+    .c-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
+    .c-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;}
+    .c-year{color:var(--dim);}
+    .c-rat{display:flex;align-items:center;gap:2px;color:var(--gold);font-weight:700;}
+    .c-badge{position:absolute;top:7px;left:7px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
+    .c-badge.g{background:#1a7a3a;}
+    .c-badge.b{background:#1a4a8a;}
+    .c-fav{position:absolute;top:7px;right:7px;background:rgba(0,0,0,.6);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .2s;}
+    .m-card:hover .c-fav{display:flex;}
+    .c-fav.faved{display:flex;color:var(--accent);}
+
+    /* ===== AD SLOTS ===== */
+    .ad-wrap{width:100%;background:#0a0a0a;position:relative;overflow:hidden;}
+    .ad-wrap.inline{margin:24px 0;border-radius:8px;border:1px solid #1a1a1a;}
+    .ad-lbl{font-size:9px;color:#333;text-transform:uppercase;letter-spacing:1px;padding:2px 8px;display:block;}
+    .ad-h{display:block;width:100%;max-height:160px;overflow:hidden;}
+    .ad-h img{width:100%;display:block;max-height:160px;object-fit:cover;}
+    .ad-v{display:block;width:100%;}
+    .ad-v img{width:100%;display:block;object-fit:cover;}
+    .sidebar-row{display:flex;gap:18px;align-items:flex-start;}
+    .sidebar-row .mv-col{flex:1;min-width:0;}
+    .sidebar-ad-col{width:190px;flex-shrink:0;margin-top:58px;}
+    @media(max-width:900px){.sidebar-row{flex-direction:column;}.sidebar-ad-col{width:100%;margin-top:0;}}
+
+    /* ===== PLAYER MODAL ===== */
+    .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
+    .modal-ov.open{opacity:1;pointer-events:all;}
+    .modal-box{background:var(--bg2);border-radius:14px;max-width:960px;width:97%;max-height:96vh;overflow-y:auto;position:relative;border:1px solid var(--border);animation:mIn .3s ease;}
+    @keyframes mIn{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .m-close{position:absolute;top:13px;right:13px;width:34px;height:34px;background:rgba(0,0,0,.7);border:1px solid var(--border);border-radius:50%;color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .2s;}
+    .m-close:hover{background:var(--accent);}
+    .m-backdrop{width:100%;height:260px;object-fit:cover;border-radius:14px 14px 0 0;display:block;}
+    .m-backdrop-ph{width:100%;height:260px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:14px 14px 0 0;display:flex;align-items:center;justify-content:center;font-size:64px;}
+    .m-grad{height:60px;background:linear-gradient(0,var(--bg2),transparent);margin-top:-60px;position:relative;}
+    .m-body{padding:0 26px 26px;}
+    .m-title{font-size:24px;font-weight:800;margin-bottom:9px;}
+    .m-metas{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+    .m-rat{color:var(--gold);font-weight:700;font-size:15px;}
+    .m-y,.m-lang,.m-dur{color:var(--muted);font-size:13px;}
+    .m-genres{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+    .m-gtag{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:12px;padding:3px 9px;border-radius:20px;}
+    .m-desc{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:20px;}
+
+    /* PLAYER AREA */
+    .player-section{margin-bottom:20px;}
+    .player-servers{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+    .srv-btn{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--bg3);transition:all .2s;}
+    .srv-btn:hover{border-color:#555;color:#fff;}
+    .srv-btn.act{background:var(--accent);border-color:var(--accent);color:#fff;}
+    .player-frame-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;}
+    .player-frame-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+    .player-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;border-radius:10px;flex-direction:column;gap:12px;}
+    .player-loading .spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .dub-bar{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
+    .dub-label{font-size:12px;color:var(--muted);}
+    .dub-btn{padding:4px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .2s;}
+    .dub-btn:hover,.dub-btn.act{background:var(--bg4);border-color:#555;color:#fff;}
+    /* TV episode selector */
+    .ep-selector{margin-bottom:14px;}
+    .ep-selector h4{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--muted);}
+    .ep-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+    .ep-select{background:var(--bg3);border:1px solid var(--border);color:#fff;padding:7px 12px;border-radius:6px;font-size:13px;font-family:inherit;outline:none;cursor:pointer;}
+    .ep-select:focus{border-color:var(--accent);}
+    .ep-nums{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;max-height:100px;overflow-y:auto;}
+    .ep-num{width:36px;height:36px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+    .ep-num:hover,.ep-num.act{background:var(--accent);border-color:var(--accent);color:#fff;}
+    /* Modal actions */
+    .m-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px;}
+    .m-btn-fav{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;}
+    .m-btn-fav:hover{border-color:var(--accent);color:var(--accent);}
+    .m-btn-fav.faved{background:rgba(229,9,20,.12);border-color:var(--accent);color:var(--accent);}
+
+    /* ===== AUTH MODAL ===== */
+    .auth-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:8000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
+    .auth-ov.open{opacity:1;pointer-events:all;}
+    .auth-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:420px;max-width:95vw;position:relative;animation:mIn .3s ease;}
+    .auth-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
+    .auth-close:hover{color:#fff;}
+    .auth-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid var(--border);}
+    .auth-tab{flex:1;padding:10px;text-align:center;font-size:15px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-1px;}
+    .auth-tab.act{color:#fff;border-bottom-color:var(--accent);}
+    .auth-form{display:none;}
+    .auth-form.act{display:block;}
+    .f-group{margin-bottom:14px;}
+    .f-group label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+    .f-group input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:#fff;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;}
+    .f-group input:focus{border-color:var(--accent);}
+    .f-err{color:var(--accent);font-size:13px;margin-top:8px;display:none;}
+    .f-err.show{display:block;}
+    .btn-full{width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:4px;}
+    .btn-full:hover{background:var(--ah);}
+    .auth-note{color:var(--muted);font-size:12px;text-align:center;margin-top:14px;}
+    .auth-note span{color:var(--accent);cursor:pointer;}
+    .auth-note span:hover{text-decoration:underline;}
+
+    /* ===== POPUP AD ===== */
+    .pop-ov{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
+    .pop-ov.open{opacity:1;pointer-events:all;}
+    .pop-box{position:relative;max-width:500px;width:93%;border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.8);animation:mIn .35s ease;}
+    .pop-close{position:absolute;top:10px;right:10px;width:32px;height:32px;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.2);border-radius:50%;color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
+    .pop-close.locked{opacity:.35;cursor:not-allowed;}
+    .pop-adlbl{position:absolute;top:7px;left:10px;font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:2px;}
+    .pop-bar{position:absolute;bottom:0;left:0;height:3px;background:var(--accent);transition:width 1s linear;}
+    .pop-box img{width:100%;display:block;border-radius:12px;}
+    .pop-fallback{background:linear-gradient(135deg,#1a0a2d,#2d1a4d);padding:50px 36px;text-align:center;}
+    .pop-fallback h2{font-size:22px;margin-bottom:10px;}
+    .pop-fallback p{color:var(--muted);font-size:14px;margin-bottom:20px;}
+    .pop-fallback .pop-cta{background:var(--gold);color:#000;border:none;padding:12px 36px;border-radius:24px;font-size:15px;font-weight:800;cursor:pointer;}
+
+    /* ===== FAVORITES PAGE ===== */
+    #fav-section{display:none;}
+
+    /* ===== SKELETON ===== */
+    .sk-card{background:var(--bg3);border-radius:9px;overflow:hidden;animation:skP 1.5s infinite;}
+    .sk-poster{width:100%;aspect-ratio:2/3;background:var(--bg4);}
+    .sk-info{padding:9px;}
+    .sk-line{height:11px;background:var(--bg4);border-radius:4px;margin-bottom:7px;}
+    .sk-s{width:55%;}
+    @keyframes skP{0%,100%{opacity:1}50%{opacity:.45}}
 
     /* ===== FOOTER ===== */
-    footer { background:var(--bg-secondary); border-top:1px solid var(--border); margin-top:50px; padding:36px 24px 20px; }
-    .footer-grid { max-width:1600px; margin:0 auto 24px; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:28px; }
-    .footer-brand .logo { display:block; margin-bottom:10px; }
-    .footer-brand p { color:var(--text-muted); font-size:13px; line-height:1.7; }
-    .footer-col h4 { font-size:13px; font-weight:700; margin-bottom:12px; }
-    .footer-col a { display:block; color:var(--text-muted); text-decoration:none; font-size:13px; margin-bottom:7px; transition:color .2s; }
-    .footer-col a:hover { color:var(--accent); }
-    .footer-bottom { max-width:1600px; margin:0 auto; border-top:1px solid var(--border); padding-top:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-    .footer-bottom p { color:var(--text-muted); font-size:12px; }
-    .footer-tags { display:flex; gap:6px; flex-wrap:wrap; }
-    .footer-tag { background:var(--bg-card); color:var(--text-muted); padding:3px 9px; border-radius:4px; font-size:11px; text-decoration:none; }
+    footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:50px;padding:32px 24px 18px;}
+    .ft-grid{max-width:1600px;margin:0 auto 22px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:26px;}
+    .ft-brand .logo{display:block;margin-bottom:10px;}
+    .ft-brand p{color:var(--muted);font-size:13px;line-height:1.7;}
+    .ft-col h4{font-size:13px;font-weight:700;margin-bottom:11px;}
+    .ft-col a{display:block;color:var(--muted);font-size:13px;margin-bottom:7px;transition:color .2s;}
+    .ft-col a:hover{color:var(--accent);}
+    .ft-btm{max-width:1600px;margin:0 auto;border-top:1px solid var(--border);padding-top:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+    .ft-btm p{color:var(--muted);font-size:12px;}
+    .ft-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+    .ft-tag{background:var(--bg3);color:var(--muted);padding:3px 9px;border-radius:4px;font-size:11px;}
 
-    /* ===== MODAL ===== */
-    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.87); z-index:8000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; backdrop-filter:blur(6px); }
-    .modal-overlay.visible { opacity:1; pointer-events:all; }
-    .modal-box { background:var(--bg-secondary); border-radius:14px; max-width:840px; width:95%; max-height:90vh; overflow-y:auto; position:relative; border:1px solid var(--border); animation:mIn .3s ease; }
-    @keyframes mIn { from{transform:translateY(18px);opacity:0} to{transform:translateY(0);opacity:1} }
-    .modal-close { position:absolute; top:14px; right:14px; width:34px; height:34px; background:rgba(0,0,0,.6); border:1px solid var(--border); border-radius:50%; color:#fff; font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; transition:background .2s; }
-    .modal-close:hover { background:var(--accent); }
-    .modal-backdrop { width:100%; height:280px; object-fit:cover; border-radius:14px 14px 0 0; display:block; }
-    .modal-backdrop-ph { width:100%; height:280px; background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:14px 14px 0 0; display:flex; align-items:center; justify-content:center; font-size:72px; }
-    .modal-grad { height:70px; background:linear-gradient(0deg,var(--bg-secondary),transparent); margin-top:-70px; position:relative; }
-    .modal-body { padding:0 28px 28px; }
-    .modal-title { font-size:26px; font-weight:800; margin-bottom:9px; }
-    .modal-meta-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
-    .modal-rating { color:var(--accent-gold); font-weight:700; font-size:16px; }
-    .modal-year, .modal-lang { color:var(--text-secondary); font-size:14px; }
-    .modal-genres { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:14px; }
-    .modal-genre-tag { background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); font-size:12px; padding:3px 9px; border-radius:20px; }
-    .modal-desc { color:var(--text-secondary); font-size:14px; line-height:1.8; margin-bottom:22px; }
-    .modal-actions { display:flex; gap:10px; flex-wrap:wrap; }
-    .modal-btn-play { flex:1; background:var(--accent); color:#fff; border:none; padding:13px; border-radius:9px; font-size:15px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; min-width:140px; transition:background .2s; }
-    .modal-btn-play:hover { background:var(--accent-hover); }
-    .modal-btn-t { background:var(--bg-card); border:1px solid var(--border); color:#fff; padding:13px 22px; border-radius:9px; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:7px; transition:background .2s; }
-    .modal-btn-t:hover { background:var(--bg-hover); }
+    /* ===== UTILS ===== */
+    .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--bg3);color:#fff;padding:11px 22px;border-radius:8px;font-size:14px;border-left:3px solid var(--accent);z-index:99999;transition:transform .3s;white-space:nowrap;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+    #scroll-top{position:fixed;bottom:26px;right:26px;width:42px;height:42px;background:var(--accent);border-radius:50%;border:none;color:#fff;font-size:18px;cursor:pointer;z-index:500;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(229,9,20,.4);transition:all .2s;}
+    #scroll-top:hover{background:var(--ah);transform:scale(1.1);}
+    #scroll-top.show{display:flex;}
+    #srch-sec{display:none;}
 
-    /* Trailer */
-    .trailer-modal { position:fixed; inset:0; background:rgba(0,0,0,.96); z-index:9000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
-    .trailer-modal.visible { opacity:1; pointer-events:all; }
-    .trailer-box { width:90%; max-width:880px; position:relative; }
-    .trailer-close { position:absolute; top:-40px; right:0; background:none; border:none; color:#fff; font-size:26px; cursor:pointer; }
-    .trailer-box iframe { width:100%; aspect-ratio:16/9; border-radius:10px; border:none; }
-
-    /* Skeleton */
-    .skeleton-card { background:var(--bg-card); border-radius:10px; overflow:hidden; animation:skPulse 1.5s infinite; }
-    .skeleton-poster { width:100%; aspect-ratio:2/3; background:var(--bg-hover); }
-    .skeleton-info { padding:9px; }
-    .skeleton-line { height:11px; background:var(--bg-hover); border-radius:4px; margin-bottom:7px; }
-    .skeleton-line.sh { width:55%; }
-    @keyframes skPulse { 0%,100%{opacity:1} 50%{opacity:.45} }
-
-    /* Toast & scroll */
-    .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(70px); background:#1a1a1a; color:#fff; padding:11px 22px; border-radius:8px; font-size:14px; border-left:3px solid var(--accent); z-index:9999; transition:transform .3s; white-space:nowrap; }
-    .toast.show { transform:translateX(-50%) translateY(0); }
-    #scroll-top { position:fixed; bottom:28px; right:28px; width:42px; height:42px; background:var(--accent); border-radius:50%; border:none; color:#fff; font-size:18px; cursor:pointer; z-index:500; display:none; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(229,9,20,.4); transition:all .2s; }
-    #scroll-top:hover { background:var(--accent-hover); transform:scale(1.1); }
-    #scroll-top.show { display:flex; }
-
-    #search-results-section { display:none; }
-
-    @media (max-width:768px) {
-      .header-top { flex-wrap:wrap; height:auto; padding:8px 14px; }
-      nav { display:none; }
-      .footer-grid { grid-template-columns:1fr 1fr; }
-      .hero { height:320px; }
-      .hero-title { font-size:24px; }
-      .hero-content { padding:26px 20px; }
-      .btn-admin-link { display:none; }
+    @media(max-width:768px){
+      .hdr{flex-wrap:wrap;height:auto;padding:8px 14px;}
+      nav{display:none;}
+      .hero{height:310px;}
+      .hero-title{font-size:22px;}
+      .hero-c{padding:24px 18px;}
+      .ft-grid{grid-template-columns:1fr 1fr;}
     }
   </style>
 </head>
 <body>
 
-<!-- Setup Banner -->
-<div id="setup-banner">
-  <span>⚙️ Введи <strong>TMDB API ключ</strong> для реальних фільмів:</span>
-  <input type="text" id="api-key-input" placeholder="Вставте API ключ...">
-  <button class="sb-btn" onclick="saveApiKey()">✓ Зберегти</button>
-  <span style="color:#aaa;font-size:11px;">(<a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:#f5a623;">Отримати безкоштовно</a>)</span>
-  <span class="sb-close" onclick="document.getElementById('setup-banner').remove()">✕</span>
-</div>
-
 <!-- HEADER -->
 <header>
-  <div class="header-top">
-    <a href="#" class="logo"><span>Кіно</span><span>База</span></a>
+  <div class="hdr">
+    <a href="#" class="logo"><b>Кіно</b>База</a>
     <nav>
-      <a href="#" class="active">Головна</a>
-      <a href="#" onclick="filterByType('movie');return false;">Фільми</a>
-      <a href="#" onclick="filterByType('tv');return false;">Серіали</a>
-      <a href="#" onclick="filterByGenre(16);return false;">Мультфільми</a>
-      <a href="#" onclick="filterByGenre(99);return false;">Документальні</a>
-      <a href="#" onclick="showTop();return false;">Топ рейтинг</a>
+      <a href="#" class="act" onclick="showHome();return false;">Головна</a>
+      <a href="#" onclick="quickFilter('/movie/now_playing',{});return false;">Фільми</a>
+      <a href="#" onclick="quickFilter('/tv/popular',{});return false;">Серіали</a>
+      <a href="#" onclick="quickFilter('/discover/movie',{with_genres:16});return false;">Мультфільми</a>
+      <a href="#" onclick="quickFilter('/discover/movie',{with_genres:99});return false;">Документальні</a>
+      <a href="#" onclick="quickFilter('/movie/top_rated',{});return false;">Топ рейтинг</a>
+      <a href="#" onclick="showClassics();return false;">Класика</a>
     </nav>
-    <div class="search-box">
-      <input type="text" id="search-input" placeholder="Пошук фільмів..." onkeyup="handleSearch(event)">
+    <div class="srch">
+      <input type="text" id="si" placeholder="Пошук фільмів..." onkeyup="handleSrch(event)">
       <button onclick="doSearch()">🔍</button>
     </div>
-    <div class="header-actions">
-      <a href="#" class="btn-login">Увійти</a>
-      <a href="#" class="btn-reg">Реєстрація</a>
-      <a href="admin.html" class="btn-admin-link" target="_blank">⚙ Адмін</a>
+    <div class="hdr-right">
+      <div id="auth-btns">
+        <button class="btn-sm" onclick="openAuth('login')" style="margin-right:6px;">Увійти</button>
+        <button class="btn-sm red" onclick="openAuth('register')">Реєстрація</button>
+      </div>
+      <div id="user-menu" style="display:none;">
+        <div class="user-avatar" id="user-av" tabindex="0">
+          <span id="user-initial">U</span>
+          <div class="user-dropdown">
+            <div class="ud-name" id="ud-name">Користувач</div>
+            <div class="ud-divider"></div>
+            <div class="ud-item" onclick="showFavorites()">❤️ Улюблені</div>
+            <div class="ud-item" onclick="showHistory()">🕐 Історія перегляду</div>
+            <div class="ud-divider"></div>
+            <div class="ud-item" onclick="doLogout()">🚪 Вийти</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <!-- HEADER AD SLOT -->
   <div id="slot-header"></div>
 </header>
 
@@ -294,563 +293,830 @@
   <!-- HERO -->
   <div class="hero" id="hero" onclick="heroClick()">
     <div class="hero-bg" id="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-overlay-b"></div>
-    <div class="hero-content">
+    <div class="hero-ov"></div><div class="hero-ob"></div>
+    <div class="hero-c">
       <div class="hero-badge">🔥 Новинка</div>
       <div class="hero-title" id="hero-title">Завантаження...</div>
       <div class="hero-meta">
-        <span class="hero-rating" id="hero-rating">⭐ —</span>
-        <span class="hero-year" id="hero-year">—</span>
-        <span class="hero-genre" id="hero-genre">—</span>
+        <span class="hero-r" id="hero-r">⭐ —</span>
+        <span class="hero-y" id="hero-y">—</span>
+        <span class="hero-g" id="hero-g">—</span>
       </div>
-      <div class="hero-desc" id="hero-desc">Завантажуємо інформацію про фільм...</div>
+      <div class="hero-desc" id="hero-d">Завантажуємо...</div>
       <div class="hero-btns">
-        <button class="btn-play" onclick="event.stopPropagation();openModalById(currentHeroId)">▶ Дивитись</button>
-        <button class="btn-more" onclick="event.stopPropagation();openModalById(currentHeroId)">ℹ Детальніше</button>
+        <button class="btn-play" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,true)">▶ Дивитись</button>
+        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,false)">ℹ Детальніше</button>
       </div>
     </div>
     <div class="hero-dots" id="hero-dots"></div>
   </div>
 
   <!-- GENRES -->
-  <div class="genres-bar">
-    <span class="genre-tag active" onclick="selectGenre(0,this)">Усі</span>
-    <span class="genre-tag" onclick="selectGenre(28,this)">Бойовик</span>
-    <span class="genre-tag" onclick="selectGenre(35,this)">Комедія</span>
-    <span class="genre-tag" onclick="selectGenre(18,this)">Драма</span>
-    <span class="genre-tag" onclick="selectGenre(27,this)">Жахи</span>
-    <span class="genre-tag" onclick="selectGenre(10749,this)">Мелодрама</span>
-    <span class="genre-tag" onclick="selectGenre(878,this)">Фантастика</span>
-    <span class="genre-tag" onclick="selectGenre(14,this)">Фентезі</span>
-    <span class="genre-tag" onclick="selectGenre(16,this)">Анімація</span>
-    <span class="genre-tag" onclick="selectGenre(99,this)">Документальні</span>
-    <span class="genre-tag" onclick="selectGenre(53,this)">Трилер</span>
-    <span class="genre-tag" onclick="selectGenre(12,this)">Пригоди</span>
+  <div class="g-bar">
+    <span class="g-tag act" onclick="selGenre(0,this)">Усі</span>
+    <span class="g-tag" onclick="selGenre(28,this)">Бойовик</span>
+    <span class="g-tag" onclick="selGenre(35,this)">Комедія</span>
+    <span class="g-tag" onclick="selGenre(18,this)">Драма</span>
+    <span class="g-tag" onclick="selGenre(27,this)">Жахи</span>
+    <span class="g-tag" onclick="selGenre(10749,this)">Мелодрама</span>
+    <span class="g-tag" onclick="selGenre(878,this)">Фантастика</span>
+    <span class="g-tag" onclick="selGenre(14,this)">Фентезі</span>
+    <span class="g-tag" onclick="selGenre(16,this)">Анімація</span>
+    <span class="g-tag" onclick="selGenre(99,this)">Документальні</span>
+    <span class="g-tag" onclick="selGenre(53,this)">Трилер</span>
+    <span class="g-tag" onclick="selGenre(12,this)">Пригоди</span>
   </div>
 
   <!-- SEARCH RESULTS -->
-  <div id="search-results-section">
-    <div class="section-header">
-      <div class="section-title" id="search-section-title">Результати пошуку</div>
-      <a href="#" class="section-link" onclick="clearSearch();return false;">✕ Закрити</a>
+  <div id="srch-sec">
+    <div class="sec-hdr">
+      <div class="sec-title" id="srch-title">Пошук</div>
+      <a href="#" class="sec-more" onclick="clearSearch();return false;">✕ Закрити</a>
     </div>
-    <div class="movies-row" id="search-results-grid"></div>
+    <div class="movies-grid" id="srch-grid"></div>
   </div>
 
-  <!-- NEW MOVIES -->
-  <div class="section-header">
-    <div class="section-title">🔥 Нові фільми</div>
-    <a href="#" class="section-link">Всі →</a>
-  </div>
-  <div id="new-movies-grid" class="movies-row">
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+  <!-- FAVORITES -->
+  <div id="fav-section">
+    <div class="sec-hdr">
+      <div class="sec-title">❤️ Улюблені</div>
+      <a href="#" class="sec-more" onclick="showHome();return false;">← Назад</a>
+    </div>
+    <div class="movies-grid" id="fav-grid"></div>
   </div>
 
-  <!-- AD SLOT: BETWEEN 1 -->
-  <div id="slot-between1"></div>
+  <!-- HOME CONTENT -->
+  <div id="home-content">
+    <!-- NEW MOVIES -->
+    <div class="sec-hdr">
+      <div class="sec-title">🔥 Нові фільми</div>
+      <a href="#" class="sec-more">Всі →</a>
+    </div>
+    <div id="new-grid" class="movies-grid">
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    </div>
 
-  <!-- POPULAR + SIDEBAR -->
-  <div class="sidebar-row">
-    <div class="movies-col">
-      <div class="section-header">
-        <div class="section-title">🌟 Популярні</div>
-        <a href="#" class="section-link">Всі →</a>
+    <!-- AD SLOT: BETWEEN 1 -->
+    <div id="slot-between1"></div>
+
+    <!-- POPULAR + SIDEBAR -->
+    <div class="sidebar-row">
+      <div class="mv-col">
+        <div class="sec-hdr">
+          <div class="sec-title">🌟 Популярні</div>
+          <a href="#" class="sec-more">Всі →</a>
+        </div>
+        <div id="pop-grid" class="movies-grid">
+          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+        </div>
       </div>
-      <div id="popular-movies-grid" class="movies-row">
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-        <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
+      <div class="sidebar-ad-col">
+        <div id="slot-sidebar"></div>
       </div>
     </div>
-    <!-- AD SLOT: SIDEBAR -->
-    <div class="ad-vertical-wrap" id="slot-sidebar-wrap">
-      <div id="slot-sidebar" style="margin-top:58px;"></div>
+
+    <!-- AD SLOT: BETWEEN 2 -->
+    <div id="slot-between2"></div>
+
+    <!-- TOP RATED -->
+    <div class="sec-hdr">
+      <div class="sec-title">🏆 Топ рейтинг</div>
+      <a href="#" class="sec-more">Всі →</a>
     </div>
-  </div>
+    <div id="top-grid" class="movies-grid">
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    </div>
 
-  <!-- AD SLOT: BETWEEN 2 -->
-  <div id="slot-between2"></div>
+    <!-- AD SLOT: BETWEEN 3 -->
+    <div id="slot-between3"></div>
 
-  <!-- TOP RATED -->
-  <div class="section-header">
-    <div class="section-title">🏆 Топ рейтинг</div>
-    <a href="#" class="section-link">Всі →</a>
-  </div>
-  <div id="top-movies-grid" class="movies-row">
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-  </div>
+    <!-- SERIES -->
+    <div class="sec-hdr">
+      <div class="sec-title">📺 Серіали</div>
+      <a href="#" class="sec-more">Всі →</a>
+    </div>
+    <div id="series-grid" class="movies-grid">
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    </div>
 
-  <!-- AD SLOT: BETWEEN 3 -->
-  <div id="slot-between3"></div>
+    <!-- CLASSICS -->
+    <div class="sec-hdr" style="margin-top:28px;">
+      <div class="sec-title">🎞️ Класика кіно</div>
+      <a href="#" class="sec-more" onclick="showClassics();return false;">Всі →</a>
+    </div>
+    <div id="classic-grid" class="movies-grid">
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    </div>
 
-  <!-- SERIES -->
-  <div class="section-header">
-    <div class="section-title">📺 Серіали</div>
-    <a href="#" class="section-link">Всі →</a>
-  </div>
-  <div id="series-grid" class="movies-row">
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line sh"></div></div></div>
-  </div>
+    <!-- 90s -->
+    <div class="sec-hdr">
+      <div class="sec-title">📼 Кіно 90-х</div>
+      <a href="#" class="sec-more">Всі →</a>
+    </div>
+    <div id="nineties-grid" class="movies-grid">
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    </div>
 
+    <!-- 2000s -->
+    <div class="sec-hdr">
+      <div class="sec-title">💿 Кіно 2000-х</div>
+      <a href="#" class="sec-more">Всі →</a>
+    </div>
+    <div id="noughts-grid" class="movies-grid">
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
+    </div>
+
+  </div><!-- /#home-content -->
 </main>
 
 <!-- FOOTER -->
 <footer>
-  <!-- AD SLOT: FOOTER -->
-  <div id="slot-footer" style="margin-bottom:28px;"></div>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="#" class="logo"><span>Кіно</span><span>База</span></a>
-      <p>Найбільша бібліотека фільмів та серіалів українською мовою. Дивись безкоштовно у HD якості.</p>
+  <div id="slot-footer" style="margin-bottom:22px;"></div>
+  <div class="ft-grid">
+    <div class="ft-brand">
+      <a href="#" class="logo"><b>Кіно</b>База</a>
+      <p>Найбільша бібліотека фільмів та серіалів. HD якість, кілька серверів відтворення, різна озвучка.</p>
     </div>
-    <div class="footer-col">
+    <div class="ft-col">
       <h4>Жанри</h4>
       <a href="#">Бойовики</a><a href="#">Комедії</a><a href="#">Драми</a>
       <a href="#">Жахи</a><a href="#">Фантастика</a><a href="#">Мелодрами</a>
     </div>
-    <div class="footer-col">
+    <div class="ft-col">
       <h4>Навігація</h4>
       <a href="#">Головна</a><a href="#">Фільми</a><a href="#">Серіали</a>
-      <a href="#">Мультфільми</a><a href="#">Топ рейтинг</a>
+      <a href="#">Класика</a><a href="#">Топ рейтинг</a>
     </div>
-    <div class="footer-col">
-      <h4>Інформація</h4>
+    <div class="ft-col">
+      <h4>Сервіс</h4>
       <a href="#">Про нас</a><a href="#">Контакти</a>
-      <a href="admin.html">Адмін панель</a>
+      <a href="admin.html" target="_blank">Адмін</a>
       <a href="#">Умови</a><a href="#">DMCA</a>
     </div>
   </div>
-  <div class="footer-tags" style="max-width:1600px;margin:0 auto 14px;">
-    <a href="#" class="footer-tag">дивитись фільми онлайн</a>
-    <a href="#" class="footer-tag">безкоштовно</a>
-    <a href="#" class="footer-tag">українська озвучка</a>
-    <a href="#" class="footer-tag">HD якість</a>
-    <a href="#" class="footer-tag">нові фільми 2025</a>
+  <div style="max-width:1600px;margin:0 auto;">
+    <div class="ft-tags">
+      <span class="ft-tag">дивитись фільми онлайн</span>
+      <span class="ft-tag">безкоштовно</span>
+      <span class="ft-tag">українська озвучка</span>
+      <span class="ft-tag">HD якість</span>
+      <span class="ft-tag">нові фільми 2025</span>
+      <span class="ft-tag">класика кіно</span>
+    </div>
   </div>
-  <div class="footer-bottom">
-    <p>© 2025 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--accent-gold);text-decoration:none;">TMDB API</a></p>
+  <div class="ft-btm">
+    <p>© 2025 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--gold);">TMDB</a></p>
+    <p style="color:var(--dim);font-size:11px;">Сайт не зберігає відеофайли. Всі відео надаються третіми особами.</p>
   </div>
 </footer>
 
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="toast" id="toast"></div>
 
-<!-- POPUP AD OVERLAY -->
-<div class="popup-overlay" id="popup-overlay">
-  <div class="popup-box" id="popup-box">
-    <div class="popup-ad-badge">Реклама</div>
-    <button class="popup-close-btn locked" id="popup-close" onclick="closePopup()">✕</button>
-    <div class="popup-timer-bar" id="popup-bar" style="width:100%"></div>
-  </div>
-</div>
-
-<!-- MOVIE MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+<!-- ===== MOVIE MODAL ===== -->
+<div class="modal-ov" id="movie-modal" onclick="if(event.target===this)closeMovieModal()">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div id="modal-content"></div>
+    <button class="m-close" onclick="closeMovieModal()">✕</button>
+    <div id="movie-modal-content"></div>
   </div>
 </div>
 
-<!-- TRAILER MODAL -->
-<div class="trailer-modal" id="trailer-modal" onclick="if(event.target===this)closeTrailer()">
-  <div class="trailer-box">
-    <button class="trailer-close" onclick="closeTrailer()">✕</button>
-    <iframe id="trailer-iframe" src="" allowfullscreen allow="autoplay"></iframe>
+<!-- ===== AUTH MODAL ===== -->
+<div class="auth-ov" id="auth-modal" onclick="if(event.target===this)closeAuth()">
+  <div class="auth-box">
+    <button class="auth-close" onclick="closeAuth()">✕</button>
+    <div class="auth-tabs">
+      <div class="auth-tab act" id="tab-login" onclick="switchTab('login')">Вхід</div>
+      <div class="auth-tab" id="tab-register" onclick="switchTab('register')">Реєстрація</div>
+    </div>
+    <!-- Login -->
+    <div class="auth-form act" id="form-login">
+      <div class="f-group"><label>Email</label><input type="email" id="l-email" placeholder="email@example.com"></div>
+      <div class="f-group"><label>Пароль</label><input type="password" id="l-pass" placeholder="••••••••" onkeyup="if(event.key==='Enter')doLogin()"></div>
+      <div class="f-err" id="l-err"></div>
+      <button class="btn-full" onclick="doLogin()">Увійти</button>
+      <div class="auth-note">Немає акаунту? <span onclick="switchTab('register')">Зареєструватись</span></div>
+    </div>
+    <!-- Register -->
+    <div class="auth-form" id="form-register">
+      <div class="f-group"><label>Ім'я</label><input type="text" id="r-name" placeholder="Ваше ім'я"></div>
+      <div class="f-group"><label>Email</label><input type="email" id="r-email" placeholder="email@example.com"></div>
+      <div class="f-group"><label>Пароль</label><input type="password" id="r-pass" placeholder="Мін. 6 символів" onkeyup="if(event.key==='Enter')doRegister()"></div>
+      <div class="f-err" id="r-err"></div>
+      <button class="btn-full" onclick="doRegister()">Зареєструватись</button>
+      <div class="auth-note">Вже є акаунт? <span onclick="switchTab('login')">Увійти</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== POPUP AD ===== -->
+<div class="pop-ov" id="pop-ov">
+  <div class="pop-box" id="pop-box">
+    <div class="pop-adlbl">Реклама</div>
+    <button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>
+    <div class="pop-bar" id="pop-bar" style="width:100%"></div>
   </div>
 </div>
 
 <script>
-  // ========================
-  // CONFIG
-  // ========================
-  let TMDB_KEY = localStorage.getItem('tmdb_key') || '';
-  const TMDB_BASE = 'https://api.themoviedb.org/3';
-  const IMG_BASE  = 'https://image.tmdb.org/t/p/';
-  const ADS_KEY   = 'kb_ads';
+// =====================================================================
+// TMDB API — multiple keys with rotation
+// =====================================================================
+const TMDB_BASE = 'https://api.themoviedb.org/3';
+const IMG = 'https://image.tmdb.org/t/p/';
+const KEYS_KEY = 'kb_api_keys';
+const ADS_KEY  = 'kb_ads';
+let keyIdx = 0;
 
-  if (TMDB_KEY) {
-    document.getElementById('setup-banner').style.display = 'none';
-    document.getElementById('api-key-input').value = TMDB_KEY;
+function getKeys() {
+  const raw = localStorage.getItem(KEYS_KEY);
+  if (raw) { try { return JSON.parse(raw); } catch{} }
+  // backward compat
+  const old = localStorage.getItem('tmdb_key');
+  return old ? [old] : [];
+}
+
+async function tmdb(ep, params={}) {
+  const keys = getKeys();
+  if (!keys.length) return null;
+  for (let i=0; i<keys.length; i++) {
+    const key = keys[(keyIdx+i) % keys.length];
+    const url = new URL(TMDB_BASE + ep);
+    url.searchParams.set('api_key', key);
+    url.searchParams.set('language', 'uk-UA');
+    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, String(v)));
+    try {
+      const r = await fetch(url);
+      if (r.status === 429) { keyIdx = (keyIdx+1) % keys.length; continue; }
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    } catch { continue; }
+  }
+  return null;
+}
+
+// =====================================================================
+// GENRE MAP
+// =====================================================================
+const GM = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'Комедія',80:'Кримінал',99:'Документальний',18:'Драма',10751:'Сімейний',14:'Фентезі',36:'Історичний',27:'Жахи',10749:'Мелодрама',878:'Фантастика',53:'Трилер',10752:'Воєнний',37:'Вестерн'};
+const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).join(', ') : '—';
+
+// =====================================================================
+// PLAYERS
+// =====================================================================
+const MOVIE_PLAYERS = [
+  { id:'vs1', name:'▶ Сервер 1', url: id => `https://vidsrc.to/embed/movie/${id}` },
+  { id:'vs2', name:'▶ Сервер 2', url: id => `https://vidsrc.xyz/embed/movie?tmdb=${id}` },
+  { id:'em3', name:'▶ Сервер 3', url: id => `https://www.2embed.cc/embed/${id}` },
+  { id:'em4', name:'▶ Сервер 4', url: id => `https://embed.su/embed/movie/${id}` },
+  { id:'em5', name:'▶ Сервер 5', url: id => `https://multiembed.mov/?video_id=${id}&tmdb=1` },
+];
+const TV_PLAYERS = [
+  { id:'vs1', name:'▶ Сервер 1', url: (id,s,e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
+  { id:'vs2', name:'▶ Сервер 2', url: (id,s,e) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}` },
+  { id:'em3', name:'▶ Сервер 3', url: (id,s,e) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
+  { id:'em4', name:'▶ Сервер 4', url: (id,s,e) => `https://embed.su/embed/tv/${id}/${s}/${e}` },
+];
+
+// =====================================================================
+// HERO SLIDER
+// =====================================================================
+let heroMovies=[], heroIdx=0, currentHeroId=null, currentHeroType='movie', heroTimer=null;
+
+function setHero(m) {
+  currentHeroId=m.id; currentHeroType=m.media_type||'movie';
+  if(m.backdrop_path) document.getElementById('hero-bg').style.backgroundImage=`url('${IMG}original${m.backdrop_path}')`;
+  document.getElementById('hero-title').textContent=m.title||m.name||'—';
+  document.getElementById('hero-r').textContent=`⭐ ${m.vote_average?m.vote_average.toFixed(1):'—'}`;
+  document.getElementById('hero-y').textContent=(m.release_date||m.first_air_date||'').slice(0,4)||'—';
+  document.getElementById('hero-g').textContent=gNames(m.genre_ids);
+  document.getElementById('hero-d').textContent=m.overview||'Опис відсутній.';
+  document.querySelectorAll('.h-dot').forEach((d,i)=>d.classList.toggle('act',i===heroIdx));
+}
+function startHero(movies) {
+  heroMovies=movies.slice(0,8);
+  document.getElementById('hero-dots').innerHTML=heroMovies.map((_,i)=>`<div class="h-dot ${i===0?'act':''}" onclick="goHero(${i})"></div>`).join('');
+  setHero(heroMovies[0]);
+  clearInterval(heroTimer);
+  heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroMovies.length; setHero(heroMovies[heroIdx]); },6000);
+}
+function goHero(i){ heroIdx=i; setHero(heroMovies[i]); clearInterval(heroTimer); heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroMovies.length; setHero(heroMovies[heroIdx]); },6000); }
+function heroClick(){ openMovie(currentHeroId,currentHeroType,false); }
+
+// =====================================================================
+// CARD HTML
+// =====================================================================
+function card(m, badge) {
+  const title=m.title||m.name||'—';
+  const year=(m.release_date||m.first_air_date||'').slice(0,4);
+  const rat=m.vote_average?m.vote_average.toFixed(1):'—';
+  const mtype=m.media_type||'movie';
+  const isFav=isFavorite(m.id);
+  const poster=m.poster_path
+    ?`<img class="c-poster" src="${IMG}w300${m.poster_path}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    :'';
+  const ph=m.poster_path?`<div class="c-ph" style="display:none">🎬</div>`:`<div class="c-ph">🎬</div>`;
+  return `<div class="m-card" onclick="openMovie(${m.id},'${mtype}',false)">
+    ${poster}${ph}
+    <div class="c-ov"><div class="c-play-btn">▶</div></div>
+    ${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}
+    <button class="c-fav ${isFav?'faved':''}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)" title="${isFav?'Видалити':'В улюблені'}">${isFav?'❤️':'🤍'}</button>
+    <div class="c-info">
+      <div class="c-title">${title}</div>
+      <div class="c-meta"><span class="c-year">${year}</span><span class="c-rat">⭐ ${rat}</span></div>
+    </div>
+  </div>`;
+}
+
+async function loadGrid(id, ep, params={}, badge=null, limit=12) {
+  const el=document.getElementById(id);
+  const data=await tmdb(ep,params);
+  if(!data||!data.results){
+    el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">
+      Немає API ключа. <a href="admin.html" style="color:var(--accent);">Додати в адмін-панелі →</a></div>`;
+    return [];
+  }
+  el.innerHTML=data.results.slice(0,limit).map(m=>card(m,badge)).join('');
+  return data.results;
+}
+
+// =====================================================================
+// INIT SITE
+// =====================================================================
+async function initSite() {
+  const np=await tmdb('/movie/now_playing');
+  if(np&&np.results) {
+    startHero(np.results);
+    loadGrid('new-grid','/movie/now_playing',{},{txt:'NEW',cls:''},12);
+  }
+  loadGrid('pop-grid','/movie/popular',{},{txt:'HD',cls:'g'},12);
+  loadGrid('top-grid','/movie/top_rated',{},null,12);
+  loadGrid('series-grid','/tv/popular',{},{txt:'СЕРІАЛ',cls:'b'},12);
+  // Classics: top rated movies before 2000
+  loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,12);
+  // 90s
+  loadGrid('nineties-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
+  // 2000s
+  loadGrid('noughts-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
+}
+
+// =====================================================================
+// MOVIE MODAL
+// =====================================================================
+let currentModalId=null, currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
+
+async function openMovie(id, type='movie', autoPlay=false) {
+  if(!id) return;
+  currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1; currentPlayer=0;
+  const modal=document.getElementById('movie-modal');
+  const content=document.getElementById('movie-modal-content');
+  modal.classList.add('open');
+  content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Завантаження...</div>';
+
+  const ep=type==='tv'?`/tv/${id}`:`/movie/${id}`;
+  const data=await tmdb(ep,{append_to_response:'videos,seasons'});
+  if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Помилка завантаження</div>';return;}
+
+  const title=data.title||data.name||'—';
+  const year=(data.release_date||data.first_air_date||'').slice(0,4);
+  const rat=data.vote_average?data.vote_average.toFixed(1):'—';
+  const genres=(data.genres||[]).map(g=>`<span class="m-gtag">${g.name}</span>`).join('');
+  const desc=data.overview||'Опис відсутній.';
+  const isFav=isFavorite(id);
+
+  const backdrop=data.backdrop_path
+    ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}" alt="${title}">`
+    :`<div class="m-backdrop-ph">🎬</div>`;
+
+  // TV: seasons
+  const players = type==='tv' ? TV_PLAYERS : MOVIE_PLAYERS;
+  const srvBtns = players.map((p,i)=>`<button class="srv-btn ${i===0?'act':''}" onclick="switchPlayer(${i})">${p.name}</button>`).join('');
+
+  let tvSelector='';
+  if(type==='tv' && data.seasons) {
+    const realSeasons=data.seasons.filter(s=>s.season_number>0);
+    const seasonOpts=realSeasons.map(s=>`<option value="${s.season_number}">Сезон ${s.season_number} (${s.episode_count} епізодів)</option>`).join('');
+    tvSelector=`<div class="ep-selector">
+      <h4>🎬 Оберіть епізод</h4>
+      <div class="ep-row">
+        <select class="ep-select" id="season-sel" onchange="changeSeason(this.value)">${seasonOpts}</select>
+        <span style="color:var(--muted);font-size:13px;">Епізод:</span>
+      </div>
+      <div class="ep-nums" id="ep-nums"></div>
+    </div>`;
   }
 
-  function saveApiKey() {
-    const k = document.getElementById('api-key-input').value.trim();
-    if (!k) { showToast('Введіть API ключ!'); return; }
-    TMDB_KEY = k;
-    localStorage.setItem('tmdb_key', k);
-    document.getElementById('setup-banner').style.display = 'none';
-    showToast('✅ API ключ збережено!');
-    initSite();
+  // Dubbing note
+  const dubNote=`<div class="dub-bar">
+    <span class="dub-label">🎙 Озвучка на серверах:</span>
+    <span class="dub-btn act">Оригінал</span>
+    <span class="dub-btn">Англійська</span>
+    <span class="dub-btn">Залежить від сервера</span>
+  </div>`;
+
+  content.innerHTML=`
+    ${backdrop}
+    <div class="m-grad"></div>
+    <div class="m-body">
+      <div class="m-title">${title}</div>
+      <div class="m-metas">
+        <span class="m-rat">⭐ ${rat}</span>
+        <span class="m-y">📅 ${year}</span>
+        ${data.original_language?`<span class="m-lang">🌍 ${data.original_language.toUpperCase()}</span>`:''}
+        ${data.runtime?`<span class="m-dur">⏱ ${data.runtime} хв</span>`:''}
+        ${data.number_of_seasons?`<span class="m-dur">📺 ${data.number_of_seasons} сезонів</span>`:''}
+      </div>
+      <div class="m-genres">${genres}</div>
+      <div class="m-desc">${desc}</div>
+
+      <!-- PLAYER -->
+      <div class="player-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:14px;font-weight:600;">🎬 Відеоплеєр</div>
+        </div>
+        <div class="player-servers" id="srv-btns">${srvBtns}</div>
+        ${tvSelector}
+        <div class="player-frame-wrap" id="player-wrap">
+          <div class="player-loading" id="player-loading">
+            <div class="spin"></div>
+            <div style="color:var(--muted);font-size:13px;">Завантаження відео...</div>
+          </div>
+          <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="opacity:0;transition:opacity .3s;"></iframe>
+        </div>
+        ${dubNote}
+        <div style="color:var(--dim);font-size:11px;margin-top:8px;">⚠️ Якщо відео не завантажилось — спробуйте інший сервер</div>
+      </div>
+
+      <div class="m-actions">
+        <button class="m-btn-fav ${isFav?'faved':''}" id="modal-fav-btn" onclick="toggleFavModal(${id},'${type}')">
+          ${isFav?'❤️ В улюблених':'🤍 В улюблені'}
+        </button>
+      </div>
+    </div>`;
+
+  // Init player & TV
+  if(type==='tv' && data.seasons) {
+    const firstReal=data.seasons.find(s=>s.season_number>0);
+    if(firstReal) { currentSeason=firstReal.season_number; loadEpisodes(firstReal.episode_count); }
   }
 
-  // ========================
-  // ADS ENGINE
-  // ========================
-  function getActiveAds(slot) {
-    const raw = localStorage.getItem(ADS_KEY);
-    if (!raw) return [];
-    try { return JSON.parse(raw).filter(a => a.active && a.slot === slot); }
-    catch { return []; }
+  if(autoPlay || type==='movie') loadPlayer();
+  else {
+    document.getElementById('player-loading').innerHTML='<div style="color:var(--muted);font-size:14px;">Натисніть кнопку сервера щоб дивитись</div>';
   }
+}
 
-  function buildHorizontalAd(ad) {
-    const wrap = document.createElement('div');
-    wrap.className = 'ad-slot-wrap in-page';
-    wrap.innerHTML = `<span class="ad-label-tag">Реклама</span>`;
-    if (ad.html) {
-      const inner = document.createElement('div');
-      inner.style.cssText = 'width:100%;';
-      inner.innerHTML = ad.html;
-      wrap.appendChild(inner);
-    } else {
-      const a = document.createElement('a');
-      a.href = ad.linkUrl || '#';
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.className = 'ad-horizontal';
-      const img = document.createElement('img');
-      img.src = ad.imageUrl;
-      img.alt = ad.altText || 'Реклама';
-      img.style.cssText = 'width:100%;display:block;max-height:160px;object-fit:cover;';
-      a.appendChild(img);
-      wrap.appendChild(a);
-    }
-    return wrap;
-  }
+function loadPlayer() {
+  const loading=document.getElementById('player-loading');
+  const iframe=document.getElementById('player-iframe');
+  if(!loading||!iframe) return;
+  loading.style.display='flex';
+  iframe.style.opacity='0';
 
-  function buildVerticalAd(ad) {
-    const wrap = document.createElement('div');
-    if (ad.html) {
-      wrap.innerHTML = ad.html;
-    } else {
-      const a = document.createElement('a');
-      a.href = ad.linkUrl || '#';
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.className = 'ad-vertical';
-      const img = document.createElement('img');
-      img.src = ad.imageUrl;
-      img.alt = ad.altText || 'Реклама';
-      a.appendChild(img);
-      wrap.appendChild(a);
-    }
-    return wrap;
-  }
+  const players=currentModalType==='tv'?TV_PLAYERS:MOVIE_PLAYERS;
+  const p=players[currentPlayer];
+  const src=currentModalType==='tv'
+    ?p.url(currentModalId,currentSeason,currentEpisode)
+    :p.url(currentModalId);
 
-  function renderAdSlots() {
-    // Header
-    const headerEl = document.getElementById('slot-header');
-    headerEl.innerHTML = '';
-    const hAds = getActiveAds('header');
-    if (hAds.length) {
-      const w = document.createElement('div');
-      w.style.cssText = 'background:#0a0a0a;border-top:1px solid #1a1a1a;';
-      const lbl = document.createElement('span');
-      lbl.className = 'ad-label-tag';
-      lbl.style.cssText = 'display:block;padding:2px 8px;font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1px;';
-      lbl.textContent = 'Реклама';
-      w.appendChild(lbl);
-      hAds.forEach(ad => {
-        if (ad.html) { const d = document.createElement('div'); d.innerHTML = ad.html; w.appendChild(d); }
-        else {
-          const a = document.createElement('a');
-          a.href = ad.linkUrl||'#'; a.target='_blank'; a.rel='noopener';
-          a.className = 'ad-horizontal';
-          const img = document.createElement('img');
-          img.src = ad.imageUrl; img.alt = ad.altText||'Реклама';
-          a.appendChild(img); w.appendChild(a);
-        }
-      });
-      headerEl.appendChild(w);
-    }
+  iframe.src='';
+  setTimeout(()=>{
+    iframe.src=src;
+    iframe.onload=()=>{
+      loading.style.display='none';
+      iframe.style.opacity='1';
+    };
+    // fallback
+    setTimeout(()=>{ if(loading.style.display!=='none'){ loading.innerHTML='<div style="color:var(--muted);font-size:13px;">Відео завантажено. Якщо не грає — спробуйте інший сервер.</div>'; iframe.style.opacity='1'; } },3000);
+  },100);
+}
 
-    // Between slots (horizontal)
-    ['between1','between2','between3'].forEach(slot => {
-      const el = document.getElementById('slot-' + slot);
-      if (!el) return;
-      el.innerHTML = '';
-      const ads = getActiveAds(slot);
-      ads.forEach(ad => el.appendChild(buildHorizontalAd(ad)));
+function switchPlayer(idx) {
+  currentPlayer=idx;
+  document.querySelectorAll('.srv-btn').forEach((b,i)=>b.classList.toggle('act',i===idx));
+  loadPlayer();
+}
+
+function changeSeason(s) {
+  currentSeason=parseInt(s); currentEpisode=1;
+  // Load episode count for this season
+  tmdb(`/tv/${currentModalId}/season/${s}`).then(data=>{
+    if(data&&data.episodes) loadEpisodes(data.episodes.length);
+  });
+  loadPlayer();
+}
+
+function loadEpisodes(count) {
+  const el=document.getElementById('ep-nums');
+  if(!el) return;
+  el.innerHTML=Array.from({length:count},(_,i)=>{
+    const n=i+1;
+    return `<button class="ep-num ${n===currentEpisode?'act':''}" onclick="selectEp(${n})">${n}</button>`;
+  }).join('');
+}
+
+function selectEp(n) {
+  currentEpisode=n;
+  document.querySelectorAll('.ep-num').forEach((b,i)=>b.classList.toggle('act',i+1===n));
+  loadPlayer();
+}
+
+function closeMovieModal() {
+  document.getElementById('movie-modal').classList.remove('open');
+  const iframe=document.getElementById('player-iframe');
+  if(iframe) iframe.src='';
+}
+
+// =====================================================================
+// FAVORITES
+// =====================================================================
+const FAV_KEY='kb_favorites';
+function getFavs(){ try{return JSON.parse(localStorage.getItem(FAV_KEY)||'[]');}catch{return[];} }
+function isFavorite(id){ return getFavs().some(f=>f.id===id); }
+function toggleFav(id, type, btn) {
+  const user=getUser();
+  if(!user){openAuth('login');showToast('Увійдіть щоб зберігати улюблені');return;}
+  let favs=getFavs();
+  const idx=favs.findIndex(f=>f.id===id);
+  if(idx>=0){favs.splice(idx,1);showToast('Видалено з улюблених');}
+  else{
+    // fetch minimal info
+    tmdb(`/${type}/${id}`).then(data=>{
+      if(data){favs.push({id:data.id,type,title:data.title||data.name,poster:data.poster_path,rating:data.vote_average,year:(data.release_date||data.first_air_date||'').slice(0,4)});localStorage.setItem(FAV_KEY,JSON.stringify(favs));}
     });
-
-    // Sidebar (vertical)
-    const sideEl = document.getElementById('slot-sidebar');
-    const sideWrap = document.getElementById('slot-sidebar-wrap');
-    sideEl.innerHTML = '';
-    const sAds = getActiveAds('sidebar');
-    if (sAds.length) {
-      sAds.forEach(ad => sideEl.appendChild(buildVerticalAd(ad)));
-      sideWrap.style.display = '';
-    } else {
-      sideWrap.style.display = 'none';
-    }
-
-    // Footer
-    const footerEl = document.getElementById('slot-footer');
-    footerEl.innerHTML = '';
-    const fAds = getActiveAds('footer');
-    fAds.forEach(ad => footerEl.appendChild(buildHorizontalAd(ad)));
-
-    // Popup
-    initPopupAd();
+    showToast('Додано до улюблених ❤️');
   }
-
-  // ========================
-  // POPUP AD
-  // ========================
-  let popupCountdown = 5;
-  let popupInt = null;
-
-  function initPopupAd() {
-    const ads = getActiveAds('popup');
-    if (!ads.length) return;
-    const ad = ads[0];
-    const box = document.getElementById('popup-box');
-    const closeBtn = document.getElementById('popup-close');
-    const bar = document.getElementById('popup-bar');
-
-    if (ad.html) {
-      box.innerHTML = `<div class="popup-ad-badge">Реклама</div><button class="popup-close-btn locked" id="popup-close" onclick="closePopup()">✕</button>${ad.html}<div class="popup-timer-bar" id="popup-bar" style="width:100%"></div>`;
-    } else if (ad.imageUrl) {
-      box.innerHTML = `
-        <div class="popup-ad-badge">Реклама</div>
-        <button class="popup-close-btn locked" id="popup-close" onclick="closePopup()">✕</button>
-        <a href="${ad.linkUrl||'#'}" target="_blank" rel="noopener" onclick="closePopup()">
-          <img src="${ad.imageUrl}" alt="${ad.altText||'Реклама'}" style="width:100%;display:block;border-radius:14px;">
-        </a>
-        <div class="popup-timer-bar" id="popup-bar" style="width:100%"></div>
-      `;
-    }
-
-    setTimeout(() => {
-      document.getElementById('popup-overlay').classList.add('visible');
-      const b = document.getElementById('popup-bar');
-      if (b) b.style.width = '0';
-      popupInt = setInterval(() => {
-        popupCountdown--;
-        if (popupCountdown <= 0) {
-          clearInterval(popupInt);
-          const c = document.getElementById('popup-close');
-          if (c) { c.classList.remove('locked'); }
-        }
-      }, 1000);
-    }, 4000);
+  localStorage.setItem(FAV_KEY,JSON.stringify(favs));
+  if(btn){const f=favs.some(x=>x.id===id);btn.classList.toggle('faved',f);btn.textContent=f?'❤️':'🤍';}
+}
+function toggleFavModal(id,type){
+  const user=getUser();
+  if(!user){openAuth('login');showToast('Увійдіть щоб зберігати улюблені');return;}
+  let favs=getFavs();
+  const idx=favs.findIndex(f=>f.id===id);
+  const btn=document.getElementById('modal-fav-btn');
+  if(idx>=0){favs.splice(idx,1);if(btn){btn.className='m-btn-fav';btn.innerHTML='🤍 В улюблені';}showToast('Видалено з улюблених');}
+  else{
+    tmdb(`/${type}/${id}`).then(data=>{
+      if(data){favs.push({id:data.id,type,title:data.title||data.name,poster:data.poster_path,rating:data.vote_average,year:(data.release_date||data.first_air_date||'').slice(0,4)});localStorage.setItem(FAV_KEY,JSON.stringify(favs));}
+    });
+    if(btn){btn.className='m-btn-fav faved';btn.innerHTML='❤️ В улюблених';}
+    showToast('Додано до улюблених ❤️');
   }
+  localStorage.setItem(FAV_KEY,JSON.stringify(favs));
+}
 
-  function closePopup() {
-    if (popupCountdown > 0) return;
-    clearInterval(popupInt);
-    document.getElementById('popup-overlay').classList.remove('visible');
+function showFavorites() {
+  document.getElementById('fav-section').style.display='block';
+  document.getElementById('home-content').style.display='none';
+  document.getElementById('srch-sec').style.display='none';
+  const favs=getFavs();
+  const grid=document.getElementById('fav-grid');
+  if(!favs.length){grid.innerHTML='<div style="color:var(--muted);padding:30px;grid-column:1/-1;text-align:center;">Тут поки порожньо. Додавайте фільми натиснувши 🤍</div>';return;}
+  grid.innerHTML=favs.map(m=>`<div class="m-card" onclick="openMovie(${m.id},'${m.type||'movie'}',false)">
+    ${m.poster?`<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title}"><div class="c-ph" style="display:none">🎬</div>`:'<div class="c-ph">🎬</div>'}
+    <div class="c-ov"><div class="c-play-btn">▶</div></div>
+    <div class="c-info">
+      <div class="c-title">${m.title||'—'}</div>
+      <div class="c-meta"><span class="c-year">${m.year||'—'}</span><span class="c-rat">⭐ ${m.rating?m.rating.toFixed(1):'—'}</span></div>
+    </div>
+  </div>`).join('');
+}
+function showHistory(){showToast('Історія перегляду в розробці...');}
+
+function showHome(){
+  document.getElementById('fav-section').style.display='none';
+  document.getElementById('home-content').style.display='block';
+  document.getElementById('srch-sec').style.display='none';
+}
+
+// =====================================================================
+// AUTH
+// =====================================================================
+const USERS_KEY='kb_users';
+const SES_KEY='kb_session';
+function getUsers(){try{return JSON.parse(localStorage.getItem(USERS_KEY)||'[]');}catch{return[];}}
+function getUser(){try{return JSON.parse(sessionStorage.getItem(SES_KEY)||'null');}catch{return null;}}
+function setUser(u){sessionStorage.setItem(SES_KEY,JSON.stringify(u));}
+
+function updateAuthUI(){
+  const user=getUser();
+  document.getElementById('auth-btns').style.display=user?'none':'flex';
+  document.getElementById('user-menu').style.display=user?'block':'none';
+  if(user){
+    document.getElementById('user-initial').textContent=(user.name||user.email||'U')[0].toUpperCase();
+    document.getElementById('ud-name').textContent=user.name||user.email;
   }
+}
 
-  // ========================
-  // GENRES
-  // ========================
-  const GENRE_MAP = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'Комедія',80:'Кримінал',99:'Документальний',18:'Драма',10751:'Сімейний',14:'Фентезі',36:'Історичний',27:'Жахи',10749:'Мелодрама',878:'Фантастика',53:'Трилер',10752:'Воєнний',37:'Вестерн'};
-  function getGenreNames(ids) {
-    if (!ids||!ids.length) return '—';
-    return ids.slice(0,3).map(id=>GENRE_MAP[id]||'').filter(Boolean).join(', ');
+function openAuth(tab='login'){
+  switchTab(tab);
+  document.getElementById('auth-modal').classList.add('open');
+}
+function closeAuth(){document.getElementById('auth-modal').classList.remove('open');}
+function switchTab(t){
+  document.getElementById('tab-login').classList.toggle('act',t==='login');
+  document.getElementById('tab-register').classList.toggle('act',t==='register');
+  document.getElementById('form-login').classList.toggle('act',t==='login');
+  document.getElementById('form-register').classList.toggle('act',t==='register');
+}
+
+function doLogin(){
+  const email=document.getElementById('l-email').value.trim();
+  const pass=document.getElementById('l-pass').value;
+  const errEl=document.getElementById('l-err');
+  errEl.classList.remove('show');
+  if(!email||!pass){errEl.textContent='Заповніть всі поля';errEl.classList.add('show');return;}
+  const users=getUsers();
+  const user=users.find(u=>u.email===email&&u.pass===btoa(pass));
+  if(!user){errEl.textContent='Невірний email або пароль';errEl.classList.add('show');return;}
+  setUser(user); closeAuth(); updateAuthUI(); showToast(`👋 Ласкаво просимо, ${user.name||user.email}!`);
+}
+
+function doRegister(){
+  const name=document.getElementById('r-name').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const pass=document.getElementById('r-pass').value;
+  const errEl=document.getElementById('r-err');
+  errEl.classList.remove('show');
+  if(!name||!email||!pass){errEl.textContent='Заповніть всі поля';errEl.classList.add('show');return;}
+  if(pass.length<6){errEl.textContent='Пароль мінімум 6 символів';errEl.classList.add('show');return;}
+  const users=getUsers();
+  if(users.find(u=>u.email===email)){errEl.textContent='Цей email вже використовується';errEl.classList.add('show');return;}
+  const user={id:Date.now(),name,email,pass:btoa(pass)};
+  users.push(user); localStorage.setItem(USERS_KEY,JSON.stringify(users));
+  setUser(user); closeAuth(); updateAuthUI(); showToast(`✅ Акаунт створено! Ласкаво просимо, ${name}!`);
+}
+
+function doLogout(){setUser(null);updateAuthUI();showToast('До побачення!');showHome();}
+
+// =====================================================================
+// SEARCH
+// =====================================================================
+let sT=null;
+function handleSrch(e){if(e.key==='Enter'){doSearch();return;} clearTimeout(sT);sT=setTimeout(doSearch,600);}
+async function doSearch(){
+  const q=document.getElementById('si').value.trim();
+  if(!q){clearSearch();return;}
+  document.getElementById('srch-sec').style.display='block';
+  document.getElementById('home-content').style.display='none';
+  document.getElementById('fav-section').style.display='none';
+  const grid=document.getElementById('srch-grid');
+  document.getElementById('srch-title').textContent=`🔍 "${q}"`;
+  grid.innerHTML='<div class="sk-card"><div class="sk-poster"></div></div>'.repeat(6);
+  const data=await tmdb('/search/multi',{query:q});
+  if(!data||!data.results||!data.results.length){grid.innerHTML='<div style="color:var(--muted);padding:30px;grid-column:1/-1;text-align:center;">Нічого не знайдено 🔍</div>';return;}
+  grid.innerHTML=data.results.filter(m=>m.media_type!=='person').slice(0,20).map(m=>card(m)).join('');
+}
+function clearSearch(){document.getElementById('srch-sec').style.display='none';document.getElementById('home-content').style.display='block';document.getElementById('si').value='';}
+
+// =====================================================================
+// GENRE FILTER
+// =====================================================================
+async function selGenre(genreId,el){
+  document.querySelectorAll('.g-tag').forEach(t=>t.classList.remove('act'));el.classList.add('act');
+  if(genreId===0){initSite();return;}
+  const p={with_genres:genreId,sort_by:'popularity.desc'};
+  loadGrid('new-grid','/discover/movie',{...p,'primary_release_date.gte':'2023-01-01'},{txt:'NEW',cls:''},12);
+  loadGrid('pop-grid','/discover/movie',p,{txt:'HD',cls:'g'},12);
+  loadGrid('top-grid','/discover/movie',{...p,sort_by:'vote_average.desc','vote_count.gte':500},null,12);
+  loadGrid('classic-grid','/discover/movie',{...p,'primary_release_date.lte':'2000-12-31'},null,12);
+  loadGrid('nineties-grid','/discover/movie',{...p,'primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
+  loadGrid('noughts-grid','/discover/movie',{...p,'primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
+}
+function quickFilter(ep,params){
+  showHome();clearSearch();
+  loadGrid('pop-grid',ep,params,{txt:'HD',cls:'g'},12);
+  document.getElementById('pop-grid').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function showClassics(){
+  quickFilter('/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'});
+  loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,24);
+}
+
+// =====================================================================
+// ADS
+// =====================================================================
+function getAds(slot){try{return(JSON.parse(localStorage.getItem(ADS_KEY)||'[]')).filter(a=>a.active&&a.slot===slot);}catch{return[];}}
+function buildH(ad){
+  const w=document.createElement('div');
+  w.className='ad-wrap inline';
+  const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
+  if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
+  else{
+    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';
+    const img=document.createElement('img');img.src=ad.imageUrl;img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);
   }
-
-  // ========================
-  // HERO SLIDER
-  // ========================
-  let heroMovies=[], currentHeroIndex=0, currentHeroId=null, heroTimer=null;
-
-  function setHero(movie) {
-    currentHeroId = movie.id;
-    if (movie.backdrop_path) document.getElementById('hero-bg').style.backgroundImage=`url('${IMG_BASE}original${movie.backdrop_path}')`;
-    document.getElementById('hero-title').textContent = movie.title||movie.name||'—';
-    document.getElementById('hero-rating').textContent = `⭐ ${movie.vote_average?movie.vote_average.toFixed(1):'—'}`;
-    document.getElementById('hero-year').textContent = (movie.release_date||movie.first_air_date||'').slice(0,4)||'—';
-    document.getElementById('hero-genre').textContent = getGenreNames(movie.genre_ids);
-    document.getElementById('hero-desc').textContent = movie.overview||'Опис відсутній.';
-    document.querySelectorAll('.hero-dot').forEach((d,i)=>d.classList.toggle('active',i===currentHeroIndex));
-  }
-
-  function startHeroSlider(movies) {
-    heroMovies = movies.slice(0,8);
-    document.getElementById('hero-dots').innerHTML = heroMovies.map((_,i)=>`<div class="hero-dot ${i===0?'active':''}" onclick="goHero(${i})"></div>`).join('');
-    setHero(heroMovies[0]);
-    clearInterval(heroTimer);
-    heroTimer = setInterval(()=>{ currentHeroIndex=(currentHeroIndex+1)%heroMovies.length; setHero(heroMovies[currentHeroIndex]); },6000);
-  }
-
-  function goHero(i) {
-    currentHeroIndex=i; setHero(heroMovies[i]);
-    clearInterval(heroTimer);
-    heroTimer=setInterval(()=>{ currentHeroIndex=(currentHeroIndex+1)%heroMovies.length; setHero(heroMovies[currentHeroIndex]); },6000);
-  }
-  function heroClick(){ openModalById(currentHeroId); }
-
-  // ========================
-  // MOVIE CARD
-  // ========================
-  function movieCard(movie, badge) {
-    const title=movie.title||movie.name||'Без назви';
-    const year=(movie.release_date||movie.first_air_date||'').slice(0,4);
-    const rating=movie.vote_average?movie.vote_average.toFixed(1):'—';
-    const mtype=movie.media_type||'movie';
-    const poster=movie.poster_path
-      ?`<img class="card-poster" src="${IMG_BASE}w300${movie.poster_path}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-poster-ph" style="display:none">🎬</div>`
-      :`<div class="card-poster-ph">🎬</div>`;
-    return `<div class="movie-card" onclick="openModalById(${movie.id},'${mtype}')">
-      ${poster}
-      <div class="card-overlay"><div class="card-play">▶</div></div>
-      ${badge?`<div class="card-badge ${badge.cls}">${badge.text}</div>`:''}
-      <div class="card-info">
-        <div class="card-title">${title}</div>
-        <div class="card-meta"><span class="card-year">${year}</span><span class="card-rating">⭐ ${rating}</span></div>
-      </div>
-    </div>`;
-  }
-
-  // ========================
-  // TMDB API
-  // ========================
-  async function tmdb(endpoint, params={}) {
-    if (!TMDB_KEY) return null;
-    const url=new URL(`${TMDB_BASE}${endpoint}`);
-    url.searchParams.set('api_key',TMDB_KEY);
-    url.searchParams.set('language','uk-UA');
-    Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
-    try { const r=await fetch(url); if(!r.ok) throw new Error(r.status); return r.json(); }
-    catch(e){ console.error('TMDB:',e); return null; }
-  }
-
-  async function loadGrid(gridId, endpoint, params={}, badge=null) {
-    const grid=document.getElementById(gridId);
-    const data=await tmdb(endpoint,params);
-    if (!data||!data.results){ grid.innerHTML='<div style="color:#555;padding:20px;grid-column:1/-1;text-align:center;">Введіть API ключ ↑</div>'; return []; }
-    grid.innerHTML=data.results.slice(0,12).map(m=>movieCard(m,badge)).join('');
-    return data.results;
-  }
-
-  // ========================
-  // INIT
-  // ========================
-  async function initSite() {
-    const np=await tmdb('/movie/now_playing');
-    if (np&&np.results) { startHeroSlider(np.results); loadGrid('new-movies-grid','/movie/now_playing',{},{text:'NEW',cls:'new'}); }
-    loadGrid('popular-movies-grid','/movie/popular',{},{text:'HD',cls:'hd'});
-    loadGrid('top-movies-grid','/movie/top_rated',{},null);
-    loadGrid('series-grid','/tv/popular',{},{text:'СЕРІАЛ',cls:'hd'});
-  }
-
-  // ========================
-  // SEARCH
-  // ========================
-  let sTimeout=null;
-  function handleSearch(e){ if(e.key==='Enter'){doSearch();return;} clearTimeout(sTimeout); sTimeout=setTimeout(doSearch,600); }
-  async function doSearch(){
-    const q=document.getElementById('search-input').value.trim();
-    if(!q){clearSearch();return;}
-    const sec=document.getElementById('search-results-section');
-    const grid=document.getElementById('search-results-grid');
-    sec.style.display='block';
-    grid.innerHTML='<div class="skeleton-card"><div class="skeleton-poster"></div></div>'.repeat(6);
-    document.getElementById('search-section-title').textContent=`Пошук: "${q}"`;
-    const data=await tmdb('/search/multi',{query:q});
-    if(!data||!data.results||!data.results.length){grid.innerHTML='<div style="color:#555;padding:30px;grid-column:1/-1;text-align:center;">Нічого не знайдено</div>';return;}
-    grid.innerHTML=data.results.filter(m=>m.media_type!=='person').slice(0,12).map(m=>movieCard(m)).join('');
-  }
-  function clearSearch(){ document.getElementById('search-results-section').style.display='none'; document.getElementById('search-input').value=''; }
-
-  // ========================
-  // GENRE FILTER
-  // ========================
-  async function selectGenre(genreId,el){
-    document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('active')); el.classList.add('active');
-    if(genreId===0){ loadGrid('new-movies-grid','/movie/now_playing',{},{text:'NEW',cls:'new'}); loadGrid('popular-movies-grid','/movie/popular',{},{text:'HD',cls:'hd'}); loadGrid('top-movies-grid','/movie/top_rated',{},null); return; }
-    const p={with_genres:genreId,sort_by:'popularity.desc'};
-    loadGrid('new-movies-grid','/discover/movie',{...p,primary_release_year:2024},{text:'NEW',cls:'new'});
-    loadGrid('popular-movies-grid','/discover/movie',p,{text:'HD',cls:'hd'});
-    loadGrid('top-movies-grid','/discover/movie',{...p,sort_by:'vote_average.desc','vote_count.gte':1000},null);
-  }
-  function filterByType(type){ if(type==='tv'){loadGrid('popular-movies-grid','/tv/popular',{},{text:'СЕРІАЛ',cls:'hd'});loadGrid('top-movies-grid','/tv/top_rated',{},null);} }
-  function filterByGenre(id){ const t=[...document.querySelectorAll('.genre-tag')].find(t=>t.getAttribute('onclick')?.includes(id)); if(t)selectGenre(id,t); }
-  function showTop(){ loadGrid('top-movies-grid','/movie/top_rated',{page:1},{text:'ТОП',cls:'hd'}); document.getElementById('top-movies-grid').scrollIntoView({behavior:'smooth'}); }
-
-  // ========================
-  // MOVIE MODAL
-  // ========================
-  async function openModalById(id, type='movie'){
-    if(!id) return;
-    const overlay=document.getElementById('modal-overlay');
-    const content=document.getElementById('modal-content');
-    overlay.classList.add('visible');
-    content.innerHTML='<div style="padding:40px;text-align:center;color:#555;">Завантаження...</div>';
-    const endpoint=type==='tv'?`/tv/${id}`:`/movie/${id}`;
-    const data=await tmdb(endpoint,{append_to_response:'videos'});
-    if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:#555;">Помилка</div>';return;}
-    const title=data.title||data.name||'—';
-    const year=(data.release_date||data.first_air_date||'').slice(0,4);
-    const rating=data.vote_average?data.vote_average.toFixed(1):'—';
-    const genres=(data.genres||[]).map(g=>`<span class="modal-genre-tag">${g.name}</span>`).join('');
-    const videos=(data.videos&&data.videos.results)||[];
-    const trailer=videos.find(v=>v.type==='Trailer'&&v.site==='YouTube')||videos[0];
-    const backdrop=data.backdrop_path?`<img class="modal-backdrop" src="${IMG_BASE}w1280${data.backdrop_path}" alt="${title}">`:`<div class="modal-backdrop-ph">🎬</div>`;
-    content.innerHTML=`${backdrop}<div class="modal-grad"></div>
-    <div class="modal-body">
-      <div class="modal-title">${title}</div>
-      <div class="modal-meta-row">
-        <span class="modal-rating">⭐ ${rating}</span>
-        <span class="modal-year">📅 ${year}</span>
-        ${data.original_language?`<span class="modal-lang">🌍 ${data.original_language.toUpperCase()}</span>`:''}
-        ${data.runtime?`<span class="modal-year">⏱ ${data.runtime} хв</span>`:''}
-      </div>
-      <div class="modal-genres">${genres}</div>
-      <div class="modal-desc">${data.overview||'Опис відсутній.'}</div>
-      <div class="modal-actions">
-        <button class="modal-btn-play" onclick="openPlayer()">▶ Дивитись</button>
-        ${trailer?`<button class="modal-btn-t" onclick="openTrailer('${trailer.key}')">🎬 Трейлер</button>`:''}
-      </div>
-    </div>`;
-  }
-  function closeModal(){ document.getElementById('modal-overlay').classList.remove('visible'); }
-  function openPlayer(){ closeModal(); showToast('🎬 Підключення до відеосервера...'); setTimeout(()=>showToast('✅ Починаємо відтворення!'),1500); }
-  function openTrailer(k){ const m=document.getElementById('trailer-modal'); document.getElementById('trailer-iframe').src=`https://www.youtube.com/embed/${k}?autoplay=1`; m.classList.add('visible'); }
-  function closeTrailer(){ document.getElementById('trailer-modal').classList.remove('visible'); document.getElementById('trailer-iframe').src=''; }
-
-  // ========================
-  // UTILS
-  // ========================
-  let toastT=null;
-  function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),3000); }
-  window.addEventListener('scroll',()=>{ document.getElementById('scroll-top').classList.toggle('show',scrollY>400); });
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeTrailer();closeModal();} });
-
-  // ========================
-  // START
-  // ========================
-  window.addEventListener('DOMContentLoaded',()=>{
-    renderAdSlots();
-    if(TMDB_KEY) initSite();
+  return w;
+}
+function buildV(ad){
+  const w=document.createElement('div');
+  if(ad.html){w.innerHTML=ad.html;}
+  else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-v';const img=document.createElement('img');img.src=ad.imageUrl;img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);}
+  return w;
+}
+function renderAds(){
+  // Header
+  const hEl=document.getElementById('slot-header');
+  hEl.innerHTML='';
+  getAds('header').forEach(ad=>{
+    const w=document.createElement('div');w.className='ad-wrap';
+    const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
+    if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
+    else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';const img=document.createElement('img');img.src=ad.imageUrl;img.alt='Реклама';a.appendChild(img);w.appendChild(a);}
+    hEl.appendChild(w);
   });
-
-  // Reload ads if changed in admin (storage event for same-origin cross-tab)
-  window.addEventListener('storage', e => {
-    if (e.key === ADS_KEY) renderAdSlots();
+  ['between1','between2','between3'].forEach(s=>{
+    const el=document.getElementById('slot-'+s);if(!el)return;el.innerHTML='';
+    getAds(s).forEach(ad=>el.appendChild(buildH(ad)));
   });
+  const sEl=document.getElementById('slot-sidebar');sEl.innerHTML='';
+  getAds('sidebar').forEach(ad=>sEl.appendChild(buildV(ad)));
+  const fEl=document.getElementById('slot-footer');fEl.innerHTML='';
+  getAds('footer').forEach(ad=>fEl.appendChild(buildH(ad)));
+  initPopup();
+}
+
+// =====================================================================
+// POPUP AD
+// =====================================================================
+let popCnt=5,popT=null;
+function initPopup(){
+  const ads=getAds('popup'); if(!ads.length)return;
+  const ad=ads[0];
+  const box=document.getElementById('pop-box');
+  const bar=document.getElementById('pop-bar');
+  const closeBtn=document.getElementById('pop-close');
+  if(ad.html) box.innerHTML=`<div class="pop-adlbl">Реклама</div><button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>${ad.html}<div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
+  else if(ad.imageUrl){
+    const isFallback=!ad.imageUrl;
+    box.innerHTML=`<div class="pop-adlbl">Реклама</div>
+      <button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>
+      <a href="${ad.linkUrl||'#'}" target="_blank" rel="noopener" onclick="closePopup()"><img src="${ad.imageUrl}" alt="Реклама" style="width:100%;display:block;border-radius:12px;"></a>
+      <div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
+  }
+  setTimeout(()=>{
+    document.getElementById('pop-ov').classList.add('open');
+    const b=document.getElementById('pop-bar');if(b)b.style.width='0';
+    popT=setInterval(()=>{
+      popCnt--;
+      if(popCnt<=0){clearInterval(popT);const c=document.getElementById('pop-close');if(c)c.classList.remove('locked');}
+    },1000);
+  },4000);
+}
+function closePopup(){if(popCnt>0)return;clearInterval(popT);document.getElementById('pop-ov').classList.remove('open');}
+
+// =====================================================================
+// UTILS
+// =====================================================================
+let tT=null;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3000);}
+window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('show',scrollY>400);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();}});
+window.addEventListener('storage',e=>{if(e.key===ADS_KEY)renderAds();});
+
+// =====================================================================
+// START
+// =====================================================================
+window.addEventListener('DOMContentLoaded',()=>{
+  updateAuthUI();
+  renderAds();
+  initSite();
+});
 </script>
 </body>
 </html>
