@@ -440,13 +440,74 @@
     #scroll-top.show{display:flex;}
     #srch-sec{display:none;}
 
+    /* ===== HAMBURGER ===== */
+    .hbg{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:5px;border:none;background:transparent;flex-shrink:0;width:36px;height:40px;}
+    .hbg span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .28s cubic-bezier(.4,0,.2,1);}
+    .hbg.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hbg.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .hbg.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+    /* ===== MOBILE DRAWER ===== */
+    .mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9998;opacity:0;pointer-events:none;transition:opacity .28s;backdrop-filter:blur(3px);}
+    .mob-ov.open{opacity:1;pointer-events:all;}
+    .mob-drawer{position:fixed;top:0;left:0;bottom:0;width:272px;background:var(--bg2);border-right:1px solid var(--border);z-index:9999;transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;}
+    .mob-drawer.open{transform:translateX(0);}
+    .mob-drawer-top{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--border);}
+    .mob-drawer-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;padding:2px;}
+    .mob-drawer-close:hover{color:#fff;}
+    .mob-drawer-section{border-bottom:1px solid var(--border);padding:6px 0;}
+    .mob-nav-link{display:flex;align-items:center;gap:12px;padding:13px 20px;color:var(--muted);font-size:15px;font-weight:500;transition:all .15s;cursor:pointer;width:100%;text-align:left;background:none;border:none;font-family:inherit;}
+    .mob-nav-link:hover,.mob-nav-link.act{color:#fff;background:var(--bg3);}
+    .mob-nav-icon{font-size:17px;width:22px;text-align:center;flex-shrink:0;}
+
+    /* ===== BOTTOM NAV ===== */
+    .mob-bnav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,13,.97);backdrop-filter:blur(12px);border-top:1px solid var(--border);z-index:800;padding:4px 0 max(4px,env(safe-area-inset-bottom));}
+    .mob-bnav-inner{display:flex;justify-content:space-around;align-items:stretch;}
+    .mbn-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 6px;cursor:pointer;color:var(--dim);font-size:10px;font-weight:600;letter-spacing:.2px;transition:color .15s;border:none;background:transparent;flex:1;font-family:inherit;}
+    .mbn-btn svg{width:22px;height:22px;fill:currentColor;flex-shrink:0;}
+    .mbn-btn.act{color:var(--accent);}
+    .mbn-btn:active{opacity:.65;}
+
+    /* ===== MEDIA 768 ===== */
     @media(max-width:768px){
-      .hdr{flex-wrap:wrap;height:auto;padding:8px 14px;}
+      .hbg{display:flex;}
       nav{display:none;}
-      .hero{height:310px;}
-      .hero-title{font-size:22px;}
-      .hero-c{padding:24px 18px;}
+      .hdr{flex-wrap:nowrap;height:52px;padding:0 12px;gap:10px;}
+      .srch-wrap{flex:1;min-width:0;}
+      .hdr-right{gap:6px;}
+      #pwa-install-btn{display:none!important;}
+      .hdr-right .btn-sm:not(.red){display:none;}
+      .hero{height:240px;margin-bottom:0;}
+      .hero-c{padding:18px 16px;}
+      .hero-title{font-size:21px;}
+      .hero-desc{-webkit-line-clamp:2;margin-bottom:14px;}
+      .btn-play{padding:9px 18px;font-size:14px;}
+      .btn-info{padding:9px 14px;font-size:13px;}
+      main{padding:0 12px;padding-bottom:76px;}
+      .movies-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px;}
+      /* Modal — sheet з низу */
+      .modal-ov{align-items:flex-end;}
+      .modal-box{border-radius:18px 18px 0 0;max-width:100%;width:100%;max-height:95vh;border-left:none;border-right:none;border-bottom:none;}
+      .m-backdrop{height:190px;border-radius:18px 18px 0 0;}
+      .m-backdrop-ph{height:190px;border-radius:18px 18px 0 0;}
+      .m-body{padding:0 16px 90px;}
+      .m-title{font-size:20px;}
       .ft-grid{grid-template-columns:1fr 1fr;}
+      .mob-bnav{display:block;}
+      #scroll-top{bottom:80px;}
+      .toast{bottom:80px;}
+      .sidebar-row{flex-direction:column;}
+      .sidebar-ad-col{width:100%;margin-top:0;}
+    }
+    /* ===== MEDIA 480 ===== */
+    @media(max-width:480px){
+      .movies-grid{grid-template-columns:repeat(2,1fr);}
+      .ft-grid{grid-template-columns:1fr;}
+      .hero-title{font-size:18px;}
+      .hero{height:220px;}
+      .m-actions{gap:7px;}
+      .m-btn-fav,.m-btn-wl,.btn-trailer{padding:9px 12px;font-size:13px;}
+      .srch input{font-size:13px;}
     }
   </style>
 </head>
@@ -455,7 +516,10 @@
 <!-- HEADER -->
 <header>
   <div class="hdr">
-    <a href="#" class="logo"><b>Кіно</b>База</a>
+    <button class="hbg" id="hbg-btn" onclick="toggleMobileMenu()" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#" class="logo" onclick="showHome();return false;"><b>Кіно</b>База</a>
     <nav>
       <a href="#" class="act" id="nav-home" onclick="showHome();return false;">Головна</a>
       <a href="#" id="nav-catalog" onclick="showCatalog({type:'movie'});return false;">Фільми</a>
@@ -849,6 +913,51 @@
 
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="toast" id="toast"></div>
+
+<!-- ===== MOBILE DRAWER ===== -->
+<div class="mob-ov" id="mob-ov" onclick="closeMobileMenu()"></div>
+<div class="mob-drawer" id="mob-drawer">
+  <div class="mob-drawer-top">
+    <a href="#" class="logo" onclick="showHome();closeMobileMenu();return false;"><b>Кіно</b>База</a>
+    <button class="mob-drawer-close" onclick="closeMobileMenu()">✕</button>
+  </div>
+  <div class="mob-drawer-section">
+    <button class="mob-nav-link" onclick="showHome();closeMobileMenu();updateBnav('home')"><span class="mob-nav-icon">🏠</span>Головна</button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie'});closeMobileMenu()"><span class="mob-nav-icon">🎬</span>Фільми</button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'tv'});closeMobileMenu()"><span class="mob-nav-icon">📺</span>Серіали</button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'16'});closeMobileMenu()"><span class="mob-nav-icon">🎨</span>Мультфільми</button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'99'});closeMobileMenu()"><span class="mob-nav-icon">📰</span>Документальні</button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});closeMobileMenu()"><span class="mob-nav-icon">⭐</span>Топ рейтинг</button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});closeMobileMenu()"><span class="mob-nav-icon">🎞</span>Класика</button>
+  </div>
+  <div class="mob-drawer-section" id="mob-auth-section"></div>
+</div>
+
+<!-- ===== MOBILE BOTTOM NAV ===== -->
+<nav class="mob-bnav">
+  <div class="mob-bnav-inner">
+    <button class="mbn-btn act" id="mbn-home" onclick="showHome();updateBnav('home')">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Головна
+    </button>
+    <button class="mbn-btn" id="mbn-search" onclick="mbnSearch()">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      Пошук
+    </button>
+    <button class="mbn-btn" id="mbn-movies" onclick="showCatalog({type:'movie'});updateBnav('movies')">
+      <svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
+      Фільми
+    </button>
+    <button class="mbn-btn" id="mbn-tv" onclick="showCatalog({type:'tv'});updateBnav('tv')">
+      <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg>
+      Серіали
+    </button>
+    <button class="mbn-btn" id="mbn-profile" onclick="handleBnavProfile()">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      Профіль
+    </button>
+  </div>
+</nav>
 
 <!-- ===== MOVIE MODAL ===== -->
 <div class="modal-ov" id="movie-modal" onclick="if(event.target===this)closeMovieModal()">
@@ -1735,6 +1844,7 @@ function showHome(){
   // Підсвітити "Головна" в навігації
   document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
   const nh=document.getElementById('nav-home');if(nh)nh.classList.add('act');
+  updateBnav('home');
 }
 
 // =====================================================================
@@ -2170,6 +2280,7 @@ function showCatalog(preset = {}) {
   // Підсвітити в навігації
   document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
   const nc = document.getElementById('nav-catalog'); if(nc) nc.classList.add('act');
+  updateBnav(catType==='tv' ? 'tv' : 'movies');
 
   applyCatFilters();
   document.getElementById('cat-section').scrollIntoView({ behavior:'smooth', block:'start' });
@@ -2490,6 +2601,79 @@ function pwaInstall() {
   _pwaPrompt.prompt();
   _pwaPrompt.userChoice.then(() => { _pwaPrompt = null; });
 }
+
+// =====================================================================
+// Block 11: MOBILE MENU + BOTTOM NAV
+// =====================================================================
+function toggleMobileMenu() {
+  const drawer = document.getElementById('mob-drawer');
+  const ov     = document.getElementById('mob-ov');
+  const btn    = document.getElementById('hbg-btn');
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    drawer.classList.remove('open');
+    ov.classList.remove('open');
+    if(btn) btn.classList.remove('open');
+  } else {
+    updateMobileDrawerAuth();
+    drawer.classList.add('open');
+    ov.classList.add('open');
+    if(btn) btn.classList.add('open');
+  }
+}
+
+function closeMobileMenu() {
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.getElementById('mob-ov').classList.remove('open');
+  const btn = document.getElementById('hbg-btn');
+  if(btn) btn.classList.remove('open');
+}
+
+function updateMobileDrawerAuth() {
+  const sec = document.getElementById('mob-auth-section');
+  if(!sec) return;
+  if(currentUser) {
+    const name = currentUser.displayName || currentUser.email || 'Користувач';
+    sec.innerHTML = `
+      <div style="padding:13px 20px;color:var(--muted);font-size:13px;">${name}</div>
+      <button class="mob-nav-link" onclick="showLibrary('fav');closeMobileMenu()"><span class="mob-nav-icon">❤️</span>Улюблені</button>
+      <button class="mob-nav-link" onclick="showLibrary('wl');closeMobileMenu()"><span class="mob-nav-icon">🕐</span>Дивитись пізніше</button>
+      <button class="mob-nav-link" onclick="showLibrary('watched');closeMobileMenu()"><span class="mob-nav-icon">✅</span>Переглянуто</button>
+      ${currentUserRole==='admin'?'<button class="mob-nav-link" onclick="location.href=\'admin.html\'"><span class="mob-nav-icon">⚙️</span>Адміністрування</button>':''}
+      <button class="mob-nav-link" onclick="doLogout();closeMobileMenu()" style="color:var(--accent);"><span class="mob-nav-icon">🚪</span>Вийти</button>
+    `;
+  } else {
+    sec.innerHTML = `
+      <button class="mob-nav-link" onclick="openAuth('login');closeMobileMenu()"><span class="mob-nav-icon">🔑</span>Увійти</button>
+      <button class="mob-nav-link" onclick="openAuth('register');closeMobileMenu()" style="color:var(--accent);"><span class="mob-nav-icon">✨</span>Реєстрація</button>
+    `;
+  }
+}
+
+function updateBnav(active) {
+  ['home','search','movies','tv','profile'].forEach(id => {
+    const el = document.getElementById('mbn-'+id);
+    if(el) el.classList.toggle('act', id===active);
+  });
+}
+
+function mbnSearch() {
+  updateBnav('search');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{ const si=document.getElementById('si'); if(si){si.focus();si.select();} },300);
+}
+
+function handleBnavProfile() {
+  if(currentUser) {
+    showLibrary('fav');
+    updateBnav('profile');
+  } else {
+    openAuth('login');
+  }
+}
+
+// Close drawer on Escape
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeMobileMenu(); });
 </script>
 </body>
 </html>
