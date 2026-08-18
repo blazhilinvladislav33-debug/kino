@@ -61,8 +61,6 @@
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Google AdSense — замініть ca-pub-XXXXXXXX на свій Publisher ID з adsense.google.com -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXX" crossorigin="anonymous"></script> -->
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -96,6 +94,7 @@
     .lang-btn.act{background:var(--accent);color:#fff;}
     .lang-btn:hover:not(.act){color:#fff;background:var(--bg4);}
     .sub-badge{display:inline-block;background:rgba(245,197,24,.18);color:var(--gold);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
+    
     /* ===== AUTOCOMPLETE ===== */
     #ac-drop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,.7);display:none;max-height:440px;overflow-y:auto;}
     #ac-drop.open{display:block;}
@@ -118,6 +117,7 @@
     .ac-recent-row span{flex:1;}
     .ac-del{color:var(--dim);font-size:16px;padding:0 4px;line-height:1;}
     .ac-del:hover{color:var(--accent);}
+    
     /* ===== SEARCH FILTERS ===== */
     .srch-filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
     .sf-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
@@ -129,6 +129,7 @@
     .btn-sm:hover{border-color:#fff;color:#fff;}
     .btn-sm.red{background:var(--accent);border-color:var(--accent);color:#fff;}
     .btn-sm.red:hover{background:var(--ah);}
+    
     /* User avatar */
     .user-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer;position:relative;flex-shrink:0;}
     .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
@@ -137,7 +138,6 @@
     .ud-item:hover{background:var(--bg4);color:#fff;}
     .ud-divider{border-top:1px solid var(--border);margin:4px 0;}
     .ud-name{padding:8px 12px;font-weight:600;color:#fff;font-size:14px;}
-    /* Header ad slot */
     #slot-header{width:100%;}
 
     /* ===== MAIN ===== */
@@ -229,9 +229,8 @@
     .m-gtag{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:12px;padding:3px 9px;border-radius:20px;}
     .m-desc{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:20px;}
 
-    /* ===== PLAYER AREA (новий дизайн) ===== */
+    /* ===== PLAYER AREA ===== */
     .player-section{margin-bottom:20px;}
-    /* Рядок вкладок */
     .player-tabs-row{display:flex;align-items:stretch;background:var(--bg3);border-radius:8px 8px 0 0;border:1px solid var(--border);border-bottom:none;overflow:hidden;}
     .player-tabs{display:flex;flex:1;overflow-x:auto;scrollbar-width:none;}
     .player-tabs::-webkit-scrollbar{display:none;}
@@ -243,7 +242,6 @@
     .ptab-badge{font-size:10px;font-weight:700;color:var(--gold);background:rgba(245,197,24,.15);padding:1px 5px;border-radius:3px;line-height:1.4;}
     .player-rating-right{display:flex;align-items:center;gap:3px;padding:0 14px;border-left:1px solid var(--border);white-space:nowrap;color:var(--gold);font-size:13px;font-weight:700;}
     .player-rating-right span{color:var(--dim);font-size:11px;font-weight:400;}
-    /* Рядок озвучки */
     .player-dub-row{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:#161616;border:1px solid var(--border);border-top:1px solid #2e2e2e;border-bottom:none;}
     .dub-select{position:relative;display:inline-flex;align-items:center;gap:6px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13px;font-weight:500;color:#fff;user-select:none;min-width:155px;}
     .dub-select svg{width:18px;height:18px;fill:var(--muted);flex-shrink:0;margin-left:auto;transition:transform .2s;}
@@ -255,12 +253,12 @@
     .dub-option.act{color:#fff;background:rgba(229,9,20,.18);}
     .player-share-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:5px;display:flex;align-items:center;border-radius:5px;transition:color .2s;}
     .player-share-btn:hover{color:#fff;}
-    /* Плеєр-фрейм */
     .player-frame-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--border);border-radius:0 0 8px 8px;overflow:hidden;}
     .player-frame-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
     .player-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;flex-direction:column;gap:10px;z-index:3;}
     .player-loading .spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg)}}
+    
     /* TV episode selector */
     .ep-selector{margin-bottom:14px;}
     .ep-selector h4{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--muted);}
@@ -270,7 +268,6 @@
     .ep-nums{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;max-height:100px;overflow-y:auto;}
     .ep-num{width:36px;height:36px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
     .ep-num:hover,.ep-num.act{background:var(--accent);border-color:var(--accent);color:#fff;}
-    /* Modal actions */
     .m-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px;}
     .m-btn-fav{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;}
     .m-btn-fav:hover{border-color:var(--accent);color:var(--accent);}
@@ -315,10 +312,6 @@
     .pop-adlbl{position:absolute;top:7px;left:10px;font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:2px;}
     .pop-bar{position:absolute;bottom:0;left:0;height:3px;background:var(--accent);transition:width 1s linear;}
     .pop-box img{width:100%;display:block;border-radius:12px;}
-    .pop-fallback{background:linear-gradient(135deg,#1a0a2d,#2d1a4d);padding:50px 36px;text-align:center;}
-    .pop-fallback h2{font-size:22px;margin-bottom:10px;}
-    .pop-fallback p{color:var(--muted);font-size:14px;margin-bottom:20px;}
-    .pop-fallback .pop-cta{background:var(--gold);color:#000;border:none;padding:12px 36px;border-radius:24px;font-size:15px;font-weight:800;cursor:pointer;}
 
     /* ===== LIBRARY PAGE ===== */
     #lib-section{display:none;}
@@ -329,15 +322,12 @@
     .lib-empty{color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;}
     .lib-empty span{font-size:40px;display:block;margin-bottom:12px;}
     .watched-badge{position:absolute;bottom:8px;left:8px;background:rgba(29,185,84,.85);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;backdrop-filter:blur(4px);}
+    
     /* ===== CONTINUE WATCHING ===== */
     #continue-section{display:none;}
     .c-ep-badge{position:absolute;bottom:8px;right:48px;background:rgba(0,0,0,.8);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px);white-space:nowrap;}
-    /* Episode highlight */
     .ep-num.last{position:relative;outline:2px solid var(--accent);outline-offset:1px;}
     .ep-num.last::before{content:'▶';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:7px;color:var(--accent);}
-    /* Server indicator */
-    .srv-saved{font-size:10px;color:var(--green);margin-left:4px;}
-    /* Watch later button in modal */
     .m-btn-wl{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
     .m-btn-wl:hover{border-color:#fff;color:#fff;}
     .m-btn-wl.saved{background:rgba(26,140,255,.12);border-color:var(--blue);color:var(--blue);}
@@ -351,6 +341,7 @@
     .cast-photo-ph{width:80px;height:80px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 6px;}
     .cast-name{font-size:11px;color:var(--muted);line-height:1.3;word-break:break-word;}
     .cast-char{font-size:10px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    
     /* ===== TRAILER ===== */
     .btn-trailer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
     .btn-trailer:hover{background:rgba(255,255,255,.16);}
@@ -360,6 +351,7 @@
     .trailer-close{position:absolute;top:-40px;right:0;background:none;border:none;color:#fff;font-size:26px;cursor:pointer;line-height:1;}
     .trailer-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;}
     .trailer-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+    
     /* ===== SIMILAR ===== */
     .sim-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
     .sim-row::-webkit-scrollbar{height:4px;}
@@ -371,11 +363,13 @@
     .sim-info{padding:6px 8px;}
     .sim-title{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .sim-year{font-size:10px;color:var(--dim);margin-top:2px;}
+    
     /* ===== EXTRA INFO GRID ===== */
     .m-extra{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:16px 0 20px;}
     .m-extra-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;}
     .m-extra-lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
     .m-extra-val{font-size:13px;font-weight:600;color:#fff;}
+    
     /* ===== SKELETON ===== */
     .sk-card{background:var(--bg3);border-radius:9px;overflow:hidden;animation:skP 1.5s infinite;}
     .sk-poster{width:100%;aspect-ratio:2/3;background:var(--bg4);}
@@ -422,9 +416,9 @@
     .adblock-steps li:last-child{margin-bottom:0;}
     .adblock-btn{background:var(--accent);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;}
     .adblock-btn:hover{background:var(--ah);}
-    /* Video ad */
     .ad-video{width:100%;display:block;max-height:160px;object-fit:cover;cursor:pointer;}
-    /* ===== PAGE MODAL (Про нас / Контакти / Умови / DMCA) ===== */
+    
+    /* ===== PAGE MODAL ===== */
     .page-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:8500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
     .page-modal-ov.open{opacity:1;pointer-events:all;}
     .page-modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:700px;max-width:95vw;max-height:85vh;overflow-y:auto;position:relative;animation:mIn .3s ease;}
@@ -435,6 +429,7 @@
     .page-modal-content a{color:var(--accent);}
     .page-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
     .page-modal-close:hover{color:#fff;}
+    
     /* ===== FOOTER ===== */
     footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:50px;padding:32px 24px 18px;}
     .ft-grid{max-width:1600px;margin:0 auto 22px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:26px;}
@@ -484,7 +479,7 @@
     .mbn-btn.act{color:var(--accent);}
     .mbn-btn:active{opacity:.65;}
 
-    /* ===== MEDIA 768 ===== */
+    /* ===== MEDIA QUERIES ===== */
     @media(max-width:768px){
       .hbg{display:flex;}
       nav{display:none;}
@@ -501,7 +496,6 @@
       .btn-info{padding:9px 14px;font-size:13px;}
       main{padding:0 12px;padding-bottom:76px;}
       .movies-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px;}
-      /* Modal — sheet з низу */
       .modal-ov{align-items:flex-end;}
       .modal-box{border-radius:18px 18px 0 0;max-width:100%;width:100%;max-height:95vh;border-left:none;border-right:none;border-bottom:none;}
       .m-backdrop{height:190px;border-radius:18px 18px 0 0;}
@@ -518,7 +512,6 @@
       .player-rating-right{padding:0 8px;font-size:12px;}
       .player-dub-row{padding:6px 10px;}
     }
-    /* ===== MEDIA 480 ===== */
     @media(max-width:480px){
       .movies-grid{grid-template-columns:repeat(2,1fr);}
       .ft-grid{grid-template-columns:1fr;}
@@ -889,7 +882,7 @@
       <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
     </div>
 
-  </div><!-- /#home-content -->
+  </div>
 </main>
 
 <!-- FOOTER -->
@@ -976,7 +969,7 @@
       Серіали
     </button>
     <button class="mbn-btn" id="mbn-profile" onclick="handleBnavProfile()">
-      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
       Профіль
     </button>
   </div>
@@ -1075,8 +1068,7 @@
 
 <script>
 // =====================================================================
-// FIREBASE CONFIG — вставте ваші дані з Firebase Console
-// Project Settings → General → Your apps → Firebase SDK snippet → Config
+// FIREBASE CONFIG — конфігурація Firebase Console
 // =====================================================================
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
@@ -1095,7 +1087,7 @@ try {
 } catch(e) { console.warn('Firebase init failed, using localStorage fallback'); }
 
 // =====================================================================
-// GLOBAL CACHES — оновлюються в реальному часі через Firestore
+// GLOBAL CACHES
 // =====================================================================
 let adsCache  = [];
 let keysCache = [];
@@ -1105,16 +1097,14 @@ let dbReady   = false;
 function initFirestore() {
   if (!db) { loadFallback(); return; }
 
-  // Real-time слухач для реклами
   db.collection('ads').onSnapshot(snap => {
     adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderAds();
   }, () => { loadFallback(); });
 
-  // Real-time слухач для API ключів
   db.collection('apiKeys').onSnapshot(snap => {
     keysCache = snap.docs.map(d => d.data().value).filter(Boolean);
-    if (!dbReady) { dbReady = true; initSite(); } // перший раз — запускаємо сайт
+    if (!dbReady) { dbReady = true; initSite(); }
   }, () => {
     const raw = localStorage.getItem('kb_api_keys');
     try {
@@ -1124,7 +1114,6 @@ function initFirestore() {
     if (!dbReady) { dbReady = true; initSite(); }
   });
 
-  // Завантаження сторінок (Про нас / Контакти / Умови / DMCA)
   ['about','contacts','terms','dmca'].forEach(id => {
     db.collection('pages').doc(id).onSnapshot(doc => {
       if (doc.exists) pagesCache[id] = doc.data();
@@ -1133,7 +1122,6 @@ function initFirestore() {
 }
 
 function loadFallback() {
-  // localStorage fallback якщо Firebase недоступний
   try { adsCache = JSON.parse(localStorage.getItem('kb_ads') || '[]'); } catch {}
   try {
     const raw = localStorage.getItem('kb_api_keys');
@@ -1141,7 +1129,6 @@ function loadFallback() {
     keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
   } catch {}
   renderAds();
-  // Запускаємо сайт одразу (не чекаємо 5 с таймаут)
   if (!dbReady) { dbReady = true; initSite(); }
 }
 
@@ -1151,8 +1138,6 @@ function loadFallback() {
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 const IMG = 'https://image.tmdb.org/t/p/';
 let keyIdx = 0;
-
-// Запасний ключ TMDB — вставте сюди свій ключ, щоб сайт завжди працював на мобільних
 const TMDB_FALLBACK_KEY = '';
 
 function getKeys() {
@@ -1161,7 +1146,6 @@ function getKeys() {
   return k;
 }
 
-// Мова сайту (метадані фільмів: назви, описи)
 let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
 function getSiteLangParam() {
   return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA';
@@ -1173,7 +1157,6 @@ function setSiteLang(lang) {
     const btn = document.getElementById('lbtn-' + l);
     if (btn) btn.classList.toggle('act', l === lang);
   });
-  // Перезавантажити контент з новою мовою
   if (dbReady) initSite();
 }
 
@@ -1203,39 +1186,24 @@ const GM = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'К
 const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).join(', ') : '—';
 
 // =====================================================================
-// PLAYERS
+// PLAYERS CONFIGURATION (ОНОВЛЕНІ ПЛЕЄРИ)
 // =====================================================================
-// lang codes: '' = auto, 'uk' = ukrainian, 'en' = english
 const MOVIE_PLAYERS = [
-  { id:'vs1',  name:'Плеєр 1',  badge:'',   url: (id,lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
-  { id:'vs2',  name:'Плеєр 2',  badge:'4K', url: (id,lang) => `https://vidsrc.xyz/embed/movie?tmdb=${id}&autoplay=1${lang?'&ds_lang='+lang:''}` },
-  { id:'vs3',  name:'Плеєр 3',  badge:'HD', url: (id,lang) => `https://vidlink.pro/movie/${id}?autoplay=true` },
-  { id:'vsm',  name:'Плеєр 4',  badge:'',   url: (id,lang) => `https://vidsrc.me/embed/movie?tmdb=${id}` },
-  { id:'vsp',  name:'Плеєр 5',  badge:'',   url: (id,lang) => `https://vidsrc.pro/embed/movie/${id}` },
-  { id:'2em',  name:'Плеєр 6',  badge:'',   url: (id,lang) => `https://www.2embed.cc/embed/${id}` },
-  { id:'mapi', name:'Плеєр 7',  badge:'',   url: (id,lang) => `https://moviesapi.club/movie/${id}` },
-  { id:'vsy',  name:'Плеєр 8',  badge:'HD', url: (id,lang) => `https://player.videasy.net/movie/${id}` },
-  { id:'blk',  name:'Плеєр 9',  badge:'',   url: (id,lang) => `https://blackvid.space/embed/movie/${id}` },
-  { id:'emb',  name:'Плеєр 10', badge:'',   url: (id,lang) => `https://www.embedder.online/embed/movie/${id}` },
-  { id:'em4',  name:'Плеєр 11', badge:'',   url: (id,lang) => `https://embed.su/embed/movie/${id}` },
-  { id:'em5',  name:'Плеєр 12', badge:'',   url: (id,lang) => `https://multiembed.mov/?video_id=${id}&tmdb=1${lang?'&lang='+lang:''}` },
-  { id:'em6',  name:'Плеєр 13', badge:'',   url: (id,lang) => `https://autoembed.co/embed/movie/${id}` },
+  { id:'ashdi',  name:'Українська (Ashdi)', badge:'UA', url: (id) => `https://ashdi.vip/vod/${id}` },
+  { id:'vidsrc', name:'Плеєр 1 (HD)',       badge:'4K', url: (id) => `https://vidsrc.cc/v2/embed/movie/${id}` },
+  { id:'embedsu',name:'Плеєр 2',            badge:'HD', url: (id) => `https://embed.su/embed/movie/${id}` },
+  { id:'videasy',name:'Плеєр 3',            badge:'',   url: (id) => `https://player.videasy.net/movie/${id}` },
+  { id:'autoemb',name:'Плеєр 4',            badge:'',   url: (id) => `https://autoembed.co/embed/movie/${id}` }
 ];
+
 const TV_PLAYERS = [
-  { id:'vs1',  name:'Плеєр 1',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
-  { id:'vs2',  name:'Плеєр 2',  badge:'4K', url: (id,s,e,lang) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}&autoplay=1${lang?'&ds_lang='+lang:''}` },
-  { id:'vs3',  name:'Плеєр 3',  badge:'HD', url: (id,s,e,lang) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
-  { id:'vsm',  name:'Плеєр 4',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` },
-  { id:'vsp',  name:'Плеєр 5',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.pro/embed/tv/${id}/${s}/${e}` },
-  { id:'2em',  name:'Плеєр 6',  badge:'',   url: (id,s,e,lang) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
-  { id:'mapi', name:'Плеєр 7',  badge:'',   url: (id,s,e,lang) => `https://moviesapi.club/tv/${id}-${s}-${e}` },
-  { id:'vsy',  name:'Плеєр 8',  badge:'HD', url: (id,s,e,lang) => `https://player.videasy.net/tv/${id}/${s}/${e}` },
-  { id:'blk',  name:'Плеєр 9',  badge:'',   url: (id,s,e,lang) => `https://blackvid.space/embed/tv/${id}/${s}/${e}` },
-  { id:'emb',  name:'Плеєр 10', badge:'',   url: (id,s,e,lang) => `https://www.embedder.online/embed/tv/${id}/${s}/${e}` },
-  { id:'em4',  name:'Плеєр 11', badge:'',   url: (id,s,e,lang) => `https://embed.su/embed/tv/${id}/${s}/${e}` },
-  { id:'em5',  name:'Плеєр 12', badge:'',   url: (id,s,e,lang) => `https://autoembed.co/embed/tv/${id}-${s}-${e}` },
+  { id:'ashdi',  name:'Українська (Ashdi)', badge:'UA', url: (id,s,e) => `https://ashdi.vip/serial/${id}?s=${s}&e=${e}` },
+  { id:'vidsrc', name:'Плеєр 1 (HD)',       badge:'4K', url: (id,s,e) => `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` },
+  { id:'embedsu',name:'Плеєр 2',            badge:'HD', url: (id,s,e) => `https://embed.su/embed/tv/${id}/${s}/${e}` },
+  { id:'videasy',name:'Плеєр 3',            badge:'',   url: (id,s,e) => `https://player.videasy.net/tv/${id}/${s}/${e}` },
+  { id:'autoemb',name:'Плеєр 4',            badge:'',   url: (id,s,e) => `https://autoembed.co/embed/tv/${id}-${s}-${e}` }
 ];
-// Озвучки — перемикають мову в тих серверах де є підтримка
+
 const DUBS = [
   { code:'',    label:'Авто' },
   { code:'uk',  label:'Укр. Дублювання' },
@@ -1318,16 +1286,13 @@ async function initSite() {
   loadGrid('pop-grid','/movie/popular',{},{txt:'HD',cls:'g'},12);
   loadGrid('top-grid','/movie/top_rated',{},null,12);
   loadGrid('series-grid','/tv/popular',{},{txt:'СЕРІАЛ',cls:'b'},12);
-  // Classics: top rated movies before 2000
   loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,12);
-  // 90s
   loadGrid('nineties-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
-  // 2000s
   loadGrid('noughts-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
 }
 
 // =====================================================================
-// MOVIE MODAL
+// MOVIE MODAL & PLAYER
 // =====================================================================
 let currentModalId=null, currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
 
@@ -1335,10 +1300,9 @@ async function openMovie(id, type='movie', autoPlay=false) {
   if(!id) return;
   currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1;
 
-  // Відновлення прогресу: сервер із localStorage (глобальний) або з Firestore
   currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0');
-  currentLang = '';          // скинути мову при кожному відкритті
-  brokenPlayers.clear();     // скинути список зламаних плеєрів для нового фільму
+  currentLang = '';
+  brokenPlayers.clear();
   const _prog = libraryCache[String(id)];
   if (_prog) {
     if (type === 'tv' && _prog.lastSeason)  currentSeason  = _prog.lastSeason;
@@ -1355,14 +1319,10 @@ async function openMovie(id, type='movie', autoPlay=false) {
   const data=await tmdb(ep,{append_to_response:'videos,seasons,credits'});
   if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Помилка завантаження</div>';return;}
 
-  // Трейлер
   const _vids    = (data.videos && data.videos.results) || [];
   const _trailer = _vids.find(v=>v.type==='Trailer'&&v.site==='YouTube') || _vids.find(v=>v.site==='YouTube') || null;
-
-  // Акторський склад
   const _cast = ((data.credits && data.credits.cast) || []).slice(0, 16);
 
-  // Додаткова інформація
   const _budget  = data.budget  && data.budget  > 0 ? '$' + (data.budget /1e6).toFixed(1) + 'M' : null;
   const _revenue = data.revenue && data.revenue > 0 ? '$' + (data.revenue/1e6).toFixed(1) + 'M' : null;
   const _country = (data.production_countries||[]).slice(0,2).map(c=>c.name).join(', ') || null;
@@ -1381,9 +1341,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
     ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}" alt="${title}">`
     :`<div class="m-backdrop-ph">🎬</div>`;
 
-  // TV: seasons
   const players = type==='tv' ? TV_PLAYERS : MOVIE_PLAYERS;
-  // Вкладки плеєрів (як на Кіного)
   const tabsHtml = players.map((p,i)=>`<div class="player-tab${i===currentPlayer?' act':''}" onclick="switchPlayer(${i})">${p.name}${p.badge?`<span class="ptab-badge">${p.badge}</span>`:''}</div>`).join('');
 
   let tvSelector='';
@@ -1400,14 +1358,11 @@ async function openMovie(id, type='movie', autoPlay=false) {
     </div>`;
   }
 
-  // Зірки рейтингу
   const _starCount = Math.round((data.vote_average||0)/2);
   const starsHtml = Array.from({length:5},(_,i)=>`<svg viewBox="0 0 24 24" width="13" height="13" fill="${i<_starCount?'var(--gold)':'#3a3a3a'}"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`).join('');
-  // Дропдаун озвучки
   const dubDropHtml = DUBS.map(d=>`<div class="dub-option${d.code===currentLang?' act':''}" onclick="selectDub('${d.code}',event)">${d.label}</div>`).join('');
   const curDubLabel = DUBS.find(d=>d.code===currentLang)?.label || 'Авто';
 
-  // Акторський склад HTML
   const _castHtml = _cast.length ? `
     <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div>
     <div class="cast-row">
@@ -1417,7 +1372,6 @@ async function openMovie(id, type='movie', autoPlay=false) {
       }).join('')}
     </div>` : '';
 
-  // Додаткова інформація HTML
   const _extraItems=[];
   if(_budget)  _extraItems.push({lbl:'Бюджет',          val:_budget});
   if(_revenue) _extraItems.push({lbl:'Касові збори',     val:_revenue});
@@ -1444,12 +1398,10 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
       <!-- PLAYER -->
       <div class="player-section">
-        <!-- Вкладки плеєрів + рейтинг -->
         <div class="player-tabs-row">
           <div class="player-tabs" id="player-tabs">${tabsHtml}${_trailer?`<div class="player-tab" onclick="openTrailer('${_trailer.key}')">Трейлер</div>`:''}</div>
           <div class="player-rating-right">${starsHtml}&nbsp;${rat}<span>&nbsp;(${data.vote_count||0})</span></div>
         </div>
-        <!-- Озвучка + поділитись -->
         <div class="player-dub-row">
           <div class="dub-select" id="dub-select" onclick="toggleDubDropdown(event)">
             <span id="dub-label-txt">${curDubLabel}</span>
@@ -1460,13 +1412,12 @@ async function openMovie(id, type='movie', autoPlay=false) {
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
           </button>
         </div>
-        <!-- Фрейм плеєра -->
         <div class="player-frame-wrap" id="player-wrap">
           <div class="player-loading" id="player-loading">
             <div class="spin"></div>
             <div style="color:var(--muted);font-size:13px;">Завантаження відео...</div>
           </div>
-          <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope" referrerpolicy="no-referrer-when-downgrade" style="opacity:0;transition:opacity .3s;" scrolling="no"></iframe>
+          <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" referrerpolicy="origin" style="opacity:0;transition:opacity .3s;width:100%;height:100%;border:none;" scrolling="no"></iframe>
         </div>
         ${tvSelector}
         <div style="color:var(--dim);font-size:11px;margin-top:8px;">Якщо відео не грає — оберіть інший плеєр</div>
@@ -1474,7 +1425,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
       <div class="m-actions">
         <button class="m-btn-fav ${isFav?'faved':''}" id="modal-fav-btn" onclick="toggleFavModal(${id},'${type}')">
-          ${isFav?'В улюблених':'В улюблені'}
+          ${isFav?'В улюблиних':'В улюблені'}
         </button>
         <button class="m-btn-wl ${isWL?'saved':''}" id="modal-wl-btn" onclick="toggleWatchLaterModal(${id},'${type}')">
           ${isWL?'Збережено':'Дивитись пізніше'}
@@ -1483,28 +1434,19 @@ async function openMovie(id, type='movie', autoPlay=false) {
         ${_trailer?`<button class="btn-trailer" onclick="openTrailer('${_trailer.key}')">Трейлер</button>`:''}
       </div>
 
-      <!-- EXTRA INFO -->
       ${_extraHtml}
-
-      <!-- CAST -->
       ${_castHtml}
-
-      <!-- SIMILAR (завантажується асинхронно) -->
       <div id="modal-sim"></div>
     </div>`;
 
-  // Init player & TV — завантажуємо епізоди потрібного сезону
   if(type==='tv' && data.seasons) {
     const realSeasons = data.seasons.filter(s=>s.season_number>0);
-    // Знайти сезон який треба відновити
     const targetSeason = realSeasons.find(s=>s.season_number===currentSeason) || realSeasons[0];
     if(targetSeason) {
       currentSeason = targetSeason.season_number;
-      // Якщо в API вже є к-сть епізодів — використати
       if(targetSeason.episode_count) {
         loadEpisodes(targetSeason.episode_count);
       } else {
-        // Завантажити з TMDB
         tmdb(`/tv/${id}/season/${currentSeason}`).then(sd=>{
           if(sd&&sd.episodes) loadEpisodes(sd.episodes.length);
         });
@@ -1512,10 +1454,8 @@ async function openMovie(id, type='movie', autoPlay=false) {
     }
   }
 
-  // Плеєр запускається одразу без shield
   _doLoadPlayer();
 
-  // Схожі фільми/серіали — завантажуємо після рендеру
   tmdb(`/${type}/${id}/similar`,{page:1}).then(sim=>{
     const simEl=document.getElementById('modal-sim');
     if(!simEl||!sim||!sim.results||!sim.results.length) return;
@@ -1545,7 +1485,6 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
 function loadPlayer() { _doLoadPlayer(); }
 
-// Відстежуємо зламані плеєри (заблоковані X-Frame-Options)
 const brokenPlayers = new Set();
 
 function _doLoadPlayer() {
@@ -1581,21 +1520,15 @@ function _doLoadPlayer() {
 }
 
 function _schedulePlayerCheck(iframe, playerIdx) {
-  // Перевіряємо через 2.5с — якщо iframe same-origin (заблокований браузером),
-  // позначаємо таб як зламаний і автоматично переходимо до наступного
   setTimeout(()=>{
     try {
       const doc = iframe.contentWindow.document;
       const bodyLen = doc.body ? doc.body.innerHTML.length : 0;
       if (bodyLen < 100) {
-        // Порожня сторінка = embed заблокований X-Frame-Options
         _markPlayerBroken(playerIdx);
         _autoAdvancePlayer();
       }
-    } catch(e) {
-      // Cross-origin = плеєр завантажив свою сторінку (може показувати "недоступно" —
-      // але це вже поведінка самого плеєра, не блокування браузером)
-    }
+    } catch(e) {}
   }, 2500);
 }
 
@@ -1616,38 +1549,31 @@ function _autoAdvancePlayer() {
   }
 }
 
-// Вибір озвучки з дропдауну
 function selectDub(code, e) {
   if(e) e.stopPropagation();
   currentLang = code;
-  // Оновити label у кнопці
   const labelEl = document.getElementById('dub-label-txt');
   if(labelEl) labelEl.textContent = DUBS.find(d=>d.code===code)?.label || 'Авто';
-  // Підсвітити активний пункт
   document.querySelectorAll('.dub-option').forEach(b=>b.classList.toggle('act', b.getAttribute('onclick').includes(`'${code}'`)));
-  // Закрити дропдаун
   const ds = document.getElementById('dub-select');
   if(ds) ds.classList.remove('open');
   _doLoadPlayer();
 }
 
-// Відкрити/закрити дропдаун озвучки
 function toggleDubDropdown(e) {
   if(e) e.stopPropagation();
   const ds = document.getElementById('dub-select');
   if(ds) ds.classList.toggle('open');
 }
 
-// Перемикання вкладки плеєра
 function switchPlayer(idx) {
-  if (brokenPlayers.has(idx)) return; // пропускаємо зламані
+  if (brokenPlayers.has(idx)) return;
   currentPlayer=idx;
   localStorage.setItem('kb_pref_srv', idx);
   document.querySelectorAll('.player-tab').forEach((b,i)=>b.classList.toggle('act',i===idx));
   _doLoadPlayer();
 }
 
-// Поділитись посиланням
 function shareCurrentMovie() {
   const url = window.location.href;
   if(navigator.share){ navigator.share({title:document.title, url}); }
@@ -1656,7 +1582,6 @@ function shareCurrentMovie() {
 
 function changeSeason(s) {
   currentSeason=parseInt(s); currentEpisode=1;
-  // Load episode count for this season
   tmdb(`/tv/${currentModalId}/season/${s}`).then(data=>{
     if(data&&data.episodes) loadEpisodes(data.episodes.length);
   });
@@ -1689,11 +1614,9 @@ function closeMovieModal() {
 }
 
 // =====================================================================
-// FAVORITES
+// FAVORITES & LIBRARY
 // =====================================================================
-// LIBRARY — Firestore /users/{uid}/library subcollection
-// =====================================================================
-let libraryCache = {}; // { "tmdbId": { favorite, watchLater, watched, title, poster, ... } }
+let libraryCache = {};
 let libUnsubscribe = null;
 let currentLibTab = 'fav';
 
@@ -1707,13 +1630,11 @@ function initLibrary() {
       snap.docs.forEach(d => { libraryCache[d.id] = { ...d.data(), _docId: d.id }; });
       refreshCardFavButtons();
       renderContinueWatching();
-      // Оновити відкриту бібліотеку
       if (document.getElementById('lib-section').style.display !== 'none') renderLibGrid(currentLibTab);
     }, () => { _loadLibLS(); });
 }
 
 function _loadLibLS() {
-  // Міграція зі старого localStorage
   try {
     const old = JSON.parse(localStorage.getItem('kb_favorites') || '[]');
     libraryCache = {};
@@ -1733,7 +1654,6 @@ async function _setLibField(id, type, field, value) {
   const user = currentUser;
   if (!user) { openAuth('login'); showToast('Увійдіть для використання бібліотеки'); return; }
   const docId = String(id);
-  // Оптимістичне оновлення
   if (!libraryCache[docId]) libraryCache[docId] = {};
   libraryCache[docId][field] = value;
 
@@ -1748,7 +1668,6 @@ async function _setLibField(id, type, field, value) {
       await ref.delete();
       delete libraryCache[docId];
     } else {
-      // Якщо метадані ще не завантажені — підтягнути з TMDB
       if (!cur.title) {
         const data = await tmdb(`/${type}/${id}`).catch(() => null);
         if (data) {
@@ -1801,7 +1720,6 @@ function markWatched(id, type) {
   _setLibField(id, type, 'watched', true);
 }
 
-// Зберегти прогрес плеєра (сервер, сезон, епізод, позначити переглянутим)
 async function savePlayerProgress() {
   if (!currentUser || !db || !currentModalId) return;
   const docId = String(currentModalId);
@@ -1815,10 +1733,8 @@ async function savePlayerProgress() {
     updates.lastSeason  = currentSeason;
     updates.lastEpisode = currentEpisode;
   }
-  // Оновити кеш локально
   if (!libraryCache[docId]) libraryCache[docId] = { id: currentModalId, type: currentModalType };
   Object.assign(libraryCache[docId], updates);
-  // Підтягнути метадані якщо їх ще немає
   if (!libraryCache[docId].title) {
     const data = await tmdb(`/${currentModalType}/${currentModalId}`).catch(()=>null);
     if (data) {
@@ -1830,7 +1746,6 @@ async function savePlayerProgress() {
       });
     }
   }
-  // Записати у Firestore
   try {
     await db.collection('users').doc(currentUser.uid)
       .collection('library').doc(docId)
@@ -1840,7 +1755,6 @@ async function savePlayerProgress() {
   } catch(e) { console.error('Progress save error', e); }
 }
 
-// Секція "Продовжити перегляд" на головній
 function renderContinueWatching() {
   const sec  = document.getElementById('continue-section');
   const grid = document.getElementById('continue-grid');
@@ -1886,7 +1800,6 @@ function refreshCardFavButtons() {
   });
 }
 
-// ---- Library UI ----
 function showLibrary(tab = 'fav') {
   currentLibTab = tab;
   document.getElementById('lib-section').style.display = 'block';
@@ -1920,7 +1833,6 @@ function renderLibGrid(tab) {
     return;
   }
 
-  // Сортування: найновіші зверху
   items.sort((a,b) => (b.updatedAt||'') > (a.updatedAt||'') ? 1 : -1);
 
   grid.innerHTML = items.map(m => {
@@ -1944,14 +1856,13 @@ function showHome(){
   document.getElementById('cat-section').style.display='none';
   document.getElementById('home-content').style.display='block';
   document.getElementById('srch-sec').style.display='none';
-  // Підсвітити "Головна" в навігації
   document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
   const nh=document.getElementById('nav-home');if(nh)nh.classList.add('act');
   updateBnav('home');
 }
 
 // =====================================================================
-// AUTH — Firebase Authentication
+// AUTH
 // =====================================================================
 let auth = null;
 let currentUser = null;
@@ -1975,13 +1886,12 @@ if (auth) {
           currentUserSubscribed = doc.data().subscribed === true;
         }
       } catch(e) {}
-      initLibrary(); // запускаємо Firestore listener для бібліотеки
+      initLibrary();
     } else {
-      // Вийшов — зупинити listener і очистити кеш
       if (libUnsubscribe) { libUnsubscribe(); libUnsubscribe = null; }
       libraryCache = {};
       refreshCardFavButtons();
-      renderContinueWatching(); // сховає секцію
+      renderContinueWatching();
     }
     updateAuthUI();
   });
@@ -1999,9 +1909,7 @@ function updateAuthUI() {
   }
   const adminLink = document.getElementById('ud-admin');
   if (adminLink) adminLink.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
-  // Перерендерити рекламу (підписка може змінити видимість)
   renderAds();
-  // Sync mobile drawer auth section whenever auth state changes
   updateMobileDrawerAuth();
 }
 
@@ -2012,7 +1920,7 @@ function openAuth(tab='login') {
 function closeAuth() { document.getElementById('auth-modal').classList.remove('open'); }
 
 // =====================================================================
-// STATIC PAGES — Про нас / Контакти / Умови / DMCA
+// STATIC PAGES
 // =====================================================================
 const PAGE_DEFAULTS = {
   about:    { title:'Про нас',            content:'<p>КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості, кілька серверів відтворення, українська озвучка.</p>' },
@@ -2142,19 +2050,16 @@ function doLogout() {
 // =====================================================================
 // SEARCH
 // =====================================================================
-// SEARCH — автодоповнення + фільтри + пагінація
-// =====================================================================
 const RECENT_KEY = 'kb_recent_srch';
 let sT = null, acT = null, acIdx = -1, acResults = [];
 let srchPage = 1, srchQuery = '', srchFilter = 'all', srchTotalPages = 1;
 
-// ---- Обробка вводу ----
 function handleSrch(e) {
   const q = document.getElementById('si').value.trim();
   clearTimeout(sT); clearTimeout(acT);
   if (!q) { hideAutocomplete(); return; }
   acT = setTimeout(() => showAutocomplete(q), 280);
-  sT  = setTimeout(() => {}, 600); // пошук лише через Enter або 🔍
+  sT  = setTimeout(() => {}, 600);
 }
 
 function acKeydown(e) {
@@ -2175,7 +2080,6 @@ function acFocus() {
   else   showRecentSearches();
 }
 
-// ---- Автодоповнення ----
 async function showAutocomplete(q) {
   acIdx = -1;
   const data = await tmdb('/search/multi', { query: q, page: 1 });
@@ -2239,7 +2143,6 @@ function acUseRecent(q) {
   doSearch();
 }
 
-// ---- Останні пошуки ----
 function getRecentSearches() {
   try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch { return []; }
 }
@@ -2254,7 +2157,6 @@ function removeRecent(q) {
   showRecentSearches();
 }
 
-// ---- Пошук ----
 async function doSearch(filter) {
   const q = document.getElementById('si').value.trim();
   if (!q) { clearSearch(); return; }
@@ -2265,7 +2167,6 @@ async function doSearch(filter) {
   else srchFilter = 'all';
   srchQuery = q; srchPage = 1;
 
-  // Оновити активний фільтр
   ['all','movie','tv'].forEach(f => {
     const btn = document.getElementById('sf-'+f);
     if (btn) btn.classList.toggle('act', f === srchFilter);
@@ -2325,7 +2226,7 @@ function clearSearch() {
 }
 
 // =====================================================================
-// GENRE FILTER
+// GENRE FILTER & CATALOG
 // =====================================================================
 async function selGenre(genreId,el){
   document.querySelectorAll('.g-tag').forEach(t=>t.classList.remove('act'));el.classList.add('act');
@@ -2338,19 +2239,7 @@ async function selGenre(genreId,el){
   loadGrid('nineties-grid','/discover/movie',{...p,'primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
   loadGrid('noughts-grid','/discover/movie',{...p,'primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
 }
-function quickFilter(ep,params){
-  showHome();clearSearch();
-  loadGrid('pop-grid',ep,params,{txt:'HD',cls:'g'},12);
-  document.getElementById('pop-grid').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function showClassics(){
-  quickFilter('/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'});
-  loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,24);
-}
 
-// =====================================================================
-// CATALOG — каталог з фільтрами
-// =====================================================================
 let catPage = 1, catTotalPages = 1, catType = 'movie';
 
 const GENRE_NAMES = {
@@ -2371,7 +2260,6 @@ function showCatalog(preset = {}) {
   document.getElementById('lib-section').style.display = 'none';
   document.getElementById('cat-section').style.display = 'block';
 
-  // Скидуємо поля до дефолтних, потім застосовуємо пресет
   document.getElementById('cat-genre').value   = '';
   document.getElementById('cat-country').value = '';
   document.getElementById('cat-yr-from').value = '';
@@ -2391,7 +2279,6 @@ function showCatalog(preset = {}) {
   document.getElementById('cpt-tv').classList.toggle('act', catType === 'tv');
   document.getElementById('cat-title').textContent = catType === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
 
-  // Підсвітити в навігації
   document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
   const nc = document.getElementById('nav-catalog'); if(nc) nc.classList.add('act');
   updateBnav(catType==='tv' ? 'tv' : 'movies');
@@ -2405,7 +2292,6 @@ function setCatType(type) {
   document.getElementById('cpt-movie').classList.toggle('act', type === 'movie');
   document.getElementById('cpt-tv').classList.toggle('act', type === 'tv');
   document.getElementById('cat-title').textContent = type === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
-  // При зміні типу скидаємо sort опції (для серіалів немає revenue)
   const sortEl = document.getElementById('cat-sort');
   if (type === 'tv' && sortEl.value === 'revenue.desc') sortEl.value = 'popularity.desc';
   applyCatFilters();
@@ -2513,10 +2399,10 @@ function removeCatFilter(key) {
 }
 
 // =====================================================================
-// ADS — Block 8: video, pop-under, anti-adblock
+// ADS & UTILS
 // =====================================================================
 function getAds(slot){
-  if (currentUserSubscribed) return []; // підписники не бачать реклами
+  if (currentUserSubscribed) return [];
   return adsCache.filter(a=>a.active&&a.slot===slot);
 }
 
@@ -2556,7 +2442,6 @@ function buildV(ad){
 }
 
 function renderAds(){
-  // Header
   const hEl=document.getElementById('slot-header');
   if(hEl){
     hEl.innerHTML='';
@@ -2584,16 +2469,12 @@ function renderAds(){
   initPopUnder();
 }
 
-// =====================================================================
-// POP-UNDER — один раз за сесію, на першому кліку
-// =====================================================================
 function initPopUnder(){
   const ads=adsCache.filter(a=>a.active&&a.slot==='popunder');
   if(!ads.length||sessionStorage.getItem('kb_pu'))return;
   const ad=ads[0];
   if(!ad.linkUrl)return;
   document.addEventListener('click',function _pu(e){
-    // Не відкривати popunder при кліку в зоні плеєра
     const wrap=document.getElementById('player-wrap');
     if(wrap&&wrap.contains(e.target)) return;
     document.removeEventListener('click',_pu);
@@ -2604,9 +2485,6 @@ function initPopUnder(){
   });
 }
 
-// =====================================================================
-// ANTI-ADBLOCK
-// =====================================================================
 function detectAdblock(){
   const bait=document.createElement('div');
   bait.className='pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads ad-slot adsbox adsbygoogle ad-banner';
@@ -2618,7 +2496,6 @@ function detectAdblock(){
     const blocked=!h||s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)<0.1;
     try{document.body.removeChild(bait);}catch(e){}
     if(blocked){
-      // Перевіримо чи антиадблок увімкнено в налаштуваннях
       const cfg=adsCache.find(a=>a.slot==='__config__');
       const antiAdblockEnabled=cfg?cfg.antiAdblock:false;
       if(antiAdblockEnabled){
@@ -2629,19 +2506,13 @@ function detectAdblock(){
   },300);
 }
 
-// =====================================================================
-// POPUP AD
-// =====================================================================
 let popCnt=5,popT=null;
 function initPopup(){
   const ads=getAds('popup'); if(!ads.length)return;
   const ad=ads[0];
   const box=document.getElementById('pop-box');
-  const bar=document.getElementById('pop-bar');
-  const closeBtn=document.getElementById('pop-close');
   if(ad.html) box.innerHTML=`<div class="pop-adlbl">Реклама</div><button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>${ad.html}<div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
   else if(ad.imageUrl){
-    const isFallback=!ad.imageUrl;
     box.innerHTML=`<div class="pop-adlbl">Реклама</div>
       <button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>
       <a href="${ad.linkUrl||'#'}" target="_blank" rel="noopener" onclick="closePopup()"><img src="${ad.imageUrl}" alt="Реклама" style="width:100%;display:block;border-radius:12px;"></a>
@@ -2658,9 +2529,6 @@ function initPopup(){
 }
 function closePopup(){if(popCnt>0)return;clearInterval(popT);document.getElementById('pop-ov').classList.remove('open');}
 
-// =====================================================================
-// TRAILER
-// =====================================================================
 function openTrailer(key) {
   const f = document.getElementById('trailer-frame');
   if (!f) return;
@@ -2672,21 +2540,14 @@ function closeTrailer() {
   document.getElementById('trailer-frame').innerHTML = '';
 }
 
-// =====================================================================
-// UTILS
-// =====================================================================
 let tT=null;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3000);}
 window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('show',scrollY>400);});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();closeTrailer();}});
 
-// =====================================================================
-// START
-// =====================================================================
 window.addEventListener('DOMContentLoaded',()=>{
-  updateAuthUI(); // початковий стан (auth змінить через onAuthStateChanged)
+  updateAuthUI();
 
-  // User avatar dropdown — toggle on click (works on touch devices too)
   const av = document.getElementById('user-av');
   if (av) {
     av.addEventListener('click', e => {
@@ -2695,31 +2556,23 @@ window.addEventListener('DOMContentLoaded',()=>{
     });
     document.addEventListener('click', () => av.classList.remove('open'));
   }
-  // Закрити дропдаун озвучки при кліку поза ним
   document.addEventListener('click', () => {
     const ds = document.getElementById('dub-select');
     if(ds) ds.classList.remove('open');
   });
 
-  // Ініціалізація кнопок мови
   ['uk','ru','en'].forEach(l => {
     const btn = document.getElementById('lbtn-' + l);
     if (btn) btn.classList.toggle('act', l === siteLang);
   });
-  initFirestore(); // підключаємо Firestore → після завантаження ключів викликає initSite()
-  setTimeout(detectAdblock, 1500); // перевірка адблоку
-  // Fallback: якщо Firestore не відповів за 5 сек — запустити сайт без ключів
+  initFirestore();
+  setTimeout(detectAdblock, 1500);
   setTimeout(()=>{ if(!dbReady){ dbReady=true; initSite(); } }, 5000);
-  // PWA: реєстрація Service Worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js', { scope: '/' })
-      .catch(() => {}); // мовчки ігнорувати якщо SW недоступний
+    navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
   }
 });
 
-// =====================================================================
-// PWA: встановлення (кнопка "Додати на екран")
-// =====================================================================
 let _pwaPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
@@ -2738,9 +2591,6 @@ function pwaInstall() {
   _pwaPrompt.userChoice.then(() => { _pwaPrompt = null; });
 }
 
-// =====================================================================
-// Block 11: MOBILE MENU + BOTTOM NAV
-// =====================================================================
 function toggleMobileMenu() {
   const drawer = document.getElementById('mob-drawer');
   const ov     = document.getElementById('mob-ov');
@@ -2808,7 +2658,6 @@ function handleBnavProfile() {
   }
 }
 
-// Close drawer on Escape
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeMobileMenu(); });
 </script>
 </body>
