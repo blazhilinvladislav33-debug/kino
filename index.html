@@ -1159,17 +1159,19 @@ const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).joi
 // =====================================================================
 // lang codes: '' = auto, 'uk' = ukrainian, 'en' = english
 const MOVIE_PLAYERS = [
-  { id:'vs1', name:'Сервер 1', url: (id,lang) => `https://vidsrc.to/embed/movie/${id}` },
-  { id:'vs2', name:'Сервер 2', url: (id,lang) => `https://vidsrc.xyz/embed/movie?tmdb=${id}${lang?'&ds_lang='+lang:''}` },
-  { id:'em3', name:'Сервер 3', url: (id,lang) => `https://www.2embed.cc/embed/${id}` },
+  { id:'vs1', name:'Сервер 1', url: (id,lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+  { id:'vs2', name:'Сервер 2', url: (id,lang) => `https://vidsrc.xyz/embed/movie?tmdb=${id}&autoplay=1${lang?'&ds_lang='+lang:''}` },
+  { id:'vs3', name:'Сервер 3', url: (id,lang) => `https://vidlink.pro/movie/${id}?autoplay=true` },
   { id:'em4', name:'Сервер 4', url: (id,lang) => `https://embed.su/embed/movie/${id}` },
   { id:'em5', name:'Сервер 5', url: (id,lang) => `https://multiembed.mov/?video_id=${id}&tmdb=1${lang?'&lang='+lang:''}` },
+  { id:'em6', name:'Сервер 6', url: (id,lang) => `https://autoembed.co/embed/movie/${id}` },
 ];
 const TV_PLAYERS = [
-  { id:'vs1', name:'Сервер 1', url: (id,s,e,lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
-  { id:'vs2', name:'Сервер 2', url: (id,s,e,lang) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}${lang?'&ds_lang='+lang:''}` },
-  { id:'em3', name:'Сервер 3', url: (id,s,e,lang) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
+  { id:'vs1', name:'Сервер 1', url: (id,s,e,lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+  { id:'vs2', name:'Сервер 2', url: (id,s,e,lang) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}&autoplay=1${lang?'&ds_lang='+lang:''}` },
+  { id:'vs3', name:'Сервер 3', url: (id,s,e,lang) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
   { id:'em4', name:'Сервер 4', url: (id,s,e,lang) => `https://embed.su/embed/tv/${id}/${s}/${e}` },
+  { id:'em5', name:'Сервер 5', url: (id,s,e,lang) => `https://autoembed.co/embed/tv/${id}-${s}-${e}` },
 ];
 // Dubbing / language options
 const DUBS = [
@@ -1396,7 +1398,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
             <div class="spin"></div>
             <div style="color:var(--muted);font-size:13px;">Завантаження відео...</div>
           </div>
-          <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" referrerpolicy="no-referrer-when-downgrade" style="opacity:0;transition:opacity .3s;"></iframe>
+          <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope" referrerpolicy="no-referrer-when-downgrade" style="opacity:0;transition:opacity .3s;" scrolling="no"></iframe>
         </div>
         ${dubNote}
         <div style="color:var(--dim);font-size:11px;margin-top:8px;">Якщо відео не завантажилось — спробуйте інший сервер</div>
@@ -1509,6 +1511,8 @@ function _doLoadPlayer() {
   iframe.style.opacity='0';
 
   const players=currentModalType==='tv'?TV_PLAYERS:MOVIE_PLAYERS;
+  // Якщо збережений індекс більше нової кількості серверів — скинути на 0
+  if(currentPlayer >= players.length) currentPlayer = 0;
   const p=players[currentPlayer];
   const src=currentModalType==='tv'
     ?p.url(currentModalId,currentSeason,currentEpisode,currentLang)
@@ -1517,16 +1521,27 @@ function _doLoadPlayer() {
   // Зберегти прогрес перегляду (сервер, сезон, епізод) + позначити переглянутим
   savePlayerProgress();
 
-  iframe.src='';
+  // Скидаємо iframe щоб примусити повторне завантаження
+  iframe.removeAttribute('src');
+  iframe.src='about:blank';
+
   setTimeout(()=>{
     iframe.src=src;
+    let loaded=false;
     iframe.onload=()=>{
+      if(loaded) return; loaded=true;
       loading.style.display='none';
       iframe.style.opacity='1';
     };
-    // fallback
-    setTimeout(()=>{ if(loading.style.display!=='none'){ loading.innerHTML='<div style="color:var(--muted);font-size:13px;">Відео завантажено. Якщо не грає — спробуйте інший сервер.</div>'; iframe.style.opacity='1'; } },3500);
-  },100);
+    // Fallback: якщо onload не спрацював за 5с — показати iframe і повідомлення
+    setTimeout(()=>{
+      if(!loaded){
+        loaded=true;
+        loading.style.display='none';
+        iframe.style.opacity='1';
+      }
+    },5000);
+  },150);
 }
 
 // Перемикання мови озвучки
