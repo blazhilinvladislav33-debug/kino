@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>КіноБаза — Адмін Панель</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <style>
     :root {
       --bg: #0d0d0d; --bg2: #151515; --bg3: #1a1a1a; --bg4: #222;
@@ -665,6 +668,26 @@
 
 <script>
   // ========================
+  // FIREBASE
+  // ========================
+  // ⚠️ Вставте ваш конфіг з Firebase Console (той самий що в index.html)
+  const FIREBASE_CONFIG = {
+    apiKey:            "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
+    authDomain:        "kinobaza-6c109.firebaseapp.com",
+    projectId:         "kinobaza-6c109",
+    storageBucket:     "kinobaza-6c109.firebasestorage.app",
+    messagingSenderId: "639150355070",
+    appId:             "1:639150355070:web:772f863f075d4d1d839e2f",
+    measurementId:     "G-GKVZ2JJDJN"
+  };
+
+  let db = null;
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+  } catch(e) { console.warn('Firebase init failed'); }
+
+  // ========================
   // AUTH
   // ========================
   const CREDS_KEY = 'kb_admin_creds';
@@ -707,22 +730,24 @@
   }
 
   // ========================
-  // ADS DATA
+  // ADS DATA — Firestore
   // ========================
-  const ADS_KEY = 'kb_ads';
+  let adsCache = [];
 
-  function getAds() {
-    const raw = localStorage.getItem(ADS_KEY);
-    return raw ? JSON.parse(raw) : [];
+  function startAdsListener() {
+    if (!db) { loadAdsFromLocalStorage(); return; }
+    db.collection('ads').orderBy('createdAt', 'desc').onSnapshot(snap => {
+      adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAds();
+    }, () => loadAdsFromLocalStorage());
   }
 
-  function saveAds(ads) {
-    localStorage.setItem(ADS_KEY, JSON.stringify(ads));
+  function loadAdsFromLocalStorage() {
+    try { adsCache = JSON.parse(localStorage.getItem('kb_ads') || '[]'); } catch { adsCache = []; }
+    renderAds();
   }
 
-  function genId() {
-    return 'ad_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-  }
+  function getAds() { return adsCache; }
 
   // ========================
   // RENDER
@@ -808,20 +833,31 @@
   }
 
   // ========================
-  // AD ACTIONS
+  // AD ACTIONS — Firestore
   // ========================
   function toggleAd(id, val) {
-    const ads = getAds();
-    const ad = ads.find(a=>a.id===id);
-    if (ad) { ad.active = val; saveAds(ads); renderAds(); showToast(val ? '✅ Банер увімкнено' : '⏸ Банер вимкнено'); }
+    if (db) {
+      db.collection('ads').doc(id).update({ active: val })
+        .then(() => showToast(val ? '✅ Банер увімкнено' : '⏸ Банер вимкнено'))
+        .catch(() => showToast('Помилка оновлення', true));
+    } else {
+      const ads = getAds(); const ad = ads.find(a=>a.id===id);
+      if (ad) { ad.active = val; localStorage.setItem('kb_ads', JSON.stringify(ads)); renderAds(); }
+      showToast(val ? '✅ Банер увімкнено' : '⏸ Банер вимкнено');
+    }
   }
 
   function deleteAd(id) {
     if (!confirm('Видалити цей банер?')) return;
-    const ads = getAds().filter(a=>a.id!==id);
-    saveAds(ads);
-    renderAds();
-    showToast('🗑 Банер видалено');
+    if (db) {
+      db.collection('ads').doc(id).delete()
+        .then(() => showToast('🗑 Банер видалено'))
+        .catch(() => showToast('Помилка видалення', true));
+    } else {
+      const ads = getAds().filter(a=>a.id!==id);
+      localStorage.setItem('kb_ads', JSON.stringify(ads)); renderAds();
+      showToast('🗑 Банер видалено');
+    }
   }
 
   function editAd(id) {
@@ -854,30 +890,38 @@
     if (!imageUrl && !html) { showToast('Вкажіть URL зображення або HTML код', true); return; }
     if (!linkUrl && !html) { showToast('Вкажіть URL посилання', true); return; }
 
-    const ads = getAds();
     const editId = document.getElementById('edit-id').value;
+    const payload = { name, slot, type, imageUrl, linkUrl, altText, html };
 
-    if (editId) {
-      const ad = ads.find(a=>a.id===editId);
-      if (ad) {
-        Object.assign(ad, { name, slot, type, imageUrl, linkUrl, altText, html });
+    if (db) {
+      if (editId) {
+        db.collection('ads').doc(editId).update(payload)
+          .then(() => { showToast('✅ Банер оновлено!'); closeModal(); })
+          .catch(() => showToast('Помилка збереження', true));
+      } else {
+        db.collection('ads').add({ ...payload, active: true, createdAt: new Date().toISOString() })
+          .then(() => { showToast('✅ Банер додано!'); closeModal(); })
+          .catch(() => showToast('Помилка збереження', true));
       }
-      showToast('✅ Банер оновлено!');
     } else {
-      ads.push({ id: genId(), name, slot, type, imageUrl, linkUrl, altText, html, active: true, createdAt: new Date().toISOString() });
-      showToast('✅ Банер додано!');
+      // localStorage fallback
+      const ads = getAds();
+      if (editId) { const ad = ads.find(a=>a.id===editId); if(ad) Object.assign(ad, payload); showToast('✅ Банер оновлено!'); }
+      else { ads.push({ id:'ad_'+Date.now(), ...payload, active:true, createdAt:new Date().toISOString() }); showToast('✅ Банер додано!'); }
+      localStorage.setItem('kb_ads', JSON.stringify(ads)); adsCache = ads; renderAds(); closeModal();
     }
-
-    saveAds(ads);
-    renderAds();
-    closeModal();
   }
 
   function clearAllAds() {
     if (!confirm('Видалити ВСІ банери? Цю дію не можна скасувати.')) return;
-    saveAds([]);
-    renderAds();
-    showToast('🗑 Всі банери видалено');
+    if (db) {
+      const batch = db.batch();
+      adsCache.forEach(ad => batch.delete(db.collection('ads').doc(ad.id)));
+      batch.commit().then(() => showToast('🗑 Всі банери видалено')).catch(() => showToast('Помилка', true));
+    } else {
+      localStorage.setItem('kb_ads', '[]'); adsCache = []; renderAds();
+      showToast('🗑 Всі банери видалено');
+    }
   }
 
   // ========================
@@ -965,14 +1009,30 @@
     const file = input.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = async e => {
       try {
         const data = JSON.parse(e.target.result);
         let msg = [];
-        if (data.ads && Array.isArray(data.ads)) { saveAds(data.ads); renderAds(); msg.push(`${data.ads.length} банерів`); }
-        if (data.apiKeys && Array.isArray(data.apiKeys)) { saveKeys(data.apiKeys); renderKeys(); msg.push(`${data.apiKeys.length} ключів`); }
+        if (data.ads && Array.isArray(data.ads) && db) {
+          const batch = db.batch();
+          data.ads.forEach(ad => {
+            const ref = ad.id ? db.collection('ads').doc(ad.id) : db.collection('ads').doc();
+            batch.set(ref, ad);
+          });
+          await batch.commit();
+          msg.push(`${data.ads.length} банерів`);
+        }
+        if (data.apiKeys && Array.isArray(data.apiKeys) && db) {
+          const batch = db.batch();
+          data.apiKeys.forEach(k => {
+            const ref = k.id ? db.collection('apiKeys').doc(k.id) : db.collection('apiKeys').doc();
+            batch.set(ref, k);
+          });
+          await batch.commit();
+          msg.push(`${data.apiKeys.length} ключів`);
+        }
         if (msg.length) showToast(`✅ Імпортовано: ${msg.join(', ')}!`);
-        else showToast('❌ Невірний формат файлу', true);
+        else showToast('❌ Невірний формат або Firebase недоступний', true);
       } catch { showToast('❌ Помилка читання файлу', true); }
     };
     reader.readAsText(file);
@@ -992,27 +1052,35 @@
   }
 
   // ========================
-  // API KEYS
+  // API KEYS — Firestore
   // ========================
-  const KEYS_KEY = 'kb_api_keys';
+  let keysCache = [];
 
-  function getKeys() {
-    const raw = localStorage.getItem(KEYS_KEY);
-    let keys = raw ? JSON.parse(raw) : [];
-    // backward compat: if old single key exists and no array yet
-    if (!keys.length) {
-      const old = localStorage.getItem('tmdb_key');
-      if (old) keys = [{ id: 'k_legacy', name: 'Імпортовано', value: old, addedAt: new Date().toISOString() }];
-    }
-    return keys;
+  function startKeysListener() {
+    if (!db) { loadKeysFromLocalStorage(); return; }
+    db.collection('apiKeys').orderBy('addedAt', 'desc').onSnapshot(snap => {
+      keysCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderKeys();
+    }, () => loadKeysFromLocalStorage());
   }
 
-  function saveKeys(keys) {
-    localStorage.setItem(KEYS_KEY, JSON.stringify(keys));
-    // also keep first key in legacy field for compatibility
-    if (keys.length) localStorage.setItem('tmdb_key', keys[0].value);
-    else localStorage.removeItem('tmdb_key');
+  function loadKeysFromLocalStorage() {
+    try {
+      const raw = localStorage.getItem('kb_api_keys');
+      const arr = raw ? JSON.parse(raw) : [];
+      keysCache = arr.map((k,i) => typeof k === 'string'
+        ? { id:'k_'+i, name:'Ключ '+(i+1), value:k, addedAt:new Date().toISOString() }
+        : k);
+      // backward compat
+      if (!keysCache.length) {
+        const old = localStorage.getItem('tmdb_key');
+        if (old) keysCache = [{ id:'k_legacy', name:'Імпортовано', value:old, addedAt:new Date().toISOString() }];
+      }
+    } catch { keysCache = []; }
+    renderKeys();
   }
+
+  function getKeys() { return keysCache; }
 
   function renderKeys() {
     const keys = getKeys();
@@ -1023,17 +1091,13 @@
     const tbody = document.getElementById('keys-tbody');
     const empty = document.getElementById('keys-empty');
 
-    if (!keys.length) {
-      tbody.innerHTML = '';
-      empty.style.display = 'block';
-      return;
-    }
+    if (!keys.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
     empty.style.display = 'none';
 
     tbody.innerHTML = keys.map((k, i) => {
-      const masked = k.value.length > 10
+      const masked = k.value && k.value.length > 10
         ? k.value.slice(0, 6) + '••••••••••••••••••••' + k.value.slice(-4)
-        : k.value;
+        : (k.value || '—');
       const date = k.addedAt ? new Date(k.addedAt).toLocaleDateString('uk-UA') : '—';
       return `
         <tr>
@@ -1067,35 +1131,46 @@
     const name = document.getElementById('k-name').value.trim();
     const value = document.getElementById('k-value').value.trim();
     if (!value) { showToast('Введіть API ключ', true); return; }
-    const keys = getKeys();
-    if (keys.find(k => k.value === value)) { showToast('Такий ключ вже існує', true); return; }
-    keys.push({ id: 'k_' + Date.now(), name: name || ('Ключ ' + (keys.length + 1)), value, addedAt: new Date().toISOString() });
-    saveKeys(keys);
-    renderKeys();
-    closeKeyModal();
-    showToast('✅ Ключ додано!');
+    if (getKeys().find(k => k.value === value)) { showToast('Такий ключ вже існує', true); return; }
+    const payload = { name: name || ('Ключ ' + (getKeys().length + 1)), value, addedAt: new Date().toISOString() };
+    if (db) {
+      db.collection('apiKeys').add(payload)
+        .then(() => { showToast('✅ Ключ додано!'); closeKeyModal(); })
+        .catch(() => showToast('Помилка збереження', true));
+    } else {
+      keysCache.push({ id:'k_'+Date.now(), ...payload });
+      localStorage.setItem('kb_api_keys', JSON.stringify(keysCache));
+      renderKeys(); closeKeyModal(); showToast('✅ Ключ додано!');
+    }
   }
 
   function deleteKey(id) {
     if (!confirm('Видалити цей API ключ?')) return;
-    const keys = getKeys().filter(k => k.id !== id);
-    saveKeys(keys);
-    renderKeys();
-    showToast('🗑 Ключ видалено');
+    if (db) {
+      db.collection('apiKeys').doc(id).delete()
+        .then(() => showToast('🗑 Ключ видалено'))
+        .catch(() => showToast('Помилка видалення', true));
+    } else {
+      keysCache = keysCache.filter(k => k.id !== id);
+      localStorage.setItem('kb_api_keys', JSON.stringify(keysCache));
+      renderKeys(); showToast('🗑 Ключ видалено');
+    }
   }
 
   function copyKey(id) {
     const key = getKeys().find(k => k.id === id);
     if (!key) return;
-    navigator.clipboard.writeText(key.value).then(() => showToast('📋 Ключ скопійовано!')).catch(() => showToast('Не вдалося скопіювати', true));
+    navigator.clipboard.writeText(key.value)
+      .then(() => showToast('📋 Ключ скопійовано!'))
+      .catch(() => showToast('Не вдалося скопіювати', true));
   }
 
   // ========================
   // INIT
   // ========================
   function initAdmin() {
-    renderAds();
-    renderKeys();
+    startAdsListener();
+    startKeysListener();
   }
 
   // Check session
