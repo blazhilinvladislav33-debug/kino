@@ -214,8 +214,19 @@
     .pop-fallback p{color:var(--muted);font-size:14px;margin-bottom:20px;}
     .pop-fallback .pop-cta{background:var(--gold);color:#000;border:none;padding:12px 36px;border-radius:24px;font-size:15px;font-weight:800;cursor:pointer;}
 
-    /* ===== FAVORITES PAGE ===== */
-    #fav-section{display:none;}
+    /* ===== LIBRARY PAGE ===== */
+    #lib-section{display:none;}
+    .lib-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0;}
+    .lib-tab{padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap;}
+    .lib-tab.act{color:#fff;border-bottom-color:var(--accent);}
+    .lib-tab:hover{color:#fff;}
+    .lib-empty{color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;}
+    .lib-empty span{font-size:40px;display:block;margin-bottom:12px;}
+    .watched-badge{position:absolute;bottom:8px;left:8px;background:rgba(29,185,84,.85);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;backdrop-filter:blur(4px);}
+    /* Watch later button in modal */
+    .m-btn-wl{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
+    .m-btn-wl:hover{border-color:#fff;color:#fff;}
+    .m-btn-wl.saved{background:rgba(26,140,255,.12);border-color:var(--blue);color:var(--blue);}
 
     /* ===== SKELETON ===== */
     .sk-card{background:var(--bg3);border-radius:9px;overflow:hidden;animation:skP 1.5s infinite;}
@@ -286,8 +297,9 @@
           <div class="user-dropdown">
             <div class="ud-name" id="ud-name">Користувач</div>
             <div class="ud-divider"></div>
-            <div class="ud-item" onclick="showFavorites()">❤️ Улюблені</div>
-            <div class="ud-item" onclick="showHistory()">🕐 Історія перегляду</div>
+            <div class="ud-item" onclick="showLibrary('fav')">❤️ Улюблені</div>
+            <div class="ud-item" onclick="showLibrary('wl')">🕐 Дивитись пізніше</div>
+            <div class="ud-item" onclick="showLibrary('watched')">✅ Переглянуто</div>
             <div class="ud-divider"></div>
             <div class="ud-item" id="ud-admin" style="display:none;" onclick="location.href='admin.html'">⚙️ Адміністрування</div>
             <div class="ud-item" onclick="doLogout()">🚪 Вийти</div>
@@ -348,13 +360,18 @@
     <div class="movies-grid" id="srch-grid"></div>
   </div>
 
-  <!-- FAVORITES -->
-  <div id="fav-section">
+  <!-- LIBRARY -->
+  <div id="lib-section">
     <div class="sec-hdr">
-      <div class="sec-title">❤️ Улюблені</div>
+      <div class="sec-title">📚 Моя бібліотека</div>
       <a href="#" class="sec-more" onclick="showHome();return false;">← Назад</a>
     </div>
-    <div class="movies-grid" id="fav-grid"></div>
+    <div class="lib-tabs">
+      <div class="lib-tab act" id="lib-tab-fav"     onclick="switchLibTab('fav')">❤️ Улюблені</div>
+      <div class="lib-tab"     id="lib-tab-wl"      onclick="switchLibTab('wl')">🕐 Дивитись пізніше</div>
+      <div class="lib-tab"     id="lib-tab-watched" onclick="switchLibTab('watched')">✅ Переглянуто</div>
+    </div>
+    <div class="movies-grid" id="lib-grid"></div>
   </div>
 
   <!-- HOME CONTENT -->
@@ -732,7 +749,7 @@ function card(m, badge) {
     ${poster}${ph}
     <div class="c-ov"><div class="c-play-btn">▶</div></div>
     ${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}
-    <button class="c-fav ${isFav?'faved':''}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)" title="${isFav?'Видалити':'В улюблені'}">${isFav?'❤️':'🤍'}</button>
+    <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)" title="${isFav?'Видалити':'В улюблені'}">${isFav?'❤️':'🤍'}</button>
     <div class="c-info">
       <div class="c-title">${title}</div>
       <div class="c-meta"><span class="c-year">${year}</span><span class="c-rat">⭐ ${rat}</span></div>
@@ -794,7 +811,9 @@ async function openMovie(id, type='movie', autoPlay=false) {
   const rat=data.vote_average?data.vote_average.toFixed(1):'—';
   const genres=(data.genres||[]).map(g=>`<span class="m-gtag">${g.name}</span>`).join('');
   const desc=data.overview||'Опис відсутній.';
-  const isFav=isFavorite(id);
+  const isFav = isFavorite(id);
+  const isWL  = isWatchLater(id);
+  const isWtch= isWatched(id);
 
   const backdrop=data.backdrop_path
     ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}" alt="${title}">`
@@ -863,6 +882,10 @@ async function openMovie(id, type='movie', autoPlay=false) {
         <button class="m-btn-fav ${isFav?'faved':''}" id="modal-fav-btn" onclick="toggleFavModal(${id},'${type}')">
           ${isFav?'❤️ В улюблених':'🤍 В улюблені'}
         </button>
+        <button class="m-btn-wl ${isWL?'saved':''}" id="modal-wl-btn" onclick="toggleWatchLaterModal(${id},'${type}')">
+          ${isWL?'🕐 Збережено':'🕐 Дивитись пізніше'}
+        </button>
+        ${isWtch?`<button class="m-btn-wl saved" style="pointer-events:none;">✅ Переглянуто</button>`:''}
       </div>
     </div>`;
 
@@ -890,6 +913,9 @@ function loadPlayer() {
   const src=currentModalType==='tv'
     ?p.url(currentModalId,currentSeason,currentEpisode)
     :p.url(currentModalId);
+
+  // Позначити як переглянуте при запуску плеєра
+  markWatched(currentModalId, currentModalType);
 
   iframe.src='';
   setTimeout(()=>{
@@ -942,62 +968,177 @@ function closeMovieModal() {
 // =====================================================================
 // FAVORITES
 // =====================================================================
-const FAV_KEY='kb_favorites';
-function getFavs(){ try{return JSON.parse(localStorage.getItem(FAV_KEY)||'[]');}catch{return[];} }
-function isFavorite(id){ return getFavs().some(f=>f.id===id); }
-function toggleFav(id, type, btn) {
-  const user=getUser();
-  if(!user){openAuth('login');showToast('Увійдіть щоб зберігати улюблені');return;}
-  let favs=getFavs();
-  const idx=favs.findIndex(f=>f.id===id);
-  if(idx>=0){favs.splice(idx,1);showToast('Видалено з улюблених');}
-  else{
-    // fetch minimal info
-    tmdb(`/${type}/${id}`).then(data=>{
-      if(data){favs.push({id:data.id,type,title:data.title||data.name,poster:data.poster_path,rating:data.vote_average,year:(data.release_date||data.first_air_date||'').slice(0,4)});localStorage.setItem(FAV_KEY,JSON.stringify(favs));}
-    });
-    showToast('Додано до улюблених ❤️');
-  }
-  localStorage.setItem(FAV_KEY,JSON.stringify(favs));
-  if(btn){const f=favs.some(x=>x.id===id);btn.classList.toggle('faved',f);btn.textContent=f?'❤️':'🤍';}
-}
-function toggleFavModal(id,type){
-  const user=getUser();
-  if(!user){openAuth('login');showToast('Увійдіть щоб зберігати улюблені');return;}
-  let favs=getFavs();
-  const idx=favs.findIndex(f=>f.id===id);
-  const btn=document.getElementById('modal-fav-btn');
-  if(idx>=0){favs.splice(idx,1);if(btn){btn.className='m-btn-fav';btn.innerHTML='🤍 В улюблені';}showToast('Видалено з улюблених');}
-  else{
-    tmdb(`/${type}/${id}`).then(data=>{
-      if(data){favs.push({id:data.id,type,title:data.title||data.name,poster:data.poster_path,rating:data.vote_average,year:(data.release_date||data.first_air_date||'').slice(0,4)});localStorage.setItem(FAV_KEY,JSON.stringify(favs));}
-    });
-    if(btn){btn.className='m-btn-fav faved';btn.innerHTML='❤️ В улюблених';}
-    showToast('Додано до улюблених ❤️');
-  }
-  localStorage.setItem(FAV_KEY,JSON.stringify(favs));
+// LIBRARY — Firestore /users/{uid}/library subcollection
+// =====================================================================
+let libraryCache = {}; // { "tmdbId": { favorite, watchLater, watched, title, poster, ... } }
+let libUnsubscribe = null;
+let currentLibTab = 'fav';
+
+function initLibrary() {
+  if (libUnsubscribe) { libUnsubscribe(); libUnsubscribe = null; }
+  const user = currentUser;
+  if (!user || !db) { _loadLibLS(); return; }
+  libUnsubscribe = db.collection('users').doc(user.uid).collection('library')
+    .onSnapshot(snap => {
+      libraryCache = {};
+      snap.docs.forEach(d => { libraryCache[d.id] = { ...d.data(), _docId: d.id }; });
+      refreshCardFavButtons();
+      // Оновити відкриту бібліотеку
+      if (document.getElementById('lib-section').style.display !== 'none') renderLibGrid(currentLibTab);
+    }, () => { _loadLibLS(); });
 }
 
-function showFavorites() {
-  document.getElementById('fav-section').style.display='block';
-  document.getElementById('home-content').style.display='none';
-  document.getElementById('srch-sec').style.display='none';
-  const favs=getFavs();
-  const grid=document.getElementById('fav-grid');
-  if(!favs.length){grid.innerHTML='<div style="color:var(--muted);padding:30px;grid-column:1/-1;text-align:center;">Тут поки порожньо. Додавайте фільми натиснувши 🤍</div>';return;}
-  grid.innerHTML=favs.map(m=>`<div class="m-card" onclick="openMovie(${m.id},'${m.type||'movie'}',false)">
-    ${m.poster?`<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title}"><div class="c-ph" style="display:none">🎬</div>`:'<div class="c-ph">🎬</div>'}
-    <div class="c-ov"><div class="c-play-btn">▶</div></div>
-    <div class="c-info">
-      <div class="c-title">${m.title||'—'}</div>
-      <div class="c-meta"><span class="c-year">${m.year||'—'}</span><span class="c-rat">⭐ ${m.rating?m.rating.toFixed(1):'—'}</span></div>
-    </div>
-  </div>`).join('');
+function _loadLibLS() {
+  // Міграція зі старого localStorage
+  try {
+    const old = JSON.parse(localStorage.getItem('kb_favorites') || '[]');
+    libraryCache = {};
+    old.forEach(m => { libraryCache[String(m.id)] = { ...m, favorite: true, watchLater: false, watched: false }; });
+  } catch {}
 }
-function showHistory(){showToast('Історія перегляду в розробці...');}
+
+function isInLib(id, field) {
+  const item = libraryCache[String(id)];
+  return item ? !!item[field] : false;
+}
+function isFavorite(id)  { return isInLib(id, 'favorite'); }
+function isWatchLater(id){ return isInLib(id, 'watchLater'); }
+function isWatched(id)   { return isInLib(id, 'watched'); }
+
+async function _setLibField(id, type, field, value) {
+  const user = currentUser;
+  if (!user) { openAuth('login'); showToast('Увійдіть для використання бібліотеки'); return; }
+  const docId = String(id);
+  // Оптимістичне оновлення
+  if (!libraryCache[docId]) libraryCache[docId] = {};
+  libraryCache[docId][field] = value;
+
+  if (!db) { return; }
+
+  const ref = db.collection('users').doc(user.uid).collection('library').doc(docId);
+  const cur = libraryCache[docId] || {};
+  const allFalse = !cur.favorite && !cur.watchLater && !cur.watched;
+
+  try {
+    if (allFalse) {
+      await ref.delete();
+      delete libraryCache[docId];
+    } else {
+      // Якщо метадані ще не завантажені — підтягнути з TMDB
+      if (!cur.title) {
+        const data = await tmdb(`/${type}/${id}`).catch(() => null);
+        if (data) {
+          libraryCache[docId] = {
+            ...libraryCache[docId],
+            id: data.id, type,
+            title:  data.title || data.name || '',
+            poster: data.poster_path || '',
+            rating: data.vote_average || 0,
+            year:   (data.release_date || data.first_air_date || '').slice(0, 4),
+            updatedAt: new Date().toISOString()
+          };
+        }
+      } else {
+        libraryCache[docId].updatedAt = new Date().toISOString();
+      }
+      await ref.set(libraryCache[docId], { merge: true });
+    }
+  } catch(e) { console.error('Library write error', e); }
+}
+
+function toggleFav(id, type, btn) {
+  if (!getUser()) { openAuth('login'); showToast('Увійдіть щоб зберігати улюблені'); return; }
+  const was = isFavorite(id);
+  _setLibField(id, type, 'favorite', !was);
+  if (btn) { btn.classList.toggle('faved', !was); btn.textContent = !was ? '❤️' : '🤍'; }
+  showToast(!was ? 'Додано до улюблених ❤️' : 'Видалено з улюблених');
+}
+
+function toggleFavModal(id, type) {
+  if (!getUser()) { openAuth('login'); showToast('Увійдіть щоб зберігати улюблені'); return; }
+  const was = isFavorite(id);
+  _setLibField(id, type, 'favorite', !was);
+  const btn = document.getElementById('modal-fav-btn');
+  if (btn) { btn.className = 'm-btn-fav' + (!was ? ' faved' : ''); btn.innerHTML = !was ? '❤️ В улюблених' : '🤍 В улюблені'; }
+  showToast(!was ? 'Додано до улюблених ❤️' : 'Видалено з улюблених');
+}
+
+function toggleWatchLaterModal(id, type) {
+  if (!getUser()) { openAuth('login'); showToast('Увійдіть щоб зберігати список'); return; }
+  const was = isWatchLater(id);
+  _setLibField(id, type, 'watchLater', !was);
+  const btn = document.getElementById('modal-wl-btn');
+  if (btn) { btn.className = 'm-btn-wl' + (!was ? ' saved' : ''); btn.innerHTML = !was ? '🕐 Збережено' : '🕐 Дивитись пізніше'; }
+  showToast(!was ? 'Додано до "Дивитись пізніше" 🕐' : 'Видалено зі списку');
+}
+
+function markWatched(id, type) {
+  if (!getUser() || isWatched(id)) return;
+  _setLibField(id, type, 'watched', true);
+}
+
+function refreshCardFavButtons() {
+  document.querySelectorAll('[data-fav-id]').forEach(btn => {
+    const f = isFavorite(btn.dataset.favId);
+    btn.classList.toggle('faved', f);
+    btn.textContent = f ? '❤️' : '🤍';
+  });
+}
+
+// ---- Library UI ----
+function showLibrary(tab = 'fav') {
+  currentLibTab = tab;
+  document.getElementById('lib-section').style.display = 'block';
+  document.getElementById('home-content').style.display = 'none';
+  document.getElementById('srch-sec').style.display = 'none';
+  switchLibTab(tab);
+}
+
+function switchLibTab(tab) {
+  currentLibTab = tab;
+  ['fav','wl','watched'].forEach(t => {
+    document.getElementById('lib-tab-'+t).classList.toggle('act', t === tab);
+  });
+  renderLibGrid(tab);
+}
+
+function renderLibGrid(tab) {
+  const field = tab === 'fav' ? 'favorite' : tab === 'wl' ? 'watchLater' : 'watched';
+  const items = Object.values(libraryCache).filter(m => m[field]);
+  const grid = document.getElementById('lib-grid');
+
+  const emptyMsg = {
+    fav:     { icon:'❤️', text:'Тут поки порожньо.<br>Натисніть 🤍 на будь-якому фільмі, щоб додати.' },
+    wl:      { icon:'🕐', text:'Тут поки порожньо.<br>Натисніть "Дивитись пізніше" у картці фільму.' },
+    watched: { icon:'✅', text:'Тут поки порожньо.<br>Фільми з'являються тут коли ви починаєте перегляд.' }
+  }[tab];
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="lib-empty"><span>${emptyMsg.icon}</span>${emptyMsg.text}</div>`;
+    return;
+  }
+
+  // Сортування: найновіші зверху
+  items.sort((a,b) => (b.updatedAt||'') > (a.updatedAt||'') ? 1 : -1);
+
+  grid.innerHTML = items.map(m => {
+    const type = m.type || 'movie';
+    const wtch = isWatched(m.id) ? '<div class="watched-badge">✅ Переглянуто</div>' : '';
+    return `<div class="m-card" onclick="openMovie(${m.id},'${type}',false)">
+      ${m.poster ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title||''}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>` : '<div class="c-ph">🎬</div>'}
+      <div class="c-ov"><div class="c-play-btn">▶</div></div>
+      ${wtch}
+      <button class="c-fav ${isFavorite(m.id)?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${type}',this)">${isFavorite(m.id)?'❤️':'🤍'}</button>
+      <div class="c-info">
+        <div class="c-title">${m.title||'—'}</div>
+        <div class="c-meta"><span class="c-year">${m.year||'—'}</span><span class="c-rat">⭐ ${m.rating?Number(m.rating).toFixed(1):'—'}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 function showHome(){
-  document.getElementById('fav-section').style.display='none';
+  document.getElementById('lib-section').style.display='none';
   document.getElementById('home-content').style.display='block';
   document.getElementById('srch-sec').style.display='none';
 }
@@ -1022,6 +1163,12 @@ if (auth) {
         const doc = await db.collection('users').doc(user.uid).get();
         if (doc.exists) currentUserRole = doc.data().role || 'user';
       } catch(e) {}
+      initLibrary(); // запускаємо Firestore listener для бібліотеки
+    } else {
+      // Вийшов — зупинити listener і очистити кеш
+      if (libUnsubscribe) { libUnsubscribe(); libUnsubscribe = null; }
+      libraryCache = {};
+      refreshCardFavButtons();
     }
     updateAuthUI();
   });
@@ -1165,7 +1312,7 @@ async function doSearch(){
   if(!q){clearSearch();return;}
   document.getElementById('srch-sec').style.display='block';
   document.getElementById('home-content').style.display='none';
-  document.getElementById('fav-section').style.display='none';
+  document.getElementById('lib-section').style.display='none';
   const grid=document.getElementById('srch-grid');
   document.getElementById('srch-title').textContent=`🔍 "${q}"`;
   grid.innerHTML='<div class="sk-card"><div class="sk-poster"></div></div>'.repeat(6);
