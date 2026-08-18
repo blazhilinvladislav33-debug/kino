@@ -1204,7 +1204,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
             <div class="spin"></div>
             <div style="color:var(--muted);font-size:13px;">Завантаження відео...</div>
           </div>
-          <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="opacity:0;transition:opacity .3s;"></iframe>
+          <iframe id="player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" referrerpolicy="no-referrer-when-downgrade" style="opacity:0;transition:opacity .3s;"></iframe>
         </div>
         ${dubNote}
         <div style="color:var(--dim);font-size:11px;margin-top:8px;">Якщо відео не завантажилось — спробуйте інший сервер</div>
