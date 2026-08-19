@@ -583,9 +583,9 @@
     </div>
     <div class="hdr-right">
       <div class="lang-sw" id="lang-sw">
-        <button class="lang-btn act" id="lbtn-uk" onclick="setSiteLang('uk')">UA</button>
-        <button class="lang-btn" id="lbtn-ru" onclick="setSiteLang('ru')">RU</button>
-        <button class="lang-btn" id="lbtn-en" onclick="setSiteLang('en')">EN</button>
+        <button class="lang-btn act" id="lbtn-uk" onclick="setSiteLang('uk')">🇺🇦 UA</button>
+        <button class="lang-btn" id="lbtn-ru" onclick="setSiteLang('ru')">🚫 RU</button>
+        <button class="lang-btn" id="lbtn-en" onclick="setSiteLang('en')">🇬🇧 EN</button>
       </div>
       <button id="pwa-install-btn" class="btn-sm" onclick="pwaInstall()" style="display:none;align-items:center;gap:5px;" title="Встановити додаток">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -1171,20 +1171,17 @@ function loadFallback() {
 }
 
 // =====================================================================
-// TMDB API — multiple keys with rotation
-// =====================================================================
-// GOOGLE ANALYTICS 4 — helper
+// TMDB API
 // =====================================================================
 function gaEvent(name, params) {
   try { if(typeof gtag === 'function') gtag('event', name, params || {}); } catch(e) {}
 }
 
-// =====================================================================
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 const IMG = 'https://image.tmdb.org/t/p/';
 let keyIdx = 0;
 
-// Запасний ключ TMDB — вставте сюди свій ключ, щоб сайт завжди працював на мобільних
+// Запасний ключ TMDB
 const TMDB_FALLBACK_KEY = '04c35731a5ee918f014970082a0088b1';
 
 function getKeys() {
@@ -1198,6 +1195,7 @@ let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
 function getSiteLangParam() {
   return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA';
 }
+
 function setSiteLang(lang) {
   siteLang = lang;
   localStorage.setItem('kb_site_lang', lang);
@@ -1206,12 +1204,20 @@ function setSiteLang(lang) {
     const btn = document.getElementById('lbtn-' + l);
     if (btn) btn.classList.toggle('act', l === lang);
   });
-  // Перезавантажити контент з новою мовою
-  if (dbReady) initSite();
+  
+  // Перезавантажити контент з новою мовою миттєво для відкритого вікна
+  if (dbReady) {
+    initSite();
+    if (document.getElementById('srch-sec').style.display === 'block') doSearch(srchFilter);
+    if (document.getElementById('cat-section').style.display === 'block') applyCatFilters();
+    if (currentModalId && document.getElementById('movie-modal').classList.contains('open')) {
+      openMovie(currentModalId, currentModalType, false, false);
+    }
+  }
 }
 
 // =====================================================================
-// MONETAG — динамічне завантаження скрипту реклами
+// MONETAG
 // =====================================================================
 let _monetagLoaded = false;
 function loadMonetag(publisherId) {
@@ -1225,7 +1231,7 @@ function loadMonetag(publisherId) {
 }
 
 // =====================================================================
-// TMDB CACHE — localStorage з TTL 4 години
+// TMDB CACHE
 // =====================================================================
 const TMDB_CACHE_TTL    = 4 * 60 * 60 * 1000;
 const TMDB_CACHE_PREFIX = 'kb_tc_';
@@ -1321,17 +1327,16 @@ const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).joi
 
 // =====================================================================
 // PLAYERS — COLLAPS IS NOW THE MAIN PLAYER
-// Якщо Collaps надав вам персональний домен, замініть "api.collaps.org" на ваш домен.
 // =====================================================================
 const MOVIE_PLAYERS = [
-  { id:'collaps', name:'Collaps (Основний)', badge:'4K', url: (id, imdb, lang) => imdb ? `https://api.collaps.org/embed/imdb/${imdb}` : `https://api.collaps.org/embed/tmdb/${id}` },
-  { id:'vs1',     name:'Резерв 1',           badge:'HD', url: (id, imdb, lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
-  { id:'vs3',     name:'Резерв 2',           badge:'',   url: (id, imdb, lang) => `https://vidlink.pro/movie/${id}?autoplay=true` }
+  { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb, lang) => imdb ? `https://api.collaps.org/embed/imdb/${imdb}` : `https://api.collaps.org/embed/tmdb/${id}` },
+  { id:'vs1',     name:'Плеєр 2', badge:'HD', url: (id, imdb, lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+  { id:'vs3',     name:'Плеєр 3', badge:'',   url: (id, imdb, lang) => `https://vidlink.pro/movie/${id}?autoplay=true` }
 ];
 const TV_PLAYERS = [
-  { id:'collaps', name:'Collaps (Основний)', badge:'4K', url: (id, imdb, s, e, lang) => imdb ? `https://api.collaps.org/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.collaps.org/embed/tmdb/${id}?season=${s}&episode=${e}` },
-  { id:'vs1',     name:'Резерв 1',           badge:'HD', url: (id, imdb, s, e, lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
-  { id:'vs3',     name:'Резерв 2',           badge:'',   url: (id, imdb, s, e, lang) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` }
+  { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb, s, e, lang) => imdb ? `https://api.collaps.org/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.collaps.org/embed/tmdb/${id}?season=${s}&episode=${e}` },
+  { id:'vs1',     name:'Плеєр 2', badge:'HD', url: (id, imdb, s, e, lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+  { id:'vs3',     name:'Плеєр 3', badge:'',   url: (id, imdb, s, e, lang) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` }
 ];
 
 const DUBS = [
@@ -1450,12 +1455,10 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   modal.classList.add('open');
   content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Завантаження...</div>';
 
-  // ЗАПИТУЄМО ДОДАТКОВО external_ids ЩОБ ОТРИМАТИ IMDB_ID ДЛЯ COLLAPS
   const ep=type==='tv'?`/tv/${id}`:`/movie/${id}`;
   const data=await tmdb(ep,{append_to_response:'videos,seasons,credits,external_ids'});
   if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Помилка завантаження</div>';return;}
 
-  // Зберігаємо IMDb ID для плеєра
   currentImdbId = data.imdb_id || (data.external_ids ? data.external_ids.imdb_id : '') || '';
 
   const _vids    = (data.videos && data.videos.results) || [];
@@ -1573,7 +1576,7 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
       <!-- CAST -->
       ${_castHtml}
 
-      <!-- SIMILAR (завантажується асинхронно) -->
+      <!-- SIMILAR -->
       <div id="modal-sim"></div>
       
       <!-- COMMENTS -->
@@ -1646,7 +1649,6 @@ function _doLoadPlayer() {
   if(currentPlayer >= players.length) currentPlayer = 0;
   const p=players[currentPlayer];
   
-  // ПЕРЕДАЄМО IMDB ID В ПЛЕЄР COLLAPS
   const src=currentModalType==='tv'
     ?p.url(currentModalId, currentImdbId, currentSeason, currentEpisode, currentLang)
     :p.url(currentModalId, currentImdbId, currentLang);
