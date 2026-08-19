@@ -66,9 +66,7 @@
   <link rel="preconnect" href="https://api.themoviedb.org">
   <link rel="preconnect" href="https://image.tmdb.org">
   <link rel="preconnect" href="https://www.gstatic.com">
-  <link rel="dns-prefetch" href="https://vidsrc.to">
-  <link rel="dns-prefetch" href="https://vidsrc.xyz">
-  <link rel="dns-prefetch" href="https://vidlink.pro">
+  <link rel="dns-prefetch" href="https://api.collaps.org">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -1214,7 +1212,6 @@ function setSiteLang(lang) {
 
 // =====================================================================
 // MONETAG — динамічне завантаження скрипту реклами
-// Якщо в Firestore є ads/__config__.monetagId — скрипт вантажиться автоматично
 // =====================================================================
 let _monetagLoaded = false;
 function loadMonetag(publisherId) {
@@ -1228,11 +1225,11 @@ function loadMonetag(publisherId) {
 }
 
 // =====================================================================
-// TMDB CACHE — localStorage з TTL 4 години (швидше завантаження)
+// TMDB CACHE — localStorage з TTL 4 години
 // =====================================================================
-const TMDB_CACHE_TTL    = 4 * 60 * 60 * 1000; // 4 год у мс
+const TMDB_CACHE_TTL    = 4 * 60 * 60 * 1000;
 const TMDB_CACHE_PREFIX = 'kb_tc_';
-const TMDB_CACHE_MAX    = 100; // максимальна кількість записів
+const TMDB_CACHE_MAX    = 100;
 
 function _tcKey(ep, params) {
   const p = { ...params, _l: getSiteLangParam() };
@@ -1252,7 +1249,6 @@ function _tcGet(key) {
 
 function _tcSet(key, data) {
   try {
-    // Обмежити розмір кешу — видаляти найстаріші записи
     const allKeys = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
@@ -1272,7 +1268,6 @@ function _tcSet(key, data) {
   } catch {}
 }
 
-// Очистити застарілий кеш при запуску (не гальмує завантаження)
 function _cleanTmdbCache() {
   try {
     const toDelete = [];
@@ -1287,13 +1282,12 @@ function _cleanTmdbCache() {
     toDelete.forEach(k => localStorage.removeItem(k));
   } catch {}
 }
-setTimeout(_cleanTmdbCache, 3000); // через 3 с після старту
+setTimeout(_cleanTmdbCache, 3000);
 
 async function tmdb(ep, params={}) {
   const keys = getKeys();
   if (!keys.length) return null;
 
-  // Кеш — не кешуємо пошук (завжди актуальні результати)
   const noCache = ep.includes('/search/');
   if (!noCache) {
     const ck = _tcKey(ep, params);
@@ -1326,39 +1320,20 @@ const GM = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'К
 const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).join(', ') : '—';
 
 // =====================================================================
-// PLAYERS
+// PLAYERS — COLLAPS IS NOW THE MAIN PLAYER
+// Якщо Collaps надав вам персональний домен, замініть "api.collaps.org" на ваш домен.
 // =====================================================================
-// lang codes: '' = auto, 'uk' = ukrainian, 'en' = english
 const MOVIE_PLAYERS = [
-  { id:'vs1',  name:'Плеєр 1',  badge:'',   url: (id,lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
-  { id:'vs2',  name:'Плеєр 2',  badge:'4K', url: (id,lang) => `https://vidsrc.xyz/embed/movie?tmdb=${id}&autoplay=1${lang?'&ds_lang='+lang:''}` },
-  { id:'vs3',  name:'Плеєр 3',  badge:'HD', url: (id,lang) => `https://vidlink.pro/movie/${id}?autoplay=true` },
-  { id:'vsm',  name:'Плеєр 4',  badge:'',   url: (id,lang) => `https://vidsrc.me/embed/movie?tmdb=${id}` },
-  { id:'vsp',  name:'Плеєр 5',  badge:'',   url: (id,lang) => `https://vidsrc.pro/embed/movie/${id}` },
-  { id:'2em',  name:'Плеєр 6',  badge:'',   url: (id,lang) => `https://www.2embed.cc/embed/${id}` },
-  { id:'mapi', name:'Плеєр 7',  badge:'',   url: (id,lang) => `https://moviesapi.club/movie/${id}` },
-  { id:'vsy',  name:'Плеєр 8',  badge:'HD', url: (id,lang) => `https://player.videasy.net/movie/${id}` },
-  { id:'blk',  name:'Плеєр 9',  badge:'',   url: (id,lang) => `https://blackvid.space/embed/movie/${id}` },
-  { id:'emb',  name:'Плеєр 10', badge:'',   url: (id,lang) => `https://www.embedder.online/embed/movie/${id}` },
-  { id:'em4',  name:'Плеєр 11', badge:'',   url: (id,lang) => `https://embed.su/embed/movie/${id}` },
-  { id:'em5',  name:'Плеєр 12', badge:'',   url: (id,lang) => `https://multiembed.mov/?video_id=${id}&tmdb=1${lang?'&lang='+lang:''}` },
-  { id:'em6',  name:'Плеєр 13', badge:'',   url: (id,lang) => `https://autoembed.co/embed/movie/${id}` },
+  { id:'collaps', name:'Collaps (Основний)', badge:'4K', url: (id, imdb, lang) => imdb ? `https://api.collaps.org/embed/imdb/${imdb}` : `https://api.collaps.org/embed/tmdb/${id}` },
+  { id:'vs1',     name:'Резерв 1',           badge:'HD', url: (id, imdb, lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+  { id:'vs3',     name:'Резерв 2',           badge:'',   url: (id, imdb, lang) => `https://vidlink.pro/movie/${id}?autoplay=true` }
 ];
 const TV_PLAYERS = [
-  { id:'vs1',  name:'Плеєр 1',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
-  { id:'vs2',  name:'Плеєр 2',  badge:'4K', url: (id,s,e,lang) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}&autoplay=1${lang?'&ds_lang='+lang:''}` },
-  { id:'vs3',  name:'Плеєр 3',  badge:'HD', url: (id,s,e,lang) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
-  { id:'vsm',  name:'Плеєр 4',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` },
-  { id:'vsp',  name:'Плеєр 5',  badge:'',   url: (id,s,e,lang) => `https://vidsrc.pro/embed/tv/${id}/${s}/${e}` },
-  { id:'2em',  name:'Плеєр 6',  badge:'',   url: (id,s,e,lang) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
-  { id:'mapi', name:'Плеєр 7',  badge:'',   url: (id,s,e,lang) => `https://moviesapi.club/tv/${id}-${s}-${e}` },
-  { id:'vsy',  name:'Плеєр 8',  badge:'HD', url: (id,s,e,lang) => `https://player.videasy.net/tv/${id}/${s}/${e}` },
-  { id:'blk',  name:'Плеєр 9',  badge:'',   url: (id,s,e,lang) => `https://blackvid.space/embed/tv/${id}/${s}/${e}` },
-  { id:'emb',  name:'Плеєр 10', badge:'',   url: (id,s,e,lang) => `https://www.embedder.online/embed/tv/${id}/${s}/${e}` },
-  { id:'em4',  name:'Плеєр 11', badge:'',   url: (id,s,e,lang) => `https://embed.su/embed/tv/${id}/${s}/${e}` },
-  { id:'em5',  name:'Плеєр 12', badge:'',   url: (id,s,e,lang) => `https://autoembed.co/embed/tv/${id}-${s}-${e}` },
+  { id:'collaps', name:'Collaps (Основний)', badge:'4K', url: (id, imdb, s, e, lang) => imdb ? `https://api.collaps.org/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.collaps.org/embed/tmdb/${id}?season=${s}&episode=${e}` },
+  { id:'vs1',     name:'Резерв 1',           badge:'HD', url: (id, imdb, s, e, lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+  { id:'vs3',     name:'Резерв 2',           badge:'',   url: (id, imdb, s, e, lang) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` }
 ];
-// Озвучки — перемикають мову в тих серверах де є підтримка
+
 const DUBS = [
   { code:'',    label:'Авто' },
   { code:'uk',  label:'Укр. Дублювання' },
@@ -1441,32 +1416,28 @@ async function initSite() {
   loadGrid('pop-grid','/movie/popular',{},{txt:'HD',cls:'g'},12);
   loadGrid('top-grid','/movie/top_rated',{},null,12);
   loadGrid('series-grid','/tv/popular',{},{txt:'СЕРІАЛ',cls:'b'},12);
-  // Classics: top rated movies before 2000
   loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,12);
-  // 90s
   loadGrid('nineties-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
-  // 2000s
   loadGrid('noughts-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
 }
 
 // =====================================================================
 // MOVIE MODAL
 // =====================================================================
-let currentModalId=null, currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
+let currentModalId=null, currentImdbId='', currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
 
 async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   if(!id) return;
-  currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1;
+  currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1; currentImdbId='';
   gaEvent('view_item', { item_id: id, item_category: type });
 
   if (pushToHistory) {
       history.pushState({ id, type }, 'Loading...', `/${type}/${id}`);
   }
 
-  // Відновлення прогресу: сервер із localStorage (глобальний) або з Firestore
   currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0');
-  currentLang = '';          // скинути мову при кожному відкритті
-  brokenPlayers.clear();     // скинути список зламаних плеєрів для нового фільму
+  currentLang = '';          
+  brokenPlayers.clear();     
   const _prog = libraryCache[String(id)];
   if (_prog) {
     if (type === 'tv' && _prog.lastSeason)  currentSeason  = _prog.lastSeason;
@@ -1479,18 +1450,18 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   modal.classList.add('open');
   content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Завантаження...</div>';
 
+  // ЗАПИТУЄМО ДОДАТКОВО external_ids ЩОБ ОТРИМАТИ IMDB_ID ДЛЯ COLLAPS
   const ep=type==='tv'?`/tv/${id}`:`/movie/${id}`;
-  const data=await tmdb(ep,{append_to_response:'videos,seasons,credits'});
+  const data=await tmdb(ep,{append_to_response:'videos,seasons,credits,external_ids'});
   if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Помилка завантаження</div>';return;}
 
-  // Трейлер
+  // Зберігаємо IMDb ID для плеєра
+  currentImdbId = data.imdb_id || (data.external_ids ? data.external_ids.imdb_id : '') || '';
+
   const _vids    = (data.videos && data.videos.results) || [];
   const _trailer = _vids.find(v=>v.type==='Trailer'&&v.site==='YouTube') || _vids.find(v=>v.site==='YouTube') || null;
-
-  // Акторський склад
   const _cast = ((data.credits && data.credits.cast) || []).slice(0, 16);
 
-  // Додаткова інформація
   const _budget  = data.budget  && data.budget  > 0 ? '$' + (data.budget /1e6).toFixed(1) + 'M' : null;
   const _revenue = data.revenue && data.revenue > 0 ? '$' + (data.revenue/1e6).toFixed(1) + 'M' : null;
   const _country = (data.production_countries||[]).slice(0,2).map(c=>c.name).join(', ') || null;
@@ -1509,9 +1480,7 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
     ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}" alt="${title}">`
     :`<div class="m-backdrop-ph">🎬</div>`;
 
-  // TV: seasons
   const players = type==='tv' ? TV_PLAYERS : MOVIE_PLAYERS;
-  // Вкладки плеєрів (як на Кіного)
   const tabsHtml = players.map((p,i)=>`<div class="player-tab${i===currentPlayer?' act':''}" onclick="switchPlayer(${i})">${p.name}${p.badge?`<span class="ptab-badge">${p.badge}</span>`:''}</div>`).join('');
 
   let tvSelector='';
@@ -1528,14 +1497,11 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
     </div>`;
   }
 
-  // Зірки рейтингу
   const _starCount = Math.round((data.vote_average||0)/2);
   const starsHtml = Array.from({length:5},(_,i)=>`<svg viewBox="0 0 24 24" width="13" height="13" fill="${i<_starCount?'var(--gold)':'#3a3a3a'}"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`).join('');
-  // Дропдаун озвучки
   const dubDropHtml = DUBS.map(d=>`<div class="dub-option${d.code===currentLang?' act':''}" onclick="selectDub('${d.code}',event)">${d.label}</div>`).join('');
   const curDubLabel = DUBS.find(d=>d.code===currentLang)?.label || 'Авто';
 
-  // Акторський склад HTML
   const _castHtml = _cast.length ? `
     <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div>
     <div class="cast-row">
@@ -1545,7 +1511,6 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
       }).join('')}
     </div>` : '';
 
-  // Додаткова інформація HTML
   const _extraItems=[];
   if(_budget)  _extraItems.push({lbl:'Бюджет',         val:_budget});
   if(_revenue) _extraItems.push({lbl:'Касові збори',     val:_revenue});
@@ -1618,18 +1583,14 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
       </div>
     </div>`;
 
-  // Init player & TV — завантажуємо епізоди потрібного сезону
   if(type==='tv' && data.seasons) {
     const realSeasons = data.seasons.filter(s=>s.season_number>0);
-    // Знайти сезон який треба відновити
     const targetSeason = realSeasons.find(s=>s.season_number===currentSeason) || realSeasons[0];
     if(targetSeason) {
       currentSeason = targetSeason.season_number;
-      // Якщо в API вже є к-сть епізодів — використати
       if(targetSeason.episode_count) {
         loadEpisodes(targetSeason.episode_count);
       } else {
-        // Завантажити з TMDB
         tmdb(`/tv/${id}/season/${currentSeason}`).then(sd=>{
           if(sd&&sd.episodes) loadEpisodes(sd.episodes.length);
         });
@@ -1643,7 +1604,6 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   }
   loadDisqusComments(id, title, type);
 
-  // Схожі фільми/серіали — завантажуємо після рендеру
   tmdb(`/${type}/${id}/similar`,{page:1}).then(sim=>{
     const simEl=document.getElementById('modal-sim');
     if(!simEl||!sim||!sim.results||!sim.results.length) return;
@@ -1673,7 +1633,6 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
 
 function loadPlayer() { _doLoadPlayer(); }
 
-// Відстежуємо зламані плеєри (заблоковані X-Frame-Options)
 const brokenPlayers = new Set();
 
 function _doLoadPlayer() {
@@ -1686,9 +1645,11 @@ function _doLoadPlayer() {
   const players=currentModalType==='tv'?TV_PLAYERS:MOVIE_PLAYERS;
   if(currentPlayer >= players.length) currentPlayer = 0;
   const p=players[currentPlayer];
+  
+  // ПЕРЕДАЄМО IMDB ID В ПЛЕЄР COLLAPS
   const src=currentModalType==='tv'
-    ?p.url(currentModalId,currentSeason,currentEpisode,currentLang)
-    :p.url(currentModalId,currentLang);
+    ?p.url(currentModalId, currentImdbId, currentSeason, currentEpisode, currentLang)
+    :p.url(currentModalId, currentImdbId, currentLang);
 
   savePlayerProgress();
   const thisPlayer = currentPlayer;
@@ -1709,21 +1670,15 @@ function _doLoadPlayer() {
 }
 
 function _schedulePlayerCheck(iframe, playerIdx) {
-  // Перевіряємо через 2.5с — якщо iframe same-origin (заблокований браузером),
-  // позначаємо таб як зламаний і автоматично переходимо до наступного
   setTimeout(()=>{
     try {
       const doc = iframe.contentWindow.document;
       const bodyLen = doc.body ? doc.body.innerHTML.length : 0;
       if (bodyLen < 100) {
-        // Порожня сторінка = embed заблокований X-Frame-Options
         _markPlayerBroken(playerIdx);
         _autoAdvancePlayer();
       }
-    } catch(e) {
-      // Cross-origin = плеєр завантажив свою сторінку (може показувати "недоступно" —
-      // але це вже поведінка самого плеєра, не блокування браузером)
-    }
+    } catch(e) {}
   }, 2500);
 }
 
@@ -1744,38 +1699,31 @@ function _autoAdvancePlayer() {
   }
 }
 
-// Вибір озвучки з дропдауну
 function selectDub(code, e) {
   if(e) e.stopPropagation();
   currentLang = code;
-  // Оновити label у кнопці
   const labelEl = document.getElementById('dub-label-txt');
   if(labelEl) labelEl.textContent = DUBS.find(d=>d.code===code)?.label || 'Авто';
-  // Підсвітити активний пункт
   document.querySelectorAll('.dub-option').forEach(b=>b.classList.toggle('act', b.getAttribute('onclick').includes(`'${code}'`)));
-  // Закрити дропдаун
   const ds = document.getElementById('dub-select');
   if(ds) ds.classList.remove('open');
   _doLoadPlayer();
 }
 
-// Відкрити/закрити дропдаун озвучки
 function toggleDubDropdown(e) {
   if(e) e.stopPropagation();
   const ds = document.getElementById('dub-select');
   if(ds) ds.classList.toggle('open');
 }
 
-// Перемикання вкладки плеєра
 function switchPlayer(idx) {
-  if (brokenPlayers.has(idx)) return; // пропускаємо зламані
+  if (brokenPlayers.has(idx)) return;
   currentPlayer=idx;
   localStorage.setItem('kb_pref_srv', idx);
   document.querySelectorAll('.player-tab').forEach((b,i)=>b.classList.toggle('act',i===idx));
   _doLoadPlayer();
 }
 
-// Поділитись посиланням
 function shareCurrentMovie() {
   const url = window.location.href;
   if(navigator.share){ navigator.share({title:document.title, url}); }
@@ -1784,7 +1732,6 @@ function shareCurrentMovie() {
 
 function changeSeason(s) {
   currentSeason=parseInt(s); currentEpisode=1;
-  // Load episode count for this season
   tmdb(`/tv/${currentModalId}/season/${s}`).then(data=>{
     if(data&&data.episodes) loadEpisodes(data.episodes.length);
   });
@@ -1822,9 +1769,7 @@ function closeMovieModal(pushToHistory = true) {
 // =====================================================================
 // FAVORITES
 // =====================================================================
-// LIBRARY — Firestore /users/{uid}/library subcollection
-// =====================================================================
-let libraryCache = {}; // { "tmdbId": { favorite, watchLater, watched, title, poster, ... } }
+let libraryCache = {}; 
 let libUnsubscribe = null;
 let currentLibTab = 'fav';
 
@@ -1838,13 +1783,11 @@ function initLibrary() {
       snap.docs.forEach(d => { libraryCache[d.id] = { ...d.data(), _docId: d.id }; });
       refreshCardFavButtons();
       renderContinueWatching();
-      // Оновити відкриту бібліотеку
       if (document.getElementById('lib-section').style.display !== 'none') renderLibGrid(currentLibTab);
     }, () => { _loadLibLS(); });
 }
 
 function _loadLibLS() {
-  // Міграція зі старого localStorage
   try {
     const old = JSON.parse(localStorage.getItem('kb_favorites') || '[]');
     libraryCache = {};
@@ -1864,7 +1807,6 @@ async function _setLibField(id, type, field, value) {
   const user = currentUser;
   if (!user) { openAuth('login'); showToast('Увійдіть для використання бібліотеки'); return; }
   const docId = String(id);
-  // Оптимістичне оновлення
   if (!libraryCache[docId]) libraryCache[docId] = {};
   libraryCache[docId][field] = value;
 
@@ -1879,7 +1821,6 @@ async function _setLibField(id, type, field, value) {
       await ref.delete();
       delete libraryCache[docId];
     } else {
-      // Якщо метадані ще не завантажені — підтягнути з TMDB
       if (!cur.title) {
         const data = await tmdb(`/${type}/${id}`).catch(() => null);
         if (data) {
@@ -1932,7 +1873,6 @@ function markWatched(id, type) {
   _setLibField(id, type, 'watched', true);
 }
 
-// Зберегти прогрес плеєра (сервер, сезон, епізод, позначити переглянутим)
 async function savePlayerProgress() {
   if (!currentUser || !db || !currentModalId) return;
   const docId = String(currentModalId);
@@ -1946,10 +1886,8 @@ async function savePlayerProgress() {
     updates.lastSeason  = currentSeason;
     updates.lastEpisode = currentEpisode;
   }
-  // Оновити кеш локально
   if (!libraryCache[docId]) libraryCache[docId] = { id: currentModalId, type: currentModalType };
   Object.assign(libraryCache[docId], updates);
-  // Підтягнути метадані якщо їх ще немає
   if (!libraryCache[docId].title) {
     const data = await tmdb(`/${currentModalType}/${currentModalId}`).catch(()=>null);
     if (data) {
@@ -1961,17 +1899,15 @@ async function savePlayerProgress() {
       });
     }
   }
-  // Записати у Firestore
   try {
     await db.collection('users').doc(currentUser.uid)
       .collection('library').doc(docId)
       .set(libraryCache[docId], { merge: true });
     renderContinueWatching();
     refreshCardFavButtons();
-  } catch(e) { console.error('Progress save error', e); }
+  } catch(e) {}
 }
 
-// Секція "Продовжити перегляд" на головній
 function renderContinueWatching() {
   const sec  = document.getElementById('continue-section');
   const grid = document.getElementById('continue-grid');
@@ -2017,7 +1953,6 @@ function refreshCardFavButtons() {
   });
 }
 
-// ---- Library UI ----
 function showLibrary(tab = 'fav') {
   currentLibTab = tab;
   document.getElementById('lib-section').style.display = 'block';
@@ -2051,7 +1986,6 @@ function renderLibGrid(tab) {
     return;
   }
 
-  // Сортування: найновіші зверху
   items.sort((a,b) => (b.updatedAt||'') > (a.updatedAt||'') ? 1 : -1);
 
   grid.innerHTML = items.map(m => {
@@ -2075,7 +2009,6 @@ function showHome(){
   document.getElementById('cat-section').style.display='none';
   document.getElementById('home-content').style.display='block';
   document.getElementById('srch-sec').style.display='none';
-  // Підсвітити "Головна" в навігації
   document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
   const nh=document.getElementById('nav-home');if(nh)nh.classList.add('act');
   updateBnav('home');
@@ -2089,7 +2022,7 @@ let currentUser = null;
 let currentUserRole = 'user';
 let currentUserSubscribed = false;
 
-try { auth = firebase.auth(); } catch(e) { console.warn('Firebase Auth init failed'); }
+try { auth = firebase.auth(); } catch(e) {}
 
 function getUser() { return currentUser; }
 
@@ -2106,13 +2039,12 @@ if (auth) {
           currentUserSubscribed = doc.data().subscribed === true;
         }
       } catch(e) {}
-      initLibrary(); // запускаємо Firestore listener для бібліотеки
+      initLibrary();
     } else {
-      // Вийшов — зупинити listener і очистити кеш
       if (libUnsubscribe) { libUnsubscribe(); libUnsubscribe = null; }
       libraryCache = {};
       refreshCardFavButtons();
-      renderContinueWatching(); // сховає секцію
+      renderContinueWatching(); 
     }
     updateAuthUI();
   });
@@ -2130,9 +2062,7 @@ function updateAuthUI() {
   }
   const adminLink = document.getElementById('ud-admin');
   if (adminLink) adminLink.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
-  // Перерендерити рекламу (підписка може змінити видимість)
   renderAds();
-  // Sync mobile drawer auth section whenever auth state changes
   updateMobileDrawerAuth();
 }
 
@@ -2274,19 +2204,16 @@ function doLogout() {
 // =====================================================================
 // SEARCH
 // =====================================================================
-// SEARCH — автодоповнення + фільтри + пагінація
-// =====================================================================
 const RECENT_KEY = 'kb_recent_srch';
 let sT = null, acT = null, acIdx = -1, acResults = [];
 let srchPage = 1, srchQuery = '', srchFilter = 'all', srchTotalPages = 1;
 
-// ---- Обробка вводу ----
 function handleSrch(e) {
   const q = document.getElementById('si').value.trim();
   clearTimeout(sT); clearTimeout(acT);
   if (!q) { hideAutocomplete(); return; }
   acT = setTimeout(() => showAutocomplete(q), 280);
-  sT  = setTimeout(() => {}, 600); // пошук лише через Enter або 🔍
+  sT  = setTimeout(() => {}, 600); 
 }
 
 function acKeydown(e) {
@@ -2307,7 +2234,6 @@ function acFocus() {
   else   showRecentSearches();
 }
 
-// ---- Автодоповнення ----
 async function showAutocomplete(q) {
   acIdx = -1;
   const data = await tmdb('/search/multi', { query: q, page: 1 });
@@ -2371,7 +2297,6 @@ function acUseRecent(q) {
   doSearch();
 }
 
-// ---- Останні пошуки ----
 function getRecentSearches() {
   try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch { return []; }
 }
@@ -2386,7 +2311,6 @@ function removeRecent(q) {
   showRecentSearches();
 }
 
-// ---- Пошук ----
 async function doSearch(filter) {
   const q = document.getElementById('si').value.trim();
   if (!q) { clearSearch(); return; }
@@ -2398,7 +2322,6 @@ async function doSearch(filter) {
   else srchFilter = 'all';
   srchQuery = q; srchPage = 1;
 
-  // Оновити активний фільтр
   ['all','movie','tv'].forEach(f => {
     const btn = document.getElementById('sf-'+f);
     if (btn) btn.classList.toggle('act', f === srchFilter);
@@ -2482,7 +2405,7 @@ function showClassics(){
 }
 
 // =====================================================================
-// CATALOG — каталог з фільтрами
+// CATALOG
 // =====================================================================
 let catPage = 1, catTotalPages = 1, catType = 'movie';
 
@@ -2504,7 +2427,6 @@ function showCatalog(preset = {}) {
   document.getElementById('lib-section').style.display = 'none';
   document.getElementById('cat-section').style.display = 'block';
 
-  // Скидуємо поля до дефолтних, потім застосовуємо пресет
   document.getElementById('cat-genre').value   = '';
   document.getElementById('cat-country').value = '';
   document.getElementById('cat-yr-from').value = '';
@@ -2524,7 +2446,6 @@ function showCatalog(preset = {}) {
   document.getElementById('cpt-tv').classList.toggle('act', catType === 'tv');
   document.getElementById('cat-title').textContent = catType === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
 
-  // Підсвітити в навігації
   document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
   const nc = document.getElementById('nav-catalog'); if(nc) nc.classList.add('act');
   updateBnav(catType==='tv' ? 'tv' : 'movies');
@@ -2538,7 +2459,6 @@ function setCatType(type) {
   document.getElementById('cpt-movie').classList.toggle('act', type === 'movie');
   document.getElementById('cpt-tv').classList.toggle('act', type === 'tv');
   document.getElementById('cat-title').textContent = type === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
-  // При зміні типу скидаємо sort опції (для серіалів немає revenue)
   const sortEl = document.getElementById('cat-sort');
   if (type === 'tv' && sortEl.value === 'revenue.desc') sortEl.value = 'popularity.desc';
   applyCatFilters();
@@ -2649,7 +2569,7 @@ function removeCatFilter(key) {
 // ADS — Block 8: video, pop-under, anti-adblock
 // =====================================================================
 function getAds(slot){
-  if (currentUserSubscribed) return []; // підписники не бачать реклами
+  if (currentUserSubscribed) return []; 
   return adsCache.filter(a=>a.active&&a.slot===slot);
 }
 
@@ -2689,7 +2609,6 @@ function buildV(ad){
 }
 
 function renderAds(){
-  // Header
   const hEl=document.getElementById('slot-header');
   if(hEl){
     hEl.innerHTML='';
@@ -2717,16 +2636,12 @@ function renderAds(){
   initPopUnder();
 }
 
-// =====================================================================
-// POP-UNDER — один раз за сесію, на першому кліку
-// =====================================================================
 function initPopUnder(){
   const ads=adsCache.filter(a=>a.active&&a.slot==='popunder');
   if(!ads.length||sessionStorage.getItem('kb_pu'))return;
   const ad=ads[0];
   if(!ad.linkUrl)return;
   document.addEventListener('click',function _pu(e){
-    // Не відкривати popunder при кліку в зоні плеєра
     const wrap=document.getElementById('player-wrap');
     if(wrap&&wrap.contains(e.target)) return;
     document.removeEventListener('click',_pu);
@@ -2737,9 +2652,6 @@ function initPopUnder(){
   });
 }
 
-// =====================================================================
-// ANTI-ADBLOCK
-// =====================================================================
 function detectAdblock(){
   const bait=document.createElement('div');
   bait.className='pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads ad-slot adsbox adsbygoogle ad-banner';
@@ -2751,7 +2663,6 @@ function detectAdblock(){
     const blocked=!h||s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)<0.1;
     try{document.body.removeChild(bait);}catch(e){}
     if(blocked){
-      // Перевіримо чи антиадблок увімкнено в налаштуваннях
       const cfg=adsCache.find(a=>a.slot==='__config__');
       const antiAdblockEnabled=cfg?cfg.antiAdblock:false;
       if(antiAdblockEnabled){
@@ -2762,9 +2673,6 @@ function detectAdblock(){
   },300);
 }
 
-// =====================================================================
-// POPUP AD
-// =====================================================================
 let popCnt=5,popT=null;
 function initPopup(){
   const ads=getAds('popup'); if(!ads.length)return;
@@ -2791,9 +2699,6 @@ function initPopup(){
 }
 function closePopup(){if(popCnt>0)return;clearInterval(popT);document.getElementById('pop-ov').classList.remove('open');}
 
-// =====================================================================
-// TRAILER
-// =====================================================================
 function openTrailer(key) {
   const f = document.getElementById('trailer-frame');
   if (!f) return;
@@ -2805,21 +2710,14 @@ function closeTrailer() {
   document.getElementById('trailer-frame').innerHTML = '';
 }
 
-// =====================================================================
-// UTILS
-// =====================================================================
 let tT=null;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3000);}
 window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('show',scrollY>400);});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();closeTrailer();}});
 
-// =====================================================================
-// START
-// =====================================================================
 window.addEventListener('DOMContentLoaded',()=>{
-  updateAuthUI(); // початковий стан (auth змінить через onAuthStateChanged)
+  updateAuthUI(); 
 
-  // User avatar dropdown — toggle on click (works on touch devices too)
   const av = document.getElementById('user-av');
   if (av) {
     av.addEventListener('click', e => {
@@ -2828,28 +2726,23 @@ window.addEventListener('DOMContentLoaded',()=>{
     });
     document.addEventListener('click', () => av.classList.remove('open'));
   }
-  // Закрити дропдаун озвучки при кліку поза ним
   document.addEventListener('click', () => {
     const ds = document.getElementById('dub-select');
     if(ds) ds.classList.remove('open');
   });
 
-  // Ініціалізація кнопок мови
   ['uk','ru','en'].forEach(l => {
     const btn = document.getElementById('lbtn-' + l);
     if (btn) btn.classList.toggle('act', l === siteLang);
   });
-  initFirestore(); // підключаємо Firestore → після завантаження ключів викликає initSite()
-  setTimeout(detectAdblock, 1500); // перевірка адблоку
-  // Fallback: якщо Firestore не відповів за 5 сек — запустити сайт без ключів
+  initFirestore(); 
+  setTimeout(detectAdblock, 1500); 
   setTimeout(()=>{ if(!dbReady){ dbReady=true; initSite(); } }, 5000);
-  // PWA: реєстрація Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
-      .catch(() => {}); // мовчки ігнорувати якщо SW недоступний
+      .catch(() => {}); 
   }
   
-  // Routing initialization
   window.addEventListener('popstate', (e) => {
     if (e.state && e.state.id) {
       openMovie(e.state.id, e.state.type || 'movie', false, false);
@@ -2865,9 +2758,6 @@ window.addEventListener('DOMContentLoaded',()=>{
   }
 });
 
-// =====================================================================
-// PWA: встановлення (кнопка "Додати на екран")
-// =====================================================================
 let _pwaPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
@@ -2886,9 +2776,6 @@ function pwaInstall() {
   _pwaPrompt.userChoice.then(() => { _pwaPrompt = null; });
 }
 
-// =====================================================================
-// Disqus Comments integration 
-// =====================================================================
 function loadDisqusComments(id, title, type) {
   const pageUrl = window.location.origin + `/${type}/${id}`;
   const pageIdentifier = `${type}_${id}`;
@@ -2914,9 +2801,6 @@ function loadDisqusComments(id, title, type) {
   }
 }
 
-// =====================================================================
-// Block 11: MOBILE MENU + BOTTOM NAV
-// =====================================================================
 function toggleMobileMenu() {
   const drawer = document.getElementById('mob-drawer');
   const ov     = document.getElementById('mob-ov');
@@ -2984,7 +2868,6 @@ function handleBnavProfile() {
   }
 }
 
-// Close drawer on Escape
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeMobileMenu(); });
 </script>
 </body>
