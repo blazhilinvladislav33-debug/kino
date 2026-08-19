@@ -1,0 +1,31 @@
+name: Auto Update Sitemap
+
+on:
+  schedule:
+    # Запуск кожні 2 дні о 03:00 ночі
+    - cron: '0 3 */2 * *'
+  workflow_dispatch: # Дозволяє запустити оновлення вручну кнопкою
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Sitemap Generator
+        run: node generate-sitemap.js
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add sitemap.xml
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update sitemap.xml [skip ci]" && git push)
