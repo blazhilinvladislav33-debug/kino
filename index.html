@@ -255,17 +255,6 @@
 
     /* ===== PLAYER AREA (новий дизайн) ===== */
     .player-section{margin-bottom:20px;}
-    /* ===== PLAYER STUB ===== */
-    .player-stub{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0f0f0f 0%,#1c1c1c 100%);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:4px;position:relative;overflow:hidden;}
-    .player-stub::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(229,9,20,.07) 0%,transparent 70%);}
-    .player-stub-inner{text-align:center;padding:32px 24px;z-index:1;}
-    .player-stub-icon{font-size:52px;line-height:1;margin-bottom:14px;filter:grayscale(.3);}
-    .player-stub-title{font-size:20px;font-weight:700;margin-bottom:10px;color:#fff;}
-    .player-stub-desc{color:var(--muted);font-size:14px;line-height:1.7;max-width:380px;margin:0 auto 18px;}
-    .player-stub-trailer{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s;}
-    .player-stub-trailer:hover{background:var(--ah);}
-    .player-stub-rating{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:14px;color:var(--gold);font-size:15px;font-weight:700;}
-    .player-stub-rating span{color:var(--muted);font-size:12px;font-weight:400;}
     /* Рядок вкладок */
     .player-tabs-row{display:flex;align-items:stretch;background:var(--bg3);border-radius:8px 8px 0 0;border:1px solid var(--border);border-bottom:none;overflow:hidden;}
     .player-tabs{display:flex;flex:1;overflow-x:auto;scrollbar-width:none;}
@@ -1198,7 +1187,7 @@ const IMG = 'https://image.tmdb.org/t/p/';
 let keyIdx = 0;
 
 // Запасний ключ TMDB — вставте сюди свій ключ, щоб сайт завжди працював на мобільних
-const TMDB_FALLBACK_KEY = '';
+const TMDB_FALLBACK_KEY = '04c35731a5ee918f014970082a0088b1';
 
 function getKeys() {
   const k = [...keysCache];
@@ -1465,10 +1454,14 @@ async function initSite() {
 // =====================================================================
 let currentModalId=null, currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
 
-async function openMovie(id, type='movie', autoPlay=false) {
+async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   if(!id) return;
   currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1;
   gaEvent('view_item', { item_id: id, item_category: type });
+
+  if (pushToHistory) {
+      history.pushState({ id, type }, 'Loading...', `/${type}/${id}`);
+  }
 
   // Відновлення прогресу: сервер із localStorage (глобальний) або з Firestore
   currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0');
@@ -1554,7 +1547,7 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
   // Додаткова інформація HTML
   const _extraItems=[];
-  if(_budget)  _extraItems.push({lbl:'Бюджет',          val:_budget});
+  if(_budget)  _extraItems.push({lbl:'Бюджет',         val:_budget});
   if(_revenue) _extraItems.push({lbl:'Касові збори',     val:_revenue});
   if(_country) _extraItems.push({lbl:'Країна',           val:_country});
   if(_studio)  _extraItems.push({lbl:'Студія',           val:_studio});
@@ -1577,18 +1570,23 @@ async function openMovie(id, type='movie', autoPlay=false) {
       <div class="m-genres">${genres}</div>
       <div class="m-desc">${desc}</div>
 
-      <!-- PLAYER STUB — тимчасова заглушка -->
+      <!-- PLAYER -->
       <div class="player-section">
-        <div class="player-stub">
-          <div class="player-stub-inner">
-            <div class="player-stub-icon">🎬</div>
-            <div class="player-stub-rating">
-              ${starsHtml}&nbsp;${rat}<span>&nbsp;(${data.vote_count||0} оцінок)</span>
-            </div>
-            <div class="player-stub-title">Відеоплеєр оновлюється</div>
-            <div class="player-stub-desc">Відеоплеєр тимчасово недоступний — ми працюємо над покращеною версією з підтримкою більшої кількості серверів та кращою якістю зображення.</div>
-            ${_trailer?`<button class="player-stub-trailer" onclick="openTrailer('${_trailer.key}')">Дивитись трейлер</button>`:''}
+        <div class="player-tabs-row">
+          <div class="player-tabs">${tabsHtml}</div>
+          <div class="player-rating-right">★ ${rat} <span>(${data.vote_count||0})</span></div>
+        </div>
+        <div class="player-dub-row">
+          <div class="dub-select" id="dub-select" onclick="toggleDubDropdown(event)">
+            <span id="dub-label-txt">${curDubLabel}</span>
+            <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            <div class="dub-dropdown">${dubDropHtml}</div>
           </div>
+          <button class="player-share-btn" onclick="shareCurrentMovie()" title="Поділитись"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
+        </div>
+        <div class="player-frame-wrap" id="player-wrap">
+          <div class="player-loading" id="player-loading"><div class="spin"></div><div style="color:var(--muted);font-size:13px;margin-top:10px;">Завантаження плеєра...</div></div>
+          <iframe id="player-iframe" allowfullscreen></iframe>
         </div>
         ${tvSelector}
       </div>
@@ -1612,6 +1610,12 @@ async function openMovie(id, type='movie', autoPlay=false) {
 
       <!-- SIMILAR (завантажується асинхронно) -->
       <div id="modal-sim"></div>
+      
+      <!-- COMMENTS -->
+      <div class="comments-section" style="margin-top:24px;border-top:1px solid var(--border);padding-top:20px;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>Коментарі</div>
+        <div id="disqus_thread"></div>
+      </div>
     </div>`;
 
   // Init player & TV — завантажуємо епізоди потрібного сезону
@@ -1633,8 +1637,11 @@ async function openMovie(id, type='movie', autoPlay=false) {
     }
   }
 
-  // Плеєр тимчасово вимкнений (заглушка активна)
-  // _doLoadPlayer();
+  _doLoadPlayer();
+  if (pushToHistory) {
+      history.replaceState({ id, type }, title, `/${type}/${id}`);
+  }
+  loadDisqusComments(id, title, type);
 
   // Схожі фільми/серіали — завантажуємо після рендеру
   tmdb(`/${type}/${id}/similar`,{page:1}).then(sim=>{
@@ -1803,10 +1810,13 @@ function selectEp(n) {
   loadPlayer();
 }
 
-function closeMovieModal() {
+function closeMovieModal(pushToHistory = true) {
   document.getElementById('movie-modal').classList.remove('open');
   const iframe=document.getElementById('player-iframe');
   if(iframe) iframe.src='';
+  if (pushToHistory && window.location.pathname !== '/') {
+      history.pushState(null, '', '/');
+  }
 }
 
 // =====================================================================
@@ -2610,7 +2620,7 @@ function renderCatChips() {
   const sort     = document.getElementById('cat-sort').value;
 
   const chips = [];
-  if (genre)   chips.push({ key:'genre',   label: GENRE_NAMES[genre]     || genre });
+  if (genre)   chips.push({ key:'genre',   label: GENRE_NAMES[genre]      || genre });
   if (country) chips.push({ key:'country', label: COUNTRY_NAMES[country] || country });
   if (yearFrom && yearTo)  chips.push({ key:'year', label: `${yearFrom}–${yearTo}` });
   else if (yearFrom)       chips.push({ key:'year', label: `Від ${yearFrom}` });
@@ -2838,6 +2848,21 @@ window.addEventListener('DOMContentLoaded',()=>{
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
       .catch(() => {}); // мовчки ігнорувати якщо SW недоступний
   }
+  
+  // Routing initialization
+  window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.id) {
+      openMovie(e.state.id, e.state.type || 'movie', false, false);
+    } else {
+      closeMovieModal(false);
+    }
+  });
+  
+  const path = window.location.pathname;
+  const match = path.match(/\/(movie|tv)\/(\d+)/);
+  if (match && match[2]) {
+    setTimeout(() => { openMovie(match[2], match[1], false, false); }, 500);
+  }
 });
 
 // =====================================================================
@@ -2859,6 +2884,34 @@ function pwaInstall() {
   if (!_pwaPrompt) return;
   _pwaPrompt.prompt();
   _pwaPrompt.userChoice.then(() => { _pwaPrompt = null; });
+}
+
+// =====================================================================
+// Disqus Comments integration 
+// =====================================================================
+function loadDisqusComments(id, title, type) {
+  const pageUrl = window.location.origin + `/${type}/${id}`;
+  const pageIdentifier = `${type}_${id}`;
+  if (typeof DISQUS !== 'undefined') {
+    DISQUS.reset({
+      reload: true,
+      config: function () {
+        this.page.identifier = pageIdentifier;
+        this.page.url = pageUrl;
+        this.page.title = title;
+      }
+    });
+  } else {
+    window.disqus_config = function () {
+      this.page.url = pageUrl;
+      this.page.identifier = pageIdentifier;
+      this.page.title = title;
+    };
+    const d = document, s = d.createElement('script');
+    s.src = 'https://kinobaza-site.disqus.com/embed.js'; 
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  }
 }
 
 // =====================================================================
