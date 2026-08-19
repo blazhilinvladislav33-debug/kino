@@ -588,7 +588,6 @@
     </nav>
     <div class="srch-wrap">
       <div class="srch">
-        <!-- Красива іконка пошуку -->
         <svg class="srch-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         <input type="text" id="si" data-i18n-ph="search_ph" placeholder="Пошук фільмів..."
           autocomplete="off" spellcheck="false"
@@ -600,7 +599,6 @@
       <div id="ac-drop"></div>
     </div>
     <div class="hdr-right">
-      <!-- Красивий Language Dropdown -->
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
         <span id="curr-lang-lbl"><span class="f">🇺🇦</span><span class="t"> UA</span></span>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
@@ -1155,7 +1153,7 @@ const TRANSLATIONS = {
     flt_type: "Тип", flt_genre: "Жанр", flt_country: "Страна", flt_year: "Год", flt_rating: "Рейтинг", flt_sort: "Сортировка",
     btn_apply: "Применить", btn_reset: "Сбросить", ph_from: "От", ph_to: "До",
     lib_title: "Моя библиотека", btn_back: "← Назад",
-    h_cont: "Продолжить просмотр", btn_all_watched: "Все просмотреленные →",
+    h_cont: "Продолжить просмотр", btn_all_watched: "Все просмотренные →",
     h_new: "Новые фильмы", all: "Все →", h_pop: "Популярные", h_top: "Топ рейтинг", h_tv: "Сериалы", h_classic: "Классика кино", h_90s: "Кино 90-х", h_00s: "Кино 2000-х",
     ft_genres: "Жанры", ft_nav: "Навигация", ft_serv: "Сервис",
     btn_search: "Поиск", btn_profile: "Профиль",
@@ -1204,7 +1202,7 @@ function updateUIStrings(lang) {
 }
 
 // =====================================================================
-// FIREBASE CONFIG — вставте ваші дані з Firebase Console
+// FIREBASE CONFIG
 // =====================================================================
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
@@ -1306,25 +1304,20 @@ function setSiteLang(lang, e) {
   localStorage.setItem('kb_site_lang', lang);
   gaEvent('select_content', { content_type: 'language', item_id: lang });
   
-  // Закриваємо меню
   document.getElementById('lang-dd-menu').classList.remove('open');
   document.getElementById('lang-dd-wrap').classList.remove('open');
   
-  // Оновлюємо іконку/текст вибраної мови
   const lbl = document.getElementById('curr-lang-lbl');
   if(lbl) {
       lbl.innerHTML = `<span class="f">${LANG_INFO[lang].flag}</span><span class="t">${LANG_INFO[lang].text}</span>`;
   }
 
-  // Оновлюємо активний клас у випадаючому списку
   document.querySelectorAll('.lang-opt').forEach(opt => {
     opt.classList.toggle('act', opt.getAttribute('onclick').includes(`'${lang}'`));
   });
   
-  // Перекладаємо UI
   updateUIStrings(lang);
 
-  // Перезавантажити контент з новою мовою
   if (dbReady) {
     initSite();
     if (document.getElementById('srch-sec').style.display === 'block') doSearch(srchFilter);
@@ -1446,13 +1439,13 @@ const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).joi
 // =====================================================================
 const MOVIE_PLAYERS = [
   { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb, lang) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
-  { id:'vs1',     name:'Плеєр 2', badge:'HD', url: (id, imdb, lang) => `https://vidsrc.to/embed/movie/${id}` },
-  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb, lang) => `https://player.autoembed.cc/embed/movie/${id}` }
+  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', url: (id, imdb, lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb, lang) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` }
 ];
 const TV_PLAYERS = [
   { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb, s, e, lang) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
-  { id:'vs1',     name:'Плеєр 2', badge:'HD', url: (id, imdb, s, e, lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
-  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb, s, e, lang) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}` }
+  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', url: (id, imdb, s, e, lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb, s, e, lang) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` }
 ];
 
 const DUBS = [
@@ -1594,6 +1587,34 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   const isFav = isFavorite(id);
   const isWL  = isWatchLater(id);
   const isWtch= isWatched(id);
+
+  // === ДОДАТИ ЦЕ ДЛЯ SEO ===
+  document.title = `${title} (${year}) — Дивитися онлайн українською | КіноБаза`;
+  let metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) {
+      metaDesc.setAttribute("content", `Дивитися ${type === 'tv' ? 'серіал' : 'фільм'} «${title}» (${year}) онлайн в хорошій якості. ${desc.substring(0, 120)}...`);
+  }
+  let oldSchema = document.getElementById('dynamic-schema');
+  if (oldSchema) oldSchema.remove();
+  let schemaData = {
+    "@context": "https://schema.org",
+    "@type": type === 'tv' ? "TVSeries" : "Movie",
+    "name": title,
+    "image": `${IMG}w500${data.poster_path}`,
+    "description": desc,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": rat,
+      "bestRating": "10",
+      "ratingCount": data.vote_count || 1
+    }
+  };
+  let scriptSchema = document.createElement('script');
+  scriptSchema.type = 'application/ld+json';
+  scriptSchema.id = 'dynamic-schema';
+  scriptSchema.text = JSON.stringify(schemaData);
+  document.head.appendChild(scriptSchema);
+  // === КІНЕЦЬ БЛОКУ ДЛЯ SEO ===
 
   const backdrop=data.backdrop_path
     ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}" alt="${title}">`
@@ -1878,6 +1899,11 @@ function closeMovieModal(pushToHistory = true) {
   document.getElementById('movie-modal').classList.remove('open');
   const iframe=document.getElementById('player-iframe');
   if(iframe) iframe.src='';
+  
+  document.title = "КіноБаза — Дивитись фільми онлайн безкоштовно";
+  let metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute("content", "КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.");
+
   if (pushToHistory && window.location.pathname !== '/') {
       history.pushState(null, '', '/');
   }
