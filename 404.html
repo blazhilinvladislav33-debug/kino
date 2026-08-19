@@ -226,8 +226,8 @@
     .m-card:hover .c-ov{opacity:1;}
     .c-poster{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--bg2);}
     .c-ph{width:100%;aspect-ratio:2/3;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:34px;}
-    .c-ov{position:absolute;inset:0;background:linear-gradient(0,rgba(0,0,0,.92) 0%,rgba(0,0,0,.3) 55%,transparent 100%);opacity:0;transition:opacity .25s;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;}
-    .c-play-btn{width:40px;height:40px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 9px;font-size:15px;box-shadow:0 4px 14px rgba(229,9,20,.5);}
+    .c-ov{position:absolute;inset:0;background:rgba(0,0,0,0.5);opacity:0;transition:opacity .25s;}
+    .c-play-btn{display:none !important;}
     .c-info{padding:9px 10px;}
     .c-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
     .c-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;}
@@ -272,39 +272,31 @@
     .m-gtag{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:12px;padding:3px 9px;border-radius:20px;}
     .m-desc{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:20px;}
 
-    /* ===== PLAYER AREA (ОПТИМІЗОВАНО ПІД МОБІЛЬНІ) ===== */
+    /* ===== PLAYER AREA ===== */
     .player-section{margin-bottom:20px;}
-    .player-tabs-row{display:flex;align-items:stretch;background:var(--bg3);border-radius:8px 8px 0 0;border:1px solid var(--border);border-bottom:none;overflow:hidden;}
+    .player-tabs-row{display:flex;align-items:stretch;justify-content:space-between;background:var(--bg3);border-radius:8px 8px 0 0;border:1px solid var(--border);border-bottom:none;overflow:hidden;}
     .player-tabs{display:flex;flex:1;overflow-x:auto;scrollbar-width:none;}
     .player-tabs::-webkit-scrollbar{display:none;}
     .player-tab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;border-right:1px solid var(--border);display:flex;align-items:center;gap:5px;transition:all .18s;user-select:none;flex-shrink:0;}
     .player-tab:hover{color:#fff;background:rgba(255,255,255,.06);}
     .player-tab.act{background:#fff;color:#111;}
     .player-tab.act .ptab-badge{color:#b8860b;background:rgba(0,0,0,.12);}
-    .player-tab.broken{opacity:.35;text-decoration:line-through;cursor:not-allowed;pointer-events:none;}
+    .player-tab.broken{display:none !important;}
     .ptab-badge{font-size:10px;font-weight:700;color:var(--gold);background:rgba(245,197,24,.15);padding:1px 5px;border-radius:3px;line-height:1.4;}
-    .player-rating-right{display:flex;align-items:center;gap:3px;padding:0 14px;border-left:1px solid var(--border);white-space:nowrap;color:var(--gold);font-size:13px;font-weight:700;}
+    
+    .player-rating-right{display:flex;align-items:center;gap:10px;padding:0 14px;white-space:nowrap;color:var(--gold);font-size:13px;font-weight:700;}
     .player-rating-right span{color:var(--dim);font-size:11px;font-weight:400;}
-    .player-dub-row{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:#161616;border:1px solid var(--border);border-top:1px solid #2e2e2e;border-bottom:none;}
-    .dub-select{position:relative;display:inline-flex;align-items:center;gap:6px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13px;font-weight:500;color:#fff;user-select:none;min-width:155px;}
-    .dub-select svg{width:18px;height:18px;fill:var(--muted);flex-shrink:0;margin-left:auto;transition:transform .2s;}
-    .dub-select.open svg{transform:rotate(180deg);}
-    .dub-dropdown{position:absolute;top:calc(100% + 4px);left:0;min-width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.7);z-index:60;display:none;overflow:hidden;}
-    .dub-select.open .dub-dropdown{display:block;}
-    .dub-option{padding:10px 14px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:background .12s;white-space:nowrap;}
-    .dub-option:hover{background:var(--bg4);color:#fff;}
-    .dub-option.act{color:#fff;background:rgba(229,9,20,.18);}
+    
     .player-share-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:5px;display:flex;align-items:center;border-radius:5px;transition:color .2s;}
     .player-share-btn:hover{color:#fff;}
     
-    /* ІДЕАЛЬНЕ ВІДОБРАЖЕННЯ НА МОБІЛЬНИХ 16:9 */
     .player-frame-wrap{position:relative;width:100%;padding-bottom:56.25%;height:0;background:#000;border:1px solid var(--border);border-radius:0 0 8px 8px;overflow:hidden;}
     .player-frame-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
     
     .player-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;flex-direction:column;gap:10px;z-index:3;}
     .player-loading .spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .ep-selector{margin-bottom:14px;}
+    .ep-selector{margin-bottom:14px; margin-top:14px;}
     .ep-selector h4{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--muted);}
     .ep-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
     .ep-select{background:var(--bg3);border:1px solid var(--border);color:#fff;padding:7px 12px;border-radius:6px;font-size:13px;font-family:inherit;outline:none;cursor:pointer;}
@@ -536,7 +528,7 @@
       .hero{height:240px;margin-bottom:0;}
       .hero-c{padding:18px 16px;}
       .hero-title{font-size:21px;}
-      .hero-desc{-webkit-line-clamp:2;margin-bottom:14px;}
+      .hero-desc{display:none;} /* Ховаємо опис новинок щоб не налізав на кнопки */
       .btn-play{padding:9px 18px;font-size:14px;}
       .btn-info{padding:9px 14px;font-size:13px;}
       main{padding:0 12px;padding-bottom:76px;}
@@ -555,7 +547,7 @@
       .sidebar-ad-col{width:100%;margin-top:0;}
       .player-tab{padding:9px 11px;font-size:12px;}
       .player-rating-right{padding:0 8px;font-size:12px;}
-      .player-dub-row{padding:6px 10px;}
+      .player-tab.broken{display:none !important;}
     }
     @media(max-width:480px){
       .movies-grid{grid-template-columns:repeat(2,1fr);}
@@ -588,6 +580,7 @@
     </nav>
     <div class="srch-wrap">
       <div class="srch">
+        <!-- Красива іконка пошуку -->
         <svg class="srch-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         <input type="text" id="si" data-i18n-ph="search_ph" placeholder="Пошук фільмів..."
           autocomplete="off" spellcheck="false"
@@ -599,6 +592,7 @@
       <div id="ac-drop"></div>
     </div>
     <div class="hdr-right">
+      <!-- Красивий Language Dropdown -->
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
         <span id="curr-lang-lbl"><span class="f">🇺🇦</span><span class="t"> UA</span></span>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
@@ -718,6 +712,7 @@
           <button class="cat-pill"     id="cpt-tv"    onclick="setCatType('tv')" data-i18n="sf_tv">Серіали</button>
         </div>
       </div>
+      <!-- Інші селектори каталогу залиште стандартними (їх значення зазвичай зрозумілі) -->
       <div class="cat-fg">
         <label data-i18n="flt_genre">Жанр</label>
         <select class="cat-sel" id="cat-genre" onchange="applyCatFilters()">
@@ -1435,26 +1430,18 @@ const GM = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'К
 const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).join(', ') : '—';
 
 // =====================================================================
-// PLAYERS — COLLAPS IS NOW THE MAIN PLAYER
+// PLAYERS - COLLAPS & FALLBACKS
 // =====================================================================
 const MOVIE_PLAYERS = [
-  { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb, lang) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
-  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', url: (id, imdb, lang) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
-  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb, lang) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` }
+  { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
+  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', url: (id, imdb) => `https://vidsrc.to/embed/movie/${id}` },
+  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}` }
 ];
 const TV_PLAYERS = [
-  { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb, s, e, lang) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
-  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', url: (id, imdb, s, e, lang) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
-  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb, s, e, lang) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` }
+  { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
+  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', url: (id, imdb, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
+  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}` }
 ];
-
-const DUBS = [
-  { code:'',    label:'Авто' },
-  { code:'uk',  label:'Укр. Дублювання' },
-  { code:'en',  label:'Оригінал (Eng)' },
-  { code:'ru',  label:'Рос. Дубляж' },
-];
-let currentLang = '';
 
 // =====================================================================
 // HERO SLIDER
@@ -1496,7 +1483,7 @@ function card(m, badge) {
   const ph=m.poster_path?`<div class="c-ph" style="display:none">🎬</div>`:`<div class="c-ph">🎬</div>`;
   return `<div class="m-card" onclick="openMovie(${m.id},'${mtype}',false)">
     ${poster}${ph}
-    <div class="c-ov"><div class="c-play-btn">▶</div></div>
+    <div class="c-ov"></div>
     ${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}
     <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)" title="${isFav?'Видалити':'В улюблені'}">${isFav?'❤️':'🤍'}</button>
     <div class="c-info">
@@ -1550,7 +1537,6 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   }
 
   currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0');
-  currentLang = '';          
   brokenPlayers.clear();     
   const _prog = libraryCache[String(id)];
   if (_prog) {
@@ -1637,11 +1623,6 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
     </div>`;
   }
 
-  const _starCount = Math.round((data.vote_average||0)/2);
-  const starsHtml = Array.from({length:5},(_,i)=>`<svg viewBox="0 0 24 24" width="13" height="13" fill="${i<_starCount?'var(--gold)':'#3a3a3a'}"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`).join('');
-  const dubDropHtml = DUBS.map(d=>`<div class="dub-option${d.code===currentLang?' act':''}" onclick="selectDub('${d.code}',event)">${d.label}</div>`).join('');
-  const curDubLabel = DUBS.find(d=>d.code===currentLang)?.label || 'Авто';
-
   const _castHtml = _cast.length ? `
     <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div>
     <div class="cast-row">
@@ -1679,15 +1660,10 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
       <div class="player-section">
         <div class="player-tabs-row">
           <div class="player-tabs">${tabsHtml}</div>
-          <div class="player-rating-right">★ ${rat} <span>(${data.vote_count||0})</span></div>
-        </div>
-        <div class="player-dub-row">
-          <div class="dub-select" id="dub-select" onclick="toggleDubDropdown(event)">
-            <span id="dub-label-txt">${curDubLabel}</span>
-            <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            <div class="dub-dropdown">${dubDropHtml}</div>
+          <div class="player-rating-right" style="display:flex; gap:10px; align-items:center;">
+             <span>★ ${rat} (${data.vote_count||0})</span>
+             <button class="player-share-btn" onclick="shareCurrentMovie()" title="Поділитись" style="padding:0; margin:0;"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
           </div>
-          <button class="player-share-btn" onclick="shareCurrentMovie()" title="Поділитись"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
         </div>
         <div class="player-frame-wrap" id="player-wrap">
           <div class="player-loading" id="player-loading"><div class="spin"></div><div style="color:var(--muted);font-size:13px;margin-top:10px;">Завантаження плеєра...</div></div>
@@ -1786,8 +1762,8 @@ function _doLoadPlayer() {
   const p=players[currentPlayer];
   
   const src=currentModalType==='tv'
-    ?p.url(currentModalId, currentImdbId, currentSeason, currentEpisode, currentLang)
-    :p.url(currentModalId, currentImdbId, currentLang);
+    ?p.url(currentModalId, currentImdbId, currentSeason, currentEpisode)
+    :p.url(currentModalId, currentImdbId);
 
   savePlayerProgress();
   const thisPlayer = currentPlayer;
@@ -1823,7 +1799,10 @@ function _schedulePlayerCheck(iframe, playerIdx) {
 function _markPlayerBroken(idx) {
   brokenPlayers.add(idx);
   const tabs = document.querySelectorAll('.player-tab');
-  if (tabs[idx]) tabs[idx].classList.add('broken');
+  if (tabs[idx]) {
+      tabs[idx].classList.add('broken');
+      tabs[idx].style.display = 'none';
+  }
 }
 
 function _autoAdvancePlayer() {
@@ -1835,23 +1814,6 @@ function _autoAdvancePlayer() {
       return;
     }
   }
-}
-
-function selectDub(code, e) {
-  if(e) e.stopPropagation();
-  currentLang = code;
-  const labelEl = document.getElementById('dub-label-txt');
-  if(labelEl) labelEl.textContent = DUBS.find(d=>d.code===code)?.label || 'Авто';
-  document.querySelectorAll('.dub-option').forEach(b=>b.classList.toggle('act', b.getAttribute('onclick').includes(`'${code}'`)));
-  const ds = document.getElementById('dub-select');
-  if(ds) ds.classList.remove('open');
-  _doLoadPlayer();
-}
-
-function toggleDubDropdown(e) {
-  if(e) e.stopPropagation();
-  const ds = document.getElementById('dub-select');
-  if(ds) ds.classList.toggle('open');
 }
 
 function switchPlayer(idx) {
@@ -2073,7 +2035,7 @@ function renderContinueWatching() {
       ${m.poster
         ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title||''}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>`
         : '<div class="c-ph">🎬</div>'}
-      <div class="c-ov"><div class="c-play-btn">▶</div></div>
+      <div class="c-ov"></div>
       ${epBadge}
       <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}"
         onclick="event.stopPropagation();toggleFav(${m.id},'${type}',this)">${isFav?'❤️':'🤍'}</button>
@@ -2136,7 +2098,7 @@ function renderLibGrid(tab) {
     const wtch = isWatched(m.id) ? '<div class="watched-badge">✅ Переглянуто</div>' : '';
     return `<div class="m-card" onclick="openMovie(${m.id},'${type}',false)">
       ${m.poster ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title||''}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>` : '<div class="c-ph">🎬</div>'}
-      <div class="c-ov"><div class="c-play-btn">▶</div></div>
+      <div class="c-ov"></div>
       ${wtch}
       <button class="c-fav ${isFavorite(m.id)?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${type}',this)">${isFavorite(m.id)?'❤️':'🤍'}</button>
       <div class="c-info">
@@ -2240,14 +2202,14 @@ function switchTab(t) {
 }
 
 function doLogin() {
-  if (!auth) { showToast('Firebase Auth недоступний'); return; }
+  if (!auth) { return; }
   const email = document.getElementById('l-email').value.trim();
   const pass  = document.getElementById('l-pass').value;
   const errEl = document.getElementById('l-err');
   errEl.classList.remove('show');
   if (!email || !pass) { errEl.textContent = 'Заповніть всі поля'; errEl.classList.add('show'); return; }
   auth.signInWithEmailAndPassword(email, pass)
-    .then(() => { closeAuth(); showToast('Ласкаво просимо!'); gaEvent('login', { method: 'email' }); })
+    .then(() => { closeAuth(); gaEvent('login', { method: 'email' }); })
     .catch(e => {
       const msgs = {
         'auth/user-not-found':    'Користувача не знайдено',
@@ -2262,7 +2224,7 @@ function doLogin() {
 }
 
 function doRegister() {
-  if (!auth) { showToast('Firebase Auth недоступний'); return; }
+  if (!auth) { return; }
   const name  = document.getElementById('r-name').value.trim();
   const email = document.getElementById('r-email').value.trim();
   const pass  = document.getElementById('r-pass').value;
@@ -2279,7 +2241,6 @@ function doRegister() {
         }).catch(()=>{});
       }
       closeAuth();
-      showToast(`Акаунт створено! Ласкаво просимо, ${name}!`);
       gaEvent('sign_up', { method: 'email' });
     })
     .catch(e => {
@@ -2310,7 +2271,6 @@ function doGoogleLogin() {
         }
       }
       closeAuth();
-      showToast(`Ласкаво просимо, ${cred.user.displayName || ''}!`);
     })
     .catch(e => {
       if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
@@ -2341,7 +2301,6 @@ function resetPassword() {
 function doLogout() {
   if (auth) auth.signOut().catch(()=>{});
   showHome();
-  showToast('До побачення!');
 }
 
 // =====================================================================
@@ -2831,8 +2790,6 @@ window.addEventListener('DOMContentLoaded',()=>{
     });
   }
   document.addEventListener('click', (e) => {
-    const ds = document.getElementById('dub-select');
-    if(ds && !e.target.closest('.dub-select')) ds.classList.remove('open');
     const ld = document.getElementById('lang-dd-menu');
     if(ld && !e.target.closest('.lang-dd-wrap')) { ld.classList.remove('open'); document.getElementById('lang-dd-wrap').classList.remove('open'); }
     if(av && !e.target.closest('.user-avatar')) av.classList.remove('open');
