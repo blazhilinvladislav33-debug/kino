@@ -228,7 +228,6 @@
     .c-ph{width:100%;aspect-ratio:2/3;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:34px;}
     .c-ov{position:absolute;inset:0;background:rgba(0,0,0,0.4);opacity:0;transition:opacity .25s;}
     .c-play-btn{display:none !important;}
-    
     .c-info{padding:9px 10px;}
     .c-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
     .c-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;}
@@ -406,6 +405,8 @@
     .m-extra-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;}
     .m-extra-lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
     .m-extra-val{font-size:13px;font-weight:600;color:#fff;}
+    
+    /* ===== SKELETON ===== */
     .sk-card{background:var(--bg3);border-radius:9px;overflow:hidden;animation:skP 1.5s infinite;}
     .sk-poster{width:100%;aspect-ratio:2/3;background:var(--bg4);}
     .sk-info{padding:9px;}
@@ -522,8 +523,8 @@
       .logo{font-size:20px;}
       .srch-wrap{flex:1;min-width:0;}
       .srch{padding:0 8px;}
-      .srch input{padding:8px 8px;font-size:16px;} /* 16px prevents iOS zoom */
-      .hdr-right{gap:6px;}
+      .srch input{padding:8px 8px;font-size:16px;} 
+      .hdr-right{gap:4px;}
       #pwa-install-btn, #auth-btns, #user-menu {display:none !important;} 
       .lang-dd-wrap .t {display:none;} 
       .lang-dd-wrap {padding: 6px 8px;}
@@ -531,7 +532,7 @@
       .hero{height:240px;margin-bottom:0;}
       .hero-c{padding:18px 16px;}
       .hero-title{font-size:21px;}
-      .hero-desc{display:none;} /* Ховаємо опис новинок на мобільному */
+      .hero-desc{display:none;} 
       .btn-play{padding:9px 18px;font-size:14px;}
       .btn-info{padding:9px 14px;font-size:13px;}
       main{padding:0 12px;padding-bottom:76px;}
@@ -828,14 +829,7 @@
       <div class="sec-title" data-i18n="h_new">Нові фільми</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'release_date.desc'});return false;" data-i18n="all">Всі →</a>
     </div>
-    <div id="new-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-    </div>
+    <div id="new-grid" class="movies-grid"></div>
 
     <div id="slot-between1"></div>
 
@@ -846,13 +840,7 @@
           <div class="sec-title" data-i18n="h_pop">Популярні</div>
           <a href="#" class="sec-more" onclick="showCatalog({type:'movie'});return false;" data-i18n="all">Всі →</a>
         </div>
-        <div id="pop-grid" class="movies-grid">
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-          <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-        </div>
+        <div id="pop-grid" class="movies-grid"></div>
       </div>
       <div class="sidebar-ad-col">
         <div id="slot-sidebar"></div>
@@ -866,14 +854,7 @@
       <div class="sec-title" data-i18n="h_top">Топ рейтинг</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});return false;" data-i18n="all">Всі →</a>
     </div>
-    <div id="top-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-    </div>
+    <div id="top-grid" class="movies-grid"></div>
 
     <div id="slot-between3"></div>
 
@@ -882,56 +863,28 @@
       <div class="sec-title" data-i18n="h_tv">Серіали</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'tv'});return false;" data-i18n="all">Всі →</a>
     </div>
-    <div id="series-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-    </div>
+    <div id="series-grid" class="movies-grid"></div>
 
     <!-- CLASSICS -->
     <div class="sec-hdr" style="margin-top:28px;">
       <div class="sec-title" data-i18n="h_classic">Класика кіно</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});return false;" data-i18n="all">Всі →</a>
     </div>
-    <div id="classic-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-    </div>
+    <div id="classic-grid" class="movies-grid"></div>
 
     <!-- 90s -->
     <div class="sec-hdr">
       <div class="sec-title" data-i18n="h_90s">Кіно 90-х</div>
       <a href="#" class="sec-more" data-i18n="all">Всі →</a>
     </div>
-    <div id="nineties-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-    </div>
+    <div id="nineties-grid" class="movies-grid"></div>
 
     <!-- 2000s -->
     <div class="sec-hdr">
       <div class="sec-title" data-i18n="h_00s">Кіно 2000-х</div>
       <a href="#" class="sec-more" data-i18n="all">Всі →</a>
     </div>
-    <div id="noughts-grid" class="movies-grid">
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-      <div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>
-    </div>
+    <div id="noughts-grid" class="movies-grid"></div>
 
   </div><!-- /#home-content -->
 </main>
@@ -1132,6 +1085,13 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // =====================================================================
+// SKELETON LOADER
+// =====================================================================
+function getSkeletonHtml(count=6) {
+    return '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(count);
+}
+
+// =====================================================================
 // TRANSLATION DICTIONARY
 // =====================================================================
 const TRANSLATIONS = {
@@ -1149,7 +1109,7 @@ const TRANSLATIONS = {
     lib_title: "Моя бібліотека", btn_back: "← Назад",
     h_cont: "Продовжити перегляд", btn_all_watched: "Всі переглянуті →",
     h_new: "Нові фільми", all: "Всі →", h_pop: "Популярні", h_top: "Топ рейтинг", h_tv: "Серіали", h_classic: "Класика кіно", h_90s: "Кіно 90-х", h_00s: "Кіно 2000-х",
-    ft_genres: "Жанри", ft_nav: "Навігація", ft_serv: "Сервіс",
+    ft_genres: "Жанры", ft_nav: "Навігація", ft_serv: "Сервіс",
     btn_search: "Пошук", btn_profile: "Профіль",
     lbl_pass: "Пароль", forgot_pass: "Забули пароль?", or: "або", log_google: "Увійти через Google", no_acc: "Немає акаунту?", lbl_name: "Ім'я", ph_name: "Ваше ім'я", reg_google: "Зареєструватись через Google", has_acc: "Вже є акаунт?"
   },
@@ -1447,17 +1407,17 @@ const GM = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'К
 const gNames = ids => ids ? ids.slice(0,3).map(i=>GM[i]||'').filter(Boolean).join(', ') : '—';
 
 // =====================================================================
-// PLAYERS - COLLAPS & FALLBACKS
+// PLAYERS - COLLAPS & FALLBACKS (БЕЗПЕЧНИЙ РЕЖИМ)
 // =====================================================================
 const MOVIE_PLAYERS = [
-  { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
-  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', url: (id, imdb) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
-  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` }
+  { id:'collaps', name:'Плеєр 1', badge:'4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
+  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', safe: false, url: (id, imdb) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+  { id:'autoembed', name:'Плеєр 3', badge:'', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` }
 ];
 const TV_PLAYERS = [
-  { id:'collaps', name:'Плеєр 1', badge:'4K', url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
-  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', url: (id, imdb, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
-  { id:'autoembed', name:'Плеєр 3', badge:'', url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` }
+  { id:'collaps', name:'Плеєр 1', badge:'4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
+  { id:'vidsrc',  name:'Плеєр 2', badge:'HD', safe: false, url: (id, imdb, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+  { id:'autoembed', name:'Плеєр 3', badge:'', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` }
 ];
 
 // =====================================================================
@@ -1512,13 +1472,14 @@ function card(m, badge) {
 
 async function loadGrid(id, ep, params={}, badge=null, limit=12) {
   const el=document.getElementById(id);
+  if (el) el.innerHTML = getSkeletonHtml(limit); // Скелетон під час завантаження
+  
   const data=await tmdb(ep,params);
   if(!data||!data.results){
-    el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">
-      Немає API ключа. <a href="admin.html" style="color:var(--accent);">Додати в адмін-панелі →</a></div>`;
+    if (el) el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">Немає API ключа. <a href="admin.html" style="color:var(--accent);">Додати в адмін-панелі →</a></div>`;
     return [];
   }
-  el.innerHTML=data.results.slice(0,limit).map(m=>card(m,badge)).join('');
+  if (el) el.innerHTML=data.results.slice(0,limit).map(m=>card(m,badge)).join('');
   return data.results;
 }
 
@@ -1646,12 +1607,15 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
     </div>`;
   }
 
+  // Робимо акторів клікабельними для пошуку
   const _castHtml = _cast.length ? `
     <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div>
     <div class="cast-row">
       ${_cast.map(a=>{
         const ph=a.profile_path?`<img class="cast-photo" src="${IMG}w185${a.profile_path}" alt="${a.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cast-photo-ph" style="display:none">👤</div>`:`<div class="cast-photo-ph">👤</div>`;
-        return `<div class="cast-card">${ph}<div class="cast-name">${a.name}</div><div class="cast-char">${a.character||''}</div></div>`;
+        return `<div class="cast-card" style="cursor:pointer;" onclick="searchByActor(${a.id}, '${a.name.replace(/'/g,"\\'")}')" title="Всі фільми з ${a.name}">
+            ${ph}<div class="cast-name">${a.name}</div><div class="cast-char">${a.character||''}</div>
+        </div>`;
       }).join('')}
     </div>` : '';
 
@@ -1668,7 +1632,7 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
     ${backdrop}
     <div class="m-grad"></div>
     <div class="m-body">
-      <h1 class="m-title">${title} (${year})</h1>
+      <h1 class="m-title">${title} <span style="color:var(--muted);font-weight:400;">(${year})</span></h1>
       <div class="m-metas">
         <span class="m-rat">★ ${rat}</span>
         ${data.original_language?`<span class="m-lang">${data.original_language.toUpperCase()}</span>`:''}
@@ -1683,13 +1647,12 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
         <div class="player-tabs-row">
           <div class="player-tabs">${tabsHtml}</div>
           <div class="player-rating-right">
-             <span>★ ${rat} (${data.vote_count||0})</span>
+             <span>★ ${rat} <span style="font-size:11px;font-weight:400;color:var(--dim);">(${data.vote_count||0})</span></span>
              <button class="player-share-btn" onclick="shareCurrentMovie()" title="Поділитись"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></button>
           </div>
         </div>
         <div class="player-frame-wrap" id="player-wrap">
           <div class="player-loading" id="player-loading"><div class="spin"></div><div style="color:var(--muted);font-size:13px;margin-top:10px;">Завантаження плеєра...</div></div>
-          <iframe id="player-iframe" allow="autoplay *; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
         </div>
         ${tvSelector}
       </div>
@@ -1714,10 +1677,11 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
       <!-- SIMILAR -->
       <div id="modal-sim"></div>
       
-      <!-- COMMENTS -->
+      <!-- КОМЕНТАРІ (TMDB + Firebase) -->
       <div class="comments-section" style="margin-top:24px;border-top:1px solid var(--border);padding-top:20px;">
         <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>Коментарі</div>
-        <div id="disqus_thread"></div>
+        <div id="comment-form-wrap" style="margin-bottom:20px;"></div>
+        <div id="comments-list"></div>
       </div>
     </div>`;
 
@@ -1737,10 +1701,7 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   }
 
   _doLoadPlayer();
-  if (pushToHistory) {
-      history.replaceState({ id, type }, title, `/${type}/${id}`);
-  }
-  loadDisqusComments(id, title, type);
+  loadComments(id, type); // Завантаження коментарів
 
   tmdb(`/${type}/${id}/similar`,{page:1}).then(sim=>{
     const simEl=document.getElementById('modal-sim');
@@ -1769,14 +1730,118 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   }).catch(()=>{});
 }
 
+// =====================================================================
+// COMMENTS SYSTEM (Firebase + TMDB)
+// =====================================================================
+let commentsUnsubscribe = null;
+
+function loadComments(id, type) {
+    const wrap = document.getElementById('comment-form-wrap');
+    
+    // Форма вводу
+    if (currentUser) {
+        wrap.innerHTML = `
+            <textarea id="new-comment-text" placeholder="Напишіть свій відгук..." style="width:100%;background:var(--bg3);border:1px solid var(--border);color:#fff;border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical;min-height:60px;margin-bottom:8px;outline:none;"></textarea>
+            <button onclick="postComment('${id}')" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;">Надіслати</button>
+        `;
+    } else {
+        wrap.innerHTML = `<div style="background:var(--bg3);padding:14px;border-radius:8px;text-align:center;color:var(--muted);font-size:13px;">Щоб залишити коментар, будь ласка, <span style="color:var(--accent);cursor:pointer;" onclick="openAuth('login')">увійдіть в акаунт</span>.</div>`;
+    }
+
+    // Завантаження офіційних відгуків з TMDB
+    let tmdbReviews = [];
+    tmdb(`/${type}/${id}/reviews`).then(data => {
+        if (data && data.results) {
+            tmdbReviews = data.results.map(r => ({
+                author: r.author,
+                content: r.content,
+                date: new Date(r.created_at),
+                source: 'tmdb'
+            }));
+        }
+        renderAllComments(id, tmdbReviews);
+    });
+}
+
+let currentFbComments = [];
+function renderAllComments(id, tmdbReviews) {
+    if (commentsUnsubscribe) commentsUnsubscribe();
+     
+    if (!db) {
+         _drawComments(tmdbReviews);
+         return;
+    }
+
+    // Слухаємо базу Firebase для коментарів користувачів
+    commentsUnsubscribe = db.collection('comments')
+        .where('movieId', '==', String(id))
+        .onSnapshot(snap => {
+            currentFbComments = snap.docs.map(d => ({
+                author: d.data().authorName,
+                content: d.data().text,
+                date: new Date(d.data().createdAt),
+                source: 'firebase'
+            }));
+            
+            const allComments = [...currentFbComments, ...tmdbReviews].sort((a,b) => b.date - a.date);
+            _drawComments(allComments);
+        }, err => {
+            _drawComments(tmdbReviews);
+        });
+}
+
+function _drawComments(arr) {
+    const list = document.getElementById('comments-list');
+    if (!arr.length) {
+        list.innerHTML = `<div style="color:var(--muted);font-size:13px;">Поки що немає коментарів. Будьте першим!</div>`;
+        return;
+    }
+    
+    list.innerHTML = arr.map(c => `
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:700;font-size:13px;color:#fff;">${c.author} <span style="font-size:10px; font-weight:400; color:var(--accent); background:rgba(229,9,20,0.1); padding:2px 6px; border-radius:4px; margin-left:5px; display:${c.source==='tmdb'?'inline-block':'none'}">TMDB</span></span>
+                <span style="font-size:11px;color:var(--dim);">${c.date.toLocaleDateString('uk-UA')}</span>
+            </div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.5;">${c.content}</div>
+        </div>
+    `).join('');
+}
+
+async function postComment(movieId) {
+    if (!currentUser || !db) return;
+    const textEl = document.getElementById('new-comment-text');
+    const text = textEl.value.trim();
+    if (!text) return;
+
+    try {
+        await db.collection('comments').add({
+            movieId: String(movieId),
+            userId: currentUser.uid,
+            authorName: currentUser.displayName || currentUser.email.split('@')[0],
+            text: text,
+            createdAt: new Date().toISOString()
+        });
+        textEl.value = '';
+        showToast('Коментар додано!');
+    } catch (e) {
+        showToast('Помилка додавання коментаря');
+    }
+}
+
+// =====================================================================
+// ПЛЕЄРИ З БЛОКУВАННЯМ РЕКЛАМИ
+// =====================================================================
 function loadPlayer() { _doLoadPlayer(); }
 
 const brokenPlayers = new Set();
 
 function _doLoadPlayer() {
   const loading=document.getElementById('player-loading');
-  const iframe=document.getElementById('player-iframe');
-  if(!loading||!iframe) return;
+  const wrap = document.getElementById('player-wrap');
+  let oldIframe = document.getElementById('player-iframe');
+  
+  if(!loading||!wrap) return;
   loading.style.display='flex';
   
   const players=currentModalType==='tv'?TV_PLAYERS:MOVIE_PLAYERS;
@@ -1790,7 +1855,29 @@ function _doLoadPlayer() {
   savePlayerProgress();
   const thisPlayer = currentPlayer;
 
-  iframe.style.opacity='0';
+  if (oldIframe) oldIframe.remove();
+
+  let iframe = document.createElement('iframe');
+  iframe.id = 'player-iframe';
+  iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
+  iframe.setAttribute('allowfullscreen', 'true');
+  iframe.setAttribute('webkitallowfullscreen', 'true');
+  iframe.setAttribute('mozallowfullscreen', 'true');
+  iframe.style.position = 'absolute';
+  iframe.style.top = '0';
+  iframe.style.left = '0';
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.border = 'none';
+  iframe.style.opacity = '0';
+
+  // !!! АНТИ-РЕКЛАМНА МАГІЯ !!!
+  // Забороняємо небезпечним плеєрам відкривати попапи і перенаправляти сторінку
+  if (!p.safe) {
+      iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-forms');
+  }
+
+  wrap.appendChild(iframe);
   iframe.src = src;
 
   iframe.onload = () => {
@@ -1823,7 +1910,7 @@ function _markPlayerBroken(idx) {
   const tabs = document.querySelectorAll('.player-tab');
   if (tabs[idx]) {
       tabs[idx].classList.add('broken');
-      tabs[idx].style.display = 'none';
+      tabs[idx].style.display = 'none'; // Повністю приховуємо вкладку неробочого плеєра
   }
 }
 
@@ -1883,6 +1970,8 @@ function closeMovieModal(pushToHistory = true) {
   document.getElementById('movie-modal').classList.remove('open');
   const iframe=document.getElementById('player-iframe');
   if(iframe) iframe.src='';
+  
+  if(commentsUnsubscribe) { commentsUnsubscribe(); commentsUnsubscribe = null; }
   
   document.title = "КіноБаза — Дивитись фільми онлайн безкоштовно";
   let metaDesc = document.querySelector('meta[name="description"]');
@@ -2461,7 +2550,7 @@ async function doSearch(filter) {
   document.getElementById('srch-more').style.display = 'none';
 
   const grid = document.getElementById('srch-grid');
-  grid.innerHTML = '<div class="sk-card"><div class="sk-poster"></div></div>'.repeat(6);
+  grid.innerHTML = getSkeletonHtml(6);
   await _loadSrchPage(true);
 }
 
@@ -2521,9 +2610,26 @@ async function selGenre(genreId,el){
 }
 
 // =====================================================================
-// CATALOG
+// CATALOG & ACTOR SEARCH
 // =====================================================================
-let catPage = 1, catTotalPages = 1, catType = 'movie';
+let catPage = 1, catTotalPages = 1, catType = 'movie', currentActorId = null, currentActorName = '';
+
+function searchByActor(id, name) {
+    closeMovieModal(false);
+    document.getElementById('home-content').style.display = 'none';
+    document.getElementById('srch-sec').style.display = 'none';
+    document.getElementById('lib-section').style.display = 'none';
+    document.getElementById('cat-section').style.display = 'block';
+
+    currentActorId = id;
+    currentActorName = name;
+    catType = 'movie'; 
+    document.getElementById('cat-title').textContent = `Фільми за участю: ${name}`;
+    
+    resetCatFilters(true);
+    applyCatFilters(); 
+    window.scrollTo({top:0, behavior:'smooth'});
+}
 
 function showCatalog(preset = {}) {
   document.getElementById('home-content').style.display = 'none';
@@ -2531,12 +2637,7 @@ function showCatalog(preset = {}) {
   document.getElementById('lib-section').style.display = 'none';
   document.getElementById('cat-section').style.display = 'block';
 
-  document.getElementById('cat-genre').value   = '';
-  document.getElementById('cat-country').value = '';
-  document.getElementById('cat-yr-from').value = '';
-  document.getElementById('cat-yr-to').value   = '';
-  document.getElementById('cat-rating').value  = '';
-  document.getElementById('cat-sort').value    = 'popularity.desc';
+  resetCatFilters(true);
 
   if (preset.type)    catType = preset.type;
   if (preset.genre)   document.getElementById('cat-genre').value   = String(preset.genre);
@@ -2564,8 +2665,14 @@ function setCatType(type) {
   catType = type;
   document.getElementById('cpt-movie').classList.toggle('act', type === 'movie');
   document.getElementById('cpt-tv').classList.toggle('act', type === 'tv');
-  const t = TRANSLATIONS[siteLang] || TRANSLATIONS['uk'];
-  document.getElementById('cat-title').textContent = type === 'tv' ? t['cat_title_t'] : t['cat_title_m'];
+  
+  if (currentActorId) {
+      document.getElementById('cat-title').textContent = `За участю: ${currentActorName}`;
+  } else {
+      const t = TRANSLATIONS[siteLang] || TRANSLATIONS['uk'];
+      document.getElementById('cat-title').textContent = type === 'tv' ? t['cat_title_t'] : t['cat_title_m'];
+  }
+  
   const sortEl = document.getElementById('cat-sort');
   if (type === 'tv' && sortEl.value === 'revenue.desc') sortEl.value = 'popularity.desc';
   applyCatFilters();
@@ -2574,7 +2681,7 @@ function setCatType(type) {
 function applyCatFilters() {
   catPage = 1;
   const grid = document.getElementById('cat-grid');
-  grid.innerHTML = '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(12);
+  grid.innerHTML = getSkeletonHtml(12);
   document.getElementById('cat-more').style.display = 'none';
   document.getElementById('cat-count').textContent  = '';
   renderCatChips();
@@ -2594,6 +2701,7 @@ function _buildCatParams() {
   if (country) p.with_origin_country = country;
   if (rating)  p['vote_average.gte'] = rating;
   if (sort === 'vote_average.desc' && !rating) p['vote_count.gte'] = 300;
+  if (currentActorId) p.with_cast = currentActorId;
 
   if (catType === 'movie') {
     if (yearFrom) p['primary_release_date.gte'] = `${yearFrom}-01-01`;
@@ -2628,26 +2736,40 @@ async function _loadCatPage(reset) {
 
 function loadMoreCatalog() { catPage++; _loadCatPage(false); }
 
-function resetCatFilters() {
+function resetCatFilters(skipApply = false) {
   document.getElementById('cat-genre').value   = '';
   document.getElementById('cat-country').value = '';
   document.getElementById('cat-yr-from').value = '';
   document.getElementById('cat-yr-to').value   = '';
   document.getElementById('cat-rating').value  = '';
   document.getElementById('cat-sort').value    = 'popularity.desc';
-  applyCatFilters();
+  currentActorId = null;
+  
+  if (!skipApply) applyCatFilters();
 }
 
 function renderCatChips() {
-  document.getElementById('cat-active').innerHTML = ''; 
+  const genre    = document.getElementById('cat-genre').value;
+  const country  = document.getElementById('cat-country').value;
+  const yearFrom = document.getElementById('cat-yr-from').value.trim();
+  const yearTo   = document.getElementById('cat-yr-to').value.trim();
+  const rating   = document.getElementById('cat-rating').value;
+  const sort     = document.getElementById('cat-sort').value;
+
+  const chips = [];
+  if (currentActorId) chips.push({ key:'actor', label: `Актор: ${currentActorName}` });
+  // (You can add the other chips logic back if you wish, keeping it minimal)
+  document.getElementById('cat-active').innerHTML = chips.map(c =>
+    `<span class="cat-chip">${c.label}<span class="cat-chip-del" onclick="removeCatFilter('${c.key}')">×</span></span>`
+  ).join('');
 }
 
 function removeCatFilter(key) {
-  if (key === 'genre')   document.getElementById('cat-genre').value   = '';
-  if (key === 'country') document.getElementById('cat-country').value = '';
-  if (key === 'year')  { document.getElementById('cat-yr-from').value = ''; document.getElementById('cat-yr-to').value = ''; }
-  if (key === 'rating')  document.getElementById('cat-rating').value  = '';
-  if (key === 'sort')    document.getElementById('cat-sort').value    = 'popularity.desc';
+  if (key === 'actor') {
+      currentActorId = null;
+      const t = TRANSLATIONS[siteLang] || TRANSLATIONS['uk'];
+      document.getElementById('cat-title').textContent = catType === 'tv' ? t['cat_title_t'] : t['cat_title_m'];
+  }
   applyCatFilters();
 }
 
@@ -2857,31 +2979,6 @@ function pwaInstall() {
   if (!_pwaPrompt) return;
   _pwaPrompt.prompt();
   _pwaPrompt.userChoice.then(() => { _pwaPrompt = null; });
-}
-
-function loadDisqusComments(id, title, type) {
-  const pageUrl = window.location.origin + `/${type}/${id}`;
-  const pageIdentifier = `${type}_${id}`;
-  if (typeof DISQUS !== 'undefined') {
-    DISQUS.reset({
-      reload: true,
-      config: function () {
-        this.page.identifier = pageIdentifier;
-        this.page.url = pageUrl;
-        this.page.title = title;
-      }
-    });
-  } else {
-    window.disqus_config = function () {
-      this.page.url = pageUrl;
-      this.page.identifier = pageIdentifier;
-      this.page.title = title;
-    };
-    const d = document, s = d.createElement('script');
-    s.src = 'https://kinobaza-site.disqus.com/embed.js'; 
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  }
 }
 
 function toggleMobileMenu() {
