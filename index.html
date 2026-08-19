@@ -1108,6 +1108,18 @@ function getSkeletonHtml(count=6) {
 }
 
 // =====================================================================
+// HTML ESCAPE FOR SAFE COMMENTS
+// =====================================================================
+function escapeHtml(unsafe) {
+    return (unsafe || '').toString()
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
+// =====================================================================
 // TRANSLATION DICTIONARY
 // =====================================================================
 const TRANSLATIONS = {
@@ -1141,7 +1153,7 @@ const TRANSLATIONS = {
     flt_type: "Тип", flt_genre: "Жанр", flt_country: "Страна", flt_year: "Год", flt_rating: "Рейтинг", flt_sort: "Сортировка", flt_lang: "Озвучка",
     btn_apply: "Применить", btn_reset: "Сбросить", ph_from: "От", ph_to: "До",
     lib_title: "Моя библиотека", btn_back: "← Назад",
-    h_cont: "Продолжить просмотр", btn_all_watched: "Все просмотреленные →",
+    h_cont: "Продолжить просмотр", btn_all_watched: "Все просмотренные →",
     h_new: "Новые фильмы", all: "Все →", h_pop: "Популярные", h_top: "Топ рейтинг", h_tv: "Сериалы", h_classic: "Классика кино", h_90s: "Кино 90-х", h_00s: "Кино 2000-х",
     ft_genres: "Жанры", ft_nav: "Навигация", ft_serv: "Сервис",
     btn_search: "Поиск", btn_profile: "Профиль",
@@ -1640,9 +1652,9 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
     <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div>
     <div class="cast-row">
       ${_cast.map(a=>{
-        const ph=a.profile_path?`<img class="cast-photo" src="${IMG}w185${a.profile_path}" alt="${a.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cast-photo-ph" style="display:none">👤</div>`:`<div class="cast-photo-ph">👤</div>`;
-        return `<div class="cast-card" style="cursor:pointer;" onclick="searchByActor(${a.id}, '${a.name.replace(/'/g,"\\'")}')" title="Всі фільми з ${a.name}">
-            ${ph}<div class="cast-name">${a.name}</div><div class="cast-char">${a.character||''}</div>
+        const ph=a.profile_path?`<img class="cast-photo" src="${IMG}w185${a.profile_path}" alt="${escapeHtml(a.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cast-photo-ph" style="display:none">👤</div>`:`<div class="cast-photo-ph">👤</div>`;
+        return `<div class="cast-card" style="cursor:pointer;" onclick="searchByActor(${a.id}, '${escapeHtml(a.name).replace(/'/g,"\\'")}')" title="Всі фільми з ${escapeHtml(a.name)}">
+            ${ph}<div class="cast-name">${escapeHtml(a.name)}</div><div class="cast-char">${escapeHtml(a.character||'')}</div>
         </div>`;
       }).join('')}
     </div>` : '';
@@ -1825,10 +1837,10 @@ function _drawComments(arr) {
     list.innerHTML = arr.map(c => `
         <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="font-weight:700;font-size:13px;color:#fff;">${c.author} <span style="font-size:10px; font-weight:400; color:var(--accent); background:rgba(229,9,20,0.1); padding:2px 6px; border-radius:4px; margin-left:5px; display:${c.source==='tmdb'?'inline-block':'none'}">TMDB</span></span>
+                <span style="font-weight:700;font-size:13px;color:#fff;">${escapeHtml(c.author)} <span style="font-size:10px; font-weight:400; color:var(--accent); background:rgba(229,9,20,0.1); padding:2px 6px; border-radius:4px; margin-left:5px; display:${c.source==='tmdb'?'inline-block':'none'}">TMDB</span></span>
                 <span style="font-size:11px;color:var(--dim);">${c.date.toLocaleDateString('uk-UA')}</span>
             </div>
-            <div style="font-size:13px;color:var(--muted);line-height:1.5;">${c.content}</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.5;word-break:break-word;">${escapeHtml(c.content).replace(/\n/g, '<br>')}</div>
         </div>
     `).join('');
 }
@@ -2647,9 +2659,12 @@ function searchByActor(id, name) {
     currentActorId = id;
     currentActorName = name;
     catType = 'movie'; 
-    document.getElementById('cat-title').textContent = `Фільми за участю: ${name}`;
+    document.getElementById('cat-title').textContent = `За участю: ${name}`;
     
-    resetCatFilters(true);
+    document.getElementById('cpt-movie').classList.add('act');
+    document.getElementById('cpt-tv').classList.remove('act');
+
+    resetCatFilters(true, true);
     applyCatFilters(); 
     window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -2761,7 +2776,7 @@ async function _loadCatPage(reset) {
 
 function loadMoreCatalog() { catPage++; _loadCatPage(false); }
 
-function resetCatFilters(skipApply = false) {
+function resetCatFilters(skipApply = false, keepActor = false) {
   document.getElementById('cat-genre').value   = '';
   document.getElementById('cat-country').value = '';
   document.getElementById('cat-lang').value    = '';
@@ -2769,7 +2784,11 @@ function resetCatFilters(skipApply = false) {
   document.getElementById('cat-yr-to').value   = '';
   document.getElementById('cat-rating').value  = '';
   document.getElementById('cat-sort').value    = 'popularity.desc';
-  currentActorId = null;
+  
+  if (!keepActor) {
+      currentActorId = null;
+      currentActorName = '';
+  }
   
   if (!skipApply) applyCatFilters();
 }
@@ -2792,6 +2811,7 @@ function renderCatChips() {
 function removeCatFilter(key) {
   if (key === 'actor') {
       currentActorId = null;
+      currentActorName = '';
       const t = TRANSLATIONS[siteLang] || TRANSLATIONS['uk'];
       document.getElementById('cat-title').textContent = catType === 'tv' ? t['cat_title_t'] : t['cat_title_m'];
   }
