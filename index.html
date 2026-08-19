@@ -228,14 +228,22 @@
     .c-ph{width:100%;aspect-ratio:2/3;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:34px;}
     .c-ov{position:absolute;inset:0;background:rgba(0,0,0,0.4);opacity:0;transition:opacity .25s;}
     .c-play-btn{display:none !important;}
+    
     .c-info{padding:9px 10px;}
     .c-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
     .c-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;}
     .c-year{color:var(--dim);}
     .c-rat{display:flex;align-items:center;gap:2px;color:var(--gold);font-weight:700;}
+    
+    /* BADGES & LANGUAGES */
     .c-badge{position:absolute;top:7px;left:7px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
     .c-badge.g{background:#1a7a3a;}
     .c-badge.b{background:#1a4a8a;}
+    .c-badge.lang { left: auto; right: 7px; }
+    .c-badge.ua { background: linear-gradient(135deg, #0057b7 50%, #ffd700 50%); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); font-weight: 800; }
+    .c-badge.multi { background: #8a2be2; color: #fff; }
+    .c-badge.sub { background: #333; color: #fff; }
+
     .c-fav{position:absolute;top:7px;right:7px;background:rgba(0,0,0,.6);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .2s;}
     .m-card:hover .c-fav{display:flex;}
     .c-fav.faved{display:flex;color:var(--accent);}
@@ -760,6 +768,14 @@
         </select>
       </div>
       <div class="cat-fg">
+        <label data-i18n="flt_lang">Озвучка</label>
+        <select class="cat-sel" id="cat-lang" onchange="applyCatFilters()">
+          <option value="">Всі мови</option>
+          <option value="uk">Українська (UA)</option>
+          <option value="en">Оригінал + Sub (ENG)</option>
+        </select>
+      </div>
+      <div class="cat-fg">
         <label data-i18n="flt_year">Рік</label>
         <div class="cat-yr-wrap">
           <input class="cat-yr-inp" type="text" id="cat-yr-from" data-i18n-ph="ph_from" placeholder="Від" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')">
@@ -1104,12 +1120,12 @@ const TRANSLATIONS = {
     g_all: "Усі", g_act: "Бойовик", g_com: "Комедія", g_dra: "Драма", g_hor: "Жахи", g_mel: "Мелодрама", g_fan: "Фантастика", g_fnt: "Фентезі", g_ani: "Анімація", g_doc: "Документальні", g_thr: "Трилер", g_adv: "Пригоди",
     btn_close: "✕ Закрити", sf_all: "Все", sf_movies: "Фільми", sf_tv: "Серіали", btn_more_load: "Завантажити ще",
     cat_title_m: "Каталог фільмів", cat_title_t: "Каталог серіалів", btn_home_back: "← Головна",
-    flt_type: "Тип", flt_genre: "Жанр", flt_country: "Країна", flt_year: "Рік", flt_rating: "Рейтинг", flt_sort: "Сортування",
+    flt_type: "Тип", flt_genre: "Жанр", flt_country: "Країна", flt_year: "Рік", flt_rating: "Рейтинг", flt_sort: "Сортування", flt_lang: "Озвучка",
     btn_apply: "Застосувати", btn_reset: "Скинути", ph_from: "Від", ph_to: "До",
     lib_title: "Моя бібліотека", btn_back: "← Назад",
     h_cont: "Продовжити перегляд", btn_all_watched: "Всі переглянуті →",
     h_new: "Нові фільми", all: "Всі →", h_pop: "Популярні", h_top: "Топ рейтинг", h_tv: "Серіали", h_classic: "Класика кіно", h_90s: "Кіно 90-х", h_00s: "Кіно 2000-х",
-    ft_genres: "Жанры", ft_nav: "Навігація", ft_serv: "Сервіс",
+    ft_genres: "Жанри", ft_nav: "Навігація", ft_serv: "Сервіс",
     btn_search: "Пошук", btn_profile: "Профіль",
     lbl_pass: "Пароль", forgot_pass: "Забули пароль?", or: "або", log_google: "Увійти через Google", no_acc: "Немає акаунту?", lbl_name: "Ім'я", ph_name: "Ваше ім'я", reg_google: "Зареєструватись через Google", has_acc: "Вже є акаунт?"
   },
@@ -1122,10 +1138,10 @@ const TRANSLATIONS = {
     g_all: "Все", g_act: "Боевик", g_com: "Комедия", g_dra: "Драма", g_hor: "Ужасы", g_mel: "Мелодрама", g_fan: "Фантастика", g_fnt: "Фэнтези", g_ani: "Анимация", g_doc: "Документальные", g_thr: "Триллер", g_adv: "Приключения",
     btn_close: "✕ Закрыть", sf_all: "Все", sf_movies: "Фильмы", sf_tv: "Сериалы", btn_more_load: "Загрузить еще",
     cat_title_m: "Каталог фильмов", cat_title_t: "Каталог сериалов", btn_home_back: "← Главная",
-    flt_type: "Тип", flt_genre: "Жанр", flt_country: "Страна", flt_year: "Год", flt_rating: "Рейтинг", flt_sort: "Сортировка",
+    flt_type: "Тип", flt_genre: "Жанр", flt_country: "Страна", flt_year: "Год", flt_rating: "Рейтинг", flt_sort: "Сортировка", flt_lang: "Озвучка",
     btn_apply: "Применить", btn_reset: "Сбросить", ph_from: "От", ph_to: "До",
     lib_title: "Моя библиотека", btn_back: "← Назад",
-    h_cont: "Продолжить просмотр", btn_all_watched: "Все просмотренные →",
+    h_cont: "Продолжить просмотр", btn_all_watched: "Все просмотреленные →",
     h_new: "Новые фильмы", all: "Все →", h_pop: "Популярные", h_top: "Топ рейтинг", h_tv: "Сериалы", h_classic: "Классика кино", h_90s: "Кино 90-х", h_00s: "Кино 2000-х",
     ft_genres: "Жанры", ft_nav: "Навигация", ft_serv: "Сервис",
     btn_search: "Поиск", btn_profile: "Профиль",
@@ -1140,7 +1156,7 @@ const TRANSLATIONS = {
     g_all: "All", g_act: "Action", g_com: "Comedy", g_dra: "Drama", g_hor: "Horror", g_mel: "Romance", g_fan: "Sci-Fi", g_fnt: "Fantasy", g_ani: "Animation", g_doc: "Documentary", g_thr: "Thriller", g_adv: "Adventure",
     btn_close: "✕ Close", sf_all: "All", sf_movies: "Movies", sf_tv: "TV Shows", btn_more_load: "Load more",
     cat_title_m: "Movie Catalog", cat_title_t: "TV Show Catalog", btn_home_back: "← Home",
-    flt_type: "Type", flt_genre: "Genre", flt_country: "Country", flt_year: "Year", flt_rating: "Rating", flt_sort: "Sort by",
+    flt_type: "Type", flt_genre: "Genre", flt_country: "Country", flt_year: "Year", flt_rating: "Rating", flt_sort: "Sort by", flt_lang: "Language",
     btn_apply: "Apply", btn_reset: "Reset", ph_from: "From", ph_to: "To",
     lib_title: "My Library", btn_back: "← Back",
     h_cont: "Continue Watching", btn_all_watched: "All watched →",
@@ -1169,7 +1185,9 @@ function updateUIStrings(lang) {
   });
   
   if(document.getElementById('cat-section').style.display === 'block') {
-      document.getElementById('cat-title').textContent = (catType === 'tv') ? t['cat_title_t'] : t['cat_title_m'];
+      if(!currentActorId) {
+          document.getElementById('cat-title').textContent = (catType === 'tv') ? t['cat_title_t'] : t['cat_title_m'];
+      }
   }
 }
 
@@ -1458,10 +1476,18 @@ function card(m, badge) {
     ?`<img class="c-poster" src="${IMG}w300${m.poster_path}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
     :'';
   const ph=m.poster_path?`<div class="c-ph" style="display:none">🎬</div>`:`<div class="c-ph">🎬</div>`;
+  
+  let langHtml = '';
+  if (m.original_language === 'uk') langHtml = `<div class="c-badge lang ua">UA ОРИГІНАЛ</div>`;
+  else if (m.original_language === 'en') langHtml = `<div class="c-badge lang ua">UA ДУБЛЯЖ</div>`;
+  else if (m.original_language === 'ja' || m.original_language === 'ko') langHtml = `<div class="c-badge lang sub">ENG / SUB</div>`;
+  else langHtml = `<div class="c-badge lang multi">MULTI</div>`;
+
   return `<div class="m-card" onclick="openMovie(${m.id},'${mtype}',false)">
     ${poster}${ph}
     <div class="c-ov"></div>
     ${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}
+    ${langHtml}
     <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)" title="${isFav?'Видалити':'В улюблені'}">${isFav?'❤️':'🤍'}</button>
     <div class="c-info">
       <div class="c-title">${title}</div>
@@ -1472,7 +1498,7 @@ function card(m, badge) {
 
 async function loadGrid(id, ep, params={}, badge=null, limit=12) {
   const el=document.getElementById(id);
-  if (el) el.innerHTML = getSkeletonHtml(limit); // Скелетон під час завантаження
+  if (el) el.innerHTML = getSkeletonHtml(limit); 
   
   const data=await tmdb(ep,params);
   if(!data||!data.results){
@@ -1553,10 +1579,11 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   const isWtch= isWatched(id);
 
   // === SEO ===
-  document.title = `Дивитися «${title}» (${year}) українською онлайн — КіноБаза`;
+  const seoTitle = `Дивитися «${title}» (${year}) українською озвучкою онлайн в HD | КіноБаза`;
+  document.title = seoTitle;
   let metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) {
-      metaDesc.setAttribute("content", `Дивитися ${type === 'tv' ? 'серіал' : 'фільм'} «${title}» (${year}) онлайн в хорошій якості. ${desc.substring(0, 120)}...`);
+      metaDesc.setAttribute("content", `Дивитися ${type === 'tv' ? 'серіал' : 'фільм'} «${title}» (${year}) українською озвучкою або мовою оригіналу з субтитрами онлайн в хорошій якості. ${desc.substring(0, 120)}...`);
   }
   let oldSchema = document.getElementById('dynamic-schema');
   if (oldSchema) oldSchema.remove();
@@ -1567,6 +1594,8 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
     "image": `${IMG}w500${data.poster_path}`,
     "description": desc,
     "dateCreated": year,
+    "inLanguage": ["uk", "en", "ru"],
+    "subtitleLanguage": ["uk", "en"],
     "genre": data.genres ? data.genres.map(g=>g.name).join(', ') : "",
     "aggregateRating": {
       "@type": "AggregateRating",
@@ -1607,7 +1636,6 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
     </div>`;
   }
 
-  // Робимо акторів клікабельними для пошуку
   const _castHtml = _cast.length ? `
     <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div>
     <div class="cast-row">
@@ -1701,7 +1729,7 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   }
 
   _doLoadPlayer();
-  loadComments(id, type); // Завантаження коментарів
+  loadComments(id, type); 
 
   tmdb(`/${type}/${id}/similar`,{page:1}).then(sim=>{
     const simEl=document.getElementById('modal-sim');
@@ -1738,7 +1766,6 @@ let commentsUnsubscribe = null;
 function loadComments(id, type) {
     const wrap = document.getElementById('comment-form-wrap');
     
-    // Форма вводу
     if (currentUser) {
         wrap.innerHTML = `
             <textarea id="new-comment-text" placeholder="Напишіть свій відгук..." style="width:100%;background:var(--bg3);border:1px solid var(--border);color:#fff;border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical;min-height:60px;margin-bottom:8px;outline:none;"></textarea>
@@ -1748,7 +1775,6 @@ function loadComments(id, type) {
         wrap.innerHTML = `<div style="background:var(--bg3);padding:14px;border-radius:8px;text-align:center;color:var(--muted);font-size:13px;">Щоб залишити коментар, будь ласка, <span style="color:var(--accent);cursor:pointer;" onclick="openAuth('login')">увійдіть в акаунт</span>.</div>`;
     }
 
-    // Завантаження офіційних відгуків з TMDB
     let tmdbReviews = [];
     tmdb(`/${type}/${id}/reviews`).then(data => {
         if (data && data.results) {
@@ -1772,7 +1798,6 @@ function renderAllComments(id, tmdbReviews) {
          return;
     }
 
-    // Слухаємо базу Firebase для коментарів користувачів
     commentsUnsubscribe = db.collection('comments')
         .where('movieId', '==', String(id))
         .onSnapshot(snap => {
@@ -1871,8 +1896,6 @@ function _doLoadPlayer() {
   iframe.style.border = 'none';
   iframe.style.opacity = '0';
 
-  // !!! АНТИ-РЕКЛАМНА МАГІЯ !!!
-  // Забороняємо небезпечним плеєрам відкривати попапи і перенаправляти сторінку
   if (!p.safe) {
       iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-forms');
   }
@@ -1910,7 +1933,7 @@ function _markPlayerBroken(idx) {
   const tabs = document.querySelectorAll('.player-tab');
   if (tabs[idx]) {
       tabs[idx].classList.add('broken');
-      tabs[idx].style.display = 'none'; // Повністю приховуємо вкладку неробочого плеєра
+      tabs[idx].style.display = 'none'; 
   }
 }
 
@@ -2691,6 +2714,7 @@ function applyCatFilters() {
 function _buildCatParams() {
   const genre    = document.getElementById('cat-genre').value;
   const country  = document.getElementById('cat-country').value;
+  const lang     = document.getElementById('cat-lang').value;
   const yearFrom = document.getElementById('cat-yr-from').value.trim();
   const yearTo   = document.getElementById('cat-yr-to').value.trim();
   const rating   = document.getElementById('cat-rating').value;
@@ -2699,6 +2723,7 @@ function _buildCatParams() {
   const p = { sort_by: sort, 'vote_count.gte': 50 };
   if (genre)   p.with_genres         = genre;
   if (country) p.with_origin_country = country;
+  if (lang)    p.with_original_language = lang;
   if (rating)  p['vote_average.gte'] = rating;
   if (sort === 'vote_average.desc' && !rating) p['vote_count.gte'] = 300;
   if (currentActorId) p.with_cast = currentActorId;
@@ -2739,6 +2764,7 @@ function loadMoreCatalog() { catPage++; _loadCatPage(false); }
 function resetCatFilters(skipApply = false) {
   document.getElementById('cat-genre').value   = '';
   document.getElementById('cat-country').value = '';
+  document.getElementById('cat-lang').value    = '';
   document.getElementById('cat-yr-from').value = '';
   document.getElementById('cat-yr-to').value   = '';
   document.getElementById('cat-rating').value  = '';
@@ -2749,16 +2775,15 @@ function resetCatFilters(skipApply = false) {
 }
 
 function renderCatChips() {
-  const genre    = document.getElementById('cat-genre').value;
-  const country  = document.getElementById('cat-country').value;
-  const yearFrom = document.getElementById('cat-yr-from').value.trim();
-  const yearTo   = document.getElementById('cat-yr-to').value.trim();
-  const rating   = document.getElementById('cat-rating').value;
-  const sort     = document.getElementById('cat-sort').value;
-
+  const lang = document.getElementById('cat-lang').value;
   const chips = [];
+  
   if (currentActorId) chips.push({ key:'actor', label: `Актор: ${currentActorName}` });
-  // (You can add the other chips logic back if you wish, keeping it minimal)
+  if (lang) {
+      const langLabel = document.querySelector(`#cat-lang option[value="${lang}"]`).text;
+      chips.push({ key:'lang', label: langLabel });
+  }
+  
   document.getElementById('cat-active').innerHTML = chips.map(c =>
     `<span class="cat-chip">${c.label}<span class="cat-chip-del" onclick="removeCatFilter('${c.key}')">×</span></span>`
   ).join('');
@@ -2770,6 +2795,7 @@ function removeCatFilter(key) {
       const t = TRANSLATIONS[siteLang] || TRANSLATIONS['uk'];
       document.getElementById('cat-title').textContent = catType === 'tv' ? t['cat_title_t'] : t['cat_title_m'];
   }
+  if (key === 'lang') document.getElementById('cat-lang').value = '';
   applyCatFilters();
 }
 
