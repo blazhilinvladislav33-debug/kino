@@ -11,7 +11,7 @@
   <meta name="google-adsense-account" content="ca-pub-9899032308956715">
   
   <meta name="description" content="КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.">
-  <meta name="keywords" content="дивитись фільми онлайн, серіали онлайн, українська озвучка, HD якість, безкоштовно, кіно онлайн, фільми 2025">
+  <meta name="keywords" content="дивитись фільми онлайн, серіали онлайн, українська озвучка, HD якість, безкоштовно, кіно онлайн, фільми 2026">
   <meta name="robots" content="index, follow">
   <meta name="author" content="КіноБаза">
   <link rel="canonical" href="https://kinobaza.site/">
@@ -102,14 +102,13 @@
       --accent: #e50914; --ah: #b20710; --gold: #f5c518;
       --text: #fff; --muted: #999; --dim: #555; --border: #2a2a2a;
       --green: #1db954; --blue: #1a8cff;
-      transition: --accent 0.8s ease; /* Ефект Хамелеона */
+      transition: --accent 0.8s ease;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
     a{text-decoration:none;color:inherit;}
     button{font-family:inherit;}
 
-    /* ===== HEADER ===== */
     header{background:rgba(13,13,13,.97);backdrop-filter:blur(12px);position:sticky;top:0;z-index:900;border-bottom:1px solid var(--border);}
     .hdr{display:flex;align-items:center;padding:0 24px;height:64px;max-width:1600px;margin:0 auto;gap:16px;}
     .logo{font-size:24px;font-weight:800;letter-spacing:-1px;flex-shrink:0;}
@@ -118,7 +117,6 @@
     nav a{color:var(--muted);font-size:14px;font-weight:500;padding:8px 12px;border-radius:6px;transition:all .2s;white-space:nowrap;}
     nav a:hover,nav a.act{color:#fff;background:var(--bg4);}
     
-    /* ===== BEAUTIFUL SEARCH ===== */
     .srch-wrap{position:relative;flex:0 1 380px;}
     .srch{display:flex;align-items:center;background:#222;border:1px solid #333;border-radius:8px;overflow:hidden;width:100%;transition:all 0.2s;padding:0 12px;}
     .srch:focus-within{border-color:var(--accent);background:#1a1a1a;box-shadow:0 0 0 2px rgba(229,9,20,.15);}
@@ -126,21 +124,20 @@
     .srch input{background:transparent;border:none;outline:none;color:#fff;padding:10px 10px;font-size:14px;width:100%;font-family:inherit;}
     .srch input::placeholder{color:#888;}
     
-    /* ===== MINIMAL LANGUAGE DROPDOWN ===== */
-    .lang-dd-wrap {position:relative;display:inline-flex;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:14px;font-weight:700;color:#fff;user-select:none;transition:all 0.2s;}
+    /* MINIMAL LANGUAGE DROPDOWN */
+    .lang-dd-wrap {position:relative;display:inline-flex;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:13px;font-weight:700;color:#fff;user-select:none;transition:all 0.2s; gap:6px;}
     .lang-dd-wrap:hover {background:var(--bg4);}
-    .lang-lbl-min { display:flex; align-items:baseline; gap:3px; }
-    .lang-dd-wrap svg {width:14px;height:14px;margin-left:6px;fill:var(--muted);transition:transform 0.2s;}
+    .lang-lbl-min { display:flex; align-items:center; font-weight:800; letter-spacing:0.5px; }
+    .lang-dd-wrap svg {width:12px;height:12px;fill:var(--muted);transition:transform 0.2s;}
     .lang-dd-wrap.open svg {transform:rotate(180deg);}
-    .lang-dd-menu {position:absolute;top:calc(100% + 6px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.7);z-index:1000;display:none;overflow:hidden;min-width:70px;}
+    .lang-dd-menu {position:absolute;top:calc(100% + 6px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.7);z-index:1000;display:none;overflow:hidden;min-width:75px;}
     .lang-dd-menu.open {display:block;}
-    .lang-opt {padding:10px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:background 0.15s;text-align:center;}
+    .lang-opt {padding:9px 12px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:background 0.15s;text-align:center;}
     .lang-opt:hover {background:var(--bg4);color:#fff;}
     .lang-opt.act {color:var(--accent); background:rgba(255,255,255,.05);}
 
     .sub-badge{display:inline-block;background:rgba(245,197,24,.18);color:var(--gold);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
     
-    /* ===== AUTOCOMPLETE ===== */
     #ac-drop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,.7);display:none;max-height:440px;overflow-y:auto;}
     #ac-drop.open{display:block;}
     .ac-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .12s;}
@@ -163,7 +160,6 @@
     .ac-del{color:var(--dim);font-size:16px;padding:0 4px;line-height:1;}
     .ac-del:hover{color:var(--accent);}
     
-    /* ===== SEARCH FILTERS ===== */
     .srch-filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
     .sf-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
     .sf-btn:hover{border-color:#fff;color:#fff;}
@@ -178,9 +174,8 @@
     .btn-sm.gold{color:var(--gold); border-color:var(--gold); display:flex; align-items:center; gap:5px;}
     .btn-sm.gold:hover{background:rgba(245,197,24,.1);}
     
-    /* User avatar */
     .user-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;cursor:pointer;position:relative;flex-shrink:0; transition: background 0.8s ease;}
-    .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:200px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
+    .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
     .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown,.user-avatar.open .user-dropdown{display:block;}
     .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:8px;}
     .ud-item:hover{background:var(--bg4);color:#fff;}
@@ -188,7 +183,6 @@
     .ud-name{padding:8px 12px;font-weight:600;color:#fff;font-size:14px;}
     #slot-header{width:100%;}
 
-    /* Switch toggle (Kids Mode) */
     .switch{position:relative;display:inline-block;width:34px;height:20px;}
     .switch input{opacity:0;width:0;height:0;}
     .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--bg4);transition:.4s;border-radius:34px;}
@@ -196,10 +190,8 @@
     input:checked + .slider{background-color:var(--accent);}
     input:checked + .slider:before{transform:translateX(14px);}
 
-    /* ===== MAIN ===== */
     main{max-width:1600px;margin:0 auto;padding:0 24px;}
 
-    /* ===== HERO ===== */
     .hero{position:relative;height:480px;border-radius:14px;overflow:hidden;margin:18px 0;cursor:pointer;}
     .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:background-image .6s;}
     .hero-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.05) 100%);}
@@ -220,19 +212,16 @@
     .h-dot{width:7px;height:7px;border-radius:4px;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;}
     .h-dot.act{width:22px;background:var(--accent);}
 
-    /* ===== GENRES BAR ===== */
     .g-bar{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0;}
     .g-tag{padding:5px 13px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--bg2);transition:all .2s;}
     .g-tag:hover,.g-tag.act{background:var(--accent);border-color:var(--accent);color:#fff;}
 
-    /* ===== SECTION ===== */
     .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;margin-top:26px;}
     .sec-title{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;}
     .sec-title::before{content:'';display:block;width:4px;height:19px;background:var(--accent);border-radius:2px; transition:background 0.8s ease;}
     .sec-more{color:var(--dim);font-size:13px;display:flex;align-items:center;gap:3px;transition:color .2s;}
     .sec-more:hover{color:var(--accent);}
 
-    /* ===== MOVIE CARDS ===== */
     .movies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:12px;}
     .m-card{background:var(--bg3);border-radius:9px;overflow:hidden;cursor:pointer;transition:all .25s;position:relative;}
     .m-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 18px 36px rgba(0,0,0,.6),0 0 0 1px rgba(229,9,20,.2);}
@@ -248,7 +237,6 @@
     .c-year{color:var(--dim);}
     .c-rat{display:flex;align-items:center;gap:2px;color:var(--gold);font-weight:700;}
     
-    /* BADGES & LANGUAGES */
     .c-badge{position:absolute;top:7px;left:7px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;}
     .c-badge.g{background:#1a7a3a;}
     .c-badge.b{background:#1a4a8a;}
@@ -261,7 +249,6 @@
     .m-card:hover .c-fav{display:flex;}
     .c-fav.faved{display:flex;color:var(--accent);}
 
-    /* ===== AD SLOTS ===== */
     .ad-wrap{width:100%;background:#0a0a0a;position:relative;overflow:hidden;}
     .ad-wrap.inline{margin:24px 0;border-radius:8px;border:1px solid #1a1a1a;}
     .ad-lbl{font-size:9px;color:#333;text-transform:uppercase;letter-spacing:1px;padding:2px 8px;display:block;}
@@ -274,7 +261,6 @@
     .sidebar-ad-col{width:190px;flex-shrink:0;margin-top:58px;}
     @media(max-width:900px){.sidebar-row{flex-direction:column;}.sidebar-ad-col{width:100%;margin-top:0;}}
 
-    /* ===== PLAYER MODAL ===== */
     .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
     .modal-ov.open{opacity:1;pointer-events:all;}
     .modal-box{background:var(--bg2);border-radius:14px;max-width:960px;width:97%;max-height:96vh;overflow-y:auto;position:relative;border:1px solid var(--border);animation:mIn .3s ease; transition: box-shadow 0.8s ease;}
@@ -293,7 +279,6 @@
     .m-gtag{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:12px;padding:3px 9px;border-radius:20px;}
     .m-desc{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:20px;}
 
-    /* ===== PLAYER AREA (ОПТИМІЗОВАНО ПІД МОБІЛЬНІ) ===== */
     .player-section{margin-bottom:20px;}
     .player-tabs-row{display:flex;align-items:stretch;background:var(--bg3);border-radius:8px 8px 0 0;border:1px solid var(--border);border-bottom:none;overflow:hidden;}
     .player-tabs{display:flex;flex:1;overflow-x:auto;scrollbar-width:none;}
@@ -309,7 +294,6 @@
     .player-share-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:5px;display:flex;align-items:center;border-radius:5px;transition:color .2s;}
     .player-share-btn:hover{color:#fff;}
     
-    /* ІДЕАЛЬНЕ ВІДОБРАЖЕННЯ НА МОБІЛЬНИХ 16:9 */
     .player-frame-wrap{position:relative;width:100%;padding-bottom:56.25%;height:0;background:#000;border:1px solid var(--border);border-radius:0 0 8px 8px;overflow:hidden;}
     .player-frame-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
     
@@ -330,7 +314,6 @@
     .m-btn-fav:hover{border-color:var(--accent);color:var(--accent);}
     .m-btn-fav.faved{background:rgba(229,9,20,.12);border-color:var(--accent);color:var(--accent);}
 
-    /* ===== COLLECTION ROW ===== */
     .col-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
     .col-row::-webkit-scrollbar{height:4px;}
     .col-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
@@ -340,7 +323,6 @@
     .col-poster{width:110px;height:165px;object-fit:cover;display:block;background:var(--bg4);}
     .col-info{padding:6px; font-size:11px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center;}
 
-    /* ===== AUTH MODAL ===== */
     .auth-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:8000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
     .auth-ov.open{opacity:1;pointer-events:all;}
     .auth-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:420px;max-width:95vw;position:relative;animation:mIn .3s ease;}
@@ -370,11 +352,9 @@
     .auth-forgot span{color:var(--dim);font-size:12px;cursor:pointer;transition:color .2s;}
     .auth-forgot span:hover{color:var(--muted);}
 
-    /* DONATE MODAL */
     .don-btn{display:flex; align-items:center; gap:8px; background:rgba(245,197,24,.1); border:1px solid var(--gold); color:var(--gold); padding:12px; border-radius:8px; font-weight:600; cursor:pointer; width:100%; justify-content:center; text-decoration:none; margin-top:10px; transition:all .2s;}
     .don-btn:hover{background:rgba(245,197,24,.2);}
 
-    /* ===== POPUP AD ===== */
     .pop-ov{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
     .pop-ov.open{opacity:1;pointer-events:all;}
     .pop-box{position:relative;max-width:500px;width:93%;border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.8);animation:mIn .35s ease;}
@@ -388,7 +368,6 @@
     .pop-fallback p{color:var(--muted);font-size:14px;margin-bottom:20px;}
     .pop-fallback .pop-cta{background:var(--gold);color:#000;border:none;padding:12px 36px;border-radius:24px;font-size:15px;font-weight:800;cursor:pointer;}
 
-    /* ===== LIBRARY PAGE ===== */
     #lib-section{display:none;}
     .lib-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0;}
     .lib-tab{padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap;}
@@ -398,7 +377,6 @@
     .lib-empty span{font-size:40px;display:block;margin-bottom:12px;}
     .watched-badge{position:absolute;bottom:8px;left:8px;background:rgba(29,185,84,.85);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;backdrop-filter:blur(4px);}
     
-    /* ===== CONTINUE WATCHING ===== */
     #continue-section{display:none;}
     .c-ep-badge{position:absolute;bottom:8px;right:48px;background:rgba(0,0,0,.8);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px);white-space:nowrap;}
     .ep-num.last{position:relative;outline:2px solid var(--accent);outline-offset:1px;}
@@ -408,7 +386,6 @@
     .m-btn-wl:hover{border-color:#fff;color:#fff;}
     .m-btn-wl.saved{background:rgba(26,140,255,.12);border-color:var(--blue);color:var(--blue);}
 
-    /* ===== CAST & SIMILAR ===== */
     .cast-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
     .cast-row::-webkit-scrollbar{height:4px;}
     .cast-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
@@ -440,7 +417,6 @@
     .m-extra-lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
     .m-extra-val{font-size:13px;font-weight:600;color:#fff;}
     
-    /* ===== SKELETON ===== */
     .sk-card{background:var(--bg3);border-radius:9px;overflow:hidden;animation:skP 1.5s infinite;}
     .sk-poster{width:100%;aspect-ratio:2/3;background:var(--bg4);}
     .sk-info{padding:9px;}
@@ -448,7 +424,6 @@
     .sk-s{width:55%;}
     @keyframes skP{0%,100%{opacity:1}50%{opacity:.45}}
 
-    /* ===== CATALOG ===== */
     #cat-section{display:none;}
     .cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;margin-top:10px;}
     .cat-filters{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;}
@@ -475,7 +450,6 @@
     .cat-chip-del:hover{opacity:1;}
     .cat-count{font-size:12px;color:var(--muted);margin-top:2px;}
 
-    /* ===== ANTI-ADBLOCK ===== */
     #adblock-wall{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:999999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
     .adblock-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:44px 36px;max-width:460px;width:94%;text-align:center;}
     .adblock-icon{font-size:52px;margin-bottom:20px;}
@@ -488,7 +462,6 @@
     .adblock-btn:hover{background:var(--ah);}
     .ad-video{width:100%;display:block;max-height:160px;object-fit:cover;cursor:pointer;}
     
-    /* ===== PAGE MODAL ===== */
     .page-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:8500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
     .page-modal-ov.open{opacity:1;pointer-events:all;}
     .page-modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:700px;max-width:95vw;max-height:85vh;overflow-y:auto;position:relative;animation:mIn .3s ease;}
@@ -500,7 +473,6 @@
     .page-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
     .page-modal-close:hover{color:#fff;}
     
-    /* ===== FOOTER ===== */
     footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:50px;padding:32px 24px 18px;}
     .ft-grid{max-width:1600px;margin:0 auto 22px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:26px;}
     .ft-brand .logo{display:block;margin-bottom:10px;}
@@ -513,7 +485,6 @@
     .ft-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
     .ft-tag{background:var(--bg3);color:var(--muted);padding:3px 9px;border-radius:4px;font-size:11px;}
 
-    /* ===== UTILS ===== */
     .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--bg3);color:#fff;padding:11px 22px;border-radius:8px;font-size:14px;border-left:3px solid var(--accent);z-index:99999;transition:transform .3s;white-space:nowrap;}
     .toast.show{transform:translateX(-50%) translateY(0);}
     #scroll-top{position:fixed;bottom:26px;right:26px;width:42px;height:42px;background:var(--accent);border-radius:50%;border:none;color:#fff;font-size:18px;cursor:pointer;z-index:500;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(229,9,20,.4);transition:all .2s;}
@@ -521,14 +492,12 @@
     #scroll-top.show{display:flex;}
     #srch-sec{display:none;}
 
-    /* ===== HAMBURGER ===== */
     .hbg{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:5px;border:none;background:transparent;flex-shrink:0;width:36px;height:40px;}
     .hbg span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .28s cubic-bezier(.4,0,.2,1);}
     .hbg.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
     .hbg.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .hbg.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
-    /* ===== MOBILE DRAWER ===== */
     .mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9998;opacity:0;pointer-events:none;transition:opacity .28s;backdrop-filter:blur(3px);}
     .mob-ov.open{opacity:1;pointer-events:all;}
     .mob-drawer{position:fixed;top:0;left:0;bottom:0;width:272px;background:var(--bg2);border-right:1px solid var(--border);z-index:9999;transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;}
@@ -541,7 +510,6 @@
     .mob-nav-link:hover,.mob-nav-link.act{color:#fff;background:var(--bg3);}
     .mob-nav-icon{font-size:17px;width:22px;text-align:center;flex-shrink:0;}
 
-    /* ===== BOTTOM NAV ===== */
     .mob-bnav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,13,.97);backdrop-filter:blur(12px);border-top:1px solid var(--border);z-index:800;padding:4px 0 max(4px,env(safe-area-inset-bottom));}
     .mob-bnav-inner{display:flex;justify-content:space-around;align-items:stretch;}
     .mbn-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 6px;cursor:pointer;color:var(--dim);font-size:10px;font-weight:600;letter-spacing:.2px;transition:color .15s;border:none;background:transparent;flex:1;font-family:inherit; -webkit-tap-highlight-color:transparent; outline:none;}
@@ -549,7 +517,6 @@
     .mbn-btn.act{color:var(--accent);}
     .mbn-btn:active{opacity:.65;}
 
-    /* ===== MEDIA 768 (MOBILE) ===== */
     @media(max-width:768px){
       .hbg{display:flex;}
       nav{display:none;}
@@ -560,7 +527,6 @@
       .srch input{padding:8px 8px;font-size:16px;} 
       .hdr-right{gap:4px;}
       #pwa-install-btn, #auth-btns, #user-menu {display:none !important;} 
-      .lang-dd-wrap .t {display:none;} 
       .lang-dd-wrap {padding: 6px 8px;}
       .lang-dd-menu {min-width: 50px;}
       .hero{height:240px;margin-bottom:0;}
@@ -635,7 +601,7 @@
     <div class="hdr-right">
       <!-- Minimal Language Selector -->
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
-        <div class="lang-lbl-min" id="curr-lang-lbl"><span class="sm">ua</span> UA</div>
+        <div class="lang-lbl-min" id="curr-lang-lbl">UA</div>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
         <div class="lang-dd-menu" id="lang-dd-menu">
           <div class="lang-opt act" onclick="setSiteLang('uk', event)">UA</div>
@@ -975,12 +941,12 @@
       <span class="ft-tag">безкоштовно</span>
       <span class="ft-tag">українська озвучка</span>
       <span class="ft-tag">HD якість</span>
-      <span class="ft-tag">нові фільми 2025</span>
+      <span class="ft-tag">нові фільми 2026</span>
       <span class="ft-tag">класика кіно</span>
     </div>
   </div>
   <div class="ft-btm">
-    <p>© 2025 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--gold);">TMDB</a></p>
+    <p>© 2026 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--gold);">TMDB</a></p>
     <p style="color:var(--dim);font-size:11px;">Сайт не зберігає відеофайли. Всі відео надаються третіми особами.</p>
   </div>
 </footer>
@@ -1088,7 +1054,7 @@
   <div class="auth-box" style="text-align:center;">
     <button class="auth-close" onclick="closeDonate()">✕</button>
     <h2 style="margin-bottom:10px;">☕ Підтримати проект</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">КіноБаза працює без агресивної реклами. Ваша підтримка допомагає оплачувати сервери!</p>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">КіноБаза працює без агресивної реклами. Ваша підтримка допомагає оплачувати сервери та розвивати сайт!</p>
     <a href="https://send.monobank.ua/jar/YOUR_LINK" target="_blank" class="don-btn">💳 Поповнити Банку (Monobank)</a>
     <a href="https://donatello.to/YOUR_LINK" target="_blank" class="don-btn" style="color:#fff; border-color:#555; background:#222;">🍩 Donatello</a>
   </div>
@@ -1107,36 +1073,65 @@
 
 <!-- ===== TRAILER MODAL ===== -->
 <div class="trailer-ov" id="trailer-ov" onclick="if(event.target===this)closeTrailer()">
-  <div class="trailer-wrap"><button class="trailer-close" onclick="closeTrailer()">✕</button><div class="trailer-frame" id="trailer-frame"></div></div>
+  <div class="trailer-wrap">
+    <button class="trailer-close" onclick="closeTrailer()">✕</button>
+    <div class="trailer-frame" id="trailer-frame"></div>
+  </div>
 </div>
 
 <!-- ===== PAGE MODAL ===== -->
 <div class="page-modal-ov" id="page-modal" onclick="if(event.target===this)closePage()">
-  <div class="page-modal-box"><button class="page-modal-close" onclick="closePage()">✕</button><div class="page-modal-title" id="page-modal-title"></div><div class="page-modal-content" id="page-modal-content"></div></div>
+  <div class="page-modal-box">
+    <button class="page-modal-close" onclick="closePage()">✕</button>
+    <div class="page-modal-title" id="page-modal-title"></div>
+    <div class="page-modal-content" id="page-modal-content"></div>
+  </div>
 </div>
 
 <!-- ===== ADBLOCK WALL ===== -->
 <div id="adblock-wall">
-  <div class="adblock-box"><div class="adblock-icon">&#128683;</div><div class="adblock-title">Вимкніть блокувальник реклами</div><div class="adblock-sub">Ми надаємо контент безкоштовно завдяки рекламі. Будь ласка, вимкніть AdBlock для нашого сайту.</div><ol class="adblock-steps"><li>Натисніть на іконку AdBlock у браузері</li><li>Виберіть "Вимкнути на цьому сайті"</li><li>Оновіть сторінку</li></ol><button class="adblock-btn" onclick="document.getElementById('adblock-wall').style.display='none'">Я вимкнув AdBlock</button></div>
+  <div class="adblock-box">
+    <div class="adblock-icon">&#128683;</div>
+    <div class="adblock-title">Вимкніть блокувальник реклами</div>
+    <div class="adblock-sub">Ми надаємо контент безкоштовно завдяки рекламі. Будь ласка, вимкніть AdBlock для нашого сайту.</div>
+    <ol class="adblock-steps">
+      <li>Натисніть на іконку AdBlock у браузері</li>
+      <li>Виберіть "Вимкнути на цьому сайті"</li>
+      <li>Оновіть сторінку</li>
+    </ol>
+    <button class="adblock-btn" onclick="document.getElementById('adblock-wall').style.display='none'">Я вимкнув AdBlock</button>
+  </div>
 </div>
 
 <!-- ===== POPUP AD ===== -->
 <div class="pop-ov" id="pop-ov">
-  <div class="pop-box" id="pop-box"><div class="pop-adlbl">Реклама</div><button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button><div class="pop-bar" id="pop-bar" style="width:100%"></div></div>
+  <div class="pop-box" id="pop-box">
+    <div class="pop-adlbl">Реклама</div>
+    <button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>
+    <div class="pop-bar" id="pop-bar" style="width:100%"></div>
+  </div>
 </div>
 
 <script>
-function acceptCookies(){localStorage.setItem('kb_cookies_accepted','1');document.getElementById('cookie-banner').style.display='none';}
-window.addEventListener('DOMContentLoaded',()=>{
-  if(!localStorage.getItem('kb_cookies_accepted')){document.getElementById('cookie-banner').style.display='flex';}
-  const langObj = {'uk':'UA', 'ru':'RU', 'en':'EN'};
-  document.getElementById('curr-lang-lbl').textContent = langObj[siteLang] || 'UA';
+function acceptCookies() {
+    localStorage.setItem('kb_cookies_accepted', '1');
+    document.getElementById('cookie-banner').style.display = 'none';
+}
+window.addEventListener('DOMContentLoaded', () => {
+    if(!localStorage.getItem('kb_cookies_accepted')) {
+        document.getElementById('cookie-banner').style.display = 'flex';
+    }
 });
-function getSkeletonHtml(count=6){return '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(count);}
-function escapeHtml(unsafe){return (unsafe||'').toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+
+function getSkeletonHtml(count=6) {
+    return '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(count);
+}
+function escapeHtml(unsafe) {
+    return (unsafe || '').toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
 
 const TR = {
-  uk: {nav_home:"Головна",nav_movies:"Фільми",nav_tv:"Серіали",nav_cartoons:"Мультфільми",nav_docs:"Документальні",nav_top:"Топ рейтинг",nav_classic:"Класика",search_ph:"Пошук фільмів...",app:"Додаток",login:"Увійти",register:"Реєстрація",ud_fav:"Улюблені",ud_wl:"Дивитись пізніше",ud_watch:"Переглянуто",ud_admin:"Адміністрування",ud_logout:"Вийти",badge_new:"Новинка",btn_watch:"Дивитись",btn_more:"Детальніше",g_all:"Усі",g_act:"Бойовик",g_com:"Комедія",g_dra:"Драма",g_hor:"Жахи",g_mel:"Мелодрама",g_fan:"Фантастика",g_fnt:"Фентезі",g_ani:"Анімація",g_doc:"Документальні",g_thr:"Трилер",g_adv:"Пригоди",btn_close:"✕ Закрити",sf_all:"Все",sf_movies:"Фільми",sf_tv:"Серіали",btn_more_load:"Завантажити ще",cat_title_m:"Каталог фільмів",cat_title_t:"Каталог серіалів",btn_home_back:"← Головна",flt_type:"Тип",flt_genre:"Жанр",flt_country:"Країна",flt_year:"Рік",flt_rating:"Рейтинг",flt_sort:"Сортування",flt_lang:"Озвучка",btn_apply:"Застосувати",btn_reset:"Скинути",ph_from:"Від",ph_to:"До",lib_title:"Моя бібліотека",btn_back:"← Назад",h_cont:"Продовжити перегляд",btn_all_watched:"Всі переглянуті →",h_new:"Нові фільми",all:"Всі →",h_pop:"Популярні",h_top:"Топ рейтинг",h_tv:"Серіали",h_classic:"Класика кіно",h_90s:"Кіно 90-х",h_00s:"Кіно 2000-х",ft_genres:"Жанри",ft_nav:"Навигация",ft_serv:"Сервис",btn_search:"Пошук",btn_profile:"Профіль",lbl_pass:"Пароль",forgot_pass:"Забули пароль?",or:"або",log_google:"Увійти через Google",no_acc:"Немає акаунту?",lbl_name:"Ім'я",ph_name:"Ваше ім'я",reg_google:"Зареєструватись через Google",has_acc:"Вже є акаунт?"},
+  uk: {nav_home:"Головна",nav_movies:"Фільми",nav_tv:"Серіали",nav_cartoons:"Мультфільми",nav_docs:"Документальні",nav_top:"Топ рейтинг",nav_classic:"Класика",search_ph:"Пошук фільмів...",app:"Додаток",login:"Увійти",register:"Реєстрація",ud_fav:"Улюблені",ud_wl:"Дивитись пізніше",ud_watch:"Переглянуто",ud_admin:"Адміністрування",ud_logout:"Вийти",badge_new:"Новинка",btn_watch:"Дивитись",btn_more:"Детальніше",g_all:"Усі",g_act:"Бойовик",g_com:"Комедія",g_dra:"Драма",g_hor:"Жахи",g_mel:"Мелодрама",g_fan:"Фантастика",g_fnt:"Фентезі",g_ani:"Анімація",g_doc:"Документальні",g_thr:"Трилер",g_adv:"Пригоди",btn_close:"✕ Закрити",sf_all:"Все",sf_movies:"Фільми",sf_tv:"Серіали",btn_more_load:"Завантажити ще",cat_title_m:"Каталог фільмів",cat_title_t:"Каталог серіалів",btn_home_back:"← Головна",flt_type:"Тип",flt_genre:"Жанр",flt_country:"Країна",flt_year:"Рік",flt_rating:"Рейтинг",flt_sort:"Сортування",flt_lang:"Озвучка",btn_apply:"Застосувати",btn_reset:"Скинути",ph_from:"Від",ph_to:"До",lib_title:"Моя бібліотека",btn_back:"← Назад",h_cont:"Продовжити перегляд",btn_all_watched:"Всі переглянуті →",h_new:"Нові фільми",all:"Всі →",h_pop:"Популярні",h_top:"Топ рейтинг",h_tv:"Серіали",h_classic:"Класика кіно",h_90s:"Кіно 90-х",h_00s:"Кіно 2000-х",ft_genres:"Жанри",ft_nav:"Навігація",ft_serv:"Сервіс",btn_search:"Пошук",btn_profile:"Профіль",lbl_pass:"Пароль",forgot_pass:"Забули пароль?",or:"або",log_google:"Увійти через Google",no_acc:"Немає акаунту?",lbl_name:"Ім'я",ph_name:"Ваше ім'я",reg_google:"Зареєструватись через Google",has_acc:"Вже є акаунт?"},
   ru: {nav_home:"Главная",nav_movies:"Фильмы",nav_tv:"Сериалы",nav_cartoons:"Мультфильмы",nav_docs:"Документальные",nav_top:"Топ рейтинг",nav_classic:"Классика",search_ph:"Поиск фильмов...",app:"Приложение",login:"Войти",register:"Регистрация",ud_fav:"Избранное",ud_wl:"Смотреть позже",ud_watch:"Просмотрено",ud_admin:"Администрирование",ud_logout:"Выйти",badge_new:"Новинка",btn_watch:"Смотреть",btn_more:"Подробнее",g_all:"Все",g_act:"Боевик",g_com:"Комедия",g_dra:"Драма",g_hor:"Ужасы",g_mel:"Мелодрама",g_fan:"Фантастика",g_fnt:"Фэнтези",g_ani:"Анимация",g_doc:"Документальные",g_thr:"Триллер",g_adv:"Приключения",btn_close:"✕ Закрыть",sf_all:"Все",sf_movies:"Фильмы",sf_tv:"Сериалы",btn_more_load:"Загрузить еще",cat_title_m:"Каталог фильмов",cat_title_t:"Каталог сериалов",btn_home_back:"← Главная",flt_type:"Тип",flt_genre:"Жанр",flt_country:"Страна",flt_year:"Год",flt_rating:"Рейтинг",flt_sort:"Сортировка",flt_lang:"Озвучка",btn_apply:"Применить",btn_reset:"Сбросить",ph_from:"От",ph_to:"До",lib_title:"Моя библиотека",btn_back:"← Назад",h_cont:"Продолжить просмотр",btn_all_watched:"Все просмотренные →",h_new:"Новые фильмы",all:"Все →",h_pop:"Популярные",h_top:"Топ рейтинг",h_tv:"Сериалы",h_classic:"Классика кино",h_90s:"Кино 90-х",h_00s:"Кино 2000-х",ft_genres:"Жанры",ft_nav:"Навигация",ft_serv:"Сервис",btn_search:"Поиск",btn_profile:"Профиль",lbl_pass:"Пароль",forgot_pass:"Забыли пароль?",or:"или",log_google:"Войти через Google",no_acc:"Нет аккаунта?",lbl_name:"Имя",ph_name:"Ваше имя",reg_google:"Зарегистрироваться через Google",has_acc:"Уже есть аккаунт?"},
   en: {nav_home:"Home",nav_movies:"Movies",nav_tv:"TV Shows",nav_cartoons:"Cartoons",nav_docs:"Documentary",nav_top:"Top Rated",nav_classic:"Classic",search_ph:"Search movies...",app:"App",login:"Login",register:"Register",ud_fav:"Favorites",ud_wl:"Watch Later",ud_watch:"Watched",ud_admin:"Admin Panel",ud_logout:"Logout",badge_new:"New",btn_watch:"Watch",btn_more:"Details",g_all:"All",g_act:"Action",g_com:"Comedy",g_dra:"Drama",g_hor:"Horror",g_mel:"Romance",g_fan:"Sci-Fi",g_fnt:"Fantasy",g_ani:"Animation",g_doc:"Documentary",g_thr:"Thriller",g_adv:"Adventure",btn_close:"✕ Close",sf_all:"All",sf_movies:"Movies",sf_tv:"TV Shows",btn_more_load:"Load more",cat_title_m:"Movie Catalog",cat_title_t:"TV Show Catalog",btn_home_back:"← Home",flt_type:"Type",flt_genre:"Genre",flt_country:"Country",flt_year:"Year",flt_rating:"Rating",flt_sort:"Sort by",flt_lang:"Language",btn_apply:"Apply",btn_reset:"Reset",ph_from:"From",ph_to:"To",lib_title:"My Library",btn_back:"← Back",h_cont:"Continue Watching",btn_all_watched:"All watched →",h_new:"New Movies",all:"All →",h_pop:"Popular",h_top:"Top Rated",h_tv:"TV Shows",h_classic:"Classic Cinema",h_90s:"90s Movies",h_00s:"2000s Movies",ft_genres:"Genres",ft_nav:"Navigation",ft_serv:"Service",btn_search:"Search",btn_profile:"Profile",lbl_pass:"Password",forgot_pass:"Forgot password?",or:"or",log_google:"Login with Google",no_acc:"Don't have an account?",lbl_name:"Name",ph_name:"Your name",reg_google:"Register with Google",has_acc:"Already have an account?"}
 };
@@ -1355,18 +1350,42 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   const _vids = (data.videos && data.videos.results) || []; const _trailer = _vids.find(v=>v.type==='Trailer'&&v.site==='YouTube') || _vids.find(v=>v.site==='YouTube') || null; const _cast = ((data.credits && data.credits.cast) || []).slice(0, 16);
   const title=data.title||data.name||'—'; const year=(data.release_date||data.first_air_date||'').slice(0,4); const rat=data.vote_average?data.vote_average.toFixed(1):'—'; const genres=(data.genres||[]).map(g=>`<span class="m-gtag">${g.name}</span>`).join(''); const desc=data.overview||'Опис відсутній.'; const isFav = isFavorite(id); const isWL = isWatchLater(id); const isWtch = isWatched(id);
   
-  // === ОНОВЛЕННЯ SEO МЕТА-ТЕГІВ ===
-  document.title = `Дивитися «${title}» (${year}) українською озвучкою онлайн в HD | КіноБаза`;
+  // === ОНОВЛЕННЯ SEO МЕТА-ТЕГІВ ТА CTR-ГАЧКІВ ===
+  let mediaLabel = 'Фільм';
+  if (type === 'tv') {
+    mediaLabel = 'Серіал';
+  } else if (data.genres && data.genres.some(g => g.id === 16)) {
+    mediaLabel = 'Мультфільм';
+  }
+  
+  document.title = `${mediaLabel} ${title} (${year}) дивитись українською в HD 1080p | КіноБаза`;
   let metaDesc = document.querySelector('meta[name="description"]');
-  if (metaDesc) metaDesc.setAttribute("content", `Дивитися ${type === 'tv' ? 'серіал' : 'фільм'} «${title}» (${year}) українською озвучкою або мовою оригіналу з субтитрами онлайн в хорошій якості. ${desc.substring(0, 120)}...`);
+  if (metaDesc) metaDesc.setAttribute("content", `Дивитись ${mediaLabel.toLowerCase()} ${title} (${year}) українською мовою онлайн в хорошій HD якості безкоштовно. ${desc.substring(0, 110)}...`);
   
   let oldSchema = document.getElementById('dynamic-schema'); if (oldSchema) oldSchema.remove();
-  let schemaData = {
-    "@context": "https://schema.org", "@type": type === 'tv' ? "TVSeries" : "Movie", "name": title, "image": `${IMG}w500${data.poster_path}`, "description": desc, "dateCreated": year, "inLanguage": ["uk", "en", "ru"],
-    "aggregateRating": { "@type": "AggregateRating", "ratingValue": rat, "bestRating": "10", "ratingCount": data.vote_count || 1 }
-  };
+  let schemaData = [
+    {
+      "@context": "https://schema.org",
+      "@type": type === 'tv' ? "TVSeries" : "Movie",
+      "name": title,
+      "image": `${IMG}w500${data.poster_path}`,
+      "description": desc,
+      "dateCreated": year,
+      "inLanguage": ["uk", "en", "ru"],
+      "aggregateRating": { "@type": "AggregateRating", "ratingValue": rat, "bestRating": "10", "ratingCount": data.vote_count || 1 }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://kinobaza.site/" },
+        { "@type": "ListItem", "position": 2, "name": mediaLabel, "item": `https://kinobaza.site/#${type}` },
+        { "@type": "ListItem", "position": 3, "name": title, "item": `https://kinobaza.site/${type}/${id}` }
+      ]
+    }
+  ];
   let scriptSchema = document.createElement('script'); scriptSchema.type = 'application/ld+json'; scriptSchema.id = 'dynamic-schema'; scriptSchema.text = JSON.stringify(schemaData); document.head.appendChild(scriptSchema);
-  // ==================================
+  // ==============================================
 
   const backdrop=data.backdrop_path ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}">` :`<div class="m-backdrop-ph">🎬</div>`;
   const players = type==='tv' ? TV_PLAYERS : MOVIE_PLAYERS; const tabsHtml = players.map((p,i)=>`<div class="player-tab${i===currentPlayer?' act':''}" onclick="switchPlayer(${i})">${p.name}${p.badge?`<span class="ptab-badge">${p.badge}</span>`:''}</div>`).join('');
@@ -1481,6 +1500,8 @@ function selectEp(n) { currentEpisode=n; document.querySelectorAll('.ep-num').fo
 function closeMovieModal(pushToHistory = true) {
   document.getElementById('movie-modal').classList.remove('open'); const iframe=document.getElementById('player-iframe'); if(iframe) iframe.src='';
   if(commentsUnsubscribe) { commentsUnsubscribe(); commentsUnsubscribe = null; } document.title = "КіноБаза — Дивитись фільми онлайн безкоштовно";
+  let metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute("content", "КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.");
   if (pushToHistory && window.location.pathname !== '/') history.pushState(null, '', '/'); resetChameleon();
 }
 
