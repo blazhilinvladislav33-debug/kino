@@ -7,23 +7,25 @@
   <!-- ===== SEO ===== -->
   <title>КіноБаза — Дивитись фільми онлайн безкоштовно</title>
   
+  <!-- Підтвердження Google AdSense -->
   <meta name="google-adsense-account" content="ca-pub-9899032308956715">
+  
   <meta name="description" content="КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.">
   <meta name="keywords" content="дивитись фільми онлайн, серіали онлайн, українська озвучка, HD якість, безкоштовно, кіно онлайн, фільми 2026">
   <meta name="robots" content="index, follow">
   <meta name="author" content="КіноБаза">
-  <link rel="canonical" id="canonical-url" href="https://kinobaza.site/">
+  <link rel="canonical" href="https://kinobaza.site/">
 
-  <!-- ===== Open Graph ===== -->
-  <meta property="og:type"         content="website">
-  <meta property="og:site_name"    content="КіноБаза">
-  <meta property="og:title"        content="КіноБаза — Дивитись фільми онлайн безкоштовно">
-  <meta property="og:description"  content="Тисячі фільмів та серіалів у HD якості з українською озвучкою. Безкоштовно, без реєстрації.">
-  <meta property="og:url"          content="https://kinobaza.site/">
-  <meta property="og:image"        content="https://kinobaza.site/icons/icon-512x512.png">
+  <!-- ===== Open Graph (Facebook / Telegram) ===== -->
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="КіноБаза">
+  <meta property="og:title"       content="КіноБаза — Дивитись фільми онлайн безкоштовно">
+  <meta property="og:description" content="Тисячі фільмів та серіалів у HD якості з українською озвучкою. Безкоштовно, без реєстрації.">
+  <meta property="og:url"         content="https://kinobaza.site/">
+  <meta property="og:image"       content="https://kinobaza.site/icons/icon-512x512.png">
   <meta property="og:image:width"  content="512">
   <meta property="og:image:height" content="512">
-  <meta property="og:locale"       content="uk_UA">
+  <meta property="og:locale"      content="uk_UA">
 
   <!-- ===== Twitter Card ===== -->
   <meta name="twitter:card"        content="summary_large_image">
@@ -94,7 +96,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  
   <style>
     :root {
       --bg: #0d0d0d; --bg2: #141414; --bg3: #1a1a1a; --bg4: #222;
@@ -171,7 +172,7 @@
     .btn-sm.red:hover{background:var(--ah);}
     
     .user-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;cursor:pointer;position:relative;flex-shrink:0; transition: background 0.8s ease;}
-    .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:200px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
+    .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
     .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown,.user-avatar.open .user-dropdown{display:block;}
     .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:8px;}
     .ud-item:hover{background:var(--bg4);color:#fff;}
@@ -189,11 +190,9 @@
     main{max-width:1600px;margin:0 auto;padding:0 24px;}
 
     .hero{position:relative;height:480px;border-radius:14px;overflow:hidden;margin:18px 0;cursor:pointer;}
-    /* ДОДАНО ПЛАВНІСТЬ ДЛЯ ФОНУ НОВИНОК */
     .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition: opacity 0.3s ease;}
     .hero-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.05) 100%);}
     .hero-ob{position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(0,var(--bg),transparent);}
-    /* ДОДАНО ПЛАВНІСТЬ ДЛЯ КОНТЕНТУ НОВИНОК */
     .hero-c{position:relative;z-index:2;padding:50px 44px;height:100%;display:flex;flex-direction:column;justify-content:center;max-width:580px; transition: opacity 0.3s ease;}
     .hero-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:3px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;width:fit-content; transition:background 0.8s ease;}
     .hero-title{font-size:36px;font-weight:800;line-height:1.1;margin-bottom:11px;}
@@ -599,6 +598,7 @@
       <div id="ac-drop"></div>
     </div>
     <div class="hdr-right">
+      <!-- Minimal Language Selector -->
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
         <div class="lang-lbl-min" id="curr-lang-lbl">UA</div>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
@@ -632,7 +632,7 @@
                 <label class="switch"><input type="checkbox" id="kids-switch" onclick="event.preventDefault()"><span class="slider"></span></label>
             </div>
             <div class="ud-divider"></div>
-            <div class="ud-item" id="ud-admin" style="display:none;" data-i18n="ud_admin" onclick="location.href='admin.html'">Адміністрування</div>
+            <div class="ud-item" id="ud-admin" style="display:none;" data-i18n="ud_admin" onclick="window.location.href='/admin.html'">Адміністрування</div>
             <div class="ud-item" data-i18n="ud_logout" onclick="doLogout()">Вийти</div>
           </div>
         </div>
@@ -645,6 +645,7 @@
 <!-- MAIN -->
 <main>
 
+  <!-- HERO -->
   <div class="hero" id="hero" onclick="heroClick()">
     <div class="hero-bg" id="hero-bg" style="transition: opacity 0.3s ease;"></div>
     <div class="hero-ov"></div><div class="hero-ob"></div>
@@ -661,7 +662,7 @@
         <button class="btn-play" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,'',true)">
             <span data-i18n="btn_watch">Дивитись</span>
         </button>
-        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,'',false)">
+        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,'',true)">
             <span data-i18n="btn_more">Детальніше</span>
         </button>
       </div>
@@ -669,6 +670,7 @@
     <div class="hero-dots" id="hero-dots"></div>
   </div>
 
+  <!-- GENRES -->
   <div class="g-bar" id="g-bar-container">
     <a href="/" class="g-tag act" onclick="event.preventDefault();selGenre(0,this)" data-i18n="g_all">Усі</a>
     <a href="/category/action" class="g-tag" onclick="event.preventDefault();selGenre(28,this)" data-i18n="g_act">Бойовик</a>
@@ -681,6 +683,7 @@
     <a href="/category/animation" class="g-tag" onclick="event.preventDefault();selGenre(16,this)" data-i18n="g_ani">Анімація</a>
   </div>
 
+  <!-- SEARCH RESULTS -->
   <div id="srch-sec">
     <div class="sec-hdr">
       <div>
@@ -700,6 +703,7 @@
     </div>
   </div>
 
+  <!-- CATALOG -->
   <div id="cat-section">
     <div class="cat-head">
       <div>
@@ -804,10 +808,11 @@
     </div>
   </div>
 
+  <!-- LIBRARY -->
   <div id="lib-section">
     <div class="sec-hdr">
       <div class="sec-title" data-i18n="lib_title">Моя бібліотека</div>
-      <a href="#" class="sec-more" onclick="showHome();return false;" data-i18n="btn_back">← Назад</a>
+      <a href="#" class="sec-more" onclick="event.preventDefault();showHome();" data-i18n="btn_back">← Назад</a>
     </div>
     <div class="lib-tabs">
       <div class="lib-tab act" id="lib-tab-fav"     onclick="switchLibTab('fav')" data-i18n="ud_fav">Улюблені</div>
@@ -817,6 +822,7 @@
     <div class="movies-grid" id="lib-grid"></div>
   </div>
 
+  <!-- HOME CONTENT -->
   <div id="home-content">
   
     <!-- ПОПУЛЯРНІ ДОБІРКИ (SEO LINKS) -->
@@ -887,20 +893,6 @@
     </div>
     <div id="classic-grid" class="movies-grid"></div>
 
-    <!-- 90s -->
-    <div class="sec-hdr">
-      <div class="sec-title" data-i18n="h_90s">Кіно 90-х</div>
-      <a href="#" class="sec-more" data-i18n="all">Всі →</a>
-    </div>
-    <div id="nineties-grid" class="movies-grid"></div>
-
-    <!-- 2000s -->
-    <div class="sec-hdr">
-      <div class="sec-title" data-i18n="h_00s">Кіно 2000-х</div>
-      <a href="#" class="sec-more" data-i18n="all">Всі →</a>
-    </div>
-    <div id="noughts-grid" class="movies-grid"></div>
-
   </div><!-- /#home-content -->
 </main>
 
@@ -953,7 +945,7 @@
 <div class="mob-ov" id="mob-ov" onclick="closeMobileMenu()"></div>
 <div class="mob-drawer" id="mob-drawer">
   <div class="mob-drawer-top">
-    <a href="#" class="logo" onclick="showHome();closeMobileMenu();return false;"><b>Кіно</b>База</a>
+    <a href="/" class="logo" onclick="event.preventDefault();showHome();closeMobileMenu();"><b>Кіно</b>База</a>
     <button class="mob-drawer-close" onclick="closeMobileMenu()">✕</button>
   </div>
   <div class="mob-drawer-section">
@@ -1098,7 +1090,7 @@
 
 <script>
 // =====================================================================
-// COOKIE CONSENT
+// Функція збереження кукі
 // =====================================================================
 function acceptCookies() {
     localStorage.setItem('kb_cookies_accepted', '1');
@@ -1118,15 +1110,15 @@ function escapeHtml(unsafe) {
 }
 
 function slugify(text) {
-  const ru = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я є і ї ґ".split(" ");
-  const en = "a b v h d e e zh z y y k l m n o p r s t u f kh ts ch sh shch  y  e yu ya ye i yi g".split(" ");
+  const ru = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ  ъ ы ь э ю я є і ї ґ".split(" ");
+  const en = "a b v h d e e zh z y y k l m n o p r s t u f kh ts ch sh shch y e yu ya ye i yi g".split(" ");
   let str = (text || '').toLowerCase();
   for(let i=0; i<ru.length; i++) str = str.split(ru[i]).join(en[i]);
   return str.replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 }
 
 // =====================================================================
-// TRANSLATION DICTIONARY
+// ПЕРЕКЛАДИ
 // =====================================================================
 const TRANSLATIONS = {
   uk: {
@@ -1308,9 +1300,6 @@ function generateStoryShare(title, posterUrl) {
     img.onerror = () => showToast('Помилка завантаження постера для генерації.');
 }
 
-/* =======================================================
-   WATCH PARTY (SYNC)
-======================================================= */
 function createWatchParty(id, type) {
     const roomId = Math.random().toString(36).substring(2, 9);
     const link = `${window.location.origin}/${type}/${id}?party=${roomId}`;
@@ -1486,7 +1475,10 @@ async function tmdb(ep, params={}) {
         params.without_genres = '27,53,80'; 
     }
     
-    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, String(v)));
+    Object.entries(params).forEach(([k,v]) => {
+      if(k==='language' && v==='') url.searchParams.delete('language');
+      else url.searchParams.set(k, String(v));
+    });
     try {
       const r = await fetch(url);
       if (r.status === 429) { keyIdx = (keyIdx+1) % keys.length; continue; }
@@ -1561,7 +1553,7 @@ function startHero(movies) {
   heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroMovies.length; setHero(heroMovies[heroIdx]); },6000);
 }
 function goHero(i){ heroIdx=i; setHero(heroMovies[i]); clearInterval(heroTimer); heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroMovies.length; setHero(heroMovies[heroIdx]); },6000); }
-function heroClick(){ openMovie(currentHeroId, currentHeroType, currentHeroTitle, false); }
+function heroClick(){ openMovie(currentHeroId, currentHeroType, currentHeroTitle, true); }
 
 // =====================================================================
 // CARD HTML
@@ -1585,7 +1577,7 @@ function card(m, badge) {
 
   const safeTitle = escapeHtml(title).replace(/'/g,"\\'");
 
-  return `<div class="m-card" onclick="openMovie(${m.id},'${mtype}','${safeTitle}',false)">
+  return `<div class="m-card" onclick="event.preventDefault(); openMovie(${m.id},'${mtype}','${safeTitle}',true)">
     ${poster}${ph}
     <div class="c-ov"></div>
     ${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}
@@ -1604,7 +1596,7 @@ async function loadGrid(id, ep, params={}, badge=null, limit=12) {
   
   const data=await tmdb(ep,params);
   if(!data||!data.results){
-    if (el) el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">Немає API ключа. <a href="admin.html" style="color:var(--accent);">Додати в адмін-панелі →</a></div>`;
+    if (el) el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">Помилка завантаження</div>`;
     return [];
   }
   const validMovies = data.results.filter(m => m.poster_path);
@@ -1642,7 +1634,8 @@ async function initSite() {
 // =====================================================================
 let currentModalId=null, currentImdbId='', currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
 
-async function openMovie(id, type='movie', titleStr='', autoPlay=false, pushToHistory=true) {
+// ДОДАНО ПАРАМЕТР titleStr (це і була помилка на мобільних і ПК)
+async function openMovie(id, type='movie', titleStr='', pushToHistory=true) {
   if(!id) return;
   currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1; currentImdbId='';
   gaEvent('view_item', { item_id: id, item_category: type });
@@ -1650,7 +1643,7 @@ async function openMovie(id, type='movie', titleStr='', autoPlay=false, pushToHi
   const slug = slugify(titleStr);
   const urlPath = slug ? `/${type}/${id}-${slug}` : `/${type}/${id}`;
   if (pushToHistory) {
-      history.pushState({ id, type, titleStr }, 'Loading...', urlPath);
+      try { history.pushState({ id, type, titleStr }, 'Loading...', urlPath); } catch(e){}
   }
 
   currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0');
@@ -1785,7 +1778,7 @@ async function openMovie(id, type='movie', titleStr='', autoPlay=false, pushToHi
                 <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>Усі частини по порядку</div>
                 <div class="col-row">
                     ${parts.map(p => `
-                        <div class="col-card ${p.id===id?'curr':''}" onclick="openMovie(${p.id},'movie','${escapeHtml(p.title||'').replace(/'/g,"\\'")}')">
+                        <div class="col-card ${p.id===id?'curr':''}" onclick="openMovie(${p.id},'movie','${escapeHtml(p.title||'').replace(/'/g,"\\'")}',true)">
                             <img class="col-poster" src="${IMG}w185${p.poster_path}" crossorigin="anonymous">
                             <div class="col-info">${(p.release_date||'').slice(0,4)}</div>
                         </div>
@@ -1848,7 +1841,7 @@ async function openMovie(id, type='movie', titleStr='', autoPlay=false, pushToHi
           </div>
         </div>
         <div class="player-frame-wrap" id="player-wrap">
-          <div class="player-loading" id="player-loading"><div class="spin"></div><div style="color:var(--muted);font-size:13px;margin-top:10px;">Завантаження плеєра...</div></div>
+          <div class="player-loading" id="player-loading"><div class="spin"></div></div>
         </div>
         <div style="font-size:12px;color:var(--dim);margin-top:8px;">Якщо відео видає помилку "404", оберіть Плеєр 2 або Плеєр 3 у вкладках вище.</div>
         ${tvSelector}
@@ -1921,7 +1914,7 @@ async function openMovie(id, type='movie', titleStr='', autoPlay=false, pushToHi
           const poster=m.poster_path
             ?`<img class="sim-poster" src="${IMG}w185${m.poster_path}" alt="${escapeHtml(t)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sim-poster-ph" style="display:none">🎬</div>`
             :`<div class="sim-poster-ph">🎬</div>`;
-          return `<div class="sim-card" onclick="openMovie(${m.id},'${type}','${escapeHtml(t).replace(/'/g,"\\'")}',false)">
+          return `<div class="sim-card" onclick="openMovie(${m.id},'${type}','${escapeHtml(t).replace(/'/g,"\\'")}',true)">
             ${poster}
             <div class="sim-info">
               <div class="sim-title">${escapeHtml(t)}</div>
@@ -1980,7 +1973,6 @@ function _doLoadPlayer() {
     :p.url(currentModalId, currentImdbId);
 
   savePlayerProgress();
-  const thisPlayer = currentPlayer;
 
   if (oldIframe) oldIframe.remove();
 
@@ -2008,7 +2000,6 @@ function _doLoadPlayer() {
   iframe.onload = () => {
     loading.style.display='none';
     iframe.style.opacity='1';
-    _schedulePlayerCheck(iframe, thisPlayer);
   };
   
   setTimeout(()=>{ 
@@ -2017,39 +2008,7 @@ function _doLoadPlayer() {
   }, 5000);
 }
 
-function _schedulePlayerCheck(iframe, playerIdx) {
-  setTimeout(()=>{
-    try {
-      const doc = iframe.contentWindow.document;
-      const bodyLen = doc.body ? doc.body.innerHTML.length : 0;
-      if (bodyLen < 100) {
-        _markPlayerBroken(playerIdx);
-        _autoAdvancePlayer();
-      }
-    } catch(e) {}
-  }, 2500);
-}
-
-function _markPlayerBroken(idx) {
-  brokenPlayers.add(idx);
-  const tabs = document.querySelectorAll('.player-tab');
-  if (tabs[idx]) {
-      tabs[idx].classList.add('broken');
-      tabs[idx].style.display = 'none'; 
-  }
-}
-
-function _autoAdvancePlayer() {
-  const players = currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
-  for (let i = 1; i < players.length; i++) {
-    const next = (currentPlayer + i) % players.length;
-    if (!brokenPlayers.has(next)) {
-      switchPlayer(next);
-      return;
-    }
-  }
-}
-
+const brokenPlayers = new Set();
 function switchPlayer(idx) {
   if (brokenPlayers.has(idx)) return;
   currentPlayer=idx;
@@ -2169,7 +2128,7 @@ function closeMovieModal(pushToHistory = true) {
   if (metaDesc) metaDesc.setAttribute("content", "КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.");
 
   if (pushToHistory && window.location.pathname !== '/') {
-      history.pushState(null, '', '/');
+      try { history.pushState(null, '', '/'); } catch(e){}
   }
   resetChameleon();
 }
@@ -2331,7 +2290,7 @@ function renderContinueWatching() {
     const epBadge = (type==='tv' && m.lastSeason)
       ? `<div class="c-ep-badge">S${m.lastSeason} E${m.lastEpisode||1}</div>` : '';
     const isFav  = isFavorite(m.id);
-    return `<div class="m-card" onclick="openMovie(${m.id},'${type}',true)">
+    return `<div class="m-card" onclick="openMovie(${m.id},'${type}','${escapeHtml(m.title||'').replace(/'/g,"\\'")}',true)">
       ${m.poster
         ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${escapeHtml(m.title||'')}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>`
         : '<div class="c-ph">🎬</div>'}
@@ -2396,7 +2355,7 @@ function renderLibGrid(tab) {
   grid.innerHTML = items.map(m => {
     const type = m.type || 'movie';
     const wtch = isWatched(m.id) ? '<div class="watched-badge">✅ Переглянуто</div>' : '';
-    return `<div class="m-card" onclick="openMovie(${m.id},'${type}',false)">
+    return `<div class="m-card" onclick="openMovie(${m.id},'${type}','${escapeHtml(m.title||'').replace(/'/g,"\\'")}',true)">
       ${m.poster ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${escapeHtml(m.title||'')}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>` : '<div class="c-ph">🎬</div>'}
       <div class="c-ov"></div>
       ${wtch}
@@ -2917,350 +2876,4 @@ async function _loadCatPage(reset) {
   const grid = document.getElementById('cat-grid');
 
   if (!data || !data.results || !data.results.length) {
-    if (reset) grid.innerHTML = '<div style="color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;">Нічого не знайдено за цими фільтрами</div>';
-    document.getElementById('cat-more').style.display = 'none';
-    document.getElementById('cat-count').textContent  = '';
-    return;
-  }
-
-  catTotalPages = Math.min(data.total_pages || 1, 500);
-  const total    = data.total_results || 0;
-  const html    = data.results.filter(m=>m.poster_path).map(m => card({ ...m, media_type: catType })).join('');
-  if (reset) grid.innerHTML = html; else grid.innerHTML += html;
-
-  document.getElementById('cat-count').textContent = `${total.toLocaleString('uk-UA')} результатів`;
-  document.getElementById('cat-more').style.display = (catPage < catTotalPages && catPage < 15) ? 'block' : 'none';
-}
-
-function loadMoreCatalog() { catPage++; _loadCatPage(false); }
-
-function resetCatFilters(skipApply = false, keepActor = false) {
-  document.getElementById('cat-genre').value   = '';
-  document.getElementById('cat-country').value = '';
-  document.getElementById('cat-lang').value    = '';
-  document.getElementById('cat-yr-from').value = '';
-  document.getElementById('cat-yr-to').value   = '';
-  document.getElementById('cat-rating').value  = '';
-  document.getElementById('cat-sort').value    = 'popularity.desc';
-  
-  if (!keepActor) {
-      currentActorId = null;
-      currentActorName = '';
-  }
-  
-  if (!skipApply) applyCatFilters();
-}
-
-function renderCatChips() {
-  const lang = document.getElementById('cat-lang').value;
-  const chips = [];
-  
-  if (currentActorId) chips.push({ key:'actor', label: `Актор: ${currentActorName}` });
-  if (lang) {
-      const langLabel = document.querySelector(`#cat-lang option[value="${lang}"]`).text;
-      chips.push({ key:'lang', label: langLabel });
-  }
-  
-  document.getElementById('cat-active').innerHTML = chips.map(c =>
-    `<span class="cat-chip">${c.label}<span class="cat-chip-del" onclick="removeCatFilter('${c.key}')">×</span></span>`
-  ).join('');
-}
-
-function removeCatFilter(key) {
-  if (key === 'actor') {
-      currentActorId = null;
-      currentActorName = '';
-      const t = TRANSLATIONS[siteLang] || TRANSLATIONS['uk'];
-      document.getElementById('cat-title').textContent = catType === 'tv' ? t['cat_title_t'] : t['cat_title_m'];
-  }
-  if (key === 'lang') document.getElementById('cat-lang').value = '';
-  applyCatFilters();
-}
-
-// =====================================================================
-// ADS
-// =====================================================================
-function getAds(slot){
-  if (currentUserSubscribed) return []; 
-  return adsCache.filter(a=>a.active&&a.slot===slot);
-}
-
-function buildH(ad){
-  const w=document.createElement('div');
-  w.className='ad-wrap inline';
-  const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
-  if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
-  else if(ad.type==='video'){
-    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
-    const vid=document.createElement('video');
-    vid.src=ad.videoUrl||ad.imageUrl||'';
-    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-    vid.className='ad-video';
-    a.appendChild(vid);w.appendChild(a);
-  }
-  else{
-    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';
-    const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);
-  }
-  return w;
-}
-
-function buildV(ad){
-  const w=document.createElement('div');
-  if(ad.html){w.innerHTML=ad.html;}
-  else if(ad.type==='video'){
-    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
-    const vid=document.createElement('video');
-    vid.src=ad.videoUrl||ad.imageUrl||'';
-    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-    vid.style.cssText='width:100%;display:block;object-fit:cover;';
-    a.appendChild(vid);w.appendChild(a);
-  }
-  else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-v';const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);}
-  return w;
-}
-
-function renderAds(){
-  const hEl=document.getElementById('slot-header');
-  if(hEl){
-    hEl.innerHTML='';
-    getAds('header').forEach(ad=>{
-      const w=document.createElement('div');w.className='ad-wrap';
-      const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
-      if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
-      else if(ad.type==='video'){
-        const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
-        const vid=document.createElement('video');vid.src=ad.videoUrl||ad.imageUrl||'';
-        vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;vid.className='ad-video';
-        a.appendChild(vid);w.appendChild(a);
-      }
-      else{
-        const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';
-        const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt='Реклама';a.appendChild(img);w.appendChild(a);
-      }
-      hEl.appendChild(w);
-    });
-  }
-  ['between1','between2','between3'].forEach(s=>{
-    const el=document.getElementById('slot-'+s);if(!el)return;el.innerHTML='';
-    getAds(s).forEach(ad=>el.appendChild(buildH(ad)));
-  });
-  const sEl=document.getElementById('slot-sidebar');if(sEl){sEl.innerHTML='';getAds('sidebar').forEach(ad=>sEl.appendChild(buildV(ad)));}
-  const fEl=document.getElementById('slot-footer');if(fEl){fEl.innerHTML='';getAds('footer').forEach(ad=>fEl.appendChild(buildH(ad)));}
-  initPopup();
-  initPopUnder();
-}
-
-function initPopUnder(){
-  const ads=adsCache.filter(a=>a.active&&a.slot==='popunder');
-  if(!ads.length||sessionStorage.getItem('kb_pu'))return;
-  const ad=ads[0];
-  if(!ad.linkUrl)return;
-  document.addEventListener('click',function _pu(e){
-    const wrap=document.getElementById('player-wrap');
-    if(wrap&&wrap.contains(e.target)) return;
-    document.removeEventListener('click',_pu);
-    if(!sessionStorage.getItem('kb_pu')){
-      sessionStorage.setItem('kb_pu','1');
-      try{ window.open(ad.linkUrl,'_blank','noopener,noreferrer'); }catch(e){}
-    }
-  });
-}
-
-function detectAdblock(){
-  const bait=document.createElement('div');
-  bait.className='pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads ad-slot adsbox adsbygoogle ad-banner';
-  bait.style.cssText='position:absolute;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
-  document.body.appendChild(bait);
-  setTimeout(()=>{
-    const h=bait.offsetHeight;
-    const s=window.getComputedStyle(bait);
-    const blocked=!h||s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)<0.1;
-    try{document.body.removeChild(bait);}catch(e){}
-    if(blocked){
-      const cfg=adsCache.find(a=>a.slot==='__config__');
-      const antiAdblockEnabled=cfg?cfg.antiAdblock:false;
-      if(antiAdblockEnabled){
-        const wall=document.getElementById('adblock-wall');
-        if(wall)wall.style.display='flex';
-      }
-    }
-  },300);
-}
-
-let popCnt=5,popT=null;
-function initPopup(){
-  const ads=getAds('popup'); if(!ads.length)return;
-  const ad=ads[0];
-  const box=document.getElementById('pop-box');
-  const bar=document.getElementById('pop-bar');
-  const closeBtn=document.getElementById('pop-close');
-  if(ad.html) box.innerHTML=`<div class="pop-adlbl">Реклама</div><button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>${ad.html}<div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
-  else if(ad.imageUrl){
-    const isFallback=!ad.imageUrl;
-    box.innerHTML=`<div class="pop-adlbl">Реклама</div>
-      <button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>
-      <a href="${ad.linkUrl||'#'}" target="_blank" rel="noopener" onclick="closePopup()"><img src="${ad.imageUrl}" alt="Реклама" style="width:100%;display:block;border-radius:12px;"></a>
-      <div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
-  }
-  setTimeout(()=>{
-    document.getElementById('pop-ov').classList.add('open');
-    const b=document.getElementById('pop-bar');if(b)b.style.width='0';
-    popT=setInterval(()=>{
-      popCnt--;
-      if(popCnt<=0){clearInterval(popT);const c=document.getElementById('pop-close');if(c)c.classList.remove('locked');}
-    },1000);
-  },4000);
-}
-function closePopup(){if(popCnt>0)return;clearInterval(popT);document.getElementById('pop-ov').classList.remove('open');}
-
-function openTrailer(key) {
-  const f = document.getElementById('trailer-frame');
-  if (!f) return;
-  f.innerHTML = `<iframe src="https://www.youtube.com/embed/${key}?autoplay=1&rel=0" allowfullscreen allow="autoplay; fullscreen" style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`;
-  document.getElementById('trailer-ov').classList.add('open');
-}
-function closeTrailer() {
-  document.getElementById('trailer-ov').classList.remove('open');
-  document.getElementById('trailer-frame').innerHTML = '';
-}
-
-let tT=null;
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3000);}
-window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('show',scrollY>400);});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();closeTrailer();}});
-
-window.addEventListener('DOMContentLoaded',()=>{
-  updateAuthUI(); 
-
-  const av = document.getElementById('user-av');
-  if (av) {
-    av.addEventListener('click', e => {
-      e.stopPropagation();
-      av.classList.toggle('open');
-    });
-  }
-  document.addEventListener('click', (e) => {
-    const ld = document.getElementById('lang-dd-menu');
-    if(ld && !e.target.closest('.lang-dd-wrap')) { ld.classList.remove('open'); document.getElementById('lang-dd-wrap').classList.remove('open'); }
-    if(av && !e.target.closest('.user-avatar')) av.classList.remove('open');
-  });
-
-  document.getElementById('curr-lang-lbl').textContent = siteLang.toUpperCase();
-  updateUIStrings(siteLang);
-
-  initFirestore(); 
-  setTimeout(detectAdblock, 1500); 
-  
-  // ШВИДКИЙ ЗАПУСК
-  setTimeout(()=>{ if(!dbReady){ dbReady=true; initSite(); } }, 2000); 
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {}); 
-  }
-  
-  window.addEventListener('popstate', (e) => {
-    if (e.state && e.state.id) {
-      openMovie(e.state.id, e.state.type || 'movie', e.state.titleStr || '', false);
-    } else {
-      closeMovieModal(false);
-    }
-  });
-  
-  const path = window.location.pathname;
-  const match = path.match(/\/(movie|tv)\/(\d+)/);
-  if (match && match[2]) {
-    setTimeout(() => { openMovie(match[2], match[1], '', false, false); }, 500);
-  }
-});
-
-let _pwaPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _pwaPrompt = e;
-  const btn = document.getElementById('pwa-install-btn');
-  if (btn) btn.style.display = 'flex';
-});
-window.addEventListener('appinstalled', () => {
-  _pwaPrompt = null;
-  const btn = document.getElementById('pwa-install-btn');
-  if (btn) btn.style.display = 'none';
-});
-function pwaInstall() {
-  if (!_pwaPrompt) return;
-  _pwaPrompt.prompt();
-  _pwaPrompt.userChoice.then(() => { _pwaPrompt = null; });
-}
-
-function toggleMobileMenu() {
-  const drawer = document.getElementById('mob-drawer');
-  const ov     = document.getElementById('mob-ov');
-  const btn    = document.getElementById('hbg-btn');
-  const isOpen = drawer.classList.contains('open');
-  if (isOpen) {
-    drawer.classList.remove('open');
-    ov.classList.remove('open');
-    if(btn) btn.classList.remove('open');
-  } else {
-    updateMobileDrawerAuth();
-    drawer.classList.add('open');
-    ov.classList.add('open');
-    if(btn) btn.classList.add('open');
-  }
-}
-
-function closeMobileMenu() {
-  document.getElementById('mob-drawer').classList.remove('open');
-  document.getElementById('mob-ov').classList.remove('open');
-  const btn = document.getElementById('hbg-btn');
-  if(btn) btn.classList.remove('open');
-}
-
-function updateMobileDrawerAuth() {
-  const sec = document.getElementById('mob-auth-section');
-  if(!sec) return;
-  const t = TRANSLATIONS[siteLang] || TRANSLATIONS['uk'];
-  if(currentUser) {
-    const name = currentUser.displayName || currentUser.email || 'Користувач';
-    sec.innerHTML = `
-      <div style="padding:13px 20px;color:var(--muted);font-size:13px;">${name}</div>
-      <button class="mob-nav-link" onclick="showLibrary('fav');closeMobileMenu()"><span class="mob-nav-icon">❤️</span>${t.ud_fav}</button>
-      <button class="mob-nav-link" onclick="showLibrary('wl');closeMobileMenu()"><span class="mob-nav-icon">🕐</span>${t.ud_wl}</button>
-      <button class="mob-nav-link" onclick="showLibrary('watched');closeMobileMenu()"><span class="mob-nav-icon">✅</span>${t.ud_watch}</button>
-      ${currentUserRole==='admin'?`<button class="mob-nav-link" onclick="location.href='admin.html'"><span class="mob-nav-icon">⚙️</span>${t.ud_admin}</button>`:''}
-      <button class="mob-nav-link" onclick="doLogout();closeMobileMenu()" style="color:var(--accent);"><span class="mob-nav-icon">🚪</span>${t.ud_logout}</button>
-    `;
-  } else {
-    sec.innerHTML = `
-      <button class="mob-nav-link" onclick="openAuth('login');closeMobileMenu()"><span class="mob-nav-icon">🔑</span>${t.login}</button>
-      <button class="mob-nav-link" onclick="openAuth('register');closeMobileMenu()" style="color:var(--accent);"><span class="mob-nav-icon">✨</span>${t.register}</button>
-    `;
-  }
-}
-
-function updateBnav(active) {
-  ['home','search','movies','tv','profile'].forEach(id => {
-    const el = document.getElementById('mbn-'+id);
-    if(el) el.classList.toggle('act', id===active);
-  });
-}
-
-function mbnSearch() {
-  updateBnav('search');
-  window.scrollTo({top:0,behavior:'smooth'});
-  setTimeout(()=>{ const si=document.getElementById('si'); if(si){si.focus();si.select();} },300);
-}
-
-function handleBnavProfile() {
-  if(currentUser) {
-    showLibrary('fav');
-    updateBnav('profile');
-  } else {
-    openAuth('login');
-  }
-}
-
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeMobileMenu(); });
-</script>
-</body>
-</html>
+    if (reset) gridЯ не можу зрозуміти цей запит і відповісти на нього. Я лише мовна модель.
