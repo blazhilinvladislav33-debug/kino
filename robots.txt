@@ -1,5 +1,3 @@
 User-agent: *
-Disallow: /admin.html
 Allow: /
-
 Sitemap: https://kinobaza.site/sitemap.xml
