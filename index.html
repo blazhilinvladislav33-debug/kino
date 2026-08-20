@@ -31,7 +31,7 @@
   <meta name="twitter:description" content="Тисячі фільмів та серіалів у HD якості. Безкоштовно.">
   <meta name="twitter:image"       content="https://kinobaza.site/icons/icon-512x512.png">
 
-  <!-- ===== PWA ===== -->
+  <!-- ===== PWA & Icons ===== -->
   <meta name="theme-color" content="#e50914">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -95,7 +95,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  
+
+  <!-- СТИЛІ -->
   <style>
     :root {
       --bg: #0d0d0d; --bg2: #141414; --bg3: #1a1a1a; --bg4: #222;
@@ -121,7 +122,7 @@
     .srch { display: flex; align-items: center; background: #222; border: 1px solid #333; border-radius: 8px; overflow: hidden; width: 100%; transition: all 0.2s; padding: 0 12px; }
     .srch:focus-within { border-color: var(--accent); background: #1a1a1a; box-shadow: 0 0 0 2px rgba(229,9,20,.15); }
     .srch-icon { width: 16px; height: 16px; fill: #888; flex-shrink: 0; }
-    .srch input { background: transparent; border: none; outline: none; color: #fff; padding: 10px 10px; font-size: 14px; width: 100%; font-family: inherit; }
+    .srch input { background: transparent; border: none; outline: none; color: #fff; padding: 10px; font-size: 14px; width: 100%; font-family: inherit; }
     .srch input::placeholder { color: #888; }
     
     .lang-dd-wrap { position: relative; display: inline-flex; align-items: center; cursor: pointer; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 700; color: #fff; user-select: none; transition: all 0.2s; gap: 6px; }
@@ -356,7 +357,7 @@
     .pop-adlbl { position: absolute; top: 7px; left: 10px; font-size: 9px; color: rgba(255,255,255,.3); text-transform: uppercase; letter-spacing: 2px; }
     .pop-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: var(--accent); transition: width 1s linear; }
     .pop-box img { width: 100%; display: block; border-radius: 12px; }
-
+    
     #lib-section { display: none; }
     .lib-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
     .lib-tab { padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s; white-space: nowrap; }
@@ -368,6 +369,8 @@
     
     #continue-section { display: none; }
     .c-ep-badge { position: absolute; bottom: 8px; right: 48px; background: rgba(0,0,0,.8); color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; backdrop-filter: blur(4px); white-space: nowrap; }
+    .ep-num.last { position: relative; outline: 2px solid var(--accent); outline-offset: 1px; }
+    .ep-num.last::before { content: '▶'; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); font-size: 7px; color: var(--accent); }
     
     .cast-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
     .cast-row::-webkit-scrollbar { height: 4px; }
@@ -543,7 +546,7 @@
 <!-- COOKIE BANNER -->
 <div id="cookie-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(20,20,20,0.95); padding:15px 20px; z-index:99999; border-top:1px solid #333; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
   <p style="font-size:12px; color:#ccc; margin:0; flex:1; min-width:250px;">
-    Цей сайт використовує файли cookie для покращення користувацького досвіду, збору аналітики та персоналізації контенту.
+    Цей сайт використовує файли cookie для покращення користувацького досвіду, збору аналітики та персоналізації контенту. Продовжуючи користуватися сайтом, ви погоджуєтесь з нашою політикою використання cookie.
   </p>
   <button onclick="acceptCookies()" style="background:var(--accent); color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px;">
     Зрозуміло
@@ -556,11 +559,9 @@
     <button class="hbg" id="hbg-btn" onclick="toggleMobileMenu()" aria-label="Меню">
       <span></span><span></span><span></span>
     </button>
-    
     <a href="/" class="logo" onclick="event.preventDefault();showHome();">
       <b>Кіно</b>База
     </a>
-    
     <nav>
       <a href="/" class="act" id="nav-home" data-i18n="nav_home" onclick="event.preventDefault();showHome();">Головна</a>
       <a href="/category/movie" id="nav-catalog" data-i18n="nav_movies" onclick="event.preventDefault();showCatalog({type:'movie'});">Фільми</a>
@@ -568,7 +569,6 @@
       <a href="/category/animation" data-i18n="nav_cartoons" onclick="event.preventDefault();showCatalog({type:'movie',genre:'16'});">Мультфільми</a>
       <a href="/category/documentary" data-i18n="nav_docs" onclick="event.preventDefault();showCatalog({type:'movie',genre:'99'});">Документальні</a>
     </nav>
-    
     <div class="srch-wrap">
       <div class="srch">
         <svg class="srch-icon" viewBox="0 0 24 24">
@@ -578,7 +578,6 @@
       </div>
       <div id="ac-drop"></div>
     </div>
-    
     <div class="hdr-right">
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
         <div class="lang-lbl-min" id="curr-lang-lbl">UA</div>
@@ -589,19 +588,17 @@
           <div class="lang-opt" onclick="setSiteLang('ru', event)">RU</div>
         </div>
       </div>
-      
+
       <button id="pwa-install-btn" class="btn-sm" onclick="pwaInstall()" style="display:none;align-items:center;gap:5px;" title="Встановити додаток">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
           <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
         </svg>
         <span data-i18n="app">Додаток</span>
       </button>
-      
       <div id="auth-btns">
         <button class="btn-sm" onclick="openAuth('login')" style="margin-right:6px;" data-i18n="login">Увійти</button>
         <button class="btn-sm red" onclick="openAuth('register')" data-i18n="register">Реєстрація</button>
       </div>
-      
       <div id="user-menu" style="display:none;">
         <div class="user-avatar" id="user-av" tabindex="0">
           <span id="user-initial">U</span>
@@ -613,15 +610,15 @@
             <div class="ud-item" data-i18n="ud_watch" onclick="showLibrary('watched')">Переглянуто</div>
             <div class="ud-divider"></div>
             <div class="ud-item" onclick="toggleKidsMode(event)">
-              <span style="display:flex;align-items:center;gap:7px;font-weight:600;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="var(--accent)">
-                  <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8Z"/>
-                </svg> Kids Control
-              </span>
-              <label class="switch">
-                <input type="checkbox" id="kids-switch" onclick="event.preventDefault()">
-                <span class="slider"></span>
-              </label>
+                <span style="display:flex;align-items:center;gap:7px;font-weight:600;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="var(--accent)">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8Z"/>
+                  </svg> Kids Control
+                </span>
+                <label class="switch">
+                  <input type="checkbox" id="kids-switch" onclick="event.preventDefault()">
+                  <span class="slider"></span>
+                </label>
             </div>
             <div class="ud-divider"></div>
             <div class="ud-item" id="ud-admin" style="display:none;" data-i18n="ud_admin" onclick="window.location.href='/admin.html'">Адміністрування</div>
@@ -652,11 +649,12 @@
       </div>
       <div class="hero-desc" id="hero-d">Завантажуємо...</div>
       <div class="hero-btns">
-        <button class="btn-play" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,currentHeroTitle,true)">
-          <span data-i18n="btn_watch">Дивитись</span>
+        <!-- Виправляємо параметри відкриття на 4 штуки (ID, type, title, pushHistory) -->
+        <button class="btn-play" onclick="event.stopPropagation(); openMovie(currentHeroId, currentHeroType, currentHeroTitle, true)">
+            <span data-i18n="btn_watch">Дивитись</span>
         </button>
-        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,currentHeroTitle,true)">
-          <span data-i18n="btn_more">Детальніше</span>
+        <button class="btn-info" onclick="event.stopPropagation(); openMovie(currentHeroId, currentHeroType, currentHeroTitle, true)">
+            <span data-i18n="btn_more">Детальніше</span>
         </button>
       </div>
     </div>
@@ -676,7 +674,7 @@
     <a href="/category/animation" class="g-tag" onclick="event.preventDefault();selGenre(16,this)" data-i18n="g_ani">Анімація</a>
   </div>
 
-  <!-- SEARCH RESULTS SECTION -->
+  <!-- SEARCH RESULTS -->
   <div id="srch-sec">
     <div class="sec-hdr">
       <div>
@@ -686,9 +684,9 @@
       <a href="#" class="sec-more" onclick="clearSearch();return false;" data-i18n="btn_close">✕ Закрити</a>
     </div>
     <div class="srch-filters">
-      <button class="sf-btn act" id="sf-all" onclick="doSearch('all')" data-i18n="sf_all">Все</button>
-      <button class="sf-btn" id="sf-movie" onclick="doSearch('movie')" data-i18n="sf_movies">Фільми</button>
-      <button class="sf-btn" id="sf-tv" onclick="doSearch('tv')" data-i18n="sf_tv">Серіали</button>
+      <button class="sf-btn act" id="sf-all"   onclick="doSearch('all')" data-i18n="sf_all">Все</button>
+      <button class="sf-btn"     id="sf-movie" onclick="doSearch('movie')" data-i18n="sf_movies">Фільми</button>
+      <button class="sf-btn"     id="sf-tv"    onclick="doSearch('tv')" data-i18n="sf_tv">Серіали</button>
     </div>
     <div class="movies-grid" id="srch-grid"></div>
     <div style="text-align:center;margin-top:24px;display:none;" id="srch-more">
@@ -710,7 +708,7 @@
         <label data-i18n="flt_type">Тип</label>
         <div class="cat-pill-row">
           <button class="cat-pill act" id="cpt-movie" onclick="setCatType('movie')" data-i18n="sf_movies">Фільми</button>
-          <button class="cat-pill" id="cpt-tv" onclick="setCatType('tv')" data-i18n="sf_tv">Серіали</button>
+          <button class="cat-pill"     id="cpt-tv"    onclick="setCatType('tv')" data-i18n="sf_tv">Серіали</button>
         </div>
       </div>
       <div class="cat-fg">
@@ -808,16 +806,17 @@
       <a href="#" class="sec-more" onclick="event.preventDefault();showHome();" data-i18n="btn_back">← Назад</a>
     </div>
     <div class="lib-tabs">
-      <div class="lib-tab act" id="lib-tab-fav" onclick="switchLibTab('fav')" data-i18n="ud_fav">Улюблені</div>
-      <div class="lib-tab" id="lib-tab-wl" onclick="switchLibTab('wl')" data-i18n="ud_wl">Дивитись пізніше</div>
-      <div class="lib-tab" id="lib-tab-watched" onclick="switchLibTab('watched')" data-i18n="ud_watch">Переглянуто</div>
+      <div class="lib-tab act" id="lib-tab-fav"     onclick="switchLibTab('fav')" data-i18n="ud_fav">Улюблені</div>
+      <div class="lib-tab"     id="lib-tab-wl"      onclick="switchLibTab('wl')" data-i18n="ud_wl">Дивитись пізніше</div>
+      <div class="lib-tab"     id="lib-tab-watched" onclick="switchLibTab('watched')" data-i18n="ud_watch">Переглянуто</div>
     </div>
     <div class="movies-grid" id="lib-grid"></div>
   </div>
 
-  <!-- HOME CONTENT SECTION -->
+  <!-- HOME CONTENT -->
   <div id="home-content">
   
+    <!-- ПОПУЛЯРНІ ДОБІРКИ -->
     <div class="sec-hdr" style="margin-top:0;"><div class="sec-title">Популярні добірки</div></div>
     <div class="seo-links-row">
         <a href="/collection/86311-marvel" class="seo-link-card" onclick="event.preventDefault();showCollection(86311, 'Кіновсесвіт Marvel (Порядок перегляду)');">⚡ Кіновсесвіт Marvel</a>
@@ -828,6 +827,7 @@
         <a href="/category/movie/genre-28/year-2024" class="seo-link-card" onclick="event.preventDefault();showCatalog({type:'movie',genre:28,yearFrom:2024,yearTo:2024});">💥 Бойовики 2024</a>
     </div>
 
+    <!-- ПРОДОВЖИТИ ПЕРЕГЛЯД -->
     <div id="continue-section">
       <div class="sec-hdr">
         <div class="sec-title" data-i18n="h_cont">Продовжити перегляд</div>
@@ -836,6 +836,7 @@
       <div class="movies-grid" id="continue-grid"></div>
     </div>
 
+    <!-- НОВИНКИ -->
     <div class="sec-hdr">
       <div class="sec-title" id="title-new" data-i18n="h_new">Нові фільми</div>
       <a href="/category/new" class="sec-more" onclick="event.preventDefault();showCatalog({type:'movie',sort:'release_date.desc'});" data-i18n="all">Всі →</a>
@@ -844,6 +845,7 @@
 
     <div id="slot-between1"></div>
 
+    <!-- ПОПУЛЯРНЕ -->
     <div class="sidebar-row">
       <div class="mv-col">
         <div class="sec-hdr">
@@ -859,6 +861,7 @@
 
     <div id="slot-between2"></div>
 
+    <!-- ТОП РЕЙТИНГ -->
     <div class="sec-hdr">
       <div class="sec-title" data-i18n="h_top">Топ рейтинг</div>
       <a href="/category/top" class="sec-more" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});" data-i18n="all">Всі →</a>
@@ -867,24 +870,28 @@
 
     <div id="slot-between3"></div>
 
+    <!-- СЕРІАЛИ -->
     <div class="sec-hdr">
       <div class="sec-title" id="title-tv" data-i18n="h_tv">Серіали</div>
       <a href="/category/tv" class="sec-more" onclick="event.preventDefault();showCatalog({type:'tv'});" data-i18n="all">Всі →</a>
     </div>
     <div id="series-grid" class="movies-grid"></div>
 
+    <!-- КЛАСИКА -->
     <div class="sec-hdr" style="margin-top:28px;">
       <div class="sec-title" data-i18n="h_classic">Класика кіно</div>
       <a href="/category/classic" class="sec-more" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});" data-i18n="all">Всі →</a>
     </div>
     <div id="classic-grid" class="movies-grid"></div>
 
+    <!-- 90s -->
     <div class="sec-hdr">
       <div class="sec-title" data-i18n="h_90s">Кіно 90-х</div>
       <a href="#" class="sec-more" data-i18n="all">Всі →</a>
     </div>
     <div id="nineties-grid" class="movies-grid"></div>
 
+    <!-- 2000s -->
     <div class="sec-hdr">
       <div class="sec-title" data-i18n="h_00s">Кіно 2000-х</div>
       <a href="#" class="sec-more" data-i18n="all">Всі →</a>
@@ -954,27 +961,13 @@
     <button class="mob-drawer-close" onclick="closeMobileMenu()">✕</button>
   </div>
   <div class="mob-drawer-section">
-    <button class="mob-nav-link" onclick="showHome();closeMobileMenu();updateBnav('home')">
-      <span class="mob-nav-icon">🏠</span><span data-i18n="nav_home">Головна</span>
-    </button>
-    <button class="mob-nav-link" onclick="showCatalog({type:'movie'});closeMobileMenu()">
-      <span class="mob-nav-icon">🎬</span><span data-i18n="nav_movies">Фільми</span>
-    </button>
-    <button class="mob-nav-link" onclick="showCatalog({type:'tv'});closeMobileMenu()">
-      <span class="mob-nav-icon">📺</span><span data-i18n="nav_tv">Серіали</span>
-    </button>
-    <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'16'});closeMobileMenu()">
-      <span class="mob-nav-icon">🎨</span><span data-i18n="nav_cartoons">Мультфільми</span>
-    </button>
-    <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'99'});closeMobileMenu()">
-      <span class="mob-nav-icon">📰</span><span data-i18n="nav_docs">Документальні</span>
-    </button>
-    <button class="mob-nav-link" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});closeMobileMenu()">
-      <span class="mob-nav-icon">⭐</span><span data-i18n="nav_top">Топ рейтинг</span>
-    </button>
-    <button class="mob-nav-link" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});closeMobileMenu()">
-      <span class="mob-nav-icon">🎞</span><span data-i18n="nav_classic">Класика</span>
-    </button>
+    <button class="mob-nav-link" onclick="showHome();closeMobileMenu();updateBnav('home')"><span class="mob-nav-icon">🏠</span><span data-i18n="nav_home">Головна</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie'});closeMobileMenu()"><span class="mob-nav-icon">🎬</span><span data-i18n="nav_movies">Фільми</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'tv'});closeMobileMenu()"><span class="mob-nav-icon">📺</span><span data-i18n="nav_tv">Серіали</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'16'});closeMobileMenu()"><span class="mob-nav-icon">🎨</span><span data-i18n="nav_cartoons">Мультфільми</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'99'});closeMobileMenu()"><span class="mob-nav-icon">📰</span><span data-i18n="nav_docs">Документальні</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});closeMobileMenu()"><span class="mob-nav-icon">⭐</span><span data-i18n="nav_top">Топ рейтинг</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});closeMobileMenu()"><span class="mob-nav-icon">🎞</span><span data-i18n="nav_classic">Класика</span></button>
   </div>
   <div class="mob-drawer-section" id="mob-auth-section"></div>
 </div>
@@ -1146,8 +1139,8 @@ function escapeHtml(unsafe) {
 }
 
 function slugify(text) { 
-    const ru="абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ".split(""); 
-    const en="a b v h d e e zh z y y k l m n o p r s t u f kh ts ch sh shch y e yu ya ye i yi g".split(" "); 
+    const ru = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ".split(""); 
+    const en = "a b v h d e e zh z y y k l m n o p r s t u f kh ts ch sh shch y e yu ya ye i yi g".split(" "); 
     let str = String(text||'').toLowerCase(); 
     for(let i=0; i<ru.length; i++) {
         str = str.split(ru[i]).join(en[i]); 
@@ -1308,7 +1301,11 @@ function createWatchParty(id, type) {
 const FIREBASE_CONFIG = { 
     apiKey: "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc", 
     authDomain: "kinobaza-6c109.firebaseapp.com", 
-    projectId: "kinobaza-6c109" 
+    projectId: "kinobaza-6c109",
+    storageBucket: "kinobaza-6c109.firebasestorage.app",
+    messagingSenderId: "639150355070",
+    appId: "1:639150355070:web:772f863f075d4d1d839e2f",
+    measurementId: "G-GKVZ2JJDJN"
 };
 
 let db = null; 
@@ -1317,20 +1314,39 @@ try {
     db = firebase.firestore(); 
 } catch(e) {}
 
-let keysCache = [], dbReady = false;
+let adsCache = [];
+let keysCache = [];
+let pagesCache = {};
+let dbReady = false;
 
 function initFirestore() { 
     if(!db) { loadFallback(); return; } 
+
+    db.collection('ads').onSnapshot(snap => {
+        adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderAds();
+        const cfg = adsCache.find(a => a.id === '__config__');
+        if (cfg && cfg.monetagId) loadMonetag(cfg.monetagId);
+    }, () => loadFallback());
+
     db.collection('apiKeys').onSnapshot(snap => { 
         keysCache = snap.docs.map(d => d.data().value).filter(Boolean); 
         bootstrapApp(); 
     }, () => loadFallback()); 
+
+    ['about','contacts','terms','dmca'].forEach(id => {
+        db.collection('pages').doc(id).onSnapshot(doc => {
+            if (doc.exists) pagesCache[id] = doc.data();
+        }, () => {});
+    });
 }
 
 function loadFallback() { 
+    try { adsCache = JSON.parse(localStorage.getItem('kb_ads') || '[]'); } catch {}
     try { 
         keysCache = (JSON.parse(localStorage.getItem('kb_api_keys') || '[]')).map(k => typeof k === 'string' ? k : k.value).filter(Boolean); 
     } catch{} 
+    renderAds();
     bootstrapApp(); 
 }
 
@@ -1350,6 +1366,17 @@ function getKeys() {
     const k = [...keysCache]; 
     if(!k.includes(TMDB_FALLBACK_KEY)) k.push(TMDB_FALLBACK_KEY); 
     return k; 
+}
+
+let _monetagLoaded = false;
+function loadMonetag(publisherId) {
+    if (_monetagLoaded || !publisherId || currentUserSubscribed) return;
+    _monetagLoaded = true;
+    const s = document.createElement('script');
+    s.src = `https://s.monetag.com/main.js?id=${publisherId}`;
+    s.async = true;
+    s.setAttribute('data-cfasync', 'false');
+    document.head.appendChild(s);
 }
 
 async function tmdb(ep, params = {}) {
@@ -1380,6 +1407,20 @@ async function tmdb(ep, params = {}) {
 
 const GM = {28:'Бойовик',12:'Пригоди',16:'Анімація',35:'Комедія',80:'Кримінал',99:'Документальний',18:'Драма',10751:'Сімейний',14:'Фентезі',36:'Історичний',27:'Жахи',10749:'Мелодрама',878:'Фантастика',53:'Трилер',10752:'Воєнний',37:'Вестерн'};
 const gNames = ids => ids ? ids.slice(0,3).map(i => GM[i] || '').filter(Boolean).join(', ') : '—';
+
+// =====================================================================
+// PLAYERS & MOVIE MODAL
+// =====================================================================
+const MOVIE_PLAYERS = [
+    { id:'collaps', name:'Плеєр 1', badge:'4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
+    { id:'vidsrc',  name:'Плеєр 2', badge:'HD', safe: false, url: (id, imdb) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+    { id:'autoembed', name:'Плеєр 3', badge:'', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` }
+];
+const TV_PLAYERS = [
+    { id:'collaps', name:'Плеєр 1', badge:'4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
+    { id:'vidsrc',  name:'Плеєр 2', badge:'HD', safe: false, url: (id, imdb, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { id:'autoembed', name:'Плеєр 3', badge:'', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` }
+];
 
 // =====================================================================
 // HERO SLIDER
@@ -1458,7 +1499,9 @@ function card(m, badge) {
     else if(m.original_language === 'ja' || m.original_language === 'ko') langHtml = `<div class="c-badge lang sub">ENG / SUB</div>`; 
     else langHtml = `<div class="c-badge lang multi">MULTI</div>`;
     
-    return `<div class="m-card" onclick="event.preventDefault(); openMovie(${m.id},'${mtype}','${escapeHtml(title).replace(/'/g,"\\'")}',true)">${poster}${ph}<div class="c-ov"></div>${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}${langHtml}<button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)">${isFav?'❤️':'🤍'}</button><div class="c-info"><div class="c-title">${escapeHtml(title)}</div><div class="c-meta"><span class="c-year">${year}</span><span class="c-rat">⭐ ${rat}</span></div></div></div>`;
+    const safeTitle = escapeHtml(title).replace(/'/g,"\\'");
+
+    return `<div class="m-card" onclick="event.preventDefault(); openMovie(${m.id},'${mtype}','${safeTitle}',true)">${poster}${ph}<div class="c-ov"></div>${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}${langHtml}<button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)">${isFav?'❤️':'🤍'}</button><div class="c-info"><div class="c-title">${escapeHtml(title)}</div><div class="c-meta"><span class="c-year">${year}</span><span class="c-rat">⭐ ${rat}</span></div></div></div>`;
 }
 
 async function loadGrid(id, ep, params={}, badge=null, limit=12) { 
@@ -1497,20 +1540,6 @@ async function initSite() {
     loadGrid('nineties-grid','/discover/movie', {...p, sort_by:'vote_count.desc', 'primary_release_date.gte':'1990-01-01', 'primary_release_date.lte':'1999-12-31'}, {txt:'90-ті', cls:'b'}, 12); 
     loadGrid('noughts-grid','/discover/movie', {...p, sort_by:'vote_count.desc', 'primary_release_date.gte':'2000-01-01', 'primary_release_date.lte':'2009-12-31'}, {txt:'2000-ні', cls:'b'}, 12);
 }
-
-// =====================================================================
-// PLAYERS & MOVIE MODAL
-// =====================================================================
-const MOVIE_PLAYERS = [
-    { id:'collaps', name:'Плеєр 1', badge:'4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
-    { id:'vidsrc',  name:'Плеєр 2', badge:'HD', safe: false, url: (id, imdb) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
-    { id:'autoembed', name:'Плеєр 3', badge:'', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` }
-];
-const TV_PLAYERS = [
-    { id:'collaps', name:'Плеєр 1', badge:'4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
-    { id:'vidsrc',  name:'Плеєр 2', badge:'HD', safe: false, url: (id, imdb, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
-    { id:'autoembed', name:'Плеєр 3', badge:'', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` }
-];
 
 let currentModalId=null, currentImdbId='', currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
 
@@ -2129,6 +2158,351 @@ function showToast(msg) {
 }
 
 // =====================================================================
+// ADS
+// =====================================================================
+function getAds(slot){
+  if (currentUserSubscribed) return []; 
+  return adsCache.filter(a=>a.active&&a.slot===slot);
+}
+
+function buildH(ad){
+  const w=document.createElement('div');
+  w.className='ad-wrap inline';
+  const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
+  if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
+  else if(ad.type==='video'){
+    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
+    const vid=document.createElement('video');
+    vid.src=ad.videoUrl||ad.imageUrl||'';
+    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+    vid.className='ad-video';
+    a.appendChild(vid);w.appendChild(a);
+  }
+  else{
+    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';
+    const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);
+  }
+  return w;
+}
+
+function buildV(ad){
+  const w=document.createElement('div');
+  if(ad.html){w.innerHTML=ad.html;}
+  else if(ad.type==='video'){
+    const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
+    const vid=document.createElement('video');
+    vid.src=ad.videoUrl||ad.imageUrl||'';
+    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+    vid.style.cssText='width:100%;display:block;object-fit:cover;';
+    a.appendChild(vid);w.appendChild(a);
+  }
+  else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-v';const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt=ad.altText||'Реклама';a.appendChild(img);w.appendChild(a);}
+  return w;
+}
+
+function renderAds(){
+  const hEl=document.getElementById('slot-header');
+  if(hEl){
+    hEl.innerHTML='';
+    getAds('header').forEach(ad=>{
+      const w=document.createElement('div');w.className='ad-wrap';
+      const lbl=document.createElement('span');lbl.className='ad-lbl';lbl.textContent='Реклама';w.appendChild(lbl);
+      if(ad.html){const d=document.createElement('div');d.innerHTML=ad.html;w.appendChild(d);}
+      else if(ad.type==='video'){
+        const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';
+        const vid=document.createElement('video');vid.src=ad.videoUrl||ad.imageUrl||'';
+        vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;vid.className='ad-video';
+        a.appendChild(vid);w.appendChild(a);
+      }
+      else{
+        const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';
+        const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt='Реклама';a.appendChild(img);w.appendChild(a);
+      }
+      hEl.appendChild(w);
+    });
+  }
+  ['between1','between2','between3'].forEach(s=>{
+    const el=document.getElementById('slot-'+s);if(!el)return;el.innerHTML='';
+    getAds(s).forEach(ad=>el.appendChild(buildH(ad)));
+  });
+  const sEl=document.getElementById('slot-sidebar');if(sEl){sEl.innerHTML='';getAds('sidebar').forEach(ad=>sEl.appendChild(buildV(ad)));}
+  const fEl=document.getElementById('slot-footer');if(fEl){fEl.innerHTML='';getAds('footer').forEach(ad=>fEl.appendChild(buildH(ad)));}
+  initPopup();
+  initPopUnder();
+}
+
+function initPopUnder(){
+  const ads=adsCache.filter(a=>a.active&&a.slot==='popunder');
+  if(!ads.length||sessionStorage.getItem('kb_pu'))return;
+  const ad=ads[0];
+  if(!ad.linkUrl)return;
+  document.addEventListener('click',function _pu(e){
+    const wrap=document.getElementById('player-wrap');
+    if(wrap&&wrap.contains(e.target)) return;
+    document.removeEventListener('click',_pu);
+    if(!sessionStorage.getItem('kb_pu')){
+      sessionStorage.setItem('kb_pu','1');
+      try{ window.open(ad.linkUrl,'_blank','noopener,noreferrer'); }catch(e){}
+    }
+  });
+}
+
+function detectAdblock(){
+  const bait=document.createElement('div');
+  bait.className='pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads ad-slot adsbox adsbygoogle ad-banner';
+  bait.style.cssText='position:absolute;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+  document.body.appendChild(bait);
+  setTimeout(()=>{
+    const h=bait.offsetHeight;
+    const s=window.getComputedStyle(bait);
+    const blocked=!h||s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)<0.1;
+    try{document.body.removeChild(bait);}catch(e){}
+    if(blocked){
+      const cfg=adsCache.find(a=>a.slot==='__config__');
+      const antiAdblockEnabled=cfg?cfg.antiAdblock:false;
+      if(antiAdblockEnabled){
+        const wall=document.getElementById('adblock-wall');
+        if(wall)wall.style.display='flex';
+      }
+    }
+  },300);
+}
+
+let popCnt=5,popT=null;
+function initPopup(){
+  const ads=getAds('popup'); if(!ads.length)return;
+  const ad=ads[0];
+  const box=document.getElementById('pop-box');
+  const bar=document.getElementById('pop-bar');
+  const closeBtn=document.getElementById('pop-close');
+  if(ad.html) box.innerHTML=`<div class="pop-adlbl">Реклама</div><button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>${ad.html}<div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
+  else if(ad.imageUrl){
+    const isFallback=!ad.imageUrl;
+    box.innerHTML=`<div class="pop-adlbl">Реклама</div>
+      <button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>
+      <a href="${ad.linkUrl||'#'}" target="_blank" rel="noopener" onclick="closePopup()"><img src="${ad.imageUrl}" alt="Реклама" style="width:100%;display:block;border-radius:12px;"></a>
+      <div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
+  }
+  setTimeout(()=>{
+    document.getElementById('pop-ov').classList.add('open');
+    const b=document.getElementById('pop-bar');if(b)b.style.width='0';
+    popT=setInterval(()=>{
+      popCnt--;
+      if(popCnt<=0){clearInterval(popT);const c=document.getElementById('pop-close');if(c)c.classList.remove('locked');}
+    },1000);
+  },4000);
+}
+function closePopup(){if(popCnt>0)return;clearInterval(popT);document.getElementById('pop-ov').classList.remove('open');}
+
+function openPage(id) {
+  const PAGE_DEFAULTS = {
+    about:    { title:'Про нас', content:'<p>КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості, кілька серверів відтворення, українська озвучка.</p>' },
+    contacts: { title:'Контакти', content:'<p>З питань співпраці та реклами звертайтесь на нашу електронну пошту.</p>' },
+    terms:    { title:'Умови використання', content:'<p>Використовуючи сайт, ви погоджуєтесь з умовами використання. Сайт не зберігає відеофайли — всі відео надаються третіми особами.</p>' },
+    dmca:     { title:'DMCA', content:'<p>Якщо ви є правовласником і вважаєте що контент порушує ваші права, зверніться до нас для видалення. Ми дотримуємось законодавства про авторське право.</p>' }
+  };
+  const data = pagesCache[id] || PAGE_DEFAULTS[id] || { title: id, content: '' };
+  document.getElementById('page-modal-title').textContent = data.title || '';
+  document.getElementById('page-modal-content').innerHTML = data.content || '';
+  document.getElementById('page-modal').classList.add('open');
+}
+function closePage() { document.getElementById('page-modal').classList.remove('open'); }
+
+// =====================================================================
+// AUTH & LOGIN
+// =====================================================================
+function doLogin() {
+  if (!auth) { return; }
+  const email = document.getElementById('l-email').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  const errEl = document.getElementById('l-err');
+  errEl.classList.remove('show');
+  if (!email || !pass) { errEl.textContent = 'Заповніть всі поля'; errEl.classList.add('show'); return; }
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(() => { closeAuth(); gaEvent('login', { method: 'email' }); })
+    .catch(e => {
+      const msgs = {
+        'auth/user-not-found':    'Користувача не знайдено',
+        'auth/wrong-password':    'Невірний пароль',
+        'auth/invalid-email':     'Невірний формат email',
+        'auth/invalid-credential':'Невірний email або пароль',
+        'auth/too-many-requests': 'Забагато спроб. Спробуйте пізніше'
+      };
+      errEl.textContent = msgs[e.code] || 'Помилка входу';
+      errEl.classList.add('show');
+    });
+}
+
+function doRegister() {
+  if (!auth) { return; }
+  const name  = document.getElementById('r-name').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const pass  = document.getElementById('r-pass').value;
+  const errEl = document.getElementById('r-err');
+  errEl.classList.remove('show');
+  if (!name || !email || !pass) { errEl.textContent = 'Заповніть всі поля'; errEl.classList.add('show'); return; }
+  if (pass.length < 6) { errEl.textContent = 'Пароль мінімум 6 символів'; errEl.classList.add('show'); return; }
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(async cred => {
+      await cred.user.updateProfile({ displayName: name }).catch(()=>{});
+      if (db) {
+        await db.collection('users').doc(cred.user.uid).set({
+          name, email, role: 'user', createdAt: new Date().toISOString()
+        }).catch(()=>{});
+      }
+      closeAuth();
+      gaEvent('sign_up', { method: 'email' });
+    })
+    .catch(e => {
+      const msgs = {
+        'auth/email-already-in-use':'Цей email вже зареєстровано',
+        'auth/invalid-email':       'Невірний формат email',
+        'auth/weak-password':       'Пароль занадто простий'
+      };
+      errEl.textContent = msgs[e.code] || 'Помилка реєстрації';
+      errEl.classList.add('show');
+    });
+}
+
+function doGoogleLogin() {
+  if (!auth) return;
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+    .then(async cred => {
+      if (db) {
+        const doc = await db.collection('users').doc(cred.user.uid).get().catch(()=>({exists:false}));
+        if (!doc.exists) {
+          await db.collection('users').doc(cred.user.uid).set({
+            name: cred.user.displayName || '',
+            email: cred.user.email || '',
+            role: 'user',
+            createdAt: new Date().toISOString()
+          }).catch(()=>{});
+        }
+      }
+      closeAuth();
+    })
+    .catch(e => {
+      if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
+        const errEl = document.getElementById('l-err');
+        errEl.textContent = 'Помилка входу через Google';
+        errEl.classList.add('show');
+      }
+    });
+}
+
+function resetPassword() {
+  if (!auth) return;
+  const email = document.getElementById('l-email').value.trim();
+  const errEl = document.getElementById('l-err');
+  if (!email) {
+    errEl.textContent = 'Введіть email вище для скидання пароля';
+    errEl.classList.add('show');
+    return;
+  }
+  auth.sendPasswordResetEmail(email)
+    .then(() => { closeAuth(); showToast(`Лист для скидання пароля надіслано на ${email}`); })
+    .catch(() => {
+      errEl.textContent = 'Не вдалось надіслати лист. Перевірте email.';
+      errEl.classList.add('show');
+    });
+}
+
+function doLogout() {
+  if (auth) auth.signOut().catch(()=>{});
+  showHome();
+}
+
+function toggleMobileMenu() {
+  const drawer = document.getElementById('mob-drawer');
+  const ov     = document.getElementById('mob-ov');
+  const btn    = document.getElementById('hbg-btn');
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    drawer.classList.remove('open');
+    ov.classList.remove('open');
+    if(btn) btn.classList.remove('open');
+  } else {
+    updateMobileDrawerAuth();
+    drawer.classList.add('open');
+    ov.classList.add('open');
+    if(btn) btn.classList.add('open');
+  }
+}
+
+function closeMobileMenu() {
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.getElementById('mob-ov').classList.remove('open');
+  const btn = document.getElementById('hbg-btn');
+  if(btn) btn.classList.remove('open');
+}
+
+function updateMobileDrawerAuth() {
+  const sec = document.getElementById('mob-auth-section');
+  if(!sec) return;
+  const t = TR[siteLang] || TR['uk'];
+  if(currentUser) {
+    const name = currentUser.displayName || currentUser.email || 'Користувач';
+    sec.innerHTML = `
+      <div style="padding:13px 20px;color:var(--muted);font-size:13px;">${name}</div>
+      <button class="mob-nav-link" onclick="showLibrary('fav');closeMobileMenu()"><span class="mob-nav-icon">❤️</span>${t.ud_fav}</button>
+      <button class="mob-nav-link" onclick="showLibrary('wl');closeMobileMenu()"><span class="mob-nav-icon">🕐</span>${t.ud_wl}</button>
+      <button class="mob-nav-link" onclick="showLibrary('watched');closeMobileMenu()"><span class="mob-nav-icon">✅</span>${t.ud_watch}</button>
+      ${currentUserRole==='admin'?`<button class="mob-nav-link" onclick="location.href='admin.html'"><span class="mob-nav-icon">⚙️</span>${t.ud_admin}</button>`:''}
+      <button class="mob-nav-link" onclick="doLogout();closeMobileMenu()" style="color:var(--accent);"><span class="mob-nav-icon">🚪</span>${t.ud_logout}</button>
+    `;
+  } else {
+    sec.innerHTML = `
+      <button class="mob-nav-link" onclick="openAuth('login');closeMobileMenu()"><span class="mob-nav-icon">🔑</span>${t.login}</button>
+      <button class="mob-nav-link" onclick="openAuth('register');closeMobileMenu()" style="color:var(--accent);"><span class="mob-nav-icon">✨</span>${t.register}</button>
+    `;
+  }
+}
+
+function updateBnav(active) {
+  ['home','search','movies','tv','profile'].forEach(id => {
+    const el = document.getElementById('mbn-'+id);
+    if(el) el.classList.toggle('act', id===active);
+  });
+}
+
+function mbnSearch() {
+  updateBnav('search');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{ const si=document.getElementById('si'); if(si){si.focus();si.select();} },300);
+}
+
+function handleBnavProfile() {
+  if(currentUser) {
+    showLibrary('fav');
+    updateBnav('profile');
+  } else {
+    openAuth('login');
+  }
+}
+
+let _pwaPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  const btn = document.getElementById('pwa-install-btn');
+  if (btn) btn.style.display = 'flex';
+});
+window.addEventListener('appinstalled', () => {
+  _pwaPrompt = null;
+  const btn = document.getElementById('pwa-install-btn');
+  if (btn) btn.style.display = 'none';
+});
+function pwaInstall() {
+  if (!_pwaPrompt) return;
+  _pwaPrompt.prompt();
+  _pwaPrompt.userChoice.then(() => { _pwaPrompt = null; });
+}
+
+window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('show',scrollY>400);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMovieModal();closeAuth();closeTrailer();closeMobileMenu();}});
+
+// =====================================================================
 // BOOTSTRAP APP
 // =====================================================================
 let isAppReady = false;
@@ -2142,7 +2516,7 @@ function bootstrapApp() {
     if (path.startsWith('/movie/') || path.startsWith('/tv/')) {
         const parts = path.split('/');
         const id = parts[2].split('-')[0];
-        openMovie(id, parts[1], '', false);
+        openMovie(id, parts[1], '', false, false);
     } else if (path.startsWith('/collection/')) {
         const id = path.split('/')[2].split('-')[0];
         showCollection(id, "Добірка фільмів");
@@ -2178,7 +2552,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // Керування кнопками "Назад" у браузері
 window.addEventListener('popstate', (e) => {
     if (e.state && e.state.id) { 
-        openMovie(e.state.id, e.state.type || 'movie', e.state.titleStr || '', false); 
+        openMovie(e.state.id, e.state.type || 'movie', e.state.titleStr || '', false, false); 
     }
     else if (e.state && e.state.colId) { 
         showCollection(e.state.colId, e.state.title || ''); 
@@ -2192,3 +2566,5 @@ window.addEventListener('popstate', (e) => {
     }
 });
 </script>
+</body>
+</html>
