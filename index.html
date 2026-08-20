@@ -64,7 +64,6 @@
     .lang-dd-wrap{position:relative;display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:6px 12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;user-select:none;transition:all 0.2s;}
     .lang-dd-wrap:hover{background:#222;} 
     .lang-lbl-min{display:flex;align-items:baseline;gap:2px;} 
-    .lang-lbl-min .sm{font-size:11px;color:#888;text-transform:lowercase;font-weight:600;}
     .lang-dd-wrap svg{width:14px;height:14px;fill:var(--muted);transition:transform 0.2s;} 
     .lang-dd-wrap.open svg{transform:rotate(180deg);}
     .lang-dd-menu{position:absolute;top:calc(100% + 6px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.7);z-index:1000;display:none;overflow:hidden;min-width:90px;}
@@ -89,6 +88,7 @@
     .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);} .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown,.user-avatar.open .user-dropdown{display:block;}
     .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:8px;} .ud-item:hover{background:var(--bg4);color:#fff;} .ud-divider{border-top:1px solid var(--border);margin:4px 0;} .ud-name{padding:8px 12px;font-weight:600;color:#fff;font-size:14px;}
     #slot-header{width:100%;}
+    /* Switch toggle (Kids Mode) */
     .switch{position:relative;display:inline-block;width:34px;height:20px;} .switch input{opacity:0;width:0;height:0;} .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--bg4);transition:.4s;border-radius:34px;} .slider:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background-color:white;transition:.4s;border-radius:50%;} input:checked + .slider{background-color:var(--accent);} input:checked + .slider:before{transform:translateX(14px);}
     main{max-width:1600px;margin:0 auto;padding:0 24px;}
     .hero{position:relative;height:480px;border-radius:14px;overflow:hidden;margin:18px 0;cursor:pointer;} .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:background-image .6s;} .hero-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.05) 100%);} .hero-ob{position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(0,var(--bg),transparent);}
@@ -161,12 +161,12 @@
     </div>
     <div class="hdr-right">
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
-        <div class="lang-lbl-min" id="curr-lang-lbl"><span class="sm">ua</span> UA</div>
+        <div class="lang-lbl-min" id="curr-lang-lbl">UA</div>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
         <div class="lang-dd-menu" id="lang-dd-menu">
-          <div class="lang-opt act" onclick="setSiteLang('uk', event)"><span style="font-size:10px;text-transform:uppercase;">ua</span> UA</div>
-          <div class="lang-opt" onclick="setSiteLang('en', event)"><span style="font-size:10px;text-transform:uppercase;">en</span> EN</div>
-          <div class="lang-opt" onclick="setSiteLang('ru', event)"><span style="font-size:10px;text-transform:uppercase;">ru</span> RU</div>
+          <div class="lang-opt act" onclick="setSiteLang('uk', event)">UA</div>
+          <div class="lang-opt" onclick="setSiteLang('en', event)">EN</div>
+          <div class="lang-opt" onclick="setSiteLang('ru', event)">RU</div>
         </div>
       </div>
       <button class="btn-sm gold" onclick="openDonate()" style="display:flex;align-items:center;gap:5px;">☕ Підтримати</button>
@@ -447,8 +447,8 @@
 function acceptCookies(){localStorage.setItem('kb_cookies_accepted','1');document.getElementById('cookie-banner').style.display='none';}
 window.addEventListener('DOMContentLoaded',()=>{
   if(!localStorage.getItem('kb_cookies_accepted')){document.getElementById('cookie-banner').style.display='flex';}
-  const lObj = LANG_INFO[siteLang] || LANG_INFO['uk'];
-  document.getElementById('curr-lang-lbl').innerHTML = `<span class="sm">${lObj.s}</span> ${lObj.b}`;
+  const langObj = {'uk':'UA', 'ru':'RU', 'en':'EN'};
+  document.getElementById('curr-lang-lbl').textContent = langObj[siteLang] || 'UA';
 });
 function getSkeletonHtml(count=6){return '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(count);}
 function escapeHtml(unsafe){return (unsafe||'').toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
@@ -458,7 +458,6 @@ const TR = {
   ru: {nav_home:"Главная",nav_movies:"Фильмы",nav_tv:"Сериалы",nav_cartoons:"Мультфильмы",nav_docs:"Документальные",nav_top:"Топ рейтинг",nav_classic:"Классика",search_ph:"Поиск фильмов...",app:"Приложение",login:"Войти",register:"Регистрация",ud_fav:"Избранное",ud_wl:"Смотреть позже",ud_watch:"Просмотрено",ud_admin:"Администрирование",ud_logout:"Выйти",badge_new:"Новинка",btn_watch:"Смотреть",btn_more:"Подробнее",g_all:"Все",g_act:"Боевик",g_com:"Комедия",g_dra:"Драма",g_hor:"Ужасы",g_mel:"Мелодрама",g_fan:"Фантастика",g_fnt:"Фэнтези",g_ani:"Анимация",g_doc:"Документальные",g_thr:"Триллер",g_adv:"Приключения",btn_close:"✕ Закрыть",sf_all:"Все",sf_movies:"Фильмы",sf_tv:"Сериалы",btn_more_load:"Загрузить еще",cat_title_m:"Каталог фильмов",cat_title_t:"Каталог сериалов",btn_home_back:"← Главная",flt_type:"Тип",flt_genre:"Жанр",flt_country:"Страна",flt_year:"Год",flt_rating:"Рейтинг",flt_sort:"Сортировка",flt_lang:"Озвучка",btn_apply:"Применить",btn_reset:"Сбросить",ph_from:"От",ph_to:"До",lib_title:"Моя библиотека",btn_back:"← Назад",h_cont:"Продолжить просмотр",btn_all_watched:"Все просмотренные →",h_new:"Новые фильмы",all:"Все →",h_pop:"Популярные",h_top:"Топ рейтинг",h_tv:"Сериалы",h_classic:"Классика кино",h_90s:"Кино 90-х",h_00s:"Кино 2000-х",ft_genres:"Жанры",ft_nav:"Навигация",ft_serv:"Сервис",btn_search:"Поиск",btn_profile:"Профиль",lbl_pass:"Пароль",forgot_pass:"Забыли пароль?",or:"или",log_google:"Войти через Google",no_acc:"Нет аккаунта?",lbl_name:"Имя",ph_name:"Ваше имя",reg_google:"Зарегистрироваться через Google",has_acc:"Уже есть аккаунт?"},
   en: {nav_home:"Home",nav_movies:"Movies",nav_tv:"TV Shows",nav_cartoons:"Cartoons",nav_docs:"Documentary",nav_top:"Top Rated",nav_classic:"Classic",search_ph:"Search movies...",app:"App",login:"Login",register:"Register",ud_fav:"Favorites",ud_wl:"Watch Later",ud_watch:"Watched",ud_admin:"Admin Panel",ud_logout:"Logout",badge_new:"New",btn_watch:"Watch",btn_more:"Details",g_all:"All",g_act:"Action",g_com:"Comedy",g_dra:"Drama",g_hor:"Horror",g_mel:"Romance",g_fan:"Sci-Fi",g_fnt:"Fantasy",g_ani:"Animation",g_doc:"Documentary",g_thr:"Thriller",g_adv:"Adventure",btn_close:"✕ Close",sf_all:"All",sf_movies:"Movies",sf_tv:"TV Shows",btn_more_load:"Load more",cat_title_m:"Movie Catalog",cat_title_t:"TV Show Catalog",btn_home_back:"← Home",flt_type:"Type",flt_genre:"Genre",flt_country:"Country",flt_year:"Year",flt_rating:"Rating",flt_sort:"Sort by",flt_lang:"Language",btn_apply:"Apply",btn_reset:"Reset",ph_from:"From",ph_to:"To",lib_title:"My Library",btn_back:"← Back",h_cont:"Continue Watching",btn_all_watched:"All watched →",h_new:"New Movies",all:"All →",h_pop:"Popular",h_top:"Top Rated",h_tv:"TV Shows",h_classic:"Classic Cinema",h_90s:"90s Movies",h_00s:"2000s Movies",ft_genres:"Genres",ft_nav:"Navigation",ft_serv:"Service",btn_search:"Search",btn_profile:"Profile",lbl_pass:"Password",forgot_pass:"Forgot password?",or:"or",log_google:"Login with Google",no_acc:"Don't have an account?",lbl_name:"Name",ph_name:"Your name",reg_google:"Register with Google",has_acc:"Already have an account?"}
 };
-const LANG_INFO = {'uk':{s:'ua',b:'UA'},'ru':{s:'ru',b:'RU'},'en':{s:'en',b:'EN'}};
 let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
 function getSiteLangParam() { return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA'; }
 
