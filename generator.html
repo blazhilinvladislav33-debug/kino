@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Генератор Sitemap для КіноБази</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #141414; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { background: #222; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid #333; }
+        button { background: #e50914; color: white; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        button:hover { background: #b20710; }
+        #status { margin-top: 20px; color: #999; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Створення sitemap.xml</h2>
+    <p>Цей скрипт збере 2000 найпопулярніших фільмів з TMDB<br>та згенерує карту сайту для Google.</p>
+    <button id="startBtn" onclick="generateSitemap()">Згенерувати Sitemap</button>
+    <div id="status">Очікування...</div>
+</div>
+
+<script>
+const API_KEY = '04c35731a5ee918f014970082a0088b1';
+const DOMAIN = 'https://kinobaza.site'; // Ваш домен
+const TOTAL_PAGES = 100; // 100 сторінок по 20 фільмів = 2000 фільмів
+
+async function generateSitemap() {
+    const statusEl = document.getElementById('status');
+    const btn = document.getElementById('startBtn');
+    btn.disabled = true;
+    
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    
+    // Додаємо головну сторінку
+    xml += `  <url>\n    <loc>${DOMAIN}/</loc>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
+
+    let moviesCount = 0;
+
+    for (let page = 1; page <= TOTAL_PAGES; page++) {
+        statusEl.innerText = `Завантаження... Сторінка ${page} з ${TOTAL_PAGES}`;
+        
+        try {
+            const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=uk-UA&page=${page}`);
+            const data = await res.json();
+            
+            if (data.results) {
+                data.results.forEach(movie => {
+                    xml += `  <url>\n`;
+                    xml += `    <loc>${DOMAIN}/movie/${movie.id}</loc>\n`;
+                    xml += `    <changefreq>weekly</changefreq>\n`;
+                    xml += `    <priority>0.8</priority>\n`;
+                    xml += `  </url>\n`;
+                    moviesCount++;
+                });
+            }
+        } catch (e) {
+            console.error('Помилка на сторінці', page);
+        }
+    }
+
+    xml += `</urlset>`;
+
+    // Створюємо файл для скачування
+    const blob = new Blob([xml], { type: 'text/xml' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'sitemap.xml';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    statusEl.innerHTML = `<span style="color:#1db954;">Готово! Зібрано ${moviesCount} фільмів. Файл sitemap.xml скачано.</span>`;
+    btn.disabled = false;
+}
+</script>
+</body>
+</html>
