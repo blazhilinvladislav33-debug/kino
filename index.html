@@ -60,13 +60,19 @@
     .srch-wrap{position:relative;flex:0 1 380px;} .srch{display:flex;align-items:center;background:#222;border:1px solid #333;border-radius:8px;overflow:hidden;width:100%;transition:all 0.2s;padding:0 12px;}
     .srch:focus-within{border-color:var(--accent);background:#1a1a1a;box-shadow:0 0 0 2px rgba(229,9,20,.15);}
     .srch-icon{width:16px;height:16px;fill:#888;flex-shrink:0;} .srch input{background:transparent;border:none;outline:none;color:#fff;padding:10px;font-size:14px;width:100%;font-family:inherit;} .srch input::placeholder{color:#888;}
-    /* MINIMAL LANG */
-    .lang-dd-wrap{position:relative;display:inline-flex;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:14px;font-weight:700;color:#fff;user-select:none;transition:all 0.2s;}
-    .lang-dd-wrap:hover{background:var(--bg4);} .lang-lbl-min{display:flex;align-items:baseline;gap:3px;} .lang-lbl-min .sm{font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;}
-    .lang-dd-wrap svg{width:14px;height:14px;margin-left:6px;fill:var(--muted);transition:transform 0.2s;} .lang-dd-wrap.open svg{transform:rotate(180deg);}
+    
+    .lang-dd-wrap{position:relative;display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:6px 12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;user-select:none;transition:all 0.2s;}
+    .lang-dd-wrap:hover{background:#222;} 
+    .lang-lbl-min{display:flex;align-items:baseline;gap:2px;} 
+    .lang-lbl-min .sm{font-size:11px;color:#888;text-transform:lowercase;font-weight:600;}
+    .lang-dd-wrap svg{width:14px;height:14px;fill:var(--muted);transition:transform 0.2s;} 
+    .lang-dd-wrap.open svg{transform:rotate(180deg);}
     .lang-dd-menu{position:absolute;top:calc(100% + 6px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.7);z-index:1000;display:none;overflow:hidden;min-width:90px;}
-    .lang-dd-menu.open{display:block;} .lang-opt{padding:10px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:background 0.15s;text-align:center;}
-    .lang-opt:hover{background:var(--bg4);color:#fff;} .lang-opt.act{color:var(--accent);background:rgba(255,255,255,.05);}
+    .lang-dd-menu.open{display:block;} 
+    .lang-opt{padding:10px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:background 0.15s;text-align:center;text-transform:uppercase;}
+    .lang-opt:hover{background:var(--bg4);color:#fff;} 
+    .lang-opt.act{color:var(--accent);background:rgba(255,255,255,.05);}
+
     .sub-badge{display:inline-block;background:rgba(245,197,24,.18);color:var(--gold);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
     #ac-drop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,.7);display:none;max-height:440px;overflow-y:auto;} #ac-drop.open{display:block;}
     .ac-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .12s;} .ac-item:hover,.ac-item.sel{background:var(--bg3);}
@@ -79,11 +85,10 @@
     .srch-filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;} .sf-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;} .sf-btn:hover{border-color:#fff;color:#fff;} .sf-btn.act{background:var(--accent);border-color:var(--accent);color:#fff;} .srch-count{font-size:12px;color:var(--muted);margin-top:2px;}
     .hdr-right{display:flex;gap:8px;align-items:center;flex-shrink:0;} .btn-sm{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .2s;} .btn-sm:hover{border-color:#fff;color:#fff;} .btn-sm.red{background:var(--accent);border-color:var(--accent);color:#fff;} .btn-sm.red:hover{filter:brightness(1.2);}
     .btn-sm.gold{color:var(--gold);border-color:var(--gold);} .btn-sm.gold:hover{background:rgba(245,197,24,.1);}
-    .user-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.5s ease;}
+    .user-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.5s ease;}
     .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);} .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown,.user-avatar.open .user-dropdown{display:block;}
     .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:8px;} .ud-item:hover{background:var(--bg4);color:#fff;} .ud-divider{border-top:1px solid var(--border);margin:4px 0;} .ud-name{padding:8px 12px;font-weight:600;color:#fff;font-size:14px;}
     #slot-header{width:100%;}
-    /* Switch toggle (Kids Mode) */
     .switch{position:relative;display:inline-block;width:34px;height:20px;} .switch input{opacity:0;width:0;height:0;} .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--bg4);transition:.4s;border-radius:34px;} .slider:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background-color:white;transition:.4s;border-radius:50%;} input:checked + .slider{background-color:var(--accent);} input:checked + .slider:before{transform:translateX(14px);}
     main{max-width:1600px;margin:0 auto;padding:0 24px;}
     .hero{position:relative;height:480px;border-radius:14px;overflow:hidden;margin:18px 0;cursor:pointer;} .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:background-image .6s;} .hero-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.05) 100%);} .hero-ob{position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(0,var(--bg),transparent);}
@@ -440,21 +445,25 @@
 
 <script>
 function acceptCookies(){localStorage.setItem('kb_cookies_accepted','1');document.getElementById('cookie-banner').style.display='none';}
-window.addEventListener('DOMContentLoaded',()=>{if(!localStorage.getItem('kb_cookies_accepted')){document.getElementById('cookie-banner').style.display='flex';}});
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!localStorage.getItem('kb_cookies_accepted')){document.getElementById('cookie-banner').style.display='flex';}
+  const lObj = LANG_INFO[siteLang] || LANG_INFO['uk'];
+  document.getElementById('curr-lang-lbl').innerHTML = `<span class="sm">${lObj.s}</span> ${lObj.b}`;
+});
 function getSkeletonHtml(count=6){return '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(count);}
 function escapeHtml(unsafe){return (unsafe||'').toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
 
-const TRANSLATIONS = {
+const TR = {
   uk: {nav_home:"Головна",nav_movies:"Фільми",nav_tv:"Серіали",nav_cartoons:"Мультфільми",nav_docs:"Документальні",nav_top:"Топ рейтинг",nav_classic:"Класика",search_ph:"Пошук фільмів...",app:"Додаток",login:"Увійти",register:"Реєстрація",ud_fav:"Улюблені",ud_wl:"Дивитись пізніше",ud_watch:"Переглянуто",ud_admin:"Адміністрування",ud_logout:"Вийти",badge_new:"Новинка",btn_watch:"Дивитись",btn_more:"Детальніше",g_all:"Усі",g_act:"Бойовик",g_com:"Комедія",g_dra:"Драма",g_hor:"Жахи",g_mel:"Мелодрама",g_fan:"Фантастика",g_fnt:"Фентезі",g_ani:"Анімація",g_doc:"Документальні",g_thr:"Трилер",g_adv:"Пригоди",btn_close:"✕ Закрити",sf_all:"Все",sf_movies:"Фільми",sf_tv:"Серіали",btn_more_load:"Завантажити ще",cat_title_m:"Каталог фільмів",cat_title_t:"Каталог серіалів",btn_home_back:"← Головна",flt_type:"Тип",flt_genre:"Жанр",flt_country:"Країна",flt_year:"Рік",flt_rating:"Рейтинг",flt_sort:"Сортування",flt_lang:"Озвучка",btn_apply:"Застосувати",btn_reset:"Скинути",ph_from:"Від",ph_to:"До",lib_title:"Моя бібліотека",btn_back:"← Назад",h_cont:"Продовжити перегляд",btn_all_watched:"Всі переглянуті →",h_new:"Нові фільми",all:"Всі →",h_pop:"Популярні",h_top:"Топ рейтинг",h_tv:"Серіали",h_classic:"Класика кіно",h_90s:"Кіно 90-х",h_00s:"Кіно 2000-х",ft_genres:"Жанри",ft_nav:"Навігація",ft_serv:"Сервис",btn_search:"Пошук",btn_profile:"Профіль",lbl_pass:"Пароль",forgot_pass:"Забули пароль?",or:"або",log_google:"Увійти через Google",no_acc:"Немає акаунту?",lbl_name:"Ім'я",ph_name:"Ваше ім'я",reg_google:"Зареєструватись через Google",has_acc:"Вже є акаунт?"},
   ru: {nav_home:"Главная",nav_movies:"Фильмы",nav_tv:"Сериалы",nav_cartoons:"Мультфильмы",nav_docs:"Документальные",nav_top:"Топ рейтинг",nav_classic:"Классика",search_ph:"Поиск фильмов...",app:"Приложение",login:"Войти",register:"Регистрация",ud_fav:"Избранное",ud_wl:"Смотреть позже",ud_watch:"Просмотрено",ud_admin:"Администрирование",ud_logout:"Выйти",badge_new:"Новинка",btn_watch:"Смотреть",btn_more:"Подробнее",g_all:"Все",g_act:"Боевик",g_com:"Комедия",g_dra:"Драма",g_hor:"Ужасы",g_mel:"Мелодрама",g_fan:"Фантастика",g_fnt:"Фэнтези",g_ani:"Анимация",g_doc:"Документальные",g_thr:"Триллер",g_adv:"Приключения",btn_close:"✕ Закрыть",sf_all:"Все",sf_movies:"Фильмы",sf_tv:"Сериалы",btn_more_load:"Загрузить еще",cat_title_m:"Каталог фильмов",cat_title_t:"Каталог сериалов",btn_home_back:"← Главная",flt_type:"Тип",flt_genre:"Жанр",flt_country:"Страна",flt_year:"Год",flt_rating:"Рейтинг",flt_sort:"Сортировка",flt_lang:"Озвучка",btn_apply:"Применить",btn_reset:"Сбросить",ph_from:"От",ph_to:"До",lib_title:"Моя библиотека",btn_back:"← Назад",h_cont:"Продолжить просмотр",btn_all_watched:"Все просмотренные →",h_new:"Новые фильмы",all:"Все →",h_pop:"Популярные",h_top:"Топ рейтинг",h_tv:"Сериалы",h_classic:"Классика кино",h_90s:"Кино 90-х",h_00s:"Кино 2000-х",ft_genres:"Жанры",ft_nav:"Навигация",ft_serv:"Сервис",btn_search:"Поиск",btn_profile:"Профиль",lbl_pass:"Пароль",forgot_pass:"Забыли пароль?",or:"или",log_google:"Войти через Google",no_acc:"Нет аккаунта?",lbl_name:"Имя",ph_name:"Ваше имя",reg_google:"Зарегистрироваться через Google",has_acc:"Уже есть аккаунт?"},
   en: {nav_home:"Home",nav_movies:"Movies",nav_tv:"TV Shows",nav_cartoons:"Cartoons",nav_docs:"Documentary",nav_top:"Top Rated",nav_classic:"Classic",search_ph:"Search movies...",app:"App",login:"Login",register:"Register",ud_fav:"Favorites",ud_wl:"Watch Later",ud_watch:"Watched",ud_admin:"Admin Panel",ud_logout:"Logout",badge_new:"New",btn_watch:"Watch",btn_more:"Details",g_all:"All",g_act:"Action",g_com:"Comedy",g_dra:"Drama",g_hor:"Horror",g_mel:"Romance",g_fan:"Sci-Fi",g_fnt:"Fantasy",g_ani:"Animation",g_doc:"Documentary",g_thr:"Thriller",g_adv:"Adventure",btn_close:"✕ Close",sf_all:"All",sf_movies:"Movies",sf_tv:"TV Shows",btn_more_load:"Load more",cat_title_m:"Movie Catalog",cat_title_t:"TV Show Catalog",btn_home_back:"← Home",flt_type:"Type",flt_genre:"Genre",flt_country:"Country",flt_year:"Year",flt_rating:"Rating",flt_sort:"Sort by",flt_lang:"Language",btn_apply:"Apply",btn_reset:"Reset",ph_from:"From",ph_to:"To",lib_title:"My Library",btn_back:"← Back",h_cont:"Continue Watching",btn_all_watched:"All watched →",h_new:"New Movies",all:"All →",h_pop:"Popular",h_top:"Top Rated",h_tv:"TV Shows",h_classic:"Classic Cinema",h_90s:"90s Movies",h_00s:"2000s Movies",ft_genres:"Genres",ft_nav:"Navigation",ft_serv:"Service",btn_search:"Search",btn_profile:"Profile",lbl_pass:"Password",forgot_pass:"Forgot password?",or:"or",log_google:"Login with Google",no_acc:"Don't have an account?",lbl_name:"Name",ph_name:"Your name",reg_google:"Register with Google",has_acc:"Already have an account?"}
 };
-const LANG_INFO = {'uk':{flag:'🇺🇦',text:' UA'},'ru':{flag:'🚫',text:' RU'},'en':{flag:'🇬🇧',text:' EN'}};
+const LANG_INFO = {'uk':{s:'ua',b:'UA'},'ru':{s:'ru',b:'RU'},'en':{s:'en',b:'EN'}};
 let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
 function getSiteLangParam() { return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA'; }
 
 function updateUIStrings(lang) {
-  const t = TRANSLATIONS[lang] || TRANSLATIONS['uk'];
+  const t = TR[lang] || TR['uk'];
   document.querySelectorAll('[data-i18n]').forEach(el => { if(t[el.getAttribute('data-i18n')]) el.textContent = t[el.getAttribute('data-i18n')]; });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { if(t[el.getAttribute('data-i18n-ph')]) el.placeholder = t[el.getAttribute('data-i18n-ph')]; });
   if(document.getElementById('cat-section').style.display === 'block') { if(!currentActorId) document.getElementById('cat-title').textContent = (catType === 'tv') ? t['cat_title_t'] : t['cat_title_m']; }
@@ -601,7 +610,7 @@ async function tmdb(ep, params={}) {
   for (let i=0; i<keys.length; i++) {
     const key = keys[(keyIdx+i) % keys.length]; const url = new URL(TMDB_BASE + ep); url.searchParams.set('api_key', key); url.searchParams.set('language', getSiteLangParam());
     if(isKidsMode && ep.includes('/discover/')) params.without_genres = '27,53,80'; 
-    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, String(v)));
+    Object.entries(params).forEach(([k,v]) => { if(k==='language' && v==='') url.searchParams.delete('language'); else url.searchParams.set(k, String(v)); });
     try { const r = await fetch(url); if (r.status === 429) { keyIdx = (keyIdx+1) % keys.length; continue; } if (!r.ok) throw new Error(); const data = await r.json(); if (!noCache) _tcSet(_tcKey(ep, params), data); return data; } catch { continue; }
   }
   return null;
@@ -638,7 +647,7 @@ function card(m, badge) {
 async function loadGrid(id, ep, params={}, badge=null, limit=12) {
   const el=document.getElementById(id); if (el) el.innerHTML = getSkeletonHtml(limit); 
   const data=await tmdb(ep,params);
-  if(!data||!data.results){ if (el) el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">Немає API ключа.</div>`; return []; }
+  if(!data||!data.results){ if (el) el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">Помилка завантаження</div>`; return []; }
   if (el) el.innerHTML=data.results.slice(0,limit).map(m=>card(m,badge)).join('');
   return data.results;
 }
@@ -677,7 +686,7 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
       }
   }
 
-  const _castHtml = _cast.length ? `<div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div><div class="cast-row">${_cast.map(a=>{const ph=a.profile_path?`<img class="cast-photo" src="${IMG}w185${a.profile_path}"><div class="cast-photo-ph" style="display:none">👤</div>`:`<div class="cast-photo-ph">👤</div>`;return `<div class="cast-card" style="cursor:pointer;" onclick="searchByActor(${a.id}, '${escapeHtml(a.name).replace(/'/g,"\\'")}')">${ph}<div class="cast-name">${escapeHtml(a.name)}</div><div class="cast-char">${escapeHtml(a.character||'')}</div></div>`;}).join('')}</div>` : '';
+  const _castHtml = _cast.length ? `<div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div><div class="cast-row">${_cast.map(a=>{const ph=a.profile_path?`<img class="cast-photo" src="${IMG}w185${a.profile_path}"><div class="cast-photo-ph" style="display:none">👤</div>`:`<div class="cast-photo-ph">👤</div>`;return `<div class="cast-card" style="cursor:pointer;" onclick="searchByActor(${a.id}, this.getAttribute('data-name'))" data-name="${escapeHtml(a.name)}">${ph}<div class="cast-name">${escapeHtml(a.name)}</div><div class="cast-char">${escapeHtml(a.character||'')}</div></div>`;}).join('')}</div>` : '';
   
   const _extraItems=[]; if(data.budget>0) _extraItems.push({lbl:'Бюджет',val:'$'+(data.budget/1e6).toFixed(1)+'M'}); if(data.revenue>0) _extraItems.push({lbl:'Касові збори',val:'$'+(data.revenue/1e6).toFixed(1)+'M'}); if(data.production_countries&&data.production_countries.length) _extraItems.push({lbl:'Країна',val:data.production_countries[0].name}); if(data.original_language) _extraItems.push({lbl:'Мова оригіналу',val:data.original_language.toUpperCase()});
   const _extraHtml = _extraItems.length ? `<div class="m-extra">${_extraItems.map(it=>`<div class="m-extra-item"><div class="m-extra-lbl">${it.lbl}</div><div class="m-extra-val">${it.val}</div></div>`).join('')}</div>` : '';
@@ -726,7 +735,7 @@ function loadComments(id, type) {
     const wrap = document.getElementById('comment-form-wrap');
     if (currentUser) { wrap.innerHTML = `<textarea id="new-comment-text" placeholder="Напишіть свій відгук..." style="width:100%;background:var(--bg3);border:1px solid var(--border);color:#fff;border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical;min-height:60px;margin-bottom:8px;outline:none;"></textarea><button onclick="postComment('${id}')" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;">Надіслати</button>`; } 
     else { wrap.innerHTML = `<div style="background:var(--bg3);padding:14px;border-radius:8px;text-align:center;color:var(--muted);font-size:13px;">Щоб залишити коментар, будь ласка, <span style="color:var(--accent);cursor:pointer;" onclick="openAuth('login')">увійдіть в акаунт</span>.</div>`; }
-    let tmdbReviews = []; tmdb(`/${type}/${id}/reviews`).then(data => { if (data && data.results) { tmdbReviews = data.results.map(r => ({ author: r.author, content: r.content, date: new Date(r.created_at), source: 'tmdb' })); } renderAllComments(id, tmdbReviews); });
+    let tmdbReviews = []; tmdb(`/${type}/${id}/reviews`, {language: ''}).then(data => { if (data && data.results) { tmdbReviews = data.results.map(r => ({ author: r.author, content: r.content, date: new Date(r.created_at), source: 'tmdb' })); } renderAllComments(id, tmdbReviews); });
 }
 
 let currentFbComments = [];
