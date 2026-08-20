@@ -3,24 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <title>КіноБаза — Дивитись фільми онлайн безкоштовно</title>
   <meta name="google-adsense-account" content="ca-pub-9899032308956715">
   <meta name="description" content="КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.">
   <meta name="keywords" content="дивитись фільми онлайн, серіали онлайн, українська озвучка, HD якість, безкоштовно, кіно онлайн, фільми 2026">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="КіноБаза">
   <link rel="canonical" id="canonical-url" href="https://kinobaza.site/">
+
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="КіноБаза">
   <meta property="og:title" content="КіноБаза — Дивитись фільми онлайн безкоштовно">
-  <meta property="og:description" content="Тисячі фільмів та серіалів у HD якості з українською озвучкою.">
+  <meta property="og:description" content="Тисячі фільмів та серіалів у HD якості з українською озвучкою. Безкоштовно, без реєстрації.">
   <meta property="og:url" content="https://kinobaza.site/">
   <meta property="og:image" content="https://kinobaza.site/icons/icon-512x512.png">
   <meta property="og:locale" content="uk_UA">
+
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="КіноБаза — Дивитись фільми онлайн">
   <meta name="twitter:description" content="Тисячі фільмів та серіалів у HD якості. Безкоштовно.">
   <meta name="twitter:image" content="https://kinobaza.site/icons/icon-512x512.png">
+
   <meta name="theme-color" content="#e50914">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -175,7 +178,7 @@
       <div class="hero-desc" id="hero-d">Завантажуємо...</div>
       <div class="hero-btns">
         <button class="btn-play" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,'',true)"><span data-i18n="btn_watch">Дивитись</span></button>
-        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,'',false)"><span data-i18n="btn_more">Детальніше</span></button>
+        <button class="btn-info" onclick="event.stopPropagation();openMovie(currentHeroId,currentHeroType,'',true)"><span data-i18n="btn_more">Детальніше</span></button>
       </div>
     </div>
     <div class="hero-dots" id="hero-dots"></div>
@@ -209,7 +212,7 @@
       <div class="cat-fg"><label data-i18n="flt_lang">Озвучка</label><select class="cat-sel" id="cat-lang" onchange="applyCatFilters()"><option value="">Всі мови</option><option value="uk">Українська (UA)</option><option value="en">Оригінал + Sub (ENG)</option></select></div>
       <div class="cat-fg"><label data-i18n="flt_year">Рік</label><div class="cat-yr-wrap"><input class="cat-yr-inp" type="text" id="cat-yr-from" data-i18n-ph="ph_from" placeholder="Від" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')"><span style="color:var(--dim)">—</span><input class="cat-yr-inp" type="text" id="cat-yr-to" data-i18n-ph="ph_to" placeholder="До" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')"></div></div>
       <div class="cat-fg"><label data-i18n="flt_rating">Рейтинг</label><select class="cat-sel" id="cat-rating" onchange="applyCatFilters()"><option value="">Будь-який</option><option value="6">6+</option><option value="7">7+</option><option value="7.5">7.5+</option><option value="8">8+</option><option value="8.5">8.5+</option></select></div>
-      <div class="cat-fg"><label data-i18n="flt_sort">Сортування</label><select class="cat-sel" id="cat-sort" onchange="applyCatFilters()"><option value="popularity.desc">За популярністю</option><option value="vote_average.desc">За рейтингом</option><option value="release_date.desc">Новинки спочатку</option><option value="vote_count.desc">За кількістю голосів</option></select></div>
+      <div class="cat-fg"><label data-i18n="flt_sort">Сортування</label><select class="cat-sel" id="cat-sort" onchange="applyCatFilters()"><option value="popularity.desc">За популярністю</option><option value="vote_average.desc">За рейтингом</option><option value="release_date.desc">Новинки спочатку</option><option value="vote_count.desc">За кількістю голосів</option><option value="revenue.desc">За касовими зборами</option></select></div>
       <button class="cat-btn-apply" onclick="applyCatFilters()" data-i18n="btn_apply">Застосувати</button><button class="cat-btn-reset" onclick="resetCatFilters()" data-i18n="btn_reset">Скинути</button>
     </div>
     <div class="cat-active" id="cat-active"></div>
@@ -275,9 +278,9 @@
   <div id="slot-footer" style="margin-bottom:22px;"></div>
   <div class="ft-grid">
     <div class="ft-brand"><a href="#" class="logo"><b>Кіно</b>База</a><p>Найбільша бібліотека фільмів та серіалів. HD якість, кілька серверів відтворення, різна озвучка.</p></div>
-    <div class="ft-col"><h4 data-i18n="ft_genres">Жанри</h4><a href="/category/action" onclick="event.preventDefault();selGenre(28,this)">Бойовики</a><a href="/category/comedy" onclick="event.preventDefault();selGenre(35,this)">Комедії</a><a href="/category/drama" onclick="event.preventDefault();selGenre(18,this)">Драми</a></div>
-    <div class="ft-col"><h4 data-i18n="ft_nav">Навігація</h4><a href="/" onclick="event.preventDefault();showHome();">Головна</a><a href="/category/movie" onclick="event.preventDefault();showCatalog({type:'movie'})">Фільми</a><a href="/category/tv" onclick="event.preventDefault();showCatalog({type:'tv'})">Серіали</a></div>
-    <div class="ft-col"><h4 data-i18n="ft_serv">Сервіс</h4><a href="#" onclick="openPage('about');return false;">Про нас</a><a href="#" onclick="openPage('contacts');return false;">Контакти</a><a href="#" onclick="openPage('dmca');return false;">DMCA</a></div>
+    <div class="ft-col"><h4 data-i18n="ft_genres">Жанри</h4><a href="/category/action" onclick="event.preventDefault();selGenre(28,this)">Бойовики</a><a href="/category/comedy" onclick="event.preventDefault();selGenre(35,this)">Комедії</a><a href="/category/drama" onclick="event.preventDefault();selGenre(18,this)">Драми</a><a href="/category/horror" onclick="event.preventDefault();selGenre(27,this)">Жахи</a><a href="/category/fantasy" onclick="event.preventDefault();selGenre(14,this)">Фантастика</a><a href="/category/romance" onclick="event.preventDefault();selGenre(10749,this)">Мелодрами</a></div>
+    <div class="ft-col"><h4 data-i18n="ft_nav">Навігація</h4><a href="/" onclick="event.preventDefault();showHome();">Головна</a><a href="/category/movie" onclick="event.preventDefault();showCatalog({type:'movie'})">Фільми</a><a href="/category/tv" onclick="event.preventDefault();showCatalog({type:'tv'})">Серіали</a><a href="/category/classic" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'})">Класика</a><a href="/category/top" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'})">Топ рейтинг</a></div>
+    <div class="ft-col"><h4 data-i18n="ft_serv">Сервіс</h4><a href="#" onclick="openPage('about');return false;">Про нас</a><a href="#" onclick="openPage('contacts');return false;">Контакти</a><a href="#" onclick="openPage('terms');return false;">Умови</a><a href="#" onclick="openPage('dmca');return false;">DMCA</a></div>
   </div>
   <div class="ft-btm"><p>© 2026 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--gold);">TMDB</a></p><p style="color:var(--dim);font-size:11px;">Сайт не зберігає відеофайли.</p></div>
 </footer>
@@ -287,11 +290,15 @@
 
 <div class="mob-ov" id="mob-ov" onclick="closeMobileMenu()"></div>
 <div class="mob-drawer" id="mob-drawer">
-  <div class="mob-drawer-top"><a href="#" class="logo" onclick="showHome();closeMobileMenu();return false;"><b>Кіно</b>База</a><button class="mob-drawer-close" onclick="closeMobileMenu()">✕</button></div>
+  <div class="mob-drawer-top"><a href="/" class="logo" onclick="event.preventDefault();showHome();closeMobileMenu();"><b>Кіно</b>База</a><button class="mob-drawer-close" onclick="closeMobileMenu()">✕</button></div>
   <div class="mob-drawer-section">
     <button class="mob-nav-link" onclick="showHome();closeMobileMenu();updateBnav('home')"><span class="mob-nav-icon">🏠</span><span data-i18n="nav_home">Головна</span></button>
     <button class="mob-nav-link" onclick="showCatalog({type:'movie'});closeMobileMenu()"><span class="mob-nav-icon">🎬</span><span data-i18n="nav_movies">Фільми</span></button>
     <button class="mob-nav-link" onclick="showCatalog({type:'tv'});closeMobileMenu()"><span class="mob-nav-icon">📺</span><span data-i18n="nav_tv">Серіали</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'16'});closeMobileMenu()"><span class="mob-nav-icon">🎨</span><span data-i18n="nav_cartoons">Мультфільми</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'99'});closeMobileMenu()"><span class="mob-nav-icon">📰</span><span data-i18n="nav_docs">Документальні</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});closeMobileMenu()"><span class="mob-nav-icon">⭐</span><span data-i18n="nav_top">Топ рейтинг</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});closeMobileMenu()"><span class="mob-nav-icon">🎞</span><span data-i18n="nav_classic">Класика</span></button>
   </div>
   <div class="mob-drawer-section" id="mob-auth-section"></div>
 </div>
@@ -300,6 +307,8 @@
   <div class="mob-bnav-inner">
     <button class="mbn-btn act" id="mbn-home" onclick="showHome();updateBnav('home')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span data-i18n="nav_home">Головна</span></button>
     <button class="mbn-btn" id="mbn-search" onclick="mbnSearch()"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span data-i18n="btn_search">Пошук</span></button>
+    <button class="mbn-btn" id="mbn-movies" onclick="showCatalog({type:'movie'});updateBnav('movies')"><svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg><span data-i18n="nav_movies">Фільми</span></button>
+    <button class="mbn-btn" id="mbn-tv" onclick="showCatalog({type:'tv'});updateBnav('tv')"><svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg><span data-i18n="nav_tv">Серіали</span></button>
     <button class="mbn-btn" id="mbn-profile" onclick="handleBnavProfile()"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span data-i18n="btn_profile">Профіль</span></button>
   </div>
 </nav>
@@ -351,7 +360,7 @@ function getSkeletonHtml(count=6) { return '<div class="sk-card"><div class="sk-
 function escapeHtml(unsafe) { return (unsafe || '').toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 function slugify(text) { const ru="абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ".split(""); const en="a b v h d e e zh z y y k l m n o p r s t u f kh ts ch sh shch y e yu ya ye i yi g".split(" "); let str=(text||'').toLowerCase(); for(let i=0;i<ru.length;i++) str=str.split(ru[i]).join(en[i]); return str.replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''); }
 
-const TR = { uk:{nav_home:"Головна",nav_movies:"Фільми",nav_tv:"Серіали",nav_cartoons:"Мультфільми",nav_docs:"Документальні",nav_top:"Топ рейтинг",nav_classic:"Класика",search_ph:"Пошук фільмів...",login:"Увійти",register:"Реєстрація",ud_fav:"Улюблені",ud_wl:"Дивитись пізніше",ud_watch:"Переглянуто",ud_admin:"Адміністрування",ud_logout:"Вийти",badge_new:"Новинка",btn_watch:"Дивитись",btn_more:"Детальніше",g_all:"Усі",g_act:"Бойовик",g_com:"Комедія",g_dra:"Драма",g_hor:"Жахи",g_mel:"Мелодрама",g_fan:"Фантастика",g_fnt:"Фентезі",g_ani:"Анімація",g_doc:"Документальні",g_thr:"Трилер",g_adv:"Пригоди",btn_close:"✕ Закрити",sf_all:"Все",sf_movies:"Фільми",sf_tv:"Серіали",btn_more_load:"Завантажити ще",cat_title_m:"Каталог фільмів",cat_title_t:"Каталог серіалів",btn_home_back:"← Головна",flt_type:"Тип",flt_genre:"Жанр",flt_country:"Країна",flt_year:"Рік",flt_rating:"Рейтинг",flt_sort:"Сортування",flt_lang:"Озвучка",btn_apply:"Застосувати",btn_reset:"Скинути",ph_from:"Від",ph_to:"До",lib_title:"Моя бібліотека",btn_back:"← Назад",h_cont:"Продовжити перегляд",btn_all_watched:"Всі переглянуті →",h_new:"Нові фільми",all:"Всі →",h_pop:"Популярні",h_top:"Топ рейтинг",h_tv:"Серіали",h_classic:"Класика кіно",h_90s:"Кіно 90-х",h_00s:"Кіно 2000-х",ft_genres:"Жанри",ft_nav:"Навігація",ft_serv:"Сервіс",btn_search:"Пошук",btn_profile:"Профіль"} };
+const TR = { uk:{nav_home:"Головна",nav_movies:"Фільми",nav_tv:"Серіали",nav_cartoons:"Мультфільми",nav_docs:"Документальні",nav_top:"Топ рейтинг",nav_classic:"Класика",search_ph:"Пошук фільмів...",login:"Увійти",register:"Реєстрація",ud_fav:"Улюблені",ud_wl:"Дивитись пізніше",ud_watch:"Переглянуто",ud_admin:"Адміністрування",ud_logout:"Вийти",badge_new:"Новинка",btn_watch:"Дивитись",btn_more:"Детальніше",g_all:"Усі",g_act:"Бойовик",g_com:"Комедія",g_dra:"Драма",g_hor:"Жахи",g_mel:"Мелодрама",g_fan:"Фантастика",g_fnt:"Фентезі",g_ani:"Анімація",g_doc:"Документальні",g_thr:"Трилер",g_adv:"Пригоди",btn_close:"✕ Закрити",sf_all:"Все",sf_movies:"Фільми",sf_tv:"Серіали",btn_more_load:"Завантажити ще",cat_title_m:"Каталог фільмів",cat_title_t:"Каталог серіалів",btn_home_back:"← Головна",flt_type:"Тип",flt_genre:"Жанр",flt_country:"Країна",flt_year:"Рік",flt_rating:"Рейтинг",flt_sort:"Сортування",flt_lang:"Озвучка",btn_apply:"Застосувати",btn_reset:"Скинути",ph_from:"Від",ph_to:"До",lib_title:"Моя бібліотека",btn_back:"← Назад",h_cont:"Продовжити перегляд",btn_all_watched:"Всі переглянуті →",h_new:"Нові фільми",all:"Всі →",h_pop:"Популярні",h_top:"Топ рейтинг",h_tv:"Серіали",h_classic:"Класика кіно",h_90s:"Кіно 90-х",h_00s:"Кіно 2000-х",ft_genres:"Жанри",ft_nav:"Навігація",ft_serv:"Сервис",btn_search:"Пошук",btn_profile:"Профіль"} };
 let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
 function getSiteLangParam() { return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA'; }
 function updateUIStrings(lang) { const t=TR[lang]||TR['uk']; document.querySelectorAll('[data-i18n]').forEach(el=>{if(t[el.getAttribute('data-i18n')]) el.textContent=t[el.getAttribute('data-i18n')];}); document.querySelectorAll('[data-i18n-ph]').forEach(el=>{if(t[el.getAttribute('data-i18n-ph')]) el.placeholder=t[el.getAttribute('data-i18n-ph')];}); if(document.getElementById('cat-section').style.display==='block'){if(!currentActorId && !currentCollectionId) document.getElementById('cat-title').textContent=(catType==='tv')?t['cat_title_t']:t['cat_title_m'];} }
@@ -371,8 +380,8 @@ function createWatchParty(id, type) { navigator.clipboard.writeText(`${window.lo
 const FIREBASE_CONFIG = { apiKey: "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc", authDomain: "kinobaza-6c109.firebaseapp.com", projectId: "kinobaza-6c109" };
 let db = null; try { if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG); db = firebase.firestore(); } catch(e){}
 let keysCache=[], dbReady=false;
-function initFirestore() { if(!db){loadFallback();return;} db.collection('apiKeys').onSnapshot(snap=>{ keysCache=snap.docs.map(d=>d.data().value).filter(Boolean); if(!dbReady){dbReady=true;initSite();} },()=>loadFallback()); }
-function loadFallback() { try { keysCache=(JSON.parse(localStorage.getItem('kb_api_keys')||'[]')).map(k=>typeof k==='string'?k:k.value).filter(Boolean); }catch{} if(!dbReady){dbReady=true;initSite();} }
+function initFirestore() { if(!db){loadFallback();return;} db.collection('apiKeys').onSnapshot(snap=>{ keysCache=snap.docs.map(d=>d.data().value).filter(Boolean); bootstrapApp(); },()=>loadFallback()); }
+function loadFallback() { try { keysCache=(JSON.parse(localStorage.getItem('kb_api_keys')||'[]')).map(k=>typeof k==='string'?k:k.value).filter(Boolean); }catch{} bootstrapApp(); }
 function gaEvent(name, params) { try{if(typeof gtag==='function') gtag('event',name,params||{});}catch(e){} }
 
 const TMDB_BASE = 'https://api.themoviedb.org/3'; const IMG = 'https://image.tmdb.org/t/p/'; let keyIdx = 0; const TMDB_FALLBACK_KEY = '04c35731a5ee918f014970082a0088b1';
@@ -397,7 +406,6 @@ let heroMovies=[], heroIdx=0, currentHeroId=null, currentHeroType='movie', heroT
 function setHero(m) {
   currentHeroId=m.id; currentHeroType=m.media_type||'movie'; currentHeroTitle=m.title||m.name||'';
   const bg = document.getElementById('hero-bg'); const hc = document.querySelector('.hero-c');
-  
   const update = (url) => {
     bg.style.opacity = 0; hc.style.opacity = 0;
     setTimeout(() => {
@@ -411,13 +419,13 @@ function setHero(m) {
 
 function startHero(movies) { heroMovies=movies.slice(0,8); document.getElementById('hero-dots').innerHTML=heroMovies.map((_,i)=>`<div class="h-dot ${i===0?'act':''}" onclick="goHero(${i})"></div>`).join(''); setHero(heroMovies[0]); clearInterval(heroTimer); heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroMovies.length; setHero(heroMovies[heroIdx]); },6000); }
 function goHero(i){ heroIdx=i; setHero(heroMovies[i]); clearInterval(heroTimer); heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroMovies.length; setHero(heroMovies[heroIdx]); },6000); }
-function heroClick(){ openMovie(currentHeroId, currentHeroType, currentHeroTitle); }
+function heroClick(){ openMovie(currentHeroId, currentHeroType, currentHeroTitle, true); }
 
 function card(m, badge) {
   const title=m.title||m.name||'—'; const year=(m.release_date||m.first_air_date||'').slice(0,4); const rat=m.vote_average?m.vote_average.toFixed(1):'—'; const mtype=m.media_type||'movie'; const isFav=isFavorite(m.id);
   const poster=m.poster_path?`<img class="c-poster" src="${IMG}w300${m.poster_path}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:''; const ph=m.poster_path?`<div class="c-ph" style="display:none">🎬</div>`:`<div class="c-ph">🎬</div>`;
   let langHtml=''; if(m.original_language==='uk') langHtml=`<div class="c-badge lang ua">UA ОРИГІНАЛ</div>`; else if(m.original_language==='en') langHtml=`<div class="c-badge lang ua">UA ДУБЛЯЖ</div>`; else if(m.original_language==='ja'||m.original_language==='ko') langHtml=`<div class="c-badge lang sub">ENG / SUB</div>`; else langHtml=`<div class="c-badge lang multi">MULTI</div>`;
-  return `<div class="m-card" onclick="openMovie(${m.id},'${mtype}','${escapeHtml(title).replace(/'/g,"\\'")}')">${poster}${ph}<div class="c-ov"></div>${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}${langHtml}<button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)">${isFav?'❤️':'🤍'}</button><div class="c-info"><div class="c-title">${escapeHtml(title)}</div><div class="c-meta"><span class="c-year">${year}</span><span class="c-rat">⭐ ${rat}</span></div></div></div>`;
+  return `<div class="m-card" onclick="event.preventDefault(); openMovie(${m.id},'${mtype}','${escapeHtml(title).replace(/'/g,"\\'")}',true)">${poster}${ph}<div class="c-ov"></div>${badge?`<div class="c-badge ${badge.cls}">${badge.txt}</div>`:''}${langHtml}<button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)">${isFav?'❤️':'🤍'}</button><div class="c-info"><div class="c-title">${escapeHtml(title)}</div><div class="c-meta"><span class="c-year">${year}</span><span class="c-rat">⭐ ${rat}</span></div></div></div>`;
 }
 
 async function loadGrid(id, ep, params={}, badge=null, limit=12) { const el=document.getElementById(id); if(el) el.innerHTML=getSkeletonHtml(limit); const data=await tmdb(ep,params); if(!data||!data.results){ if(el) el.innerHTML=`<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">Помилка завантаження</div>`; return []; } const valid=data.results.filter(m=>m.poster_path); if(el) el.innerHTML=valid.slice(0,limit).map(m=>card(m,badge)).join(''); return valid; }
@@ -440,11 +448,12 @@ const TV_PLAYERS = [
   { id:'autoembed', name:'Плеєр 3', badge:'', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` }
 ];
 
-let currentModalId=null, currentModalType='movie', currentSeason=1, currentEpisode=1, currentImdbId='', currentPlayer=0;
+let currentModalId=null, currentImdbId='', currentModalType='movie', currentSeason=1, currentEpisode=1, currentPlayer=0;
+
 async function openMovie(id, type='movie', titleStr='', pushToHistory=true) {
-  if(!id) return; currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1; gaEvent('view_item', { item_id: id, item_category: type });
+  if(!id) return; currentModalId=id; currentModalType=type; currentSeason=1; currentEpisode=1; currentImdbId=''; gaEvent('view_item', { item_id: id, item_category: type });
   const slug = slugify(titleStr); const urlPath = slug ? `/${type}/${id}-${slug}` : `/${type}/${id}`;
-  if (pushToHistory) { history.pushState({ id, type, titleStr }, 'Loading...', urlPath); }
+  if (pushToHistory) { try { history.pushState({ id, type, titleStr }, 'Loading...', urlPath); } catch(e){} }
   currentPlayer = parseInt(localStorage.getItem('kb_pref_srv') || '0'); brokenPlayers.clear();     
   const _prog = libraryCache[String(id)]; if (_prog) { if (type === 'tv' && _prog.lastSeason) currentSeason = _prog.lastSeason; if (type === 'tv' && _prog.lastEpisode) currentEpisode = _prog.lastEpisode; if (_prog.lastServer != null) currentPlayer = _prog.lastServer; }
   document.getElementById('movie-modal').classList.add('open'); document.getElementById('movie-modal-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Завантаження...</div>';
@@ -467,10 +476,10 @@ async function openMovie(id, type='movie', titleStr='', pushToHistory=true) {
   
   const players = type==='tv' ? TV_PLAYERS : MOVIE_PLAYERS;
   const tabsHtml = players.map((p,i)=>`<div class="player-tab${i===currentPlayer?' act':''}" onclick="switchPlayer(${i})">${p.name}${p.badge?`<span class="ptab-badge">${p.badge}</span>`:''}</div>`).join('');
-  let tvSelector=''; if(type==='tv'&&data.seasons) { const rs=data.seasons.filter(s=>s.season_number>0); tvSelector=`<div class="ep-selector"><h4>Оберіть епізод</h4><div class="ep-row"><select class="ep-select" id="season-sel" onchange="changeSeason(this.value)">${rs.map(s=>`<option value="${s.season_number}">Сезон ${s.season_number}</option>`).join('')}</select><span style="color:var(--muted);font-size:13px;">Епізод:</span></div><div class="ep-nums" id="ep-nums"></div></div>`; }
+  let tvSelector=''; if(type==='tv'&&data.seasons) { const rs=data.seasons.filter(s=>s.season_number>0); tvSelector=`<div class="ep-selector"><h4>Оберіть епізод</h4><div class="ep-row"><select class="ep-select" id="season-sel" onchange="changeSeason(this.value)">${rs.map(s=>`<option value="${s.season_number}" ${s.season_number===currentSeason?'selected':''}>Сезон ${s.season_number}</option>`).join('')}</select><span style="color:var(--muted);font-size:13px;">Епізод:</span></div><div class="ep-nums" id="ep-nums"></div></div>`; }
   
   let collectionHtml = '';
-  if(data.belongs_to_collection) { const colData = await tmdb(`/collection/${data.belongs_to_collection.id}`); if(colData && colData.parts) { const parts = colData.parts.sort((a,b) => (a.release_date||'') > (b.release_date||'') ? 1 : -1).filter(p=>p.poster_path); collectionHtml = `<div style="margin-top:20px; margin-bottom:20px;"><div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>Усі частини по порядку</div><div class="col-row">${parts.map(p => `<div class="col-card ${p.id===id?'curr':''}" onclick="openMovie(${p.id},'movie','${escapeHtml(p.title||'').replace(/'/g,"\\'")}')"><img class="col-poster" src="${IMG}w185${p.poster_path}" crossorigin="anonymous"><div class="col-info">${(p.release_date||'').slice(0,4)}</div></div>`).join('')}</div></div>`; } }
+  if(data.belongs_to_collection) { const colData = await tmdb(`/collection/${data.belongs_to_collection.id}`); if(colData && colData.parts) { const parts = colData.parts.sort((a,b) => (a.release_date||'') > (b.release_date||'') ? 1 : -1).filter(p=>p.poster_path); collectionHtml = `<div style="margin-top:20px; margin-bottom:20px;"><div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>Усі частини по порядку</div><div class="col-row">${parts.map(p => `<div class="col-card ${p.id===id?'curr':''}" onclick="openMovie(${p.id},'movie','${escapeHtml(p.title||'').replace(/'/g,"\\'")}',true)"><img class="col-poster" src="${IMG}w185${p.poster_path}" crossorigin="anonymous"><div class="col-info">${(p.release_date||'').slice(0,4)}</div></div>`).join('')}</div></div>`; } }
 
   const _castHtml=_cast.length?`<div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>В ролях</div><div class="cast-row">${_cast.map(a=>`<div class="cast-card" style="cursor:pointer;" onclick="searchByActor(${a.id}, '${escapeHtml(a.name).replace(/'/g,"\\'")}')"><img src="${a.profile_path?IMG+'w185'+a.profile_path:''}" class="cast-photo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cast-photo-ph" style="${a.profile_path?'display:none':''}">👤</div><div class="cast-name">${escapeHtml(a.name)}</div></div>`).join('')}</div>`:'';
   const faqHtml = `<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:20px;"><div style="font-size:15px;font-weight:700;margin-bottom:12px;">Поширені запитання (FAQ)</div><div style="background:var(--bg3);padding:12px;border-radius:8px;margin-bottom:8px;"><b>Де подивитися ${escapeHtml(title)} онлайн?</b><br><span style="color:var(--muted);font-size:13px;">Ви можете безкоштовно подивитися ${mediaLabel.toLowerCase()} "${escapeHtml(title)}" на сайті КіноБаза у найкращій HD якості.</span></div><div style="background:var(--bg3);padding:12px;border-radius:8px;"><b>Чи є українська озвучка?</b><br><span style="color:var(--muted);font-size:13px;">Так, для цього контенту доступний перегляд з якісною українською озвучкою або дубляжем.</span></div></div>`;
@@ -508,7 +517,7 @@ async function openMovie(id, type='movie', titleStr='', pushToHistory=true) {
   if(type==='tv' && data.seasons) { const s1=data.seasons.find(s=>s.season_number===1); if(s1) loadEpisodes(s1.episode_count||1); }
   _doLoadPlayer(); loadComments(id, type); 
   tmdb(`/${type}/${id}/similar`,{page:1}).then(sim=>{
-    if(!sim||!sim.results) return; const items=sim.results.filter(m=>m.poster_path).slice(0,14);
+    if(!sim||!sim.results) return; const items=sim.results.filter(m=>m.poster_path).slice(0,14); const label=type==='tv'?'Схожі серіали':'Схожі фільми';
     document.getElementById('modal-sim').innerHTML=`<div style="font-size:15px;font-weight:700;margin-bottom:12px;margin-top:20px;">Схожі</div><div class="sim-row">${items.map(m=>`<div class="sim-card" onclick="openMovie(${m.id},'${type}','${escapeHtml(m.title||m.name||'').replace(/'/g,"\\'")}',true)"><img class="sim-poster" src="${IMG}w185${m.poster_path}"><div class="sim-info"><div class="sim-title">${escapeHtml(m.title||m.name)}</div></div></div>`).join('')}</div>`;
   }).catch(()=>{});
 }
@@ -537,13 +546,13 @@ function _markPlayerBroken(idx) { brokenPlayers.add(idx); const tabs = document.
 function _autoAdvancePlayer() { const players = currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS; for (let i = 1; i < players.length; i++) { const next = (currentPlayer + i) % players.length; if (!brokenPlayers.has(next)) { switchPlayer(next); return; } } }
 function switchPlayer(idx) { if (brokenPlayers.has(idx)) return; currentPlayer=idx; localStorage.setItem('kb_pref_srv', idx); document.querySelectorAll('.player-tab').forEach((b,i)=>b.classList.toggle('act',i===idx)); _doLoadPlayer(); }
 
-function closeMovieModal(pushToHistory = true) { document.getElementById('movie-modal').classList.remove('open'); document.getElementById('player-iframe').src=''; if(pushToHistory) history.pushState(null, '', '/'); resetChameleon(); document.title = "КіноБаза — Дивитись фільми онлайн безкоштовно"; }
+function closeMovieModal(pushToHistory = true) { document.getElementById('movie-modal').classList.remove('open'); document.getElementById('player-iframe').src=''; if(pushToHistory) { try{history.pushState(null, '', '/');}catch(e){} } resetChameleon(); document.title = "КіноБаза — Дивитись фільми онлайн безкоштовно"; }
 function showHome() { document.getElementById('home-content').style.display='block'; document.getElementById('cat-section').style.display='none'; document.getElementById('srch-sec').style.display='none'; document.getElementById('lib-section').style.display='none'; }
 
 let currentCollectionId = null;
 async function showCollection(id, title) {
     currentCollectionId = id; currentActorId = null;
-    history.pushState({colId: id, title}, 'Collection', `/collection/${id}-${slugify(title)}`);
+    try{history.pushState({colId: id, title}, 'Collection', `/collection/${id}-${slugify(title)}`);}catch(e){}
     document.getElementById('home-content').style.display = 'none'; document.getElementById('srch-sec').style.display = 'none'; document.getElementById('lib-section').style.display = 'none'; document.getElementById('cat-section').style.display = 'block';
     document.getElementById('cat-title').textContent = title;
     document.getElementById('cat-grid').innerHTML = getSkeletonHtml(12);
@@ -559,7 +568,7 @@ function showCatalog(preset = {}, skipHistory = false) {
   document.getElementById('home-content').style.display = 'none'; document.getElementById('srch-sec').style.display = 'none'; document.getElementById('lib-section').style.display = 'none'; document.getElementById('cat-section').style.display = 'block';
   if(!skipHistory) { currentActorId = null; currentCollectionId = null; }
   if (preset.type) catType = preset.type; if (preset.genre) document.getElementById('cat-genre').value = String(preset.genre); if (preset.yearFrom) document.getElementById('cat-yr-from').value = String(preset.yearFrom); if (preset.yearTo) document.getElementById('cat-yr-to').value = String(preset.yearTo);
-  if(!skipHistory && !currentCollectionId) { let url = `/category/${catType}`; if(preset.genre) url += `/genre-${preset.genre}`; if(preset.yearFrom) url += `/year-${preset.yearFrom}`; history.pushState(preset, 'Category', url); }
+  if(!skipHistory && !currentCollectionId) { let url = `/category/${catType}`; if(preset.genre) url += `/genre-${preset.genre}`; if(preset.yearFrom) url += `/year-${preset.yearFrom}`; try{history.pushState(preset, 'Category', url);}catch(e){} }
   document.getElementById('cpt-movie').classList.toggle('act', catType === 'movie'); document.getElementById('cpt-tv').classList.toggle('act', catType === 'tv');
   if(!currentActorId && !currentCollectionId) document.getElementById('cat-title').textContent = catType === 'tv' ? 'Каталог серіалів' : 'Каталог фільмів';
   applyCatFilters(); window.scrollTo(0,0);
@@ -619,26 +628,42 @@ function openTrailer(key) { document.getElementById('trailer-frame').innerHTML =
 function closeTrailer() { document.getElementById('trailer-ov').classList.remove('open'); document.getElementById('trailer-frame').innerHTML = ''; }
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
-window.addEventListener('DOMContentLoaded', () => {
-    // ВАЖЛИВО: Викликаємо завантаження контенту відразу, без очікування бази
-    if (!dbReady) { dbReady = true; initSite(); }
-    
-    // Аналіз URL для прямих SEO-посилань
+// Бронебійний запуск сайту
+let isAppReady = false;
+function bootstrapApp() {
+    if(isAppReady) return;
+    isAppReady = true;
     const path = window.location.pathname;
     if (path.startsWith('/movie/') || path.startsWith('/tv/')) {
         const parts = path.split('/');
         const id = parts[2].split('-')[0];
-        setTimeout(() => { openMovie(id, parts[1], '', false); }, 100);
+        openMovie(id, parts[1], '', false, false);
     } else if (path.startsWith('/collection/')) {
         const id = path.split('/')[2].split('-')[0];
-        setTimeout(() => { showCollection(id, "Добірка фільмів"); }, 100);
+        showCollection(id, "Добірка фільмів");
     } else if (path.startsWith('/category/')) {
         const parts = path.split('/');
         const type = parts[2] === 'tv' ? 'tv' : 'movie';
         let preset = {type};
         if(parts[3] && parts[3].startsWith('genre-')) preset.genre = parts[3].replace('genre-','');
         if(parts[4] && parts[4].startsWith('year-')) { preset.yearFrom = parts[4].replace('year-',''); preset.yearTo = preset.yearFrom; }
-        setTimeout(() => { showCatalog(preset, true); }, 100);
+        showCatalog(preset, true);
+    } else {
+        initSite();
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    updateAuthUI(); 
+    document.getElementById('curr-lang-lbl').textContent = siteLang.toUpperCase();
+    updateUIStrings(siteLang);
+    initFirestore(); 
+    
+    // Якщо ключі довго не підвантажуються - стартуємо примусово через 1 секунду
+    setTimeout(bootstrapApp, 1000); 
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {}); 
     }
 });
 
