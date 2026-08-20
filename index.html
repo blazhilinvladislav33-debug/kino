@@ -7,24 +7,25 @@
   <!-- ===== SEO ===== -->
   <title>КіноБаза — Дивитись фільми онлайн безкоштовно</title>
   
+  <!-- Підтвердження Google AdSense -->
   <meta name="google-adsense-account" content="ca-pub-9899032308956715">
   
   <meta name="description" content="КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.">
-  <meta name="keywords" content="дивитись фільми онлайн, серіали онлайн, українська озвучка, HD якість, безкоштовно, кіно онлайн, фільми 2026">
+  <meta name="keywords" content="дивитись фільми онлайн, серіали онлайн, українська озвучка, HD якість, безкоштовно, кіно онлайн, фільми 2025">
   <meta name="robots" content="index, follow">
   <meta name="author" content="КіноБаза">
   <link rel="canonical" href="https://kinobaza.site/">
 
-  <!-- ===== Open Graph ===== -->
-  <meta property="og:type"         content="website">
-  <meta property="og:site_name"    content="КіноБаза">
-  <meta property="og:title"        content="КіноБаза — Дивитись фільми онлайн безкоштовно">
-  <meta property="og:description"  content="Тисячі фільмів та серіалів у HD якості з українською озвучкою. Безкоштовно, без реєстрації.">
-  <meta property="og:url"          content="https://kinobaza.site/">
-  <meta property="og:image"        content="https://kinobaza.site/icons/icon-512x512.png">
+  <!-- ===== Open Graph (Facebook / Telegram) ===== -->
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="КіноБаза">
+  <meta property="og:title"       content="КіноБаза — Дивитись фільми онлайн безкоштовно">
+  <meta property="og:description" content="Тисячі фільмів та серіалів у HD якості з українською озвучкою. Безкоштовно, без реєстрації.">
+  <meta property="og:url"         content="https://kinobaza.site/">
+  <meta property="og:image"       content="https://kinobaza.site/icons/icon-512x512.png">
   <meta property="og:image:width"  content="512">
   <meta property="og:image:height" content="512">
-  <meta property="og:locale"       content="uk_UA">
+  <meta property="og:locale"      content="uk_UA">
 
   <!-- ===== Twitter Card ===== -->
   <meta name="twitter:card"        content="summary_large_image">
@@ -63,6 +64,7 @@
   }
   </script>
 
+  <!-- ===== Preconnect ===== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://api.themoviedb.org">
@@ -70,9 +72,12 @@
   <link rel="preconnect" href="https://www.gstatic.com">
   <link rel="dns-prefetch" href="https://api.ortified.ws">
 
+  <!-- Скрипт антиблокування плеєра Collaps -->
   <script src="https://kodir2.github.io/actualize.js" async></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- ===== Google Analytics 4 ===== -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKVZ2JJDJN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -85,32 +90,34 @@
     });
   </script>
 
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9899032308956715" crossorigin="anonymous"></script>
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  
   <style>
     :root {
       --bg: #0d0d0d; --bg2: #141414; --bg3: #1a1a1a; --bg4: #222;
       --accent: #e50914; --ah: #b20710; --gold: #f5c518;
       --text: #fff; --muted: #999; --dim: #555; --border: #2a2a2a;
       --green: #1db954; --blue: #1a8cff;
-      transition: --accent 0.8s ease;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
     a{text-decoration:none;color:inherit;}
     button{font-family:inherit;}
 
+    /* ===== HEADER ===== */
     header{background:rgba(13,13,13,.97);backdrop-filter:blur(12px);position:sticky;top:0;z-index:900;border-bottom:1px solid var(--border);}
     .hdr{display:flex;align-items:center;padding:0 24px;height:64px;max-width:1600px;margin:0 auto;gap:16px;}
     .logo{font-size:24px;font-weight:800;letter-spacing:-1px;flex-shrink:0;}
-    .logo b{color:var(--accent); transition: color 0.8s ease;}
+    .logo b{color:var(--accent);}
     nav{display:flex;gap:4px;flex:1;}
     nav a{color:var(--muted);font-size:14px;font-weight:500;padding:8px 12px;border-radius:6px;transition:all .2s;white-space:nowrap;}
     nav a:hover,nav a.act{color:#fff;background:var(--bg4);}
     
+    /* ===== BEAUTIFUL SEARCH ===== */
     .srch-wrap{position:relative;flex:0 1 380px;}
     .srch{display:flex;align-items:center;background:#222;border:1px solid #333;border-radius:8px;overflow:hidden;width:100%;transition:all 0.2s;padding:0 12px;}
     .srch:focus-within{border-color:var(--accent);background:#1a1a1a;box-shadow:0 0 0 2px rgba(229,9,20,.15);}
@@ -118,19 +125,20 @@
     .srch input{background:transparent;border:none;outline:none;color:#fff;padding:10px 10px;font-size:14px;width:100%;font-family:inherit;}
     .srch input::placeholder{color:#888;}
     
-    .lang-dd-wrap {position:relative;display:inline-flex;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:13px;font-weight:700;color:#fff;user-select:none;transition:all 0.2s; gap:6px;}
+    /* ===== LANGUAGE DROPDOWN ===== */
+    .lang-dd-wrap {position:relative;display:inline-flex;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#fff;user-select:none;transition:all 0.2s;}
     .lang-dd-wrap:hover {background:var(--bg4);}
-    .lang-lbl-min { display:flex; align-items:center; font-weight:800; letter-spacing:0.5px; }
-    .lang-dd-wrap svg {width:12px;height:12px;fill:var(--muted);transition:transform 0.2s;}
+    .lang-dd-wrap svg {width:14px;height:14px;margin-left:6px;fill:var(--muted);transition:transform 0.2s;}
     .lang-dd-wrap.open svg {transform:rotate(180deg);}
-    .lang-dd-menu {position:absolute;top:calc(100% + 6px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.7);z-index:1000;display:none;overflow:hidden;min-width:75px;}
+    .lang-dd-menu {position:absolute;top:calc(100% + 6px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.7);z-index:1000;display:none;overflow:hidden;min-width:110px;}
     .lang-dd-menu.open {display:block;}
-    .lang-opt {padding:9px 12px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:background 0.15s;text-align:center;}
+    .lang-opt {padding:10px 14px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:background 0.15s;white-space:nowrap;}
     .lang-opt:hover {background:var(--bg4);color:#fff;}
-    .lang-opt.act {color:var(--accent); background:rgba(255,255,255,.05);}
+    .lang-opt.act {color:#fff;background:rgba(229,9,20,.15);}
 
     .sub-badge{display:inline-block;background:rgba(245,197,24,.18);color:var(--gold);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
     
+    /* ===== AUTOCOMPLETE ===== */
     #ac-drop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,.7);display:none;max-height:440px;overflow-y:auto;}
     #ac-drop.open{display:block;}
     .ac-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .12s;}
@@ -153,6 +161,7 @@
     .ac-del{color:var(--dim);font-size:16px;padding:0 4px;line-height:1;}
     .ac-del:hover{color:var(--accent);}
     
+    /* ===== SEARCH FILTERS ===== */
     .srch-filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
     .sf-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
     .sf-btn:hover{border-color:#fff;color:#fff;}
@@ -164,30 +173,26 @@
     .btn-sm.red{background:var(--accent);border-color:var(--accent);color:#fff;}
     .btn-sm.red:hover{background:var(--ah);}
     
-    .user-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;cursor:pointer;position:relative;flex-shrink:0; transition: background 0.8s ease;}
-    .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:200px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
+    /* User avatar */
+    .user-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;cursor:pointer;position:relative;flex-shrink:0;}
+    .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:180px;display:none;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.5);}
     .user-avatar:hover .user-dropdown,.user-avatar:focus-within .user-dropdown,.user-avatar.open .user-dropdown{display:block;}
-    .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .ud-item{padding:9px 12px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--muted);display:flex;align-items:center;gap:8px;}
     .ud-item:hover{background:var(--bg4);color:#fff;}
     .ud-divider{border-top:1px solid var(--border);margin:4px 0;}
     .ud-name{padding:8px 12px;font-weight:600;color:#fff;font-size:14px;}
     #slot-header{width:100%;}
 
-    .switch{position:relative;display:inline-block;width:34px;height:20px;}
-    .switch input{opacity:0;width:0;height:0;}
-    .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--bg4);transition:.4s;border-radius:34px;}
-    .slider:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background-color:white;transition:.4s;border-radius:50%;}
-    input:checked + .slider{background-color:var(--accent);}
-    input:checked + .slider:before{transform:translateX(14px);}
-
+    /* ===== MAIN ===== */
     main{max-width:1600px;margin:0 auto;padding:0 24px;}
 
+    /* ===== HERO ===== */
     .hero{position:relative;height:480px;border-radius:14px;overflow:hidden;margin:18px 0;cursor:pointer;}
     .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:background-image .6s;}
     .hero-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,.05) 100%);}
     .hero-ob{position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(0,var(--bg),transparent);}
     .hero-c{position:relative;z-index:2;padding:50px 44px;height:100%;display:flex;flex-direction:column;justify-content:center;max-width:580px;}
-    .hero-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:3px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;width:fit-content; transition:background 0.8s ease;}
+    .hero-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:3px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;width:fit-content;}
     .hero-title{font-size:36px;font-weight:800;line-height:1.1;margin-bottom:11px;}
     .hero-meta{display:flex;align-items:center;gap:11px;margin-bottom:13px;font-size:13px;}
     .hero-r{color:var(--gold);font-weight:700;}
@@ -195,23 +200,26 @@
     .hero-desc{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:22px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
     .hero-btns{display:flex;gap:10px;}
     .btn-play{display:flex;align-items:center;gap:7px;background:var(--accent);color:#fff;padding:11px 26px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;border:none;transition:all .2s;}
-    .btn-play:hover{filter:brightness(1.2);transform:scale(1.02);}
+    .btn-play:hover{background:var(--ah);transform:scale(1.02);}
     .btn-info{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.13);backdrop-filter:blur(8px);color:#fff;padding:11px 22px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;border:1px solid rgba(255,255,255,.2);transition:all .2s;}
     .btn-info:hover{background:rgba(255,255,255,.22);}
     .hero-dots{position:absolute;bottom:16px;right:26px;display:flex;gap:6px;z-index:3;}
     .h-dot{width:7px;height:7px;border-radius:4px;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;}
     .h-dot.act{width:22px;background:var(--accent);}
 
+    /* ===== GENRES BAR ===== */
     .g-bar{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0;}
     .g-tag{padding:5px 13px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--bg2);transition:all .2s;}
     .g-tag:hover,.g-tag.act{background:var(--accent);border-color:var(--accent);color:#fff;}
 
+    /* ===== SECTION ===== */
     .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;margin-top:26px;}
     .sec-title{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;}
-    .sec-title::before{content:'';display:block;width:4px;height:19px;background:var(--accent);border-radius:2px; transition:background 0.8s ease;}
+    .sec-title::before{content:'';display:block;width:4px;height:19px;background:var(--accent);border-radius:2px;}
     .sec-more{color:var(--dim);font-size:13px;display:flex;align-items:center;gap:3px;transition:color .2s;}
     .sec-more:hover{color:var(--accent);}
 
+    /* ===== MOVIE CARDS ===== */
     .movies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:12px;}
     .m-card{background:var(--bg3);border-radius:9px;overflow:hidden;cursor:pointer;transition:all .25s;position:relative;}
     .m-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 18px 36px rgba(0,0,0,.6),0 0 0 1px rgba(229,9,20,.2);}
@@ -240,6 +248,7 @@
     .m-card:hover .c-fav{display:flex;}
     .c-fav.faved{display:flex;color:var(--accent);}
 
+    /* ===== AD SLOTS ===== */
     .ad-wrap{width:100%;background:#0a0a0a;position:relative;overflow:hidden;}
     .ad-wrap.inline{margin:24px 0;border-radius:8px;border:1px solid #1a1a1a;}
     .ad-lbl{font-size:9px;color:#333;text-transform:uppercase;letter-spacing:1px;padding:2px 8px;display:block;}
@@ -255,10 +264,10 @@
     /* ===== PLAYER MODAL ===== */
     .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
     .modal-ov.open{opacity:1;pointer-events:all;}
-    .modal-box{background:var(--bg2);border-radius:14px;max-width:960px;width:97%;max-height:96vh;overflow-y:auto;position:relative;border:1px solid var(--border);animation:mIn .3s ease; transition: box-shadow 0.8s ease;}
+    .modal-box{background:var(--bg2);border-radius:14px;max-width:960px;width:97%;max-height:96vh;overflow-y:auto;position:relative;border:1px solid var(--border);animation:mIn .3s ease;}
     @keyframes mIn{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
     .m-close{position:absolute;top:13px;right:13px;width:34px;height:34px;background:rgba(0,0,0,.7);border:1px solid var(--border);border-radius:50%;color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .2s;}
-    .m-close:hover{background:var(--accent); border-color:var(--accent);}
+    .m-close:hover{background:var(--accent);}
     .m-backdrop{width:100%;height:260px;object-fit:cover;border-radius:14px 14px 0 0;display:block;}
     .m-backdrop-ph{width:100%;height:260px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:14px 14px 0 0;display:flex;align-items:center;justify-content:center;font-size:64px;}
     .m-grad{height:60px;background:linear-gradient(0,var(--bg2),transparent);margin-top:-60px;position:relative;}
@@ -279,7 +288,8 @@
     .player-tabs::-webkit-scrollbar{display:none;}
     .player-tab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;border-right:1px solid var(--border);display:flex;align-items:center;gap:5px;transition:all .18s;user-select:none;flex-shrink:0;}
     .player-tab:hover{color:#fff;background:rgba(255,255,255,.06);}
-    .player-tab.act{background:var(--accent);color:#fff; transition: background 0.8s ease;}
+    .player-tab.act{background:#fff;color:#111;}
+    .player-tab.act .ptab-badge{color:#b8860b;background:rgba(0,0,0,.12);}
     .player-tab.broken{display:none !important;} 
     .ptab-badge{font-size:10px;font-weight:700;color:var(--gold);background:rgba(245,197,24,.15);padding:1px 5px;border-radius:3px;line-height:1.4;}
     
@@ -309,16 +319,6 @@
     .m-btn-fav:hover{border-color:var(--accent);color:var(--accent);}
     .m-btn-fav.faved{background:rgba(229,9,20,.12);border-color:var(--accent);color:var(--accent);}
 
-    /* COLLECTION ROW */
-    .col-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-    .col-row::-webkit-scrollbar{height:4px;}
-    .col-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-    .col-card{flex-shrink:0;width:110px;cursor:pointer;border-radius:7px;overflow:hidden;background:var(--bg3);transition:transform .2s; position:relative; border:1px solid transparent;}
-    .col-card:hover{transform:scale(1.04); border:1px solid var(--accent);}
-    .col-card.curr{border:1px solid var(--accent); opacity:0.6; pointer-events:none;}
-    .col-poster{width:110px;height:165px;object-fit:cover;display:block;background:var(--bg4);}
-    .col-info{padding:6px; font-size:11px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center;}
-
     /* ===== AUTH MODAL ===== */
     .auth-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:8000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px);}
     .auth-ov.open{opacity:1;pointer-events:all;}
@@ -336,8 +336,8 @@
     .f-group input:focus{border-color:var(--accent);}
     .f-err{color:var(--accent);font-size:13px;margin-top:8px;display:none;}
     .f-err.show{display:block;}
-    .btn-full{width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;transition:filter .2s;margin-top:4px;}
-    .btn-full:hover{filter:brightness(1.2);}
+    .btn-full{width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:4px;}
+    .btn-full:hover{background:var(--ah);}
     .auth-note{color:var(--muted);font-size:12px;text-align:center;margin-top:14px;}
     .auth-note span{color:var(--accent);cursor:pointer;}
     .auth-note span:hover{text-decoration:underline;}
@@ -372,7 +372,6 @@
     .lib-empty{color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;font-size:15px;}
     .lib-empty span{font-size:40px;display:block;margin-bottom:12px;}
     .watched-badge{position:absolute;bottom:8px;left:8px;background:rgba(29,185,84,.85);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;backdrop-filter:blur(4px);}
-    
     /* ===== CONTINUE WATCHING ===== */
     #continue-section{display:none;}
     .c-ep-badge{position:absolute;bottom:8px;right:48px;background:rgba(0,0,0,.8);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px);white-space:nowrap;}
@@ -608,17 +607,16 @@
       <div id="ac-drop"></div>
     </div>
     <div class="hdr-right">
-      <!-- Minimal Language Selector -->
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
-        <div class="lang-lbl-min" id="curr-lang-lbl">UA</div>
+        <span id="curr-lang-lbl"><span class="f">🇺🇦</span><span class="t"> UA</span></span>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
         <div class="lang-dd-menu" id="lang-dd-menu">
-          <div class="lang-opt act" onclick="setSiteLang('uk', event)">UA</div>
-          <div class="lang-opt" onclick="setSiteLang('en', event)">EN</div>
-          <div class="lang-opt" onclick="setSiteLang('ru', event)">RU</div>
+          <div class="lang-opt act" onclick="setSiteLang('uk', event)">🇺🇦 UA</div>
+          <div class="lang-opt" onclick="setSiteLang('ru', event)">🚫 RU</div>
+          <div class="lang-opt" onclick="setSiteLang('en', event)">🇬🇧 EN</div>
         </div>
       </div>
-
+      
       <button id="pwa-install-btn" class="btn-sm" onclick="pwaInstall()" style="display:none;align-items:center;gap:5px;" title="Встановити додаток">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
         <span data-i18n="app">Додаток</span>
@@ -636,12 +634,6 @@
             <div class="ud-item" data-i18n="ud_fav" onclick="showLibrary('fav')">Улюблені</div>
             <div class="ud-item" data-i18n="ud_wl" onclick="showLibrary('wl')">Дивитись пізніше</div>
             <div class="ud-item" data-i18n="ud_watch" onclick="showLibrary('watched')">Переглянуто</div>
-            <div class="ud-divider"></div>
-            <!-- Kids Mode Toggle -->
-            <div class="ud-item" onclick="toggleKidsMode(event)">
-                <span style="display:flex;align-items:center;gap:7px;font-weight:600;"><svg width="15" height="15" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8subscriptionZ"/></svg> Kids Control</span>
-                <label class="switch"><input type="checkbox" id="kids-switch" onclick="event.preventDefault()"><span class="slider"></span></label>
-            </div>
             <div class="ud-divider"></div>
             <div class="ud-item" id="ud-admin" style="display:none;" data-i18n="ud_admin" onclick="location.href='admin.html'">Адміністрування</div>
             <div class="ud-item" data-i18n="ud_logout" onclick="doLogout()">Вийти</div>
@@ -661,7 +653,7 @@
     <div class="hero-bg" id="hero-bg"></div>
     <div class="hero-ov"></div><div class="hero-ob"></div>
     <div class="hero-c">
-      <div class="hero-badge" data-i18n="badge_new" id="hero-badge-el">Новинка</div>
+      <div class="hero-badge" data-i18n="badge_new">Новинка</div>
       <div class="hero-title" id="hero-title">Завантаження...</div>
       <div class="hero-meta">
         <span class="hero-r" id="hero-r">⭐ —</span>
@@ -850,7 +842,7 @@
 
     <!-- NEW MOVIES -->
     <div class="sec-hdr">
-      <div class="sec-title" id="title-new" data-i18n="h_new">Нові фільми</div>
+      <div class="sec-title" data-i18n="h_new">Нові фільми</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'movie',sort:'release_date.desc'});return false;" data-i18n="all">Всі →</a>
     </div>
     <div id="new-grid" class="movies-grid"></div>
@@ -861,7 +853,7 @@
     <div class="sidebar-row">
       <div class="mv-col">
         <div class="sec-hdr">
-          <div class="sec-title" id="title-pop" data-i18n="h_pop">Популярні</div>
+          <div class="sec-title" data-i18n="h_pop">Популярні</div>
           <a href="#" class="sec-more" onclick="showCatalog({type:'movie'});return false;" data-i18n="all">Всі →</a>
         </div>
         <div id="pop-grid" class="movies-grid"></div>
@@ -884,7 +876,7 @@
 
     <!-- SERIES -->
     <div class="sec-hdr">
-      <div class="sec-title" id="title-tv" data-i18n="h_tv">Серіали</div>
+      <div class="sec-title" data-i18n="h_tv">Серіали</div>
       <a href="#" class="sec-more" onclick="showCatalog({type:'tv'});return false;" data-i18n="all">Всі →</a>
     </div>
     <div id="series-grid" class="movies-grid"></div>
@@ -945,12 +937,12 @@
       <span class="ft-tag">безкоштовно</span>
       <span class="ft-tag">українська озвучка</span>
       <span class="ft-tag">HD якість</span>
-      <span class="ft-tag">нові фільми 2026</span>
+      <span class="ft-tag">нові фільми 2025</span>
       <span class="ft-tag">класика кіно</span>
     </div>
   </div>
   <div class="ft-btm">
-    <p>© 2026 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--gold);">TMDB</a></p>
+    <p>© 2025 КіноБаза. Powered by <a href="https://www.themoviedb.org" target="_blank" style="color:var(--gold);">TMDB</a></p>
     <p style="color:var(--dim);font-size:11px;">Сайт не зберігає відеофайли. Всі відео надаються третіми особами.</p>
   </div>
 </footer>
@@ -1005,7 +997,7 @@
 
 <!-- ===== MOVIE MODAL ===== -->
 <div class="modal-ov" id="movie-modal" onclick="if(event.target===this)closeMovieModal()">
-  <div class="modal-box" id="modal-box-el">
+  <div class="modal-box">
     <button class="m-close" onclick="closeMovieModal()">✕</button>
     <div id="movie-modal-content"></div>
   </div>
@@ -1050,17 +1042,6 @@
       </button>
       <div class="auth-note"><span data-i18n="has_acc">Вже є акаунт?</span> <span onclick="switchTab('login')" data-i18n="login">Увійти</span></div>
     </div>
-  </div>
-</div>
-
-<!-- KIDS CONTROL PIN MODAL -->
-<div class="auth-ov" id="pin-modal" onclick="if(event.target===this)closePin()">
-  <div class="auth-box" style="text-align:center;">
-    <button class="auth-close" onclick="closePin()">✕</button>
-    <h3 style="margin-bottom:8px;font-size:18px;font-weight:800;letter-spacing:0.5px;">KIDS CONTROL</h3>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:20px;" id="pin-desc">Введіть 4-значний PIN-код безпеки</p>
-    <input type="password" id="pin-input" maxlength="4" style="font-size:24px;text-align:center;letter-spacing:12px;width:140px;padding:10px;background:var(--bg3);border:1px solid var(--border);color:#fff;border-radius:8px;outline:none;" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-    <button class="btn-full" onclick="submitPin()" style="margin-top:20px;">Підтвердити</button>
   </div>
 </div>
 
@@ -1119,11 +1100,23 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// =====================================================================
+// SKELETON LOADER
+// =====================================================================
 function getSkeletonHtml(count=6) {
     return '<div class="sk-card"><div class="sk-poster"></div><div class="sk-info"><div class="sk-line"></div><div class="sk-line sk-s"></div></div></div>'.repeat(count);
 }
+
+// =====================================================================
+// HTML ESCAPE FOR SAFE COMMENTS
+// =====================================================================
 function escapeHtml(unsafe) {
-    return (unsafe || '').toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    return (unsafe || '').toString()
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
 }
 
 // =====================================================================
@@ -1186,8 +1179,11 @@ const TRANSLATIONS = {
   }
 };
 
-let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
-function getSiteLangParam() { return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA'; }
+const LANG_INFO = {
+  'uk': { flag: '🇺🇦', text: ' UA' },
+  'ru': { flag: '🚫', text: ' RU' },
+  'en': { flag: '🇬🇧', text: ' EN' }
+};
 
 function updateUIStrings(lang) {
   const t = TRANSLATIONS[lang] || TRANSLATIONS['uk'];
@@ -1199,125 +1195,12 @@ function updateUIStrings(lang) {
     const key = el.getAttribute('data-i18n-ph');
     if(t[key]) el.placeholder = t[key];
   });
+  
   if(document.getElementById('cat-section').style.display === 'block') {
-      if(!currentActorId) document.getElementById('cat-title').textContent = (catType === 'tv') ? t['cat_title_t'] : t['cat_title_m'];
+      if(!currentActorId) {
+          document.getElementById('cat-title').textContent = (catType === 'tv') ? t['cat_title_t'] : t['cat_title_m'];
+      }
   }
-}
-
-function toggleLangDropdown(e) { e.stopPropagation(); document.getElementById('lang-dd-menu').classList.toggle('open'); document.getElementById('lang-dd-wrap').classList.toggle('open'); }
-function setSiteLang(l, e) {
-  if (e) {
-      e.stopPropagation();
-      e.preventDefault();
-  }
-  if (siteLang === l) {
-      document.getElementById('lang-dd-menu').classList.remove('open');
-      document.getElementById('lang-dd-wrap').classList.remove('open');
-      return;
-  }
-  siteLang = l; localStorage.setItem('kb_site_lang', l);
-  gaEvent('select_content', { content_type: 'language', item_id: l });
-  document.getElementById('lang-dd-menu').classList.remove('open');
-  document.getElementById('lang-dd-wrap').classList.remove('open');
-  location.reload(); 
-}
-
-const isKidsMode = localStorage.getItem('kb_kids_mode') === 'true';
-document.getElementById('kids-switch').checked = isKidsMode;
-
-/* =======================================================
-   KIDS CONTROL MODE (PIN)
-======================================================= */
-function toggleKidsMode(e) {
-  e.stopPropagation(); e.preventDefault();
-  document.getElementById('pin-input').value = '';
-  document.getElementById('pin-modal').classList.add('open');
-}
-function closePin() { document.getElementById('pin-modal').classList.remove('open'); }
-function submitPin() {
-  const val = document.getElementById('pin-input').value;
-  if(val.length !== 4) return showToast('Введіть 4 цифри');
-  let savedPin = localStorage.getItem('kb_kids_pin');
-  if(!savedPin) {
-      localStorage.setItem('kb_kids_pin', val); localStorage.setItem('kb_kids_mode', 'true');
-  } else {
-      if(val !== savedPin) return showToast('Невірний PIN-код');
-      localStorage.setItem('kb_kids_mode', isKidsMode ? 'false' : 'true');
-  }
-  location.reload();
-}
-
-/* =======================================================
-   CHAMELEON EFFECT (DYNAMIC COLORS)
-======================================================= */
-function applyChameleonColor(imgUrl) {
-    const img = new Image();
-    img.crossOrigin = "Anonymous";
-    img.src = imgUrl;
-    img.onload = () => {
-        const c = document.createElement('canvas');
-        c.width = 1; c.height = 1;
-        const ctx = c.getContext('2d');
-        ctx.drawImage(img, 0, 0, 1, 1);
-        try {
-            const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-            const max = Math.max(r,g,b); const factor = max > 0 ? 255/max : 1;
-            const finalR = Math.min(255, Math.round(r * factor * 0.8));
-            const finalG = Math.min(255, Math.round(g * factor * 0.8));
-            const finalB = Math.min(255, Math.round(b * factor * 0.8));
-            document.documentElement.style.setProperty('--accent', `rgb(${finalR},${finalG},${finalB})`);
-            const box = document.getElementById('modal-box-el');
-            if(box) box.style.boxShadow = `0 0 80px rgba(${finalR},${finalG},${finalB},0.15)`;
-        } catch(e) {}
-    };
-}
-function resetChameleon() {
-    document.documentElement.style.setProperty('--accent', '#e50914');
-    const box = document.getElementById('modal-box-el');
-    if(box) box.style.boxShadow = 'none';
-}
-
-/* =======================================================
-   SHARE GENERATOR (INSTAGRAM STORIES)
-======================================================= */
-function generateStoryShare(title, posterUrl) {
-    showToast('Генеруємо зображення для Stories...');
-    const c = document.createElement('canvas');
-    c.width = 1080; c.height = 1920;
-    const ctx = c.getContext('2d');
-    
-    ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0, 0, 1080, 1920);
-    
-    const img = new Image();
-    img.crossOrigin = "Anonymous";
-    img.src = posterUrl;
-    img.onload = () => {
-        ctx.drawImage(img, 140, 250, 800, 1200);
-        ctx.fillStyle = '#ffffff'; 
-        ctx.font = 'bold 70px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(title.length > 25 ? title.substring(0,25)+'...' : title, 540, 1600);
-        ctx.fillStyle = '#e50914';
-        ctx.font = '50px sans-serif';
-        ctx.fillText('Дивитись на КіноБазі 🍿', 540, 1720);
-        
-        const a = document.createElement('a');
-        a.download = `Story_${title.replace(/\s+/g, '_')}.jpg`;
-        a.href = c.toDataURL('image/jpeg', 0.9);
-        a.click();
-    };
-    img.onerror = () => showToast('Помилка завантаження постера для генерації.');
-}
-
-/* =======================================================
-   WATCH PARTY (SYNC)
-======================================================= */
-function createWatchParty(id, type) {
-    const roomId = Math.random().toString(36).substring(2, 9);
-    const link = `${window.location.origin}/${type}/${id}?party=${roomId}`;
-    navigator.clipboard.writeText(link).then(() => {
-        alert('Кіно-кімнату створено! Посилання скопійовано.\nНадішліть його другу, щоб почати перегляд разом.');
-    });
 }
 
 // =====================================================================
@@ -1360,7 +1243,14 @@ function initFirestore() {
   db.collection('apiKeys').onSnapshot(snap => {
     keysCache = snap.docs.map(d => d.data().value).filter(Boolean);
     if (!dbReady) { dbReady = true; initSite(); } 
-  }, () => { loadFallback(); });
+  }, () => {
+    const raw = localStorage.getItem('kb_api_keys');
+    try {
+      const arr = raw ? JSON.parse(raw) : [];
+      keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
+    } catch {}
+    if (!dbReady) { dbReady = true; initSite(); }
+  });
 
   ['about','contacts','terms','dmca'].forEach(id => {
     db.collection('pages').doc(id).onSnapshot(doc => {
@@ -1390,6 +1280,7 @@ function gaEvent(name, params) {
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 const IMG = 'https://image.tmdb.org/t/p/';
 let keyIdx = 0;
+
 const TMDB_FALLBACK_KEY = '04c35731a5ee918f014970082a0088b1';
 
 function getKeys() {
@@ -1398,6 +1289,50 @@ function getKeys() {
   return k;
 }
 
+let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
+function getSiteLangParam() {
+  return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA';
+}
+
+function toggleLangDropdown(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('lang-dd-menu').classList.toggle('open');
+  document.getElementById('lang-dd-wrap').classList.toggle('open');
+}
+
+function setSiteLang(lang, e) {
+  if (e) e.stopPropagation();
+  siteLang = lang;
+  localStorage.setItem('kb_site_lang', lang);
+  gaEvent('select_content', { content_type: 'language', item_id: lang });
+  
+  document.getElementById('lang-dd-menu').classList.remove('open');
+  document.getElementById('lang-dd-wrap').classList.remove('open');
+  
+  const lbl = document.getElementById('curr-lang-lbl');
+  if(lbl) {
+      lbl.innerHTML = `<span class="f">${LANG_INFO[lang].flag}</span><span class="t">${LANG_INFO[lang].text}</span>`;
+  }
+
+  document.querySelectorAll('.lang-opt').forEach(opt => {
+    opt.classList.toggle('act', opt.getAttribute('onclick').includes(`'${lang}'`));
+  });
+  
+  updateUIStrings(lang);
+
+  if (dbReady) {
+    initSite();
+    if (document.getElementById('srch-sec').style.display === 'block') doSearch(srchFilter);
+    if (document.getElementById('cat-section').style.display === 'block') applyCatFilters();
+    if (currentModalId && document.getElementById('movie-modal').classList.contains('open')) {
+      openMovie(currentModalId, currentModalType, false, false);
+    }
+  }
+}
+
+// =====================================================================
+// MONETAG
+// =====================================================================
 let _monetagLoaded = false;
 function loadMonetag(publisherId) {
   if (_monetagLoaded || !publisherId || currentUserSubscribed) return;
@@ -1409,6 +1344,9 @@ function loadMonetag(publisherId) {
   document.head.appendChild(s);
 }
 
+// =====================================================================
+// TMDB CACHE
+// =====================================================================
 const TMDB_CACHE_TTL    = 4 * 60 * 60 * 1000;
 const TMDB_CACHE_PREFIX = 'kb_tc_';
 const TMDB_CACHE_MAX    = 100;
@@ -1482,11 +1420,6 @@ async function tmdb(ep, params={}) {
     const url = new URL(TMDB_BASE + ep);
     url.searchParams.set('api_key', key);
     url.searchParams.set('language', getSiteLangParam());
-    
-    if(isKidsMode && ep.includes('/discover/')) {
-        params.without_genres = '27,53,80'; 
-    }
-    
     Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, String(v)));
     try {
       const r = await fetch(url);
@@ -1552,7 +1485,7 @@ function card(m, badge) {
   const mtype=m.media_type||'movie';
   const isFav=isFavorite(m.id);
   const poster=m.poster_path
-    ?`<img class="c-poster" src="${IMG}w300${m.poster_path}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    ?`<img class="c-poster" src="${IMG}w300${m.poster_path}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
     :'';
   const ph=m.poster_path?`<div class="c-ph" style="display:none">🎬</div>`:`<div class="c-ph">🎬</div>`;
   
@@ -1569,7 +1502,7 @@ function card(m, badge) {
     ${langHtml}
     <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)" title="${isFav?'Видалити':'В улюблені'}">${isFav?'❤️':'🤍'}</button>
     <div class="c-info">
-      <div class="c-title">${escapeHtml(title)}</div>
+      <div class="c-title">${title}</div>
       <div class="c-meta"><span class="c-year">${year}</span><span class="c-rat">⭐ ${rat}</span></div>
     </div>
   </div>`;
@@ -1592,24 +1525,17 @@ async function loadGrid(id, ep, params={}, badge=null, limit=12) {
 // INIT SITE
 // =====================================================================
 async function initSite() {
-  const p = isKidsMode ? {with_genres:'16,10751'} : {};
-  if(isKidsMode) {
-      document.getElementById('title-new').textContent = 'Нові мультфільми';
-      document.getElementById('title-pop').textContent = 'Популярне для сім\'ї';
-      document.getElementById('title-tv').textContent = 'Дитячі серіали';
-  }
-
-  const np=await tmdb('/movie/now_playing', p);
+  const np=await tmdb('/movie/now_playing');
   if(np&&np.results) {
     startHero(np.results);
-    loadGrid('new-grid','/movie/now_playing',p,{txt:'NEW',cls:''},12);
+    loadGrid('new-grid','/movie/now_playing',{},{txt:'NEW',cls:''},12);
   }
-  loadGrid('pop-grid','/movie/popular',p,{txt:'HD',cls:'g'},12);
-  loadGrid('top-grid','/movie/top_rated',p,null,12);
-  loadGrid('series-grid','/tv/popular',isKidsMode?{with_genres:'10762'}:{},{txt:'СЕРІАЛ',cls:'b'},12);
-  loadGrid('classic-grid','/discover/movie',{...p,sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,12);
-  loadGrid('nineties-grid','/discover/movie',{...p,sort_by:'vote_count.desc','primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
-  loadGrid('noughts-grid','/discover/movie',{...p,sort_by:'vote_count.desc','primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
+  loadGrid('pop-grid','/movie/popular',{},{txt:'HD',cls:'g'},12);
+  loadGrid('top-grid','/movie/top_rated',{},null,12);
+  loadGrid('series-grid','/tv/popular',{},{txt:'СЕРІАЛ',cls:'b'},12);
+  loadGrid('classic-grid','/discover/movie',{sort_by:'vote_average.desc','vote_count.gte':5000,'primary_release_date.lte':'2000-12-31'},null,12);
+  loadGrid('nineties-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'1990-01-01','primary_release_date.lte':'1999-12-31'},{txt:'90-ті',cls:'b'},12);
+  loadGrid('noughts-grid','/discover/movie',{sort_by:'vote_count.desc','primary_release_date.gte':'2000-01-01','primary_release_date.lte':'2009-12-31'},{txt:'2000-ні',cls:'b'},12);
 }
 
 // =====================================================================
@@ -1644,8 +1570,6 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   const data=await tmdb(ep,{append_to_response:'videos,seasons,credits,external_ids'});
   if(!data){content.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);">Помилка завантаження</div>';return;}
 
-  if(data.poster_path) applyChameleonColor(`${IMG}w300${data.poster_path}`);
-
   currentImdbId = data.imdb_id || (data.external_ids ? data.external_ids.imdb_id : '') || '';
 
   const _vids    = (data.videos && data.videos.results) || [];
@@ -1666,49 +1590,36 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   const isWL  = isWatchLater(id);
   const isWtch= isWatched(id);
 
-  // === SEO ТА CTR ГАЧКИ ===
-  let mediaLabel = 'Фільм';
-  if (type === 'tv') {
-    mediaLabel = 'Серіал';
-  } else if (data.genres && data.genres.some(g => g.id === 16)) {
-    mediaLabel = 'Мультфільм';
-  }
-
-  const seoTitle = `${mediaLabel} ${title} (${year}) дивитись українською в HD 1080p | КіноБаза`;
+  // === SEO ===
+  const seoTitle = `Дивитися «${title}» (${year}) українською озвучкою онлайн в HD | КіноБаза`;
   document.title = seoTitle;
   let metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) {
-      metaDesc.setAttribute("content", `Дивитись ${mediaLabel.toLowerCase()} ${title} (${year}) українською мовою онлайн в хорошій HD якості безкоштовно. ${desc.substring(0, 110)}...`);
+      metaDesc.setAttribute("content", `Дивитися ${type === 'tv' ? 'серіал' : 'фільм'} «${title}» (${year}) українською озвучкою або мовою оригіналу з субтитрами онлайн в хорошій якості. ${desc.substring(0, 120)}...`);
   }
-
   let oldSchema = document.getElementById('dynamic-schema');
   if (oldSchema) oldSchema.remove();
-  let schemaData = [
-    {
-      "@context": "https://schema.org",
-      "@type": type === 'tv' ? "TVSeries" : "Movie",
-      "name": title,
-      "image": `${IMG}w500${data.poster_path}`,
-      "description": desc,
-      "dateCreated": year,
-      "inLanguage": ["uk", "en", "ru"],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": rat,
-        "bestRating": "10",
-        "ratingCount": data.vote_count || 1
-      }
+  let schemaData = {
+    "@context": "https://schema.org",
+    "@type": type === 'tv' ? "TVSeries" : "Movie",
+    "name": title,
+    "image": `${IMG}w500${data.poster_path}`,
+    "description": desc,
+    "dateCreated": year,
+    "inLanguage": ["uk", "en", "ru"],
+    "subtitleLanguage": ["uk", "en"],
+    "genre": data.genres ? data.genres.map(g=>g.name).join(', ') : "",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": rat,
+      "bestRating": "10",
+      "ratingCount": data.vote_count || 1
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://kinobaza.site/" },
-        { "@type": "ListItem", "position": 2, "name": mediaLabel, "item": `https://kinobaza.site/#${type}` },
-        { "@type": "ListItem", "position": 3, "name": title, "item": `https://kinobaza.site/${type}/${id}` }
-      ]
+    "potentialAction": {
+      "@type": "WatchAction",
+      "target": window.location.href
     }
-  ];
+  };
   let scriptSchema = document.createElement('script');
   scriptSchema.type = 'application/ld+json';
   scriptSchema.id = 'dynamic-schema';
@@ -1717,7 +1628,7 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
   // === SEO ===
 
   const backdrop=data.backdrop_path
-    ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}" alt="${escapeHtml(title)}">`
+    ?`<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}" alt="${title}">`
     :`<div class="m-backdrop-ph">🎬</div>`;
 
   const players = type==='tv' ? TV_PLAYERS : MOVIE_PLAYERS;
@@ -1735,27 +1646,6 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
       </div>
       <div class="ep-nums" id="ep-nums"></div>
     </div>`;
-  }
-
-  let collectionHtml = '';
-  if(data.belongs_to_collection) {
-      const colData = await tmdb(`/collection/${data.belongs_to_collection.id}`);
-      if(colData && colData.parts) {
-          const parts = colData.parts.sort((a,b) => (a.release_date||'') > (b.release_date||'') ? 1 : -1);
-          collectionHtml = `
-            <div style="margin-top:20px; margin-bottom:20px;">
-                <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>Усі частини по порядку</div>
-                <div class="col-row">
-                    ${parts.map(p => `
-                        <div class="col-card ${p.id===id?'curr':''}" onclick="openMovie(${p.id},'movie')">
-                            <img class="col-poster" src="${IMG}w185${p.poster_path}" crossorigin="anonymous">
-                            <div class="col-info">${(p.release_date||'').slice(0,4)}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-          `;
-      }
   }
 
   const _castHtml = _cast.length ? `
@@ -1816,15 +1706,10 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
         </button>
         ${isWtch?`<button class="m-btn-wl saved" style="pointer-events:none;">Переглянуто</button>`:''}
         ${_trailer?`<button class="btn-trailer" onclick="openTrailer('${_trailer.key}')">Трейлер</button>`:''}
-        
-        <button class="m-btn-fav" onclick="generateStoryShare('${escapeHtml(title).replace(/'/g,"")}', '${IMG}w500${data.poster_path}')">📸 У Stories</button>
-        <button class="m-btn-fav" onclick="createWatchParty(${id}, '${type}')">🍿 Разом</button>
       </div>
 
       <!-- EXTRA INFO -->
       ${_extraHtml}
-      
-      ${collectionHtml}
 
       <!-- CAST -->
       ${_castHtml}
@@ -1871,12 +1756,12 @@ async function openMovie(id, type='movie', autoPlay=false, pushToHistory=true) {
           const y=(m.release_date||m.first_air_date||'').slice(0,4);
           const rat=m.vote_average?m.vote_average.toFixed(1):'';
           const poster=m.poster_path
-            ?`<img class="sim-poster" src="${IMG}w185${m.poster_path}" alt="${escapeHtml(t)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sim-poster-ph" style="display:none">🎬</div>`
+            ?`<img class="sim-poster" src="${IMG}w185${m.poster_path}" alt="${t}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sim-poster-ph" style="display:none">🎬</div>`
             :`<div class="sim-poster-ph">🎬</div>`;
           return `<div class="sim-card" onclick="openMovie(${m.id},'${type}',false)">
             ${poster}
             <div class="sim-info">
-              <div class="sim-title">${escapeHtml(t)}</div>
+              <div class="sim-title">${t}</div>
               <div class="sim-year">${y}${rat?' · '+rat:''}</div>
             </div>
           </div>`;
@@ -1919,7 +1804,7 @@ function loadComments(id, type) {
 let currentFbComments = [];
 function renderAllComments(id, tmdbReviews) {
     if (commentsUnsubscribe) commentsUnsubscribe();
-      
+     
     if (!db) {
          _drawComments(tmdbReviews);
          return;
@@ -2130,7 +2015,6 @@ function closeMovieModal(pushToHistory = true) {
   if (pushToHistory && window.location.pathname !== '/') {
       history.pushState(null, '', '/');
   }
-  resetChameleon();
 }
 
 // =====================================================================
@@ -2222,7 +2106,7 @@ function toggleFavModal(id, type) {
   const was = isFavorite(id);
   _setLibField(id, type, 'favorite', !was);
   const btn = document.getElementById('modal-fav-btn');
-  if (btn) { btn.className = 'm-btn-fav' + (!was ? ' faved' : ''); btn.innerHTML = !was ? (TRANSLATIONS[siteLang]?.ud_fav || 'В улюблиних') : 'В улюблені'; }
+  if (btn) { btn.className = 'm-btn-fav' + (!was ? ' faved' : ''); btn.innerHTML = !was ? (TRANSLATIONS[siteLang]?.ud_fav || 'В улюблених') : 'В улюблені'; }
   showToast(!was ? 'Додано до улюблених' : 'Видалено з улюблених');
 }
 
@@ -2295,14 +2179,14 @@ function renderContinueWatching() {
     const isFav  = isFavorite(m.id);
     return `<div class="m-card" onclick="openMovie(${m.id},'${type}',true)">
       ${m.poster
-        ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${escapeHtml(m.title||'')}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>`
+        ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title||''}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>`
         : '<div class="c-ph">🎬</div>'}
       <div class="c-ov"></div>
       ${epBadge}
       <button class="c-fav ${isFav?'faved':''}" data-fav-id="${m.id}"
         onclick="event.stopPropagation();toggleFav(${m.id},'${type}',this)">${isFav?'❤️':'🤍'}</button>
       <div class="c-info">
-        <div class="c-title">${escapeHtml(m.title||'—')}</div>
+        <div class="c-title">${m.title||'—'}</div>
         <div class="c-meta">
           <span class="c-year">${m.year||'—'}</span>
           <span class="c-rat">⭐ ${m.rating?Number(m.rating).toFixed(1):'—'}</span>
@@ -2359,12 +2243,12 @@ function renderLibGrid(tab) {
     const type = m.type || 'movie';
     const wtch = isWatched(m.id) ? '<div class="watched-badge">✅ Переглянуто</div>' : '';
     return `<div class="m-card" onclick="openMovie(${m.id},'${type}',false)">
-      ${m.poster ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${escapeHtml(m.title||'')}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>` : '<div class="c-ph">🎬</div>'}
+      ${m.poster ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${m.title||''}" loading="lazy"><div class="c-ph" style="display:none">🎬</div>` : '<div class="c-ph">🎬</div>'}
       <div class="c-ov"></div>
       ${wtch}
       <button class="c-fav ${isFavorite(m.id)?'faved':''}" data-fav-id="${m.id}" onclick="event.stopPropagation();toggleFav(${m.id},'${type}',this)">${isFavorite(m.id)?'❤️':'🤍'}</button>
       <div class="c-info">
-        <div class="c-title">${escapeHtml(m.title||'—')}</div>
+        <div class="c-title">${m.title||'—'}</div>
         <div class="c-meta"><span class="c-year">${m.year||'—'}</span><span class="c-rat">⭐ ${m.rating?Number(m.rating).toFixed(1):'—'}</span></div>
       </div>
     </div>`;
@@ -2616,7 +2500,7 @@ async function showAutocomplete(q) {
     return `<div class="ac-item" onclick="acSelect(${m.id},'${type}','${title.replace(/'/g,"\\'")}')">
       ${poster}
       <div class="ac-inf">
-        <div class="ac-ttl">${escapeHtml(title)}</div>
+        <div class="ac-ttl">${title}</div>
         <div class="ac-sub">
           <span class="ac-badge ${type==='tv'?'t':'m'}">${type==='tv'?'Серіал':'Фільм'}</span>
           ${year ? `<span>${year}</span>` : ''}
@@ -2628,7 +2512,7 @@ async function showAutocomplete(q) {
 
   const t = TRANSLATIONS[siteLang] || TRANSLATIONS['uk'];
   const drop = document.getElementById('ac-drop');
-  drop.innerHTML = html + `<div class="ac-all" onclick="doSearch()">Показати всі результати для «${escapeHtml(q)}»</div>`;
+  drop.innerHTML = html + `<div class="ac-all" onclick="doSearch()">Показати всі результати для «${q}»</div>`;
   drop.classList.add('open');
 }
 
@@ -2638,7 +2522,7 @@ function showRecentSearches() {
   const drop = document.getElementById('ac-drop');
   drop.innerHTML = `<div class="ac-sep">Нещодавні пошуки</div>`
     + recent.map(r => `<div class="ac-recent-row">
-        <span onclick="acUseRecent('${r.replace(/'/g,"\\'")}')" style="flex:1">🕐 ${escapeHtml(r)}</span>
+        <span onclick="acUseRecent('${r.replace(/'/g,"\\'")}')" style="flex:1">🕐 ${r}</span>
         <span class="ac-del" onclick="event.stopPropagation();removeRecent('${r.replace(/'/g,"\\'")}')">✕</span>
       </div>`).join('');
   drop.classList.add('open');
@@ -2696,7 +2580,7 @@ async function doSearch(filter) {
   document.getElementById('home-content').style.display = 'none';
   document.getElementById('lib-section').style.display = 'none';
   document.getElementById('cat-section').style.display = 'none';
-  document.getElementById('srch-title').textContent = `«${escapeHtml(q)}»`;
+  document.getElementById('srch-title').textContent = `«${q}»`;
   document.getElementById('srch-count').textContent = '';
   document.getElementById('srch-more').style.display = 'none';
 
@@ -2752,8 +2636,6 @@ async function selGenre(genreId,el){
   document.querySelectorAll('.g-tag').forEach(t=>t.classList.remove('act'));el.classList.add('act');
   if(genreId===0){initSite();return;}
   const p={with_genres:genreId,sort_by:'popularity.desc'};
-  if(isKidsMode) p.without_genres = '27,53,80';
-
   loadGrid('new-grid','/discover/movie',{...p,'primary_release_date.gte':'2023-01-01'},{txt:'NEW',cls:''},12);
   loadGrid('pop-grid','/discover/movie',p,{txt:'HD',cls:'g'},12);
   loadGrid('top-grid','/discover/movie',{...p,sort_by:'vote_average.desc','vote_count.gte':500},null,12);
@@ -2860,8 +2742,6 @@ function _buildCatParams() {
   if (rating)  p['vote_average.gte'] = rating;
   if (sort === 'vote_average.desc' && !rating) p['vote_count.gte'] = 300;
   if (currentActorId) p.with_cast = currentActorId;
-  
-  if(isKidsMode) p.without_genres = '27,53,80';
 
   if (catType === 'movie') {
     if (yearFrom) p['primary_release_date.gte'] = `${yearFrom}-01-01`;
@@ -2886,7 +2766,7 @@ async function _loadCatPage(reset) {
   }
 
   catTotalPages = Math.min(data.total_pages || 1, 500);
-  const total    = data.total_results || 0;
+  const total   = data.total_results || 0;
   const html    = data.results.map(m => card({ ...m, media_type: catType })).join('');
   if (reset) grid.innerHTML = html; else grid.innerHTML += html;
 
@@ -2996,10 +2876,7 @@ function renderAds(){
         vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;vid.className='ad-video';
         a.appendChild(vid);w.appendChild(a);
       }
-      else{
-        const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';
-        const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt='Реклама';a.appendChild(img);w.appendChild(a);
-      }
+      else{const a=document.createElement('a');a.href=ad.linkUrl||'#';a.target='_blank';a.rel='noopener';a.className='ad-h';const img=document.createElement('img');img.src=ad.imageUrl||'';img.alt='Реклама';a.appendChild(img);w.appendChild(a);}
       hEl.appendChild(w);
     });
   }
@@ -3108,8 +2985,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(av && !e.target.closest('.user-avatar')) av.classList.remove('open');
   });
 
-  document.getElementById('curr-lang-lbl').textContent = siteLang.toUpperCase();
-  updateUIStrings(siteLang);
+  setSiteLang(siteLang);
 
   initFirestore(); 
   setTimeout(detectAdblock, 1500); 
@@ -3182,4 +3058,44 @@ function updateMobileDrawerAuth() {
   if(currentUser) {
     const name = currentUser.displayName || currentUser.email || 'Користувач';
     sec.innerHTML = `
-      <div style="padding:13px 20px;color:var(--muted);font-Я не можу зрозуміти цей запит і допомогти з цим. Я лише мовна модель.
+      <div style="padding:13px 20px;color:var(--muted);font-size:13px;">${name}</div>
+      <button class="mob-nav-link" onclick="showLibrary('fav');closeMobileMenu()"><span class="mob-nav-icon">❤️</span>${t.ud_fav}</button>
+      <button class="mob-nav-link" onclick="showLibrary('wl');closeMobileMenu()"><span class="mob-nav-icon">🕐</span>${t.ud_wl}</button>
+      <button class="mob-nav-link" onclick="showLibrary('watched');closeMobileMenu()"><span class="mob-nav-icon">✅</span>${t.ud_watch}</button>
+      ${currentUserRole==='admin'?`<button class="mob-nav-link" onclick="location.href='admin.html'"><span class="mob-nav-icon">⚙️</span>${t.ud_admin}</button>`:''}
+      <button class="mob-nav-link" onclick="doLogout();closeMobileMenu()" style="color:var(--accent);"><span class="mob-nav-icon">🚪</span>${t.ud_logout}</button>
+    `;
+  } else {
+    sec.innerHTML = `
+      <button class="mob-nav-link" onclick="openAuth('login');closeMobileMenu()"><span class="mob-nav-icon">🔑</span>${t.login}</button>
+      <button class="mob-nav-link" onclick="openAuth('register');closeMobileMenu()" style="color:var(--accent);"><span class="mob-nav-icon">✨</span>${t.register}</button>
+    `;
+  }
+}
+
+function updateBnav(active) {
+  ['home','search','movies','tv','profile'].forEach(id => {
+    const el = document.getElementById('mbn-'+id);
+    if(el) el.classList.toggle('act', id===active);
+  });
+}
+
+function mbnSearch() {
+  updateBnav('search');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{ const si=document.getElementById('si'); if(si){si.focus();si.select();} },300);
+}
+
+function handleBnavProfile() {
+  if(currentUser) {
+    showLibrary('fav');
+    updateBnav('profile');
+  } else {
+    openAuth('login');
+  }
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeMobileMenu(); });
+</script>
+</body>
+</html>
