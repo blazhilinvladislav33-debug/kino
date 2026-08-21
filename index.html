@@ -4240,55 +4240,17 @@ const vidsrcMirrors = ['vidsrc.to', 'vidsrc.win', 'vidsrc.me', 'vidsrc.pro', 'vi
 async function findWorkingVidsrc() {
     for (let domain of vidsrcMirrors) {
         try {
-            // Робимо тихий запит (без блокування сторінки та конфліктів CORS)
             await fetch(`https://${domain}/`, { mode: 'no-cors', cache: 'no-store' });
-            vidsrcDomain = domain; // Сервер відповів! Зберігаємо домен
-            break; // Зупиняємо пошук
-        } catch (e) {
-            // Якщо сервер "мертвий" (ERR_NAME_NOT_RESOLVED), цикл просто перейде до наступного
-        }
+            vidsrcDomain = domain; 
+            break; 
+        } catch (e) {}
     }
 }
 
-// Запускаємо перевірку у фоні одразу при завантаженні сторінки
+// Запускаємо перевірку у фоні
 findWorkingVidsrc();
 
 const MOVIE_PLAYERS = [
-    // Тепер замість жорсткого vidsrc.to тут стоїть змінна ${vidsrcDomain}
-    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` },
-    { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` },
-    { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` }
-];
-
-const TV_PLAYERS = [
-    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` },
-    { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` },
-    { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` }
-];// =====================================================================
-// 9. PLAYERS ТА АВТОПІДБІР ДОМЕНУ
-// =====================================================================
-let vidsrcDomain = 'vidsrc.to'; // Домен за замовчуванням
-const vidsrcMirrors = ['vidsrc.to', 'vidsrc.win', 'vidsrc.me', 'vidsrc.pro', 'vidsrc.net'];
-
-// Функція автоматичного пошуку "живого" дзеркала
-async function findWorkingVidsrc() {
-    for (let domain of vidsrcMirrors) {
-        try {
-            // Робимо тихий запит (без блокування сторінки та конфліктів CORS)
-            await fetch(`https://${domain}/`, { mode: 'no-cors', cache: 'no-store' });
-            vidsrcDomain = domain; // Сервер відповів! Зберігаємо домен
-            break; // Зупиняємо пошук
-        } catch (e) {
-            // Якщо сервер "мертвий" (ERR_NAME_NOT_RESOLVED), цикл просто перейде до наступного
-        }
-    }
-}
-
-// Запускаємо перевірку у фоні одразу при завантаженні сторінки
-findWorkingVidsrc();
-
-const MOVIE_PLAYERS = [
-    // Тепер замість жорсткого vidsrc.to тут стоїть змінна ${vidsrcDomain}
     { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` },
     { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` },
     { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` }
@@ -4299,6 +4261,7 @@ const TV_PLAYERS = [
     { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` },
     { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` }
 ];
+
 // =====================================================================
 // 10. HERO SLIDER
 // =====================================================================
@@ -4827,6 +4790,321 @@ function closeMobileMenu() {
     } catch(e) {}
 }
 
+  // =====================================================================
+// ФІЛЬТРАЦІЯ КАТАЛОГУ
+// =====================================================================
+function applyCatFilters() { 
+    try {
+        catPage = 1; 
+        const grid = document.getElementById('cat-grid');
+        if (grid) grid.innerHTML = getSkeletonHtml(12); 
+        const moreBtn = document.getElementById('cat-more');
+        if (moreBtn) moreBtn.style.display = 'none'; 
+        _loadCatPage(true); 
+    } catch(e) {}
+}
+
+async function _loadCatPage(reset) {
+    if(currentCollectionId) return; 
+    try {
+        const genre = document.getElementById('cat-genre').value; 
+        const yearFrom = document.getElementById('cat-yr-from').value; 
+        const yearTo = document.getElementById('cat-yr-to').value; 
+        const sort = document.getElementById('cat-sort').value || 'popularity.desc';
+        const p = { sort_by: sort, 'vote_count.gte': 50, page: catPage }; 
+        if (genre) p.with_genres = genre; 
+        if (currentActorId) p.with_cast = currentActorId; 
+        
+        try { if(typeof isKidsMode !== 'undefined' && isKidsMode) p.without_genres = '27,53,80'; } catch(e){}
+        
+        if (catType === 'movie') { 
+            if (yearFrom) p['primary_release_date.gte'] = `${yearFrom}-01-01`; 
+            if (yearTo) p['primary_release_date.lte'] = `${yearTo}-12-31`; 
+        } else { 
+            if (yearFrom) p['first_air_date.gte'] = `${yearFrom}-01-01`; 
+            if (yearTo) p['first_air_date.lte'] = `${yearTo}-12-31`; 
+        }
+        
+        const data = await tmdb(catType === 'tv' ? '/discover/tv' : '/discover/movie', p); 
+        const grid = document.getElementById('cat-grid');
+        if (!grid) return;
+        
+        if (!data || !data.results || !data.results.length) { 
+            if(reset) grid.innerHTML = '<div style="color:var(--muted);padding:40px;grid-column:1/-1;text-align:center;">Нічого не знайдено</div>'; 
+            return; 
+        }
+        
+        catTotalPages = Math.min(data.total_pages || 1, 500); 
+        const items = data.results.filter(m => m.poster_path);
+        const html = items.map(m => card({ ...m, media_type: catType })).join(''); 
+        
+        if (reset) grid.innerHTML = html; else grid.innerHTML += html;
+        const countEl = document.getElementById('cat-count');
+        if (countEl) countEl.textContent = `${(data.total_results||0).toLocaleString('uk-UA')} результатів`; 
+        const moreBtn = document.getElementById('cat-more');
+        if (moreBtn) moreBtn.style.display = (catPage < catTotalPages) ? 'block' : 'none';
+    } catch(e) {}
+}
+
+function loadMoreCatalog() { catPage++; _loadCatPage(false); }
+function resetCatFilters() { 
+    try {
+        document.getElementById('cat-genre').value = ''; document.getElementById('cat-yr-from').value = ''; 
+        document.getElementById('cat-yr-to').value = ''; document.getElementById('cat-sort').value = 'popularity.desc'; 
+        currentActorId = null; currentCollectionId = null; showCatalog({type: catType}); 
+    } catch(e) {}
+}
+function setCatType(type) { catType = type; showCatalog({type}); }
+function searchByActor(id, name) { 
+    try {
+        closeMovieModal(false); currentActorId = id; currentActorName = name; currentCollectionId = null; catType = 'movie'; 
+        const catTitle = document.getElementById('cat-title');
+        if (catTitle) catTitle.textContent = `За участю: ${name}`; 
+        showCatalog({}, true); 
+    } catch(e) {}
+}
+
+// =====================================================================
+// БІБЛІОТЕКА ТА ЗБЕРЕЖЕННЯ (ЯДРО)
+// =====================================================================
+function isInLib(id, field) {
+    try { return libraryCache[String(id)] ? !!libraryCache[String(id)][field] : false; } catch(e) { return false; }
+}
+function isFavorite(id)  { return isInLib(id, 'favorite'); }
+function isWatchLater(id){ return isInLib(id, 'watchLater'); }
+function isWatched(id)   { return isInLib(id, 'watched'); }
+
+async function _setLibField(id, type, field, value) {
+    try {
+        if (typeof currentUser === 'undefined' || !currentUser) { openAuth('login'); showToast('Увійдіть для використання бібліотеки'); return; }
+        const docId = String(id);
+        if (!libraryCache[docId]) libraryCache[docId] = {};
+        libraryCache[docId][field] = value;
+        if (!db) return;
+        
+        const ref = db.collection('users').doc(currentUser.uid).collection('library').doc(docId);
+        const cur = libraryCache[docId];
+        
+        if (!cur.favorite && !cur.watchLater && !cur.watched) {
+            await ref.delete(); delete libraryCache[docId];
+        } else {
+            if (!cur.title) {
+                let data = null; try { data = await tmdb(`/${type}/${id}`); } catch(e) {}
+                if (data) libraryCache[docId] = { ...cur, id: data.id, type: type, title: data.title||data.name||'', poster: data.poster_path||'', rating: data.vote_average||0, year: (data.release_date||data.first_air_date||'').slice(0, 4), updatedAt: new Date().toISOString() };
+            } else { libraryCache[docId].updatedAt = new Date().toISOString(); }
+            await ref.set(libraryCache[docId], { merge: true });
+        }
+    } catch(e) {}
+}
+
+function toggleFav(id, type, btn) {
+    try {
+        if (typeof currentUser === 'undefined' || !currentUser) { openAuth('login'); showToast('Увійдіть щоб зберігати улюблені'); return; }
+        const was = isFavorite(id);
+        _setLibField(id, type, 'favorite', !was);
+        if (btn) { 
+            if (!was) btn.classList.add('faved'); else btn.classList.remove('faved');
+            btn.textContent = !was ? '❤️' : '🤍'; 
+        }
+        showToast(!was ? 'Додано до улюблених ❤️' : 'Видалено з улюблених');
+    } catch(e) {}
+}
+
+function markWatched(id, type) { try { if (typeof currentUser === 'undefined' || !currentUser || isWatched(id)) return; _setLibField(id, type, 'watched', true); } catch(e) {} }
+
+async function savePlayerProgress() {
+    try {
+        if (typeof currentUser === 'undefined' || !currentUser || !db || !currentModalId) return;
+        const docId = String(currentModalId);
+        const updates = { watched: true, lastServer: currentPlayer, updatedAt: new Date().toISOString() };
+        if (currentModalType === 'tv') { updates.lastSeason = currentSeason; updates.lastEpisode = currentEpisode; }
+        if (!libraryCache[docId]) libraryCache[docId] = { id: currentModalId, type: currentModalType };
+        Object.assign(libraryCache[docId], updates);
+        
+        if (!libraryCache[docId].title) {
+            let data = null; try { data = await tmdb(`/${currentModalType}/${currentModalId}`); } catch(e) {}
+            if (data) Object.assign(libraryCache[docId], { title: data.title||data.name||'', poster: data.poster_path||'', rating: data.vote_average||0, year: (data.release_date||data.first_air_date||'').slice(0,4) });
+        }
+        await db.collection('users').doc(currentUser.uid).collection('library').doc(docId).set(libraryCache[docId], { merge: true });
+        
+        if(typeof renderContinueWatching === 'function') renderContinueWatching();
+        if(typeof refreshCardFavButtons === 'function') refreshCardFavButtons();
+    } catch(e) {}
+}
+
+// =====================================================================
+// АВТОРИЗАЦІЯ ТА ПРОФІЛЬ
+// =====================================================================
+let auth = null, currentUser = null, currentUserRole = 'user', currentUserSubscribed = false;
+try { auth = firebase.auth(); } catch(e) {}
+
+if (auth) {
+    try {
+        auth.onAuthStateChanged(async (user) => {
+            currentUser = user; currentUserRole = 'user'; currentUserSubscribed = false;
+            if (user && db) {
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists) { currentUserRole = doc.data().role || 'user'; currentUserSubscribed = doc.data().subscribed === true; }
+                } catch(e) {}
+                if(typeof initLibrary === 'function') initLibrary();
+            } else {
+                if (libUnsubscribe) { libUnsubscribe(); libUnsubscribe = null; }
+                libraryCache = {}; 
+                if(typeof refreshCardFavButtons === 'function') refreshCardFavButtons();
+                if(typeof renderContinueWatching === 'function') renderContinueWatching(); 
+            }
+            updateAuthUI();
+        });
+    } catch(e) {}
+}
+
+function updateAuthUI() {
+    try {
+        const user = currentUser;
+        const authBtns = document.getElementById('auth-btns'), userMenu = document.getElementById('user-menu');
+        if (authBtns) authBtns.style.display = user ? 'none' : 'flex';
+        if (userMenu) userMenu.style.display = user ? 'block' : 'none';
+        
+        if (user) {
+            const initialEl = document.getElementById('user-initial');
+            if (initialEl) initialEl.textContent = (user.displayName || user.email || 'U')[0].toUpperCase();
+            const nameEl = document.getElementById('ud-name');
+            if (nameEl) nameEl.innerHTML = escapeHtml(user.displayName || user.email) + (currentUserSubscribed ? '<span class="sub-badge">Premium</span>' : '');
+        }
+        
+        const adminLink = document.getElementById('ud-admin');
+        if (adminLink) adminLink.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
+    } catch(e) {}
+}
+
+function openAuth(tab = 'login') { try { switchTab(tab); const modal = document.getElementById('auth-modal'); if (modal) modal.classList.add('open'); } catch(e) {} }
+function closeAuth() { try { const modal = document.getElementById('auth-modal'); if (modal) modal.classList.remove('open'); } catch(e) {} }
+function switchTab(t) {
+    try {
+        document.getElementById('tab-login')?.classList.toggle('act', t === 'login');
+        document.getElementById('tab-register')?.classList.toggle('act', t === 'register');
+        document.getElementById('form-login')?.classList.toggle('act', t === 'login');
+        document.getElementById('form-register')?.classList.toggle('act', t === 'register');
+    } catch(e) {}
+}
+
+function doLogin() {
+    if (!auth) return;
+    try {
+        const email = document.getElementById('l-email')?.value.trim(), pass = document.getElementById('l-pass')?.value;
+        const errEl = document.getElementById('l-err');
+        errEl.classList.remove('show');
+        if (!email || !pass) { errEl.textContent = 'Заповніть всі поля'; errEl.classList.add('show'); return; }
+        
+        auth.signInWithEmailAndPassword(email, pass).then(() => { closeAuth(); }).catch(e => {
+            errEl.textContent = 'Помилка входу'; errEl.classList.add('show');
+        });
+    } catch(e) {}
+}
+
+function doRegister() {
+    if (!auth) return;
+    try {
+        const name = document.getElementById('r-name')?.value.trim(), email = document.getElementById('r-email')?.value.trim(), pass = document.getElementById('r-pass')?.value;
+        const errEl = document.getElementById('r-err');
+        errEl.classList.remove('show');
+        
+        if (!name || !email || !pass) { errEl.textContent = 'Заповніть всі поля'; errEl.classList.add('show'); return; }
+        if (pass.length < 6) { errEl.textContent = 'Пароль мінімум 6 символів'; errEl.classList.add('show'); return; }
+        
+        auth.createUserWithEmailAndPassword(email, pass).then(async cred => {
+            try { await cred.user.updateProfile({ displayName: name }); } catch(e){}
+            if (db) { try { await db.collection('users').doc(cred.user.uid).set({ name: name, email: email, role: 'user', createdAt: new Date().toISOString() }); } catch(e){} }
+            closeAuth();
+        }).catch(e => { errEl.textContent = 'Помилка реєстрації'; errEl.classList.add('show'); });
+    } catch(e) {}
+}
+
+function doGoogleLogin() {
+    if (!auth) return;
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).then(async cred => {
+            if (db) {
+                try {
+                    const doc = await db.collection('users').doc(cred.user.uid).get();
+                    if (!doc.exists) await db.collection('users').doc(cred.user.uid).set({ name: cred.user.displayName || '', email: cred.user.email || '', role: 'user', createdAt: new Date().toISOString() });
+                } catch(e){}
+            }
+            closeAuth();
+        }).catch(e => {});
+    } catch(e) {}
+}
+
+function resetPassword() {
+    if (!auth) return;
+    try {
+        const email = document.getElementById('l-email')?.value.trim();
+        const errEl = document.getElementById('l-err');
+        if (!email) { errEl.textContent = 'Введіть email вище'; errEl.classList.add('show'); return; }
+        auth.sendPasswordResetEmail(email).then(() => { closeAuth(); showToast('Лист надіслано'); }).catch(() => { errEl.textContent = 'Помилка'; errEl.classList.add('show'); });
+    } catch(e) {}
+}
+
+function doLogout() { try { if (auth) auth.signOut(); showHome(); } catch(e) {} }
+
+// Мобільне меню (низ)
+function updateBnav(active) { try { ['home','search','movies','tv','profile'].forEach(id => { const el = document.getElementById('mbn-'+id); if(el) el.classList.toggle('act', id === active); }); } catch(e) {} }
+function mbnSearch() { try { updateBnav('search'); window.scrollTo({top:0, behavior:'smooth'}); setTimeout(() => { const si = document.getElementById('si'); if(si){ si.focus(); si.select(); } }, 300); } catch(e) {} }
+function handleBnavProfile() { try { if(typeof currentUser !== 'undefined' && currentUser) { showLibrary('fav'); updateBnav('profile'); } else { openAuth('login'); } } catch(e) {} }
+
+// =====================================================================
+// КОМЕНТАРІ (TMDB + Firebase)
+// =====================================================================
+function loadComments(id, type) {
+    try {
+        const wrap = document.getElementById('comment-form-wrap');
+        if (!wrap) return;
+        if (typeof currentUser !== 'undefined' && currentUser) {
+            wrap.innerHTML = `<textarea id="new-comment-text" placeholder="Напишіть свій відгук..." style="width:100%;background:var(--bg3);border:1px solid var(--border);color:#fff;border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical;min-height:60px;margin-bottom:8px;outline:none;"></textarea><button onclick="postComment('${id}')" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;">Надіслати</button>`;
+        } else {
+            wrap.innerHTML = `<div style="background:var(--bg3);padding:14px;border-radius:8px;text-align:center;color:var(--muted);font-size:13px;">Щоб залишити коментар, <span style="color:var(--accent);cursor:pointer;" onclick="openAuth('login')">увійдіть в акаунт</span>.</div>`;
+        }
+        tmdb(`/${type}/${id}/reviews`).then(data => {
+            const tmdbReviews = (data && data.results) ? data.results.map(r => ({ author: r.author, content: r.content, date: new Date(r.created_at), source: 'tmdb' })) : [];
+            renderAllComments(id, tmdbReviews);
+        }).catch(() => renderAllComments(id, []));
+    } catch(e) {}
+}
+
+let commentsUnsubscribe = null, currentFbComments = [];
+function renderAllComments(id, tmdbReviews) {
+    if (commentsUnsubscribe) commentsUnsubscribe();
+    if (typeof db === 'undefined' || !db) return _drawComments(tmdbReviews);
+    try {
+        commentsUnsubscribe = db.collection('comments').where('movieId', '==', String(id)).onSnapshot(snap => {
+            currentFbComments = snap.docs.map(d => ({ author: d.data().authorName, content: d.data().text, date: new Date(d.data().createdAt), source: 'firebase' }));
+            _drawComments([...currentFbComments, ...tmdbReviews].sort((a,b) => b.date - a.date));
+        }, () => _drawComments(tmdbReviews));
+    } catch(e) { _drawComments(tmdbReviews); }
+}
+
+function _drawComments(arr) {
+    try {
+        const list = document.getElementById('comments-list');
+        if (!list) return;
+        if (!arr.length) { list.innerHTML = `<div style="color:var(--muted);font-size:13px;">Поки що немає коментарів. Будьте першим!</div>`; return; }
+        
+        list.innerHTML = arr.map(c => `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-weight:700;font-size:13px;color:#fff;">${escapeHtml(c.author)} ${c.source==='tmdb'?'<span style="font-size:10px;color:var(--accent);background:rgba(229,9,20,0.1);padding:2px 6px;border-radius:4px;margin-left:5px;">TMDB</span>':''}</span><span style="font-size:11px;color:var(--dim);">${c.date.toLocaleDateString('uk-UA')}</span></div><div style="font-size:13px;color:var(--muted);line-height:1.5;">${escapeHtml(c.content).replace(/\n/g, '<br>')}</div></div>`).join('');
+    } catch(e) {}
+}
+
+async function postComment(movieId) {
+    try {
+        if (typeof currentUser === 'undefined' || !currentUser || !db) return;
+        const textEl = document.getElementById('new-comment-text');
+        if(!textEl || !textEl.value.trim()) return;
+        
+        await db.collection('comments').add({ movieId: String(movieId), userId: currentUser.uid, authorName: currentUser.displayName || currentUser.email.split('@')[0], text: textEl.value.trim(), createdAt: new Date().toISOString() });
+        textEl.value = ''; showToast('Коментар додано!');
+    } catch(e) { showToast('Помилка додавання коментаря'); }
+}
 // =====================================================================
 // ЗАПУСК ДОДАТКУ ТА РОУТИНГ
 // =====================================================================
