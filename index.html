@@ -4261,7 +4261,6 @@ const TV_PLAYERS = [
     { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` },
     { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` }
 ];
-
 // =====================================================================
 // 10. HERO SLIDER
 // =====================================================================
@@ -4393,18 +4392,6 @@ function showCollection(id, title) {
     } catch(e){}
 }
 
-function handleSrch(e) {
-    clearTimeout(sT);
-    const val = e.target.value.trim();
-    if(!val) {
-        hideAutocomplete();
-        document.getElementById('srch-sec').style.display = 'none';
-        showHome();
-        return;
-    }
-    sT = setTimeout(() => { doSearch(); }, 500);
-}
-
 function acKeydown(e) { if(e.key === 'Enter') doSearch(); }
 function acFocus() {}
 function hideAutocomplete() { document.getElementById('ac-drop').classList.remove('open'); }
@@ -4484,7 +4471,7 @@ function closeTrailer() {
 // =====================================================================
 let currentModalId = null, currentImdbId = '', currentModalType = 'movie', currentSeason = 1, currentEpisode = 1, currentPlayer = 0;
 
-async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = true) {
+  async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = true) {
     if (!id) return;
     currentModalId = id; currentModalType = type; currentSeason = 1; currentEpisode = 1; currentImdbId = '';
     try { gaEvent('view_item', { item_id: id, item_category: type }); } catch(e) {}
@@ -4551,10 +4538,45 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
             if (data.credits && data.credits.cast) cast = data.credits.cast.slice(0, 16);
         } catch(e) {}
 
-        let isFav = false, isWL = false, isWtch = false;
-        try { isFav = isFavorite(id); isWL  = isWatchLater(id); isWtch= isWatched(id); } catch(e) {}
+        // 1. Додаткова інформація (Бюджет, країни, студії)
+        let extraItemsHtml = '';
+        try {
+            let extraArr = [];
+            if (data.budget && Number(data.budget) > 0) extraArr.push({ lbl: 'Бюджет', val: '$' + (Number(data.budget) / 1e6).toFixed(1) + 'M' });
+            if (data.revenue && Number(data.revenue) > 0) extraArr.push({ lbl: 'Касові збори', val: '$' + (Number(data.revenue) / 1e6).toFixed(1) + 'M' });
+            if (data.production_countries && data.production_countries.length > 0) extraArr.push({ lbl: 'Країна', val: data.production_countries.slice(0, 2).map(c => c.name).join(', ') });
+            if (data.production_companies && data.production_companies.length > 0) extraArr.push({ lbl: 'Студія', val: data.production_companies.slice(0, 2).map(c => c.name).join(', ') });
+            if (data.original_language) extraArr.push({ lbl: 'Мова', val: escapeHtml(String(data.original_language).toUpperCase()) });
+            
+            if (extraArr.length > 0) {
+                extraItemsHtml = `<div class="m-extra">${extraArr.map(it => `<div class="m-extra-item"><div class="m-extra-lbl">${it.lbl}</div><div class="m-extra-val">${it.val}</div></div>`).join('')}</div>`;
+            }
+        } catch(e) {}
 
-        const backdropHtml = data.backdrop_path ? `<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}">` : `<div class="m-backdrop-ph">🎬</div>`;
+        // 2. Блок Акторів (Каст)
+        let castHtml = '';
+        try {
+            if (cast.length > 0) {
+                let cardsHtml = cast.map(a => {
+                    let safeName = escapeHtml(a.name).replace(/'/g, "");
+                    let photo = a.profile_path ? `<img class="cast-photo" src="${IMG}w185${a.profile_path}" alt="${escapeHtml(a.name)}">` : `<div class="cast-photo-ph">👤</div>`;
+                    return `<div class="cast-card" onclick="searchByActor(${a.id}, '${safeName}')" title="Всі фільми з ${escapeHtml(a.name)}">${photo}<div class="cast-name">${escapeHtml(a.name)}</div><div class="cast-char">${escapeHtml(a.character || '')}</div></div>`;
+                }).join('');
+                castHtml = `<div style="font-size:15px;font-weight:700;margin-top:20px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>Актори</div><div class="cast-row">${cardsHtml}</div>`;
+            }
+        } catch(e) {}
+
+        let isFav = false, isWL = false, isWtch = false;
+        try { isFav = isFavorite(id); isWL = isWatchLater(id); isWtch = isWatched(id); } catch(e) {}
+
+       const backdropHtml = data.backdrop_path ? `<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}">` : `<div class="m-backdrop-ph">🎬</div>`;
+        
+        // ВМИКАЄМО ХАМЕЛЕОН ТУТ:
+        if (data.backdrop_path) {
+            applyChameleonColor(`${IMG}w300${data.backdrop_path}`);
+        } else {
+            resetChameleon();
+        }
         const players = type === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
         let tabsHtml = '';
         players.forEach((p, i) => {
@@ -4577,30 +4599,54 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
             if (t && t.ud_wl) wlText = t.ud_wl;
         } catch(e) {}
 
+        // Рендер повного шаблону (з оцінками, акторами, схожими фільмами та коментарями)
         content.innerHTML = `
         ${backdropHtml}
         <div class="m-grad"></div>
         <div class="m-body">
             <h1 class="m-title">${escapeHtml(title)} <span style="color:var(--muted);font-weight:400;">(${year})</span></h1>
-            <div class="m-metas"><span class="m-rat">★ ${rat}</span></div>
+            <div class="m-metas">
+                <span class="m-rat">★ ${rat}</span>
+                ${data.runtime ? `<span class="m-dur">${data.runtime} хв</span>` : ''}
+                ${data.number_of_seasons ? `<span class="m-dur">${data.number_of_seasons} сез.</span>` : ''}
+            </div>
             <div class="m-genres">${genresHtml}</div>
             <div class="m-desc">${escapeHtml(desc)}</div>
+            
             <div class="player-section">
-                <div class="player-tabs-row">
+               <div class="player-tabs-row">
                     <div class="player-tabs">${tabsHtml}</div>
+                    <div class="player-rating-right">
+                        <button class="player-share-btn" onclick="navigator.clipboard.writeText(window.location.href); showToast('Посилання скопійовано!')" title="Поділитися">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                        </button>
+                        <span>★ ${rat} <span style="font-size:11px;font-weight:400;color:var(--dim);">(${data.vote_count || 0})</span></span>
+                    </div>
                 </div>
                 <div class="player-frame-wrap" id="player-wrap">
                     <div class="player-loading" id="player-loading"><div class="spin"></div><div style="color:var(--muted);font-size:13px;margin-top:10px;">Завантаження плеєра...</div></div>
                 </div>
                 ${tvSelector}
             </div>
+
             <div class="m-actions">
                 <button class="${isFav ? 'm-btn-fav faved' : 'm-btn-fav'}" id="modal-fav-btn" onclick="toggleFavModal(${id},'${type}')">${isFav ? favText : 'В улюблені'}</button>
                 <button class="${isWL ? 'm-btn-wl saved' : 'm-btn-wl'}" id="modal-wl-btn" onclick="toggleWatchLaterModal(${id},'${type}')">${isWL ? 'Збережено' : wlText}</button>
                 ${isWtch ? `<button class="m-btn-wl saved" style="pointer-events:none;">Переглянуто</button>` : ''}
                 ${trailer ? `<button class="btn-trailer" onclick="openTrailer('${trailer.key}')">Трейлер</button>` : ''}
             </div>
+
+            ${extraItemsHtml}
+            ${castHtml}
             <div id="modal-sim"></div>
+
+            <div class="comments-section" style="margin-top:24px;border-top:1px solid var(--border);padding-top:20px;">
+                <div style="font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                    <span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>Коментарі
+                </div>
+                <div id="comment-form-wrap" style="margin-bottom:20px;"></div>
+                <div id="comments-list"></div>
+            </div>
         </div>`;
 
         try {
@@ -4620,6 +4666,31 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
         } catch (e) {}
 
         _doLoadPlayer();
+        
+        // Виклик завантаження коментарів
+        try { loadComments(id, type); } catch(e) {}
+
+        // Виклик завантаження схожих фільмів
+        try {
+            tmdb(`/${type}/${id}/similar`, { page: 1 }).then(sim => {
+                const simEl = document.getElementById('modal-sim');
+                if (!simEl || !sim || !sim.results || !sim.results.length) return;
+                
+                const items = sim.results.slice(0, 12);
+                const label = type === 'tv' ? 'Схожі серіали' : 'Схожі фільми';
+                
+                let simCardsHtml = items.map(m => {
+                    const t = m.title || m.name || '—';
+                    const y = (m.release_date || m.first_air_date || '').slice(0, 4);
+                    const simRat = m.vote_average ? m.vote_average.toFixed(1) : '';
+                    let posterHtml = m.poster_path ? `<img class="sim-poster" src="${IMG}w185${m.poster_path}" alt="${escapeHtml(t)}">` : `<div class="sim-poster-ph">🎬</div>`;
+                    
+                    return `<div class="sim-card" onclick="openMovie(${m.id},'${type}',false)"><div class="sim-poster-wrap">${posterHtml}</div><div class="sim-info"><div class="sim-title">${escapeHtml(t)}</div><div class="sim-year">${y}${simRat ? ' · ★ ' + simRat : ''}</div></div></div>`;
+                }).join('');
+
+                simEl.innerHTML = `<div style="font-size:15px;font-weight:700;margin-top:20px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;"></span>${label}</div><div class="sim-row">${simCardsHtml}</div>`;
+            }).catch(() => {});
+        } catch (e) {}
         
     } catch (renderError) {
         console.error("Render Error:", renderError);
@@ -5105,6 +5176,310 @@ async function postComment(movieId) {
         textEl.value = ''; showToast('Коментар додано!');
     } catch(e) { showToast('Помилка додавання коментаря'); }
 }
+
+  // =====================================================================
+// ВІДОБРАЖЕННЯ БІБЛІОТЕКИ ТА "ПРОДОВЖИТИ ПЕРЕГЛЯД"
+// =====================================================================
+function initLibrary() {
+    if (typeof currentUser === 'undefined' || !currentUser || !db) return;
+    if (libUnsubscribe) libUnsubscribe();
+    
+    // Підписуємося на зміни в базі Firebase для поточного юзера
+    libUnsubscribe = db.collection('users').doc(currentUser.uid).collection('library')
+        .onSnapshot(snap => {
+            libraryCache = {};
+            snap.docs.forEach(doc => { libraryCache[doc.id] = doc.data(); });
+            refreshCardFavButtons();
+            renderContinueWatching();
+            if (document.getElementById('lib-section').style.display === 'block') {
+                renderLibraryGrid();
+            }
+        });
+}
+
+function showLibrary(tab = 'fav') {
+    if (typeof currentUser === 'undefined' || !currentUser) {
+        openAuth('login');
+        showToast('Увійдіть, щоб переглянути бібліотеку');
+        return;
+    }
+    document.getElementById('home-content').style.display = 'none';
+    document.getElementById('cat-section').style.display = 'none';
+    document.getElementById('srch-sec').style.display = 'none';
+    document.getElementById('lib-section').style.display = 'block';
+    
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('act'));
+    switchLibTab(tab);
+    window.scrollTo(0,0);
+}
+
+function switchLibTab(tab) {
+    currentLibTab = tab;
+    document.querySelectorAll('.lib-tab').forEach(t => t.classList.remove('act'));
+    const activeTab = document.getElementById('lib-tab-' + tab);
+    if (activeTab) activeTab.classList.add('act');
+    renderLibraryGrid();
+}
+
+function renderLibraryGrid() {
+    const grid = document.getElementById('lib-grid');
+    if (!grid) return;
+    
+    // Фільтруємо кеш залежно від обраної вкладки
+    const items = Object.values(libraryCache).filter(item => {
+        if (currentLibTab === 'fav') return item.favorite;
+        if (currentLibTab === 'wl') return item.watchLater;
+        if (currentLibTab === 'watched') return item.watched;
+        return false;
+    }).sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
+
+    if (!items.length) {
+        let msg = currentLibTab === 'fav' ? 'Немає улюблених фільмів' : 
+                  currentLibTab === 'wl' ? 'Список "Дивитись пізніше" порожній' : 
+                  'Ви ще нічого не переглянули';
+        grid.innerHTML = `<div class="lib-empty"><span>🎬</span>${msg}</div>`;
+        return;
+    }
+
+    grid.innerHTML = items.map(m => {
+        const mtype = m.type || 'movie';
+        const posterHtml = m.poster ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${escapeHtml(m.title)}">` : `<div class="c-ph">🎬</div>`;
+        let isFav = false; try { isFav = isFavorite(m.id); } catch(e){}
+        
+        let extraBadge = '';
+        if (currentLibTab === 'watched') {
+            if (mtype === 'tv' && m.lastSeason) extraBadge = `<div class="c-ep-badge">S${m.lastSeason} E${m.lastEpisode||1}</div>`;
+            extraBadge += `<div class="watched-badge">✓ Переглянуто</div>`;
+        }
+
+        return `
+        <div class="m-card" onclick="openMovie(${m.id},'${mtype}',false,true)">
+            ${posterHtml}
+            <div class="c-ov"></div>
+            ${extraBadge}
+            <button class="${isFav ? 'c-fav faved' : 'c-fav'}" onclick="event.stopPropagation();toggleFav(${m.id},'${mtype}',this)">${isFav ? '❤️' : '🤍'}</button>
+            <div class="c-info">
+                <div class="c-title">${escapeHtml(m.title)}</div>
+                <div class="c-meta"><span class="c-year">${m.year || ''}</span><span class="c-rat">⭐ ${m.rating ? Number(m.rating).toFixed(1) : '—'}</span></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderContinueWatching() {
+    const sec = document.getElementById('continue-section');
+    const grid = document.getElementById('continue-grid');
+    if (!sec || !grid) return;
+
+    // Беремо останні 6 переглянутих фільмів/серіалів
+    const watchedItems = Object.values(libraryCache)
+        .filter(item => item.watched)
+        .sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0))
+        .slice(0, 6);
+
+    if (!watchedItems.length) {
+        sec.style.display = 'none';
+        return;
+    }
+
+    sec.style.display = 'block';
+    grid.innerHTML = watchedItems.map(m => {
+        const mtype = m.type || 'movie';
+        const posterHtml = m.poster ? `<img class="c-poster" src="${IMG}w300${m.poster}" alt="${escapeHtml(m.title)}">` : `<div class="c-ph">🎬</div>`;
+        
+        let epBadge = '';
+        if (mtype === 'tv' && m.lastSeason) {
+            epBadge = `<div class="c-ep-badge" style="right:8px;">S${m.lastSeason} E${m.lastEpisode||1}</div>`;
+        }
+
+        return `
+        <div class="m-card" onclick="openMovie(${m.id},'${mtype}',false,true)">
+            ${posterHtml}
+            <div class="c-ov"></div>
+            ${epBadge}
+            <div class="watched-badge">Продовжити ➔</div>
+            <div class="c-info">
+                <div class="c-title">${escapeHtml(m.title)}</div>
+                <div class="c-meta"><span class="c-year">${m.year || ''}</span></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function refreshCardFavButtons() {
+    document.querySelectorAll('.c-fav').forEach(btn => {
+        const id = btn.getAttribute('data-fav-id');
+        if (id) {
+            const isF = isFavorite(id);
+            if (isF) btn.classList.add('faved'); else btn.classList.remove('faved');
+            btn.textContent = isF ? '❤️' : '🤍';
+        }
+    });
+}
+
+  // =====================================================================
+// 15. ВСТАНОВЛЕННЯ ДОДАТКА (PWA)
+// =====================================================================
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Показуємо кнопку "Додаток" у шапці, якщо браузер підтримує встановлення
+    const installBtn = document.getElementById('pwa-install-btn');
+    if(installBtn) installBtn.style.display = 'flex';
+});
+
+function pwaInstall() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                document.getElementById('pwa-install-btn').style.display = 'none';
+            }
+            deferredPrompt = null;
+        });
+    }
+}
+
+// =====================================================================
+// 16. ЖИВИЙ ПОШУК ТА ПАГІНАЦІЯ (АВТОЗАПОВНЕННЯ)
+// =====================================================================
+let srchPage = 1;
+let srchQuery = '';
+
+// Переписуємо handleSrch, щоб він показував гарний випадаючий список
+async function handleSrch(e) {
+    clearTimeout(sT);
+    const val = e.target.value.trim();
+    const drop = document.getElementById('ac-drop');
+    
+    if (!val) { 
+        drop.classList.remove('open'); 
+        return; 
+    }
+    
+    sT = setTimeout(async () => {
+        try {
+            const data = await tmdb('/search/multi', { query: val });
+            if (data && data.results) {
+                const items = data.results.filter(m => m.media_type !== 'person' && m.poster_path).slice(0, 5);
+                if (items.length) {
+                    drop.innerHTML = items.map(m => `
+                        <div class="ac-item" onclick="openMovie(${m.id}, '${m.media_type}')">
+                            <img class="ac-thumb" src="${IMG}w92${m.poster_path}" alt="">
+                            <div class="ac-inf">
+                                <div class="ac-ttl">${escapeHtml(m.title || m.name)}</div>
+                                <div class="ac-sub">${(m.release_date || m.first_air_date || '').slice(0, 4)} • ★ ${m.vote_average ? m.vote_average.toFixed(1) : ''}</div>
+                            </div>
+                        </div>
+                    `).join('') + `<div class="ac-all" onclick="doSearch('all')">Показати всі результати</div>`;
+                    drop.classList.add('open');
+                } else {
+                    drop.classList.remove('open');
+                }
+            }
+        } catch(err) {}
+    }, 400); // Чекаємо 400мс після того, як юзер перестав друкувати
+}
+
+// Функція для кнопки "Завантажити ще" на сторінці пошуку
+async function loadMoreSearch() {
+    srchPage++;
+    const grid = document.getElementById('srch-grid');
+    const p = { query: srchQuery, page: srchPage };
+    const data = await tmdb('/search/multi', p);
+    
+    if (data && data.results) {
+        let res = data.results.filter(m => m.media_type !== 'person' && m.poster_path);
+        if (srchFilter === 'movie') res = res.filter(m => m.media_type === 'movie');
+        if (srchFilter === 'tv') res = res.filter(m => m.media_type === 'tv');
+        
+        if (res.length) {
+            grid.innerHTML += res.map(m => card(m)).join('');
+        }
+        
+        const moreBtn = document.getElementById('srch-more');
+        if (moreBtn) moreBtn.style.display = (srchPage < data.total_pages) ? 'block' : 'none';
+    }
+}
+
+// =====================================================================
+// 17. ФІКСАЦІЯ ПЕРЕГЛЯДУ (Щоб працювало "Продовжити перегляд")
+// =====================================================================
+// Цей таймер перевірятиме кожні 15 секунд, чи відкрито модальне вікно фільму, 
+// і якщо так — автоматично зберігатиме його в базу як "Переглянуте"
+setInterval(() => {
+    const modal = document.getElementById('movie-modal');
+    if (modal && modal.classList.contains('open') && currentModalId) {
+        if (typeof savePlayerProgress === 'function') {
+            savePlayerProgress();
+        }
+    }
+}, 15000);
+
+// =====================================================================
+// 18. ВІЗУАЛЬНІ ТРИГЕРИ (Скрол, AdBlock, Попапи)
+// =====================================================================
+
+// 1. Поява кнопки "Вгору" при гортанні сторінки
+window.addEventListener('scroll', () => {
+    const btn = document.getElementById('scroll-top');
+    if (btn) {
+        if (window.scrollY > 500) {
+            btn.classList.add('show');
+        } else {
+            btn.classList.remove('show');
+        }
+    }
+});
+
+// 2. Детектор AdBlock (перевірка через приховану рекламу)
+setTimeout(() => {
+    const testAd = document.createElement('div');
+    testAd.innerHTML = '&nbsp;';
+    testAd.className = 'adsbox ad-wrap pub_300x250 pub_300x250m'; // Типові класи, які блокує AdBlock
+    testAd.style.position = 'absolute';
+    testAd.style.top = '-1000px';
+    document.body.appendChild(testAd);
+    
+    window.setTimeout(() => {
+        if (testAd.offsetHeight === 0) {
+            // Якщо висота 0 — AdBlock увімкнений. 
+            // Якщо хочете жорстко блокувати сайт, розкоментуйте рядок нижче:
+            // document.getElementById('adblock-wall').style.display = 'flex';
+            console.log('AdBlock виявлено!');
+        }
+        testAd.remove();
+    }, 100);
+}, 2000);
+
+// 3. Функція виклику попап-реклами (можна викликати будь-де, наприклад, при кліку на фільм)
+function triggerPopupAd() {
+    const pop = document.getElementById('pop-ov');
+    const bar = document.getElementById('pop-bar');
+    const closeBtn = document.getElementById('pop-close');
+    
+    if (pop && bar && closeBtn) {
+        pop.classList.add('open');
+        closeBtn.classList.add('locked');
+        
+        // Скидаємо смужку
+        bar.style.transition = 'none';
+        bar.style.width = '100%';
+        
+        // Запускаємо анімацію на 5 секунд
+        setTimeout(() => {
+            bar.style.transition = 'width 5s linear';
+            bar.style.width = '0%';
+        }, 50);
+        
+        // Розблоковуємо кнопку хрестика через 5 секунд
+        setTimeout(() => {
+            closeBtn.classList.remove('locked');
+        }, 5000);
+    }
+}
+
 // =====================================================================
 // ЗАПУСК ДОДАТКУ ТА РОУТИНГ
 // =====================================================================
