@@ -3830,7 +3830,8 @@ function escapeHtml(unsafe) {
 }
 
 function slugify(text) {
-    if (!text || typeof text !== 'string') return '';
+    // Примусово робимо текст рядком, щоб уникнути помилки з цифрами
+    text = String(text || ''); 
     const ru = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я є і ї ґ".split(" ");
     const en = "a b v h d e e zh z y y k l m n o p r s t u f kh ts ch sh shch y e yu ya ye i yi g".split(" ");
     let str = text.toLowerCase();
