@@ -1300,29 +1300,36 @@
     input.value = '';
   }
 
-  // ========================
+ // ========================
   // ANTI-ADBLOCK SETTINGS
   // ========================
   function loadAntiAdblockSetting() {
     if (!db) return;
-    db.collection('ads').doc('__config__').get().then(doc => {
+    db.collection('settings').doc('config').get().then(doc => {
       const enabled = doc.exists ? (doc.data().antiAdblock || false) : false;
       const toggle = document.getElementById('ab-toggle');
       const label  = document.getElementById('ab-label');
       if (toggle) toggle.checked = enabled;
       if (label)  label.textContent = enabled ? 'Увімкнено' : 'Вимкнено';
-    }).catch(() => {});
+    }).catch(err => {
+      console.error('Помилка завантаження AdBlock:', err);
+    });
   }
 
   function saveAntiAdblock(val) {
     const label = document.getElementById('ab-label');
     if (label) label.textContent = val ? 'Увімкнено' : 'Вимкнено';
     if (!db) { showToast('Firebase недоступний', true); return; }
-    db.collection('ads').doc('__config__').set({ antiAdblock: val, updatedAt: new Date().toISOString() }, { merge: true })
+    
+    // Змінено колекцію на 'settings' та документ на 'config' (правильніше для налаштувань сайту)
+    // Використовуємо set з merge:true для 100% збереження навіть якщо документа ще немає
+    db.collection('settings').doc('config').set({ antiAdblock: val, updatedAt: new Date().toISOString() }, { merge: true })
       .then(() => showToast(val ? 'Захист від AdBlock увімкнено' : 'Захист від AdBlock вимкнено'))
-      .catch(() => showToast('Помилка збереження', true));
+      .catch(err => {
+        console.error('Помилка збереження AdBlock:', err); // Тепер помилка буде видна в консолі (F12)
+        showToast('Помилка збереження (див. консоль)', true);
+      });
   }
-
   // ========================
   // TOAST
   // ========================
