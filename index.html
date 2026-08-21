@@ -4753,11 +4753,24 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
 // ПЛЕЄР ЛОГІКА
 function _doLoadPlayer() {
     try {
-        const loading = document.getElementById('player-loading');
         const wrap = document.getElementById('player-wrap');
-        let oldIframe = document.getElementById('player-iframe');
-        if (!loading || !wrap) return;
+        if (!wrap) return;
+
+        // 1. Відновлюємо або знаходимо індикатор завантаження
+        let loading = document.getElementById('player-loading');
+        if (!loading) {
+            loading = document.createElement('div');
+            loading.id = 'player-loading';
+            loading.className = 'player-loading';
+            loading.innerHTML = '<div class="spin"></div><div style="color:var(--muted);font-size:13px;margin-top:10px;">Завантаження плеєра...</div>';
+            wrap.appendChild(loading);
+        }
         loading.style.display = 'flex';
+
+        // 2. Очищаємо контейнер від попередніх плеєрів, не чіпаючи індикатор завантаження
+        Array.from(wrap.children).forEach(child => {
+            if (child.id !== 'player-loading') child.remove();
+        });
 
         const players = currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
         if (isNaN(currentPlayer) || currentPlayer >= players.length || currentPlayer < 0) currentPlayer = 0;
@@ -4765,22 +4778,27 @@ function _doLoadPlayer() {
 
         // --- ОБРОБКА SDK ПЛЕЄРА RENDEX ---
         if (p.id === 'rendex') {
-            if (oldIframe) oldIframe.remove();
-            
             let dataType = currentImdbId ? 'imdb' : (currentModalType === 'tv' ? 'series' : 'movie');
             let dataId = currentImdbId || currentModalId;
-            let seasonAttr = (currentModalType === 'tv') ? `data-season="${currentSeason}"` : '';
 
-            wrap.innerHTML = `<ins data-publisher-id="${RENDEX_PUB_ID}" data-type="${dataType}" data-id="${dataId}" ${seasonAttr} data-design="1" data-width="100%" data-height="100%"></ins>`;
-            
-            setTimeout(() => { loading.style.display = 'none'; }, 600);
+            const ins = document.createElement('ins');
+            ins.setAttribute('data-publisher-id', RENDEX_PUB_ID);
+            ins.setAttribute('data-type', dataType);
+            ins.setAttribute('data-id', dataId);
+            if (currentModalType === 'tv') ins.setAttribute('data-season', currentSeason);
+            ins.setAttribute('data-design', '1');
+            ins.setAttribute('data-width', '100%');
+            ins.setAttribute('data-height', '100%');
+
+            wrap.appendChild(ins);
+
+            setTimeout(() => { loading.style.display = 'none'; }, 800);
             return;
         }
 
         // --- ОБРОБКА ЗВИЧАЙНИХ IFRAME ПЛЕЄРІВ ---
         const src = currentModalType === 'tv' ? p.url(currentModalId, currentImdbId, currentSeason, currentEpisode) : p.url(currentModalId, currentImdbId);
 
-        if (oldIframe) oldIframe.remove();
         let iframe = document.createElement('iframe');
         iframe.id = 'player-iframe';
         iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
