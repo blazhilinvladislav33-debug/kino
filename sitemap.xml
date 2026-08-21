@@ -16,6 +16,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://kinobaza.site/movie/1084244</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://kinobaza.site/movie/634649</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -26,27 +31,22 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1315772</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://kinobaza.site/movie/1375646</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1084244</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1284041</loc>
+    <loc>https://kinobaza.site/movie/1315772</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/1339713</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1284041</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -61,11 +61,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1212763</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://kinobaza.site/movie/1108427</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -76,29 +71,9 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1081003</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/315635</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1307118</loc>
+    <loc>https://kinobaza.site/movie/1212763</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1083381</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1273221</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/82023</loc>
@@ -106,17 +81,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/687163</loc>
+    <loc>https://kinobaza.site/movie/1081003</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1481343</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/980431</loc>
+    <loc>https://kinobaza.site/movie/1083381</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -126,14 +96,24 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1698863</loc>
+    <loc>https://kinobaza.site/movie/687163</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/950028</loc>
+    <loc>https://kinobaza.site/movie/1273221</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1307118</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/315635</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/1612018</loc>
@@ -141,7 +121,12 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1523145</loc>
+    <loc>https://kinobaza.site/movie/980431</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1594914</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -151,19 +136,24 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://kinobaza.site/movie/1481343</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1523145</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://kinobaza.site/movie/557</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1594914</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1564614</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
+    <loc>https://kinobaza.site/movie/1698863</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/1311031</loc>
@@ -171,12 +161,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1599191</loc>
+    <loc>https://kinobaza.site/movie/755898</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1280738</loc>
+    <loc>https://kinobaza.site/movie/950028</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -191,27 +181,27 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/83533</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/936075</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1727780</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://kinobaza.site/movie/441168</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1314481</loc>
+    <loc>https://kinobaza.site/movie/1564614</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/83533</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/89657</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1599191</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -221,24 +211,19 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/755898</loc>
+    <loc>https://kinobaza.site/movie/936075</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1630409</loc>
+    <loc>https://kinobaza.site/movie/1285366</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1727780</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1930</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/5721</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/1408162</loc>
@@ -251,27 +236,22 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://kinobaza.site/movie/1314481</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1930</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/5721</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://kinobaza.site/movie/1569947</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1110034</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1127384</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/429617</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1084242</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -281,7 +261,22 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/89657</loc>
+    <loc>https://kinobaza.site/movie/1630409</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1084242</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1127384</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1193950</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -291,29 +286,9 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1668364</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1285366</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1193950</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1510795</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1698856</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://kinobaza.site/movie/1110034</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/1504358</loc>
@@ -321,7 +296,27 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1226863</loc>
+    <loc>https://kinobaza.site/movie/1668364</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/429617</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/299534</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/27205</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1228710</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -336,17 +331,27 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/299534</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://kinobaza.site/movie/155</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/27205</loc>
+    <loc>https://kinobaza.site/movie/1510795</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1226863</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1419406</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/238</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -361,22 +366,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1228710</loc>
+    <loc>https://kinobaza.site/movie/1698856</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1419406</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/102382</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1404304</loc>
+    <loc>https://kinobaza.site/movie/324857</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -386,17 +381,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/238</loc>
+    <loc>https://kinobaza.site/movie/533535</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1391021</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/324857</loc>
+    <loc>https://kinobaza.site/movie/102382</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -406,22 +396,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/533535</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1728704</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/617126</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1368166</loc>
+    <loc>https://kinobaza.site/movie/1327819</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -431,12 +406,27 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1304313</loc>
+    <loc>https://kinobaza.site/movie/617126</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/99861</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/1007757</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1491920</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1728704</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -451,17 +441,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/99861</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1487864</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1089791</loc>
+    <loc>https://kinobaza.site/movie/1404304</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -471,12 +451,47 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://kinobaza.site/movie/1242898</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1625901</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1291595</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://kinobaza.site/movie/1234821</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1308767</loc>
+    <loc>https://kinobaza.site/movie/1599993</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1368166</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1304313</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/603</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1391021</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -491,22 +506,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/361743</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://kinobaza.site/movie/671</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/603</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1656061</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1242898</loc>
+    <loc>https://kinobaza.site/movie/1726</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -516,7 +521,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/986056</loc>
+    <loc>https://kinobaza.site/movie/680</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1418582</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -526,12 +536,27 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1726</loc>
+    <loc>https://kinobaza.site/movie/1413976</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/120</loc>
+    <loc>https://kinobaza.site/movie/361743</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1656061</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1487864</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/550</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -541,7 +566,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1413976</loc>
+    <loc>https://kinobaza.site/movie/393392</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -551,37 +576,22 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1599993</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1625901</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/284053</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/550</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/98</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/680</loc>
+    <loc>https://kinobaza.site/movie/986056</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/693134</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/120</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/98</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -596,17 +606,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/393392</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1305672</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1318447</loc>
+    <loc>https://kinobaza.site/movie/1301421</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -616,117 +616,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1061474</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1125257</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/949838</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/967941</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/496243</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1318621</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1301421</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1598766</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1516698</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1325734</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/121</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/798645</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1616268</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/424</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1265609</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1497463</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/672</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1122573</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/976912</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1382832</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/674</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/13</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/933260</loc>
+    <loc>https://kinobaza.site/movie/284053</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -736,9 +626,119 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1185806</loc>
+    <loc>https://kinobaza.site/movie/1089791</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1125257</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/967941</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1616268</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/496243</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1497463</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1598766</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1325734</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/76341</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1122573</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/13</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/798645</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1265609</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/949838</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/597</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1308767</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/121</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1318447</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/976912</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/350</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1516698</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1061474</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/424</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/12444</loc>
@@ -751,7 +751,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/350</loc>
+    <loc>https://kinobaza.site/movie/862</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -761,17 +761,17 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1291595</loc>
+    <loc>https://kinobaza.site/movie/1318621</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/597</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://kinobaza.site/movie/1382832</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1430698</loc>
+    <loc>https://kinobaza.site/movie/672</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -781,117 +781,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/862</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1358280</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/11</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/447365</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1469342</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/246655</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/68718</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/497</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1010581</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/12445</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/284052</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1297842</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/390062</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/539972</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://kinobaza.site/movie/1168190</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/76341</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/807</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/138843</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/385687</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/673</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1669051</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/335984</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1380291</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -901,7 +791,67 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1305781</loc>
+    <loc>https://kinobaza.site/movie/674</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/76338</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1430698</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1185806</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/438631</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/950387</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/284052</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/68718</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/390062</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1010581</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/673</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1297842</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/12445</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -911,12 +861,112 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1263532</loc>
+    <loc>https://kinobaza.site/movie/933260</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/244786</loc>
+    <loc>https://kinobaza.site/movie/447365</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/138843</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/807</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1233413</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/497</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/10138</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/106646</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/335984</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/240</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1469342</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/11</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/539972</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/385687</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1669051</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/324786</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/252522</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1218925</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/475557</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/19995</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/10195</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/49026</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -931,59 +981,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/76338</loc>
+    <loc>https://kinobaza.site/movie/49018</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/198663</loc>
+    <loc>https://kinobaza.site/movie/13333</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1233413</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1487861</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/240</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1022789</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1368314</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/489</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/675</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1491920</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/671</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/movie/1288445</loc>
@@ -996,12 +1001,12 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1740877</loc>
+    <loc>https://kinobaza.site/movie/372058</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1363387</loc>
+    <loc>https://kinobaza.site/movie/1444466</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -1011,7 +1016,12 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/372058</loc>
+    <loc>https://kinobaza.site/movie/1616131</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1487861</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -1021,17 +1031,7 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1541560</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1433367</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/movie/1235877</loc>
+    <loc>https://kinobaza.site/movie/1740877</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -1041,7 +1041,17 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/movie/1240889</loc>
+    <loc>https://kinobaza.site/movie/1433367</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1545621</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/movie/1632473</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -1051,22 +1061,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/113962</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://kinobaza.site/tv/5920</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/67707</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/94997</loc>
+    <loc>https://kinobaza.site/tv/113962</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1076,17 +1076,17 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://kinobaza.site/tv/94997</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://kinobaza.site/tv/95350</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/94722</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/37528</loc>
+    <loc>https://kinobaza.site/tv/67707</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1101,17 +1101,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/1416</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://kinobaza.site/tv/125988</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/227292</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1121,7 +1111,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/59941</loc>
+    <loc>https://kinobaza.site/tv/1416</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1131,12 +1121,52 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/46271</loc>
+    <loc>https://kinobaza.site/tv/59941</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/204269</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/227292</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/37528</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kinobaza.site/tv/549</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/4614</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/1431</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/1622</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/94722</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/46271</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1151,12 +1181,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/1622</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/1431</loc>
+    <loc>https://kinobaza.site/tv/91759</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1166,7 +1191,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/204269</loc>
+    <loc>https://kinobaza.site/tv/97546</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1186,17 +1211,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/2224</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/1408</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/233643</loc>
+    <loc>https://kinobaza.site/tv/61818</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1206,87 +1221,22 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/34307</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/1396</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/65334</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/206559</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/1668</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/91555</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/97546</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/2661</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/36109</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/61818</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/1433</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://kinobaza.site/tv/63770</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/94664</loc>
+    <loc>https://kinobaza.site/tv/1408</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/31132</loc>
+    <loc>https://kinobaza.site/tv/34307</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/45140</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/57243</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://kinobaza.site/tv/1405</loc>
+    <loc>https://kinobaza.site/tv/2224</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1296,17 +1246,72 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://kinobaza.site/tv/36109</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/1668</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/615</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/65334</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/4601</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/278624</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/233643</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/206559</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/94664</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/95897</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://kinobaza.site/tv/764</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/76479</loc>
+    <loc>https://kinobaza.site/tv/1433</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/19530</loc>
+    <loc>https://kinobaza.site/tv/45140</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/31132</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1316,22 +1321,27 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/4656</loc>
+    <loc>https://kinobaza.site/tv/2661</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/204917</loc>
+    <loc>https://kinobaza.site/tv/30984</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/66732</loc>
+    <loc>https://kinobaza.site/tv/1405</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kinobaza.site/tv/99688</loc>
+    <loc>https://kinobaza.site/tv/76479</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kinobaza.site/tv/57243</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
