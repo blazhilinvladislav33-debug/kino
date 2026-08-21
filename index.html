@@ -4626,7 +4626,10 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
         try { isFav = isFavorite(id); isWL = isWatchLater(id); isWtch = isWatched(id); } catch(e) {}
 
        const backdropHtml = data.backdrop_path ? `<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}">` : `<div class="m-backdrop-ph">🎬</div>`;
-    
+
+              // ОСЬ ЦЕЙ РЯДОК ПОТРІБНО ПОВЕРНУТИ:
+             const players = type === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
+
         let tabsHtml = '';
         players.forEach((p, i) => {
             tabsHtml += `<div class="player-tab${(i === currentPlayer) ? ' act' : ''}" onclick="switchPlayer(${i})">${escapeHtml(p.name)}${p.badge ? `<span class="ptab-badge">${escapeHtml(p.badge)}</span>` : ''}</div>`;
