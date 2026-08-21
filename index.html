@@ -75,6 +75,10 @@
   <!-- Скрипт антиблокування плеєра Collaps -->
   <script src="https://kodir2.github.io/actualize.js" async></script>
 
+  <!-- SDK Плеєра Rendex (Publisher ID: 678891863) -->
+  <script src="https://graphicslab.io/sdk/v2/rendex-sdk.min.js" async></script>
+  <script src="https://alt.graphicslab.io/sdk/v2/rendex-sdk.min.js" async></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- ===== Google Analytics 4 ===== -->
@@ -4233,10 +4237,11 @@ function submitPin() {
 // =====================================================================
 // 9. PLAYERS ТА АВТОПІДБІР ДОМЕНУ
 // =====================================================================
-let vidsrcDomain = 'vidsrc.to'; // Домен за замовчуванням
+const RENDEX_PUB_ID = '678891863';
+
+let vidsrcDomain = 'vidsrc.to';
 const vidsrcMirrors = ['vidsrc.to', 'vidsrc.win', 'vidsrc.me', 'vidsrc.pro', 'vidsrc.net'];
 
-// Функція автоматичного пошуку "живого" дзеркала
 async function findWorkingVidsrc() {
     for (let domain of vidsrcMirrors) {
         try {
@@ -4246,20 +4251,18 @@ async function findWorkingVidsrc() {
         } catch (e) {}
     }
 }
-
-// Запускаємо перевірку у фоні
 findWorkingVidsrc();
 
 const MOVIE_PLAYERS = [
-    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` },
-    { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` },
-    { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` }
+    { id: 'rendex',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: true },
+    { id: 'collaps', name: 'Плеєр 2 (Collaps)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
+    { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` }
 ];
 
 const TV_PLAYERS = [
-    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` },
-    { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` },
-    { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` }
+    { id: 'rendex',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: true },
+    { id: 'collaps', name: 'Плеєр 2 (Collaps)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
+    { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` }
 ];
 // =====================================================================
 // 10. HERO SLIDER
@@ -4710,6 +4713,22 @@ function _doLoadPlayer() {
         const players = currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
         if (isNaN(currentPlayer) || currentPlayer >= players.length || currentPlayer < 0) currentPlayer = 0;
         const p = players[currentPlayer];
+
+        // --- ОБРОБКА SDK ПЛЕЄРА RENDEX ---
+        if (p.id === 'rendex') {
+            if (oldIframe) oldIframe.remove();
+            
+            let dataType = currentImdbId ? 'imdb' : (currentModalType === 'tv' ? 'series' : 'movie');
+            let dataId = currentImdbId || currentModalId;
+            let seasonAttr = (currentModalType === 'tv') ? `data-season="${currentSeason}"` : '';
+
+            wrap.innerHTML = `<ins data-publisher-id="${RENDEX_PUB_ID}" data-type="${dataType}" data-id="${dataId}" ${seasonAttr} data-design="1" data-width="100%" data-height="100%"></ins>`;
+            
+            setTimeout(() => { loading.style.display = 'none'; }, 600);
+            return;
+        }
+
+        // --- ОБРОБКА ЗВИЧАЙНИХ IFRAME ПЛЕЄРІВ ---
         const src = currentModalType === 'tv' ? p.url(currentModalId, currentImdbId, currentSeason, currentEpisode) : p.url(currentModalId, currentImdbId);
 
         if (oldIframe) oldIframe.remove();
