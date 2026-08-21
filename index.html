@@ -4230,16 +4230,71 @@ function submitPin() {
 }
 
 // =====================================================================
-// 9. PLAYERS (ВИПРАВЛЕНИЙ ПОРЯДОК)
+// 9. PLAYERS ТА АВТОПІДБІР ДОМЕНУ
 // =====================================================================
+let vidsrcDomain = 'vidsrc.to'; // Домен за замовчуванням
+const vidsrcMirrors = ['vidsrc.to', 'vidsrc.win', 'vidsrc.me', 'vidsrc.pro', 'vidsrc.net'];
+
+// Функція автоматичного пошуку "живого" дзеркала
+async function findWorkingVidsrc() {
+    for (let domain of vidsrcMirrors) {
+        try {
+            // Робимо тихий запит (без блокування сторінки та конфліктів CORS)
+            await fetch(`https://${domain}/`, { mode: 'no-cors', cache: 'no-store' });
+            vidsrcDomain = domain; // Сервер відповів! Зберігаємо домен
+            break; // Зупиняємо пошук
+        } catch (e) {
+            // Якщо сервер "мертвий" (ERR_NAME_NOT_RESOLVED), цикл просто перейде до наступного
+        }
+    }
+}
+
+// Запускаємо перевірку у фоні одразу при завантаженні сторінки
+findWorkingVidsrc();
+
 const MOVIE_PLAYERS = [
-    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+    // Тепер замість жорсткого vidsrc.to тут стоїть змінна ${vidsrcDomain}
+    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` },
     { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` },
     { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` }
 ];
 
 const TV_PLAYERS = [
-    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` },
+    { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` }
+];// =====================================================================
+// 9. PLAYERS ТА АВТОПІДБІР ДОМЕНУ
+// =====================================================================
+let vidsrcDomain = 'vidsrc.to'; // Домен за замовчуванням
+const vidsrcMirrors = ['vidsrc.to', 'vidsrc.win', 'vidsrc.me', 'vidsrc.pro', 'vidsrc.net'];
+
+// Функція автоматичного пошуку "живого" дзеркала
+async function findWorkingVidsrc() {
+    for (let domain of vidsrcMirrors) {
+        try {
+            // Робимо тихий запит (без блокування сторінки та конфліктів CORS)
+            await fetch(`https://${domain}/`, { mode: 'no-cors', cache: 'no-store' });
+            vidsrcDomain = domain; // Сервер відповів! Зберігаємо домен
+            break; // Зупиняємо пошук
+        } catch (e) {
+            // Якщо сервер "мертвий" (ERR_NAME_NOT_RESOLVED), цикл просто перейде до наступного
+        }
+    }
+}
+
+// Запускаємо перевірку у фоні одразу при завантаженні сторінки
+findWorkingVidsrc();
+
+const MOVIE_PLAYERS = [
+    // Тепер замість жорсткого vidsrc.to тут стоїть змінна ${vidsrcDomain}
+    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` },
+    { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` },
+    { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` }
+];
+
+const TV_PLAYERS = [
+    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` },
     { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` },
     { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` }
 ];
