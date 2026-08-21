@@ -3510,15 +3510,8 @@
   <div id="home-content">
   
     <!-- ПОПУЛЯРНІ ДОБІРКИ -->
-    <div class="sec-hdr" style="margin-top:0;"><div class="sec-title">Популярні добірки</div></div>
-    <div class="seo-links-row">
-      <a href="/collection/86311-marvel" class="seo-link-card" onclick="event.preventDefault();showCollection(86311, 'Кіновсесвіт Marvel (Порядок перегляду)');">⚡ Кіновсесвіт Marvel</a>
-      <a href="/collection/1241-harry-potter" class="seo-link-card" onclick="event.preventDefault();showCollection(1241, 'Гаррі Поттер: Усі частини');">🪄 Гаррі Поттер</a>
-      <a href="/collection/10-star-wars" class="seo-link-card" onclick="event.preventDefault();showCollection(10, 'Зоряні Війни: Колекція');">🚀 Зоряні Війни</a>
-      <a href="/collection/9485-fast-and-furious" class="seo-link-card" onclick="event.preventDefault();showCollection(9485, 'Форсаж: Усі фільми');">🏎 Форсаж</a>
-      <a href="/category/movie/genre-35/year-2024" class="seo-link-card" onclick="event.preventDefault();showCatalog({type:'movie',genre:35,yearFrom:2024,yearTo:2024});">😂 Комедії 2024</a>
-      <a href="/category/movie/genre-28/year-2024" class="seo-link-card" onclick="event.preventDefault();showCatalog({type:'movie',genre:28,yearFrom:2024,yearTo:2024});">💥 Бойовики 2024</a>
-    </div>
+<div class="sec-hdr" style="margin-top:0;"><div class="sec-title">Популярні добірки</div></div>
+<div class="seo-links-row" id="seo-links-container"></div>
 
     <!-- CONTINUE WATCHING -->
     <div id="continue-section">
@@ -4018,7 +4011,20 @@ let dbReady   = false;
 
 // ЗАГЛУШКА ДЛЯ РЕКЛАМИ (ЩОБ КОД НЕ КРАШИВСЯ, ЯКЩО НЕМАЄ ФУНКЦІЇ)
 function renderAds() {
-    // Тут можна додати логіку рекламних банерів
+    if (!adsCache || !adsCache.length) return;
+    const slots = ['header', 'between1', 'between2', 'between3', 'sidebar', 'footer'];
+    slots.forEach(slot => {
+        const el = document.getElementById('slot-' + slot);
+        if (!el) return;
+        const activeAds = adsCache.filter(a => a.active && a.slot === slot);
+        if (!activeAds.length) { el.innerHTML = ''; return; }
+        const ad = activeAds[Math.floor(Math.random() * activeAds.length)];
+        if (ad.html) {
+            el.innerHTML = `<div class="ad-wrap inline"><span class="ad-lbl">Реклама</span>${ad.html}</div>`;
+        } else if (ad.imageUrl) {
+            el.innerHTML = `<div class="ad-wrap inline"><span class="ad-lbl">Реклама</span><a href="${ad.linkUrl || '#'}" target="_blank" class="ad-h"><img src="${ad.imageUrl}" alt="${escapeHtml(ad.altText || '')}"></a></div>`;
+        }
+    });
 }
 
 function initFirestore() {
@@ -4342,10 +4348,9 @@ async function loadGrid(id, ep, params = {}, badge = null, limit = 12) {
     }
 }
 
-// =====================================================================
-// 12. ІНІЦІАЛІЗАЦІЯ ГОЛОВНОЇ СТОРІНКИ
-// =====================================================================
 async function initSite() {
+    renderDynamicCollections(); // <--- Автоматичний виклик генерації добірок
+
     let p = {};
     try { if(isKidsMode) p = {with_genres:'16,10751'}; } catch(e) {}
     try {
@@ -4367,7 +4372,55 @@ async function initSite() {
         loadGrid('noughts-grid', '/discover/movie', {...p, sort_by: 'vote_count.desc', 'primary_release_date.gte': '2000-01-01', 'primary_release_date.lte': '2009-12-31'}, {txt: '2000-ні', cls: 'b'}, 12);
     } catch(e) { console.error("Init site error:", e); }
 }
+// =====================================================================
+// АВТОМАТИЧНА ГЕНЕРАЦІЯ ДОБІРОК
+// =====================================================================
+function renderDynamicCollections() {
+    const container = document.getElementById('seo-links-container');
+    if (!container) return;
 
+    // Автоматично беремо поточний рік системного годинника
+    const currentYear = new Date().getFullYear(); 
+
+    const collections = [
+        {
+            title: `🔥 Новинки ${currentYear}`,
+            action: `showCatalog({type:'movie', yearFrom:${currentYear}, yearTo:${currentYear}, sort:'release_date.desc'})`
+        },
+        {
+            title: `😂 Комедії ${currentYear}`,
+            action: `showCatalog({type:'movie', genre:35, yearFrom:${currentYear}, yearTo:${currentYear}})`
+        },
+        {
+            title: `💥 Бойовики ${currentYear}`,
+            action: `showCatalog({type:'movie', genre:28, yearFrom:${currentYear}, yearTo:${currentYear}})`
+        },
+        {
+            title: `🚀 Фантастика ${currentYear}`,
+            action: `showCatalog({type:'movie', genre:878, yearFrom:${currentYear}, yearTo:${currentYear}})`
+        },
+        {
+            title: `🎨 Мультфільми ${currentYear}`,
+            action: `showCatalog({type:'movie', genre:16, yearFrom:${currentYear}, yearTo:${currentYear}})`
+        },
+        {
+            title: `⚡ Кіновсесвіт Marvel`,
+            action: `showCollection(86311, 'Кіновсесвіт Marvel')`
+        },
+        {
+            title: `🪄 Гаррі Поттер`,
+            action: `showCollection(1241, 'Гаррі Поттер: Усі частини')`
+        },
+        {
+            title: `🏎 Форсаж`,
+            action: `showCollection(9485, 'Форсаж: Усі фільми')`
+        }
+    ];
+
+    container.innerHTML = collections.map(col => `
+        <a href="#" class="seo-link-card" onclick="event.preventDefault(); ${col.action};">${col.title}</a>
+    `).join('');
+}
 // =====================================================================
 // 13. ПОШУК, КОЛЕКЦІЇ ТА СТОРІНКИ (Додано)
 // =====================================================================
@@ -4573,14 +4626,7 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
         try { isFav = isFavorite(id); isWL = isWatchLater(id); isWtch = isWatched(id); } catch(e) {}
 
        const backdropHtml = data.backdrop_path ? `<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}">` : `<div class="m-backdrop-ph">🎬</div>`;
-        
-        // ВМИКАЄМО ХАМЕЛЕОН ТУТ:
-        if (data.backdrop_path) {
-            applyChameleonColor(`${IMG}w300${data.backdrop_path}`);
-        } else {
-            resetChameleon();
-        }
-        const players = type === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
+    
         let tabsHtml = '';
         players.forEach((p, i) => {
             tabsHtml += `<div class="player-tab${(i === currentPlayer) ? ' act' : ''}" onclick="switchPlayer(${i})">${escapeHtml(p.name)}${p.badge ? `<span class="ptab-badge">${escapeHtml(p.badge)}</span>` : ''}</div>`;
@@ -5452,25 +5498,27 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// 2. Детектор AdBlock (перевірка через приховану рекламу)
+// 2. Детектор AdBlock з перевіркою налаштувань адмінки
 setTimeout(() => {
-    const testAd = document.createElement('div');
-    testAd.innerHTML = '&nbsp;';
-    testAd.className = 'adsbox ad-wrap pub_300x250 pub_300x250m'; // Типові класи, які блокує AdBlock
-    testAd.style.position = 'absolute';
-    testAd.style.top = '-1000px';
-    document.body.appendChild(testAd);
-    
-    window.setTimeout(() => {
-        if (testAd.offsetHeight === 0) {
-            // Якщо висота 0 — AdBlock увімкнений. 
-            // Якщо хочете жорстко блокувати сайт, розкоментуйте рядок нижче:
-            // document.getElementById('adblock-wall').style.display = 'flex';
-            console.log('AdBlock виявлено!');
+    if (!db) return;
+    db.collection('settings').doc('config').get().then(doc => {
+        if (doc.exists && doc.data().antiAdblock) {
+            const testAd = document.createElement('div');
+            testAd.innerHTML = '&nbsp;';
+            testAd.className = 'adsbox ad-wrap pub_300x250 pub_300x250m';
+            testAd.style.position = 'absolute';
+            testAd.style.top = '-1000px';
+            document.body.appendChild(testAd);
+
+            setTimeout(() => {
+                if (testAd.offsetHeight === 0) {
+                    document.getElementById('adblock-wall').style.display = 'flex';
+                }
+                testAd.remove();
+            }, 100);
         }
-        testAd.remove();
-    }, 100);
-}, 2000);
+    }).catch(() => {});
+}, 1500);
 
 // 3. Функція виклику попап-реклами (можна викликати будь-де, наприклад, при кліку на фільм)
 function triggerPopupAd() {
