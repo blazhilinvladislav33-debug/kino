@@ -3971,24 +3971,18 @@ function setSiteLang(lang, e) {
     }
   }
 }
-
-
-  // =====================================================================
+// =====================================================================
 // ВИБІР ЖАНРУ З ПАНЕЛІ АБО ФУТЕРА
 // =====================================================================
 function selGenre(id, el) {
     try {
-        // Оновлюємо активну кнопку (підсвічуємо обраний жанр)
         document.querySelectorAll('.g-tag').forEach(t => t.classList.remove('act'));
         if (el && el.classList) {
             el.classList.add('act');
         }
-
-        // Якщо id === 0 (кнопка "Усі"), показуємо головну
         if (id === 0) {
             showHome();
         } else {
-            // Інакше відкриваємо каталог фільмів з обраним жанром
             showCatalog({ type: 'movie', genre: id });
         }
     } catch(e) {}
@@ -4236,22 +4230,19 @@ function submitPin() {
 }
 
 // =====================================================================
-// 9. ПЛЕЄРИ З БЛОКУВАННЯМ РЕКЛАМИ
+// 9. PLAYERS (ВИПРАВЛЕНИЙ ПОРЯДОК)
 // =====================================================================
 const MOVIE_PLAYERS = [
-    // Тепер Vidsrc стоїть першим і завантажуватиметься автоматично
-    { id: 'vidsrc',  name: 'Плеєр 1', badge: 'HD', safe: false, url: (id, imdb) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
+    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb) => `https://vidsrc.to/embed/movie/${id}?autoplay=1` },
     { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb) => `https://player.autoembed.cc/embed/movie/${id}?autoplay=true` },
-    // Старий плеєр Collaps, який зараз "лежить", ставимо як запасний
     { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` }
 ];
 
 const TV_PLAYERS = [
-    { id: 'vidsrc',  name: 'Плеєр 1', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { id: 'vidsrc',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
     { id: 'autoembed', name: 'Плеєр 2', badge: '', safe: false, url: (id, imdb, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}?autoplay=true` },
     { id: 'collaps', name: 'Плеєр 3 (Резерв)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` }
 ];
-
 // =====================================================================
 // 10. HERO SLIDER
 // =====================================================================
