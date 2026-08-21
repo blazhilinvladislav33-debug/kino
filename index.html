@@ -4012,6 +4012,8 @@ let dbReady   = false;
 // ЗАГЛУШКА ДЛЯ РЕКЛАМИ (ЩОБ КОД НЕ КРАШИВСЯ, ЯКЩО НЕМАЄ ФУНКЦІЇ)
 function renderAds() {
     if (!adsCache || !adsCache.length) return;
+    
+    // 1. Звичайна баннерна реклама на сторінці
     const slots = ['header', 'between1', 'between2', 'between3', 'sidebar', 'footer'];
     slots.forEach(slot => {
         const el = document.getElementById('slot-' + slot);
@@ -4025,6 +4027,27 @@ function renderAds() {
             el.innerHTML = `<div class="ad-wrap inline"><span class="ad-lbl">Реклама</span><a href="${ad.linkUrl || '#'}" target="_blank" class="ad-h"><img src="${ad.imageUrl}" alt="${escapeHtml(ad.altText || '')}"></a></div>`;
         }
     });
+
+    // 2. Pop-up реклама
+    const popupAds = adsCache.filter(a => a.active && (a.slot === 'popup' || a.type === 'popup'));
+    if (popupAds.length) {
+        const popBox = document.getElementById('pop-box');
+        const popAd = popupAds[Math.floor(Math.random() * popupAds.length)];
+        if (popBox) {
+            const closeBtn = `<button class="pop-close locked" id="pop-close" onclick="closePopup()">✕</button>`;
+            const bar = `<div class="pop-bar" id="pop-bar" style="width:100%"></div>`;
+            const label = `<div class="pop-adlbl">Реклама</div>`;
+            
+            if (popAd.html) {
+                popBox.innerHTML = `${label}${closeBtn}${popAd.html}${bar}`;
+            } else if (popAd.imageUrl) {
+                popBox.innerHTML = `${label}${closeBtn}<a href="${popAd.linkUrl || '#'}" target="_blank"><img src="${popAd.imageUrl}" alt="${escapeHtml(popAd.altText || '')}"></a>${bar}`;
+            }
+            
+            // Запускаємо показ через 5 секунд після завантаження
+            setTimeout(triggerPopupAd, 5000);
+        }
+    }
 }
 
 function initFirestore() {
@@ -4922,9 +4945,35 @@ function showCatalog(preset = {}, skipHistory = false) {
         document.getElementById('srch-sec').style.display = 'none'; 
         document.getElementById('lib-section').style.display = 'none'; 
         document.getElementById('cat-section').style.display = 'block';
-        if (preset.type) catType = preset.type; 
-        if(!skipHistory) history.pushState(preset, 'Category', `/category/${catType}`);
+
+        // 1. Оновлюємо тип контенту (фільми або серіали)
+        if (preset.type) catType = preset.type;
+        
+        // 2. Оновлюємо підсвітку перемикача типу в каталозі
+        document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('act'));
+        const pill = document.getElementById(`cpt-${catType}`);
+        if (pill) pill.classList.add('act');
+
+        // 3. Передаємо отримані параметри прямо у поля фільтрів
+        document.getElementById('cat-genre').value = preset.genre || '';
+        document.getElementById('cat-yr-from').value = preset.yearFrom || '';
+        document.getElementById('cat-yr-to').value = preset.yearTo || '';
+        document.getElementById('cat-sort').value = preset.sort || 'popularity.desc';
+
+        // 4. Скидаємо ID колекції
+        currentCollectionId = null;
+
+        // 5. Оновлюємо заголовок сторінки
+        const titleEl = document.getElementById('cat-title');
+        if (titleEl && !currentActorId) {
+            titleEl.textContent = (catType === 'tv') ? 'Каталог серіалів' : 'Каталог фільмів';
+        }
+
+        if (!skipHistory) history.pushState(preset, 'Category', `/category/${catType}`);
         window.scrollTo(0,0);
+
+        // 6. ЗАПУСКАЄМО ЗБІР ТА ЗАВАНТАЖЕННЯ ВІДФІЛЬТРОВАНИХ ФІЛЬМІВ
+        applyCatFilters();
     } catch(e) {}
 }
 
@@ -4965,11 +5014,18 @@ async function _loadCatPage(reset) {
     if(currentCollectionId) return; 
     try {
         const genre = document.getElementById('cat-genre').value; 
+        const country = document.getElementById('cat-country').value;
+        const lang = document.getElementById('cat-lang').value;
+        const rating = document.getElementById('cat-rating').value;
         const yearFrom = document.getElementById('cat-yr-from').value; 
         const yearTo = document.getElementById('cat-yr-to').value; 
         const sort = document.getElementById('cat-sort').value || 'popularity.desc';
+        
         const p = { sort_by: sort, 'vote_count.gte': 50, page: catPage }; 
         if (genre) p.with_genres = genre; 
+        if (country) p.with_origin_country = country;
+        if (lang) p.with_original_language = lang;
+        if (rating) p['vote_average.gte'] = rating;
         if (currentActorId) p.with_cast = currentActorId; 
         
         try { if(typeof isKidsMode !== 'undefined' && isKidsMode) p.without_genres = '27,53,80'; } catch(e){}
@@ -5000,6 +5056,21 @@ async function _loadCatPage(reset) {
         if (countEl) countEl.textContent = `${(data.total_results||0).toLocaleString('uk-UA')} результатів`; 
         const moreBtn = document.getElementById('cat-more');
         if (moreBtn) moreBtn.style.display = (catPage < catTotalPages) ? 'block' : 'none';
+    } catch(e) {}
+}
+
+function resetCatFilters() { 
+    try {
+        document.getElementById('cat-genre').value = ''; 
+        document.getElementById('cat-country').value = ''; 
+        document.getElementById('cat-lang').value = ''; 
+        document.getElementById('cat-rating').value = ''; 
+        document.getElementById('cat-yr-from').value = ''; 
+        document.getElementById('cat-yr-to').value = ''; 
+        document.getElementById('cat-sort').value = 'popularity.desc'; 
+        currentActorId = null; 
+        currentCollectionId = null; 
+        showCatalog({type: catType}); 
     } catch(e) {}
 }
 
