@@ -1,10 +1,8 @@
 const fs = require('fs');
 
-// Ваші ключі
 const TMDB_KEY = '04c35731a5ee918f014970082a0088b1';
 const GEMINI_KEY = 'AQ.Ab8RN6JrcVtbN8MO1_bObnW5xrV9cvOVqNFRWsYvLcOr5RR_Sg';
 
-// Функція для створення посилань
 function slugify(text) {
     const ru = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я є і ї ґ".split(" ");
     const en = "a b v h d e e zh z y y k l m n o p r s t u f kh ts ch sh shch y e yu ya ye i yi g".split(" ");
@@ -16,20 +14,33 @@ function slugify(text) {
 async function runAutopilot() {
     console.log("🤖 Автопілот запущено! Збираємо фільми...");
     
+    let collections = [];
+    if (fs.existsSync('collections.json')) {
+        try {
+            collections = JSON.parse(fs.readFileSync('collections.json', 'utf8'));
+        } catch (e) {
+            collections = [];
+        }
+    }
+
     try {
-        // 1. Беремо найпопулярніші фільми цього тижня
         const tmdbRes = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_KEY}&language=uk-UA`);
         const tmdbData = await tmdbRes.json();
         
-        // Вибираємо 5 випадкових
+        if (!tmdbData.results || tmdbData.results.length === 0) {
+            throw new Error("Не вдалося отримати фільми з TMDB");
+        }
+
         const shuffled = tmdbData.results.sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 5);
         const movieNames = selected.map(m => m.title).join(", ");
         
-        // 2. Просимо ШІ написати статтю
-        console.log(`🧠 Звертаємось до ШІ... (Фільми: ${movieNames})`);
-        const prompt = `Ось 5 популярних фільмів: ${movieNames}. Придумай для них клікбейтний заголовок добірки (наприклад "5 фільмів на вечір, які знесуть дах") і напиши 2 абзаци інтригуючого тексту (вступ до добірки) українською мовою. 
-        Поверни результат СУВОРО у форматі JSON (без маркдауну, просто голий JSON): {"title": "твій заголовок", "description": "твій текст"}`;
+        console.log(`🧠 Звертаємось до ШІ Gemini... (Фільми: ${movieNames})`);
+        
+        const prompt = `Ти кінокритик. Напиши коротку статтю-добірку про 5 фільмів: ${movieNames}.
+Придумай яскравий заголовок і 2 абзаци вступу українською мовою.
+Поверни ВИНЯТКОВО готовий JSON об'єкт без виділення коду чи слів:
+{"title": "Твій заголовок", "description": "Твій текст вступу"}`;
 
         const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
             method: 'POST',
@@ -39,11 +50,16 @@ async function runAutopilot() {
         
         const geminiData = await geminiRes.json();
         
+        if (!geminiRes.ok) {
+            console.error("Деталі відповіді Gemini:", JSON.stringify(geminiData));
+            throw new Error(`Помилка Gemini API: ${geminiRes.status}`);
+        }
+
         let aiText = geminiData.candidates[0].content.parts[0].text;
-        aiText = aiText.replace(/```json/g, '').replace(/```/g, '').trim(); // Чистимо код
+        aiText = aiText.replace(/```json/gi, '').replace(/```/g, '').trim();
+        
         const article = JSON.parse(aiText);
         
-        // 3. Формуємо красиву добірку
         const newCollection = {
             id: Date.now(),
             date: new Date().toISOString().split('T')[0],
@@ -57,19 +73,17 @@ async function runAutopilot() {
             }))
         };
         
-        // 4. Зберігаємо у файл
-        let collections = [];
-        if (fs.existsSync('collections.json')) {
-            collections = JSON.parse(fs.readFileSync('collections.json'));
-        }
-        collections.unshift(newCollection); // Додаємо на початок
-        if (collections.length > 20) collections.pop(); // Залишаємо тільки 20 останніх
+        collections.unshift(newCollection);
+        if (collections.length > 20) collections.pop();
         
-        fs.writeFileSync('collections.json', JSON.stringify(collections, null, 2));
-        console.log("✅ СУПЕР! ШІ написав статтю і зберіг у collections.json!");
-        
+        console.log("✅ ШІ успішно написав статтю!");
+
     } catch (e) {
-        console.error("❌ Помилка Автопілота (перевірте ключ ШІ):", e.message);
+        console.error("❌ Помилка під час виконання:", e.message);
+    } finally {
+        // Завжди зберігаємо файл, щоб GitHub Actions не "ламувався"
+        fs.writeFileSync('collections.json', JSON.stringify(collections, null, 2));
+        console.log("💾 Файл collections.json оновлено.");
     }
 }
 
