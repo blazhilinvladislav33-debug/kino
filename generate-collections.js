@@ -13,57 +13,56 @@ function slugify(text) {
 
 async function runAutopilot() {
     console.log("🤖 Отримуємо популярні фільми з TMDB...");
-    
     const tmdbRes = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_KEY}&language=uk-UA`);
-    if (!tmdbRes.ok) throw new Error(`Помилка TMDB API: status ${tmdbRes.status}`);
-    
     const tmdbData = await tmdbRes.json();
+    
     if (!tmdbData.results || tmdbData.results.length === 0) {
-        throw new Error("Не вдалося отримати список фільмів з TMDB");
+        throw new Error("Не вдалося завантажити дані з TMDB");
     }
 
-    const shuffled = tmdbData.results.sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 5);
+    const selected = tmdbData.results.sort(() => 0.5 - Math.random()).slice(0, 5);
     const movieNames = selected.map(m => m.title).join(", ");
+    
+    // Резервні дані на випадок збою ШІ
+    let title = `🔥 Топ-5 фільмів тижня, які варто подивитися`;
+    let description = `Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.`;
 
-    console.log(`🧠 Звертаємось до Gemini API... (Фільми: ${movieNames})`);
+    try {
+        console.log(`🧠 Звертаємось до Gemini API...`);
+        const prompt = `Ти кінокритик. Напиши статтю про 5 фільмів: ${movieNames}.
+Поверни JSON об'єкт: {"title": "Яскравий заголовок", "description": "Вступний текст на 2 абзаци"}`;
 
-    const prompt = `Ти кінокритик. Напиши яскраву статтю-добірку про ці 5 фільмів: ${movieNames}.
-Придумай клікбейтний заголовок та 2 інтригуючі абзаци вступу українською мовою.
-Поверни JSON об'єкт такого формату: {"title": "Заголовок", "description": "Текст вступу"}`;
+        const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
 
-    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { responseMimeType: "application/json" }
-        })
-    });
-
-    const geminiData = await geminiRes.json();
-    if (!geminiRes.ok) {
-        console.error("Деталі помилки Gemini:", JSON.stringify(geminiData));
-        throw new Error(`Помилка Gemini API: ${geminiRes.status}`);
+        if (geminiRes.ok) {
+            const geminiData = await geminiRes.json();
+            let text = geminiData.candidates[0].content.parts[0].text;
+            text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const parsed = JSON.parse(text);
+            if (parsed.title) title = parsed.title;
+            if (parsed.description) description = parsed.description;
+            console.log("✅ Текст успішно згенеровано ШІ!");
+        } else {
+            console.warn(`⚠️ ШІ повернув статус ${geminiRes.status}. Використано резервний шаблон.`);
+        }
+    } catch (e) {
+        console.warn("⚠️ Використовуємо резервний генератор:", e.message);
     }
-
-    const rawJson = geminiData.candidates[0].content.parts[0].text;
-    const article = JSON.parse(rawJson);
 
     let collections = [];
     if (fs.existsSync('collections.json')) {
-        try {
-            collections = JSON.parse(fs.readFileSync('collections.json', 'utf8'));
-        } catch (e) {
-            collections = [];
-        }
+        try { collections = JSON.parse(fs.readFileSync('collections.json', 'utf8')); } catch (e) { collections = []; }
     }
 
     const newCollection = {
         id: Date.now(),
         date: new Date().toISOString().split('T')[0],
-        title: article.title,
-        description: article.description,
+        title: title,
+        description: description,
         movies: selected.map(m => ({
             id: m.id,
             title: m.title,
@@ -76,10 +75,7 @@ async function runAutopilot() {
     if (collections.length > 20) collections.pop();
 
     fs.writeFileSync('collections.json', JSON.stringify(collections, null, 2));
-    console.log("✅ УСПІХ! Нову статтю збережено у collections.json");
+    console.log("💾 УСПІХ! Файл collections.json оновлено.");
 }
 
-runAutopilot().catch(err => {
-    console.error("❌ Критична помилка:", err.message);
-    process.exit(1);
-});
+runAutopilot();
