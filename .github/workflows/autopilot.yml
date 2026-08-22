@@ -1,0 +1,31 @@
+name: ШІ-Автопілот Добірок
+
+on:
+  schedule:
+    - cron: '0 8 */2 * *' # Запускати кожні 2 дні о 8-й ранку
+  workflow_dispatch: # Кнопка для ручного запуску
+
+jobs:
+  run-ai:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Встановлення Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          
+      - name: Запуск ШІ журналіста
+        run: node generate-collections.js
+        
+      - name: Збереження нової статті на сайт
+        run: |
+          git config --global user.name 'AI-Journalist'
+          git config --global user.email 'ai@kinobaza.site'
+          git add collections.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Нова стаття від ШІ"
+          git push
