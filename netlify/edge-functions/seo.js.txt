@@ -1,0 +1,54 @@
+export default async (request, context) => {
+  const url = new URL(request.url);
+  const path = url.pathname; // наприклад: /movie/550
+
+  // Шукаємо, чи це посилання на фільм або серіал
+  const match = path.match(/\/(movie|tv)\/(\d+)/);
+  
+  // Якщо це просто головна сторінка — пропускаємо далі як є
+  if (!match) {
+    return context.next();
+  }
+
+  const type = match[1]; // 'movie' або 'tv'
+  const id = match[2];   // номер (наприклад, 550)
+  const TMDB_KEY = '04c35731a5ee918f014970082a0088b1';
+
+  try {
+    // 1. Беремо оригінальний index.html вашого сайту
+    const response = await context.next();
+    let html = await response.text();
+
+    // 2. Йдемо в TMDB за даними фільму
+    const apiRes = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${TMDB_KEY}&language=uk-UA`);
+    const data = await apiRes.json();
+
+    if (data && data.success !== false) {
+      const title = data.title || data.name || 'КіноБаза';
+      const desc = data.overview ? data.overview.substring(0, 160) + '...' : 'Дивитись фільм онлайн безкоштовно в HD якості.';
+      const image = data.poster_path ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${data.poster_path}` : 'https://kinobaza.site/icons/icon-512x512.png';
+      const releaseYear = (data.release_date || data.first_air_date || '').substring(0, 4);
+      
+      const fullTitle = `${title} (${releaseYear}) — Дивитись онлайн | КіноБаза`;
+
+      // 3. Замінюємо стандартні теги на правильні для SEO та Телеграму
+      html = html.replace(/<title>.*<\/title>/, `<title>${fullTitle}</title>`);
+      html = html.replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${desc}">`);
+      html = html.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${fullTitle}">`);
+      html = html.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${desc}">`);
+      html = html.replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${image}">`);
+      html = html.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${fullTitle}">`);
+      html = html.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${desc}">`);
+      html = html.replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${image}">`);
+    }
+
+    // Віддаємо готовий оновлений HTML
+    return new Response(html, {
+      headers: { "content-type": "text/html;charset=UTF-8" },
+    });
+
+  } catch (error) {
+    // Якщо сталася якась помилка, просто віддаємо звичайний сайт
+    return context.next();
+  }
+};
