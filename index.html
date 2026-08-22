@@ -5715,16 +5715,12 @@ window.addEventListener('DOMContentLoaded', () => {
     } catch(e) {}
 });
 
-wwindow.addEventListener('popstate', (e) => {
+window.addEventListener('popstate', (e) => {
     try {
         if (e.state && e.state.id) openMovie(e.state.id, e.state.type || 'movie', false, false); 
         else { closeMovieModal(false); showHome(); }
     } catch(err) { showHome(); }
 });
 </script>
-
-<!-- Monetag Popunder -->
-<script>(function(s){s.dataset.zone='11630757',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-
 </body>
 </html>
