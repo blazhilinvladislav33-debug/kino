@@ -1,0 +1,7 @@
+[[edge_functions]]
+  function = "seo"
+  path = "/movie/*"
+
+[[edge_functions]]
+  function = "seo"
+  path = "/tv/*"
