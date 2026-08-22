@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "id": 1787409660277,
+    "date": "2026-08-22",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 687163,
+        "title": "Проєкт «Аве Марія»",
+        "poster": "https://image.tmdb.org/t/p/w500/Diwwr8A7xdZq1gVytOFMvh4aTa.jpg",
+        "slug": "proyikt-ave-margi"
+      },
+      {
+        "id": 1081003,
+        "title": "Суперґьорл",
+        "poster": "https://image.tmdb.org/t/p/w500/sAaAVBiQr4HpRPhtvkapvDYmUc3.jpg",
+        "slug": "super-yuorl"
+      },
+      {
+        "id": 1368337,
+        "title": "Одіссея",
+        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
+        "slug": "odgssei"
+      },
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
+        "slug": "zakolot"
+      },
+      {
+        "id": 1275779,
+        "title": "День істини",
+        "poster": "https://image.tmdb.org/t/p/w500/b7OyH5StSuM8jNVU30Yi90GazGA.jpg",
+        "slug": "denyu-gstyny"
+      }
+    ]
+  }
+]
