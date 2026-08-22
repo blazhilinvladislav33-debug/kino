@@ -354,7 +354,8 @@
         </div>
         <div class="sidebar-link" onclick="showPage('users');loadUsersData();" id="nav-users">
           <span class="icon">👥</span> Користувачі
-          <span class="sidebar-count" id="count-users">0</span>
+          <span class="sidebar-count" id="count-users">0</span><div class="sidebar-link" onclick="showPage('streams')" id="nav-streams">
+          <span class="icon">🎬</span> Плеєри та YouTube
         </div>
       </div>
       <div class="sidebar-section">
@@ -369,7 +370,56 @@
 
     <!-- Main -->
     <div class="admin-main">
+<!-- === PAGE: CUSTOM STREAMS === -->
+<div class="section-page" id="page-streams">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Кастомні плеєри та YouTube</div>
+      <div class="page-sub">Прив'язка YouTube відео або власних серверів за TMDB ID фільму</div>
+    </div>
+  </div>
 
+  <div style="max-width:600px;">
+    <div class="slots-guide">
+      <h3 style="margin-bottom:16px;">➕ Додати плеєр до фільму</h3>
+      
+      <div class="form-group">
+        <label>TMDB ID фільму / серіалу *</label>
+        <input type="text" id="cs-tmdb-id" placeholder="Наприклад: 550 або 1399">
+        <div class="form-hint">ID з посилання сайту (наприклад: /movie/550-fight-club -> ID: 550)</div>
+      </div>
+
+      <div class="form-group">
+        <label>YouTube Video ID (необов'язково)</label>
+        <input type="text" id="cs-yt-id" placeholder="Наприклад: dQw4w9WgXcQ">
+        <div class="form-hint">Тільки ID відео після v= у посиланні YouTube</div>
+      </div>
+
+      <div class="form-group">
+        <label>Кастомний URL плеєра (iFrame / Embed)</label>
+        <input type="url" id="cs-custom-url" placeholder="https://my-host.com/embed/123">
+      </div>
+
+      <div class="form-group">
+        <label>Назва вкладки у плеєрі</label>
+        <input type="text" id="cs-custom-name" placeholder="Наприклад: Сервер 4 (Українська озвучка)">
+      </div>
+
+      <button class="btn-primary" onclick="saveCustomStream()">💾 Зберегти посилання</button>
+    </div>
+
+    <!-- Заділ під майбутній YouTube API Key -->
+    <div class="slots-guide" style="margin-top:20px;">
+      <h3 style="margin-bottom:12px;">🔑 YouTube Data API v3 (На майбутнє)</h3>
+      <div class="form-group">
+        <label>YouTube API Key</label>
+        <input type="text" id="cs-yt-key" placeholder="AIzaSy...">
+        <div class="form-hint">Ключ з Google Cloud Console для майбутнього автоматичного пошуку</div>
+      </div>
+      <button class="btn-add" onclick="saveYtApiKey()" style="font-size:13px;padding:8px 16px;">Зберегти API Key</button>
+    </div>
+  </div>
+</div>
       <!-- === PAGE: ADS === -->
       <div class="section-page active" id="page-ads">
         <div class="page-header">
