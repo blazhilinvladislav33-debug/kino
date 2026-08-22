@@ -4546,13 +4546,16 @@ function closeTrailer() {
 }
 
 // =====================================================================
-// 14. MOVIE MODAL (ОСНОВНИЙ ФУНКЦІОНАЛ)
+// 14. MOVIE MODAL (ОСНОВНИЙ ФУНКЦІОНАЛ + КАСТОМНІ ПЛЕЄРИ)
 // =====================================================================
 let currentModalId = null, currentImdbId = '', currentModalType = 'movie', currentSeason = 1, currentEpisode = 1, currentPlayer = 0;
+let currentCustomPlayers = []; // Кеш для кастомних плеєрів з бази
 
-  async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = true) {
+async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = true) {
     if (!id) return;
     currentModalId = id; currentModalType = type; currentSeason = 1; currentEpisode = 1; currentImdbId = '';
+    currentCustomPlayers = []; // Очищаємо кастомні плеєри при кожному відкритті
+
     try { gaEvent('view_item', { item_id: id, item_category: type }); } catch(e) {}
 
     try {
@@ -4588,16 +4591,41 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
             return;
         }
 
-        let title = 'Без назви', year = '—', desc = 'Опис відсутній.', rat = '—', genresHtml = '';
-        try {
-            title = data.title || data.name || 'Без назви';
-            if (data.release_date) year = data.release_date.slice(0, 4);
-            else if (data.first_air_date) year = data.first_air_date.slice(0, 4);
-            desc = data.overview || 'Опис відсутній.';
-            if (data.vote_average) rat = Number(data.vote_average).toFixed(1);
-            if (data.genres) genresHtml = data.genres.map(g => `<span class="m-gtag">${escapeHtml(g.name)}</span>`).join('');
-        } catch (e) {}
-        
+        // --- ПЕРЕВІРКА КАСТОМНИХ ПЛЕЄРІВ У FIREBASE ---
+        if (typeof db !== 'undefined' && db) {
+            try {
+                const streamDoc = await db.collection('custom_streams').doc(String(id)).get();
+                if (streamDoc.exists) {
+                    const sData = streamDoc.data();
+                    if (sData.youtubeId) {
+                        currentCustomPlayers.push({
+                            id: 'youtube',
+                            name: sData.youtubeTitle || 'YouTube',
+                            badge: 'FREE',
+                            youtubeId: sData.youtubeId
+                        });
+                    }
+                    if (sData.customPlayers && Array.isArray(sData.customPlayers)) {
+                        sData.customPlayers.forEach((cp, idx) => {
+                            currentCustomPlayers.push({
+                                id: `custom_${idx}`,
+                                name: cp.name || `Сервер ${idx + 4}`,
+                                badge: cp.badge || 'HD',
+                                url: cp.url
+                            });
+                        });
+                    }
+                }
+            } catch (err) { console.warn('Custom streams fetch error:', err); }
+        }
+        // -----------------------------------------------
+
+        let title = data.title || data.name || 'Без назви';
+        let year = (data.release_date || data.first_air_date || '').slice(0, 4);
+        let desc = data.overview || 'Опис відсутній.';
+        let rat = data.vote_average ? Number(data.vote_average).toFixed(1) : '—';
+        let genresHtml = data.genres ? data.genres.map(g => `<span class="m-gtag">${escapeHtml(g.name)}</span>`).join('') : '';
+
         if (pushToHistory) {
             try {
                 const slug = slugify(title);
@@ -4617,7 +4645,6 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
             if (data.credits && data.credits.cast) cast = data.credits.cast.slice(0, 16);
         } catch(e) {}
 
-        // 1. Додаткова інформація (Бюджет, країни, студії)
         let extraItemsHtml = '';
         try {
             let extraArr = [];
@@ -4632,7 +4659,6 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
             }
         } catch(e) {}
 
-        // 2. Блок Акторів (Каст)
         let castHtml = '';
         try {
             if (cast.length > 0) {
@@ -4648,13 +4674,14 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
         let isFav = false, isWL = false, isWtch = false;
         try { isFav = isFavorite(id); isWL = isWatchLater(id); isWtch = isWatched(id); } catch(e) {}
 
-       const backdropHtml = data.backdrop_path ? `<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}">` : `<div class="m-backdrop-ph">🎬</div>`;
+        const backdropHtml = data.backdrop_path ? `<img class="m-backdrop" src="${IMG}w1280${data.backdrop_path}">` : `<div class="m-backdrop-ph">🎬</div>`;
 
-              // ОСЬ ЦЕЙ РЯДОК ПОТРІБНО ПОВЕРНУТИ:
-             const players = type === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
+        // --- ФОРМУВАННЯ ВКЛАДОК ПЛЕЄРІВ ---
+        const basePlayers = type === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
+        const allPlayers = [...basePlayers, ...currentCustomPlayers];
 
         let tabsHtml = '';
-        players.forEach((p, i) => {
+        allPlayers.forEach((p, i) => {
             tabsHtml += `<div class="player-tab${(i === currentPlayer) ? ' act' : ''}" onclick="switchPlayer(${i})">${escapeHtml(p.name)}${p.badge ? `<span class="ptab-badge">${escapeHtml(p.badge)}</span>` : ''}</div>`;
         });
 
@@ -4674,7 +4701,6 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
             if (t && t.ud_wl) wlText = t.ud_wl;
         } catch(e) {}
 
-        // Рендер повного шаблону (з оцінками, акторами, схожими фільмами та коментарями)
         content.innerHTML = `
         ${backdropHtml}
         <div class="m-grad"></div>
@@ -4742,10 +4768,8 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
 
         _doLoadPlayer();
         
-        // Виклик завантаження коментарів
         try { loadComments(id, type); } catch(e) {}
 
-        // Виклик завантаження схожих фільмів
         try {
             tmdb(`/${type}/${id}/similar`, { page: 1 }).then(sim => {
                 const simEl = document.getElementById('modal-sim');
@@ -4779,7 +4803,6 @@ function _doLoadPlayer() {
         const wrap = document.getElementById('player-wrap');
         if (!wrap) return;
 
-        // 1. Відновлюємо або знаходимо індикатор завантаження
         let loading = document.getElementById('player-loading');
         if (!loading) {
             loading = document.createElement('div');
@@ -4790,14 +4813,35 @@ function _doLoadPlayer() {
         }
         loading.style.display = 'flex';
 
-        // 2. Очищаємо контейнер від попередніх плеєрів, не чіпаючи індикатор завантаження
         Array.from(wrap.children).forEach(child => {
             if (child.id !== 'player-loading') child.remove();
         });
 
-        const players = currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
-        if (isNaN(currentPlayer) || currentPlayer >= players.length || currentPlayer < 0) currentPlayer = 0;
-        const p = players[currentPlayer];
+        // Визначаємо поточного обраного плеєра
+        const basePlayers = currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
+        const allPlayers = [...basePlayers, ...currentCustomPlayers];
+        
+        if (isNaN(currentPlayer) || currentPlayer >= allPlayers.length || currentPlayer < 0) currentPlayer = 0;
+        const p = allPlayers[currentPlayer];
+
+        // --- ОБРОБКА YOUTUBE ---
+        if (p.id === 'youtube') {
+            let iframe = document.createElement('iframe');
+            iframe.id = 'player-iframe';
+            iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+            iframe.setAttribute('allowfullscreen', 'true');
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.src = `https://www.youtube.com/embed/${p.youtubeId}?autoplay=1`;
+            
+            wrap.appendChild(iframe);
+            iframe.onload = () => { loading.style.display = 'none'; };
+            return;
+        }
 
         // --- ОБРОБКА SDK ПЛЕЄРА RENDEX ---
         if (p.id === 'rendex') {
@@ -4820,7 +4864,7 @@ function _doLoadPlayer() {
         }
 
         // --- ОБРОБКА ЗВИЧАЙНИХ IFRAME ПЛЕЄРІВ ---
-        const src = currentModalType === 'tv' ? p.url(currentModalId, currentImdbId, currentSeason, currentEpisode) : p.url(currentModalId, currentImdbId);
+        const src = p.url ? (typeof p.url === 'function' ? p.url(currentModalId, currentImdbId, currentSeason, currentEpisode) : p.url) : '';
 
         let iframe = document.createElement('iframe');
         iframe.id = 'player-iframe';
