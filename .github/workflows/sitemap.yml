@@ -1,31 +1,33 @@
-name: Auto Update Sitemap
+name: Автоматичне оновлення Sitemap
 
 on:
   schedule:
-    # Запуск кожні 2 дні о 03:00 ночі
-    - cron: '0 3 */2 * *'
-  workflow_dispatch: # Дозволяє запустити оновлення вручну кнопкою
+    - cron: '0 3 * * 1' # Запускати автоматично щопонеділка о 03:00 ночі
+  workflow_dispatch: # Дозволяє запускати скрипт вручну кнопкою
 
 jobs:
   update-sitemap:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Даємо дозвіл боту зберігати оновлений файл
+
     steps:
-      - name: Checkout repository
+      - name: Завантаження коду репозиторію
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Встановлення Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Run Sitemap Generator
+      - name: Запуск генератора sitemap.xml
         run: node generate-sitemap.js
 
-      - name: Commit and Push Changes
+      - name: Збереження оновленого файлу на GitHub
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update sitemap.xml [skip ci]" && git push)
+          # Робимо коміт тільки якщо файл sitemap.xml реально змінився
+          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Авто-оновлення sitemap.xml (додано нові фільми)"
+          git push
