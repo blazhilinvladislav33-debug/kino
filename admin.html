@@ -354,7 +354,9 @@
         </div>
         <div class="sidebar-link" onclick="showPage('users');loadUsersData();" id="nav-users">
           <span class="icon">👥</span> Користувачі
-          <span class="sidebar-count" id="count-users">0</span><div class="sidebar-link" onclick="showPage('streams')" id="nav-streams">
+          <span class="sidebar-count" id="count-users">0</span>
+        </div>
+        <div class="sidebar-link" onclick="showPage('streams')" id="nav-streams">
           <span class="icon">🎬</span> Плеєри та YouTube
         </div>
       </div>
@@ -1657,6 +1659,51 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
   });
+  // ========================
+  // ЗБЕРЕЖЕННЯ ПЛЕЄРІВ (CUSTOM STREAMS)
+  // ========================
+  function saveCustomStream() {
+      const tmdbId = document.getElementById('cs-tmdb-id').value.trim();
+      const ytId = document.getElementById('cs-yt-id').value.trim();
+      const customUrl = document.getElementById('cs-custom-url').value.trim();
+      const customName = document.getElementById('cs-custom-name').value.trim();
+
+      if (!tmdbId) { showToast('Введіть TMDB ID фільму', true); return; }
+      if (!ytId && !customUrl) { showToast('Заповніть хоча б одне посилання (YouTube або URL)', true); return; }
+
+      const payload = {};
+      if (ytId) payload.youtubeId = ytId;
+      
+      if (customUrl) {
+          payload.customPlayers = [{
+              name: customName || 'Кастомний сервер',
+              url: customUrl,
+              badge: 'HD'
+          }];
+      }
+
+      if (!db) { showToast('Firebase недоступний', true); return; }
+
+      db.collection('custom_streams').doc(tmdbId).set(payload, { merge: true })
+        .then(() => {
+            showToast('✅ Плеєр успішно прив\'язано до фільму!');
+            document.getElementById('cs-tmdb-id').value = '';
+            document.getElementById('cs-yt-id').value = '';
+            document.getElementById('cs-custom-url').value = '';
+            document.getElementById('cs-custom-name').value = '';
+        })
+        .catch(err => { showToast('Помилка збереження', true); console.error(err); });
+  }
+
+  function saveYtApiKey() {
+      const key = document.getElementById('cs-yt-key').value.trim();
+      if (!key) { showToast('Введіть API ключ', true); return; }
+      if (!db) return;
+
+      db.collection('settings').doc('config').set({ youtubeApiKey: key }, { merge: true })
+        .then(() => showToast('✅ YouTube API Key збережено!'))
+        .catch(() => showToast('Помилка збереження', true));
+  }
 </script>
 </body>
 </html>
