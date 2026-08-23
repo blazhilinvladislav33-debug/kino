@@ -1,5 +1,43 @@
 [
   {
+    "id": 1787472932681,
+    "date": "2026-08-23",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
+        "slug": "zakolot"
+      },
+      {
+        "id": 1228710,
+        "title": "Мандалорець і Ґроґу",
+        "poster": "https://image.tmdb.org/t/p/w500/ipezVNLljduGrftH9kjfUaUqIt1.jpg",
+        "slug": "mandaloretsyu-g-ro-u"
+      },
+      {
+        "id": 1081003,
+        "title": "Суперґьорл",
+        "poster": "https://image.tmdb.org/t/p/w500/sAaAVBiQr4HpRPhtvkapvDYmUc3.jpg",
+        "slug": "super-yuorl"
+      },
+      {
+        "id": 1084244,
+        "title": "Історія іграшок 5",
+        "poster": "https://image.tmdb.org/t/p/w500/z7ATYNzGYj3qo9fsNF3sv3lbLBf.jpg",
+        "slug": "gstorgi-ghrashok-5"
+      },
+      {
+        "id": 1493400,
+        "title": "Camp Rock 3",
+        "poster": "https://image.tmdb.org/t/p/w500/rS7byWK9cfPfdLeFNlRIaJxH9mN.jpg",
+        "slug": "camp-rock-3"
+      }
+    ]
+  },
+  {
     "id": 1787409660277,
     "date": "2026-08-22",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
