@@ -97,10 +97,10 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9899032308956715" crossorigin="anonymous"></script>
   
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <!-- Firebase SDK v9.23.0 (Modular) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 
   <!-- СТИЛІ БЕЗ СКОРОЧЕНЬ -->
   <style>
@@ -4434,12 +4434,12 @@ async function tmdb(ep, params = {}) {
           console.log(`✅ TMDB успішно завантажена: ${ep}`);
           return data;
       } catch (err) {
-        lastErr = err;
-        console.warn(`⚠️ Помилка TMDB запиту #${i}: ${err.message}`);
+        lastErr = err || new Error('Unknown error');
+        console.warn(`⚠️ Помилка TMDB запиту #${i}: ${(lastErr?.message || 'Unknown')}`);
         continue;
       }
   }
-  console.error(`❌ КРИТИЧНА ПОМИЛКА: Усі TMDB запити не вдалися. Останній помилка: ${lastErr?.message}`);
+  console.error(`❌ КРИТИЧНА ПОМИЛКА: Усі TMDB запити не вдалися. Останній помилка: ${lastErr?.message || 'Unknown'}`);
   return null;
 }
 
@@ -4546,7 +4546,9 @@ const TV_PLAYERS = [
 
 // Отримати тільки активні плеєри (не вимкнені)
 function getActivePlayers(allPlayers) {
-    return allPlayers.filter(p => !disabledPlayers.includes(p.id));
+    if (!Array.isArray(allPlayers)) return [];
+    if (!Array.isArray(disabledPlayers)) disabledPlayers = [];
+    return allPlayers.filter(p => p && p.id && !disabledPlayers.includes(p.id));
 }
 
 // Оновити конфіг вимкнених плеєрів в Firebase
@@ -4973,8 +4975,10 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
     // 🔧 ОТРИМАНЕ: ID=${id}, Type=${type}, AutoPlay=${autoPlay}, PushHistory=${pushToHistory}
     console.log(`🎬 openMovie() викликана: ID=${id}, Type=${type}`);
 
-    if (!id) {
-        console.error('❌ openMovie: ID не передано!');
+    // Конвертуємо ID на число і перевіряємо
+    id = parseInt(id, 10);
+    if (isNaN(id) || id <= 0) {
+        console.error('❌ openMovie: Невірний ID фільму:', id);
         return;
     }
 
@@ -6364,13 +6368,34 @@ function loadComments(id, type) {
 let commentsUnsubscribe = null, currentFbComments = [];
 function renderAllComments(id, tmdbReviews) {
     if (commentsUnsubscribe) commentsUnsubscribe();
-    if (typeof db === 'undefined' || !db) return _drawComments(tmdbReviews);
+    if (typeof db === 'undefined' || !db || !currentModalId) return _drawComments(tmdbReviews);
+    if (!db.collection || typeof db.collection !== 'function') return _drawComments(tmdbReviews);
+
     try {
         commentsUnsubscribe = db.collection('comments').where('movieId', '==', String(id)).onSnapshot(snap => {
-            currentFbComments = snap.docs.map(d => ({ author: d.data().authorName, content: d.data().text, date: new Date(d.data().createdAt), source: 'firebase' }));
-            _drawComments([...currentFbComments, ...tmdbReviews].sort((a,b) => b.date - a.date));
-        }, () => _drawComments(tmdbReviews));
-    } catch(e) { _drawComments(tmdbReviews); }
+            try {
+                currentFbComments = snap.docs.map(d => {
+                    const data = d.data();
+                    return {
+                        author: data.authorName || 'Невідомо',
+                        content: data.text || '',
+                        date: new Date(data.createdAt || Date.now()),
+                        source: 'firebase'
+                    };
+                }).filter(c => c && c.content);
+                _drawComments([...currentFbComments, ...tmdbReviews].sort((a,b) => new Date(b.date) - new Date(a.date)));
+            } catch(mapErr) {
+                console.error('⚠️ Помилка обробки коментарів:', mapErr);
+                _drawComments(tmdbReviews);
+            }
+        }, (err) => {
+            console.warn('⚠️ Помилка завантаження коментарів:', err.message);
+            _drawComments(tmdbReviews);
+        });
+    } catch(e) {
+        console.warn('⚠️ Не можна завантажити коментарі з Firebase:', e.message);
+        _drawComments(tmdbReviews);
+    }
 }
 
 function _drawComments(arr) {
