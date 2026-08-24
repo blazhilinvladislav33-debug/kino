@@ -3258,6 +3258,7 @@
       <a href="/category/documentary" data-i18n="nav_docs" onclick="event.preventDefault();showCatalog({type:'movie',genre:'99'});">Документальні</a>
       <a href="/category/top" data-i18n="nav_top" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});">Топ рейтинг</a>
       <a href="/category/classic" data-i18n="nav_classic" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});">Класика</a>
+      <a href="/trending" onclick="event.preventDefault();showTrending();">🎬 Трендинг</a>
     </nav>
 
     <div class="srch-wrap">
@@ -3302,6 +3303,9 @@
             <div class="ud-item" data-i18n="ud_fav" onclick="showLibrary('fav')">Улюблені</div>
             <div class="ud-item" data-i18n="ud_wl" onclick="showLibrary('wl')">Дивитись пізніше</div>
             <div class="ud-item" data-i18n="ud_watch" onclick="showLibrary('watched')">Переглянуто</div>
+            <div class="ud-divider"></div>
+            <div class="ud-item" onclick="showFriends()">👥 Друзі</div>
+            <div class="ud-item" onclick="showRecommendations()">⭐ Рекомендації</div>
             <div class="ud-divider"></div>
             <div class="ud-item" onclick="toggleKidsMode(event)">
               <span style="display:flex;align-items:center;gap:7px;font-weight:600;">
@@ -3639,6 +3643,54 @@
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="toast" id="toast"></div>
 
+<!-- TRENDING SECTION -->
+<div class="ft" id="trending-sec" style="display:none;">
+  <h1 style="padding:30px 20px 0; text-align:center; font-size:32px; margin-bottom:20px;">🎬 Трендинг зараз</h1>
+  <div class="ft-grid" id="trending-grid">
+    <div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Завантаження трендингових фільмів...</div>
+  </div>
+  <a href="/" class="sec-more" onclick="event.preventDefault();showHome();" style="display:block; text-align:center; margin:30px auto;">← Головна</a>
+</div>
+
+<!-- FRIENDS SECTION -->
+<div class="ft" id="friends-sec" style="display:none;">
+  <h1 style="padding:30px 20px 0; text-align:center; font-size:28px; margin-bottom:20px;">👥 Мої Друзі</h1>
+  <div style="max-width:800px; margin:0 auto; padding:20px;">
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+      <input type="text" id="friend-uid-input" placeholder="Введи UID друга..." style="flex:1; padding:10px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text);">
+      <input type="text" id="friend-name-input" placeholder="Ім'я друга..." style="flex:1; padding:10px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text);">
+      <button onclick="addNewFriend()" style="padding:10px 20px; background:var(--accent); color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">Додати</button>
+    </div>
+    <div id="friends-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:15px;"></div>
+  </div>
+  <a href="/" class="sec-more" onclick="event.preventDefault();showHome();" style="display:block; text-align:center; margin:30px auto;">← Головна</a>
+</div>
+
+<!-- RECOMMENDATIONS SECTION -->
+<div class="ft" id="recs-sec" style="display:none;">
+  <h1 style="padding:30px 20px 0; text-align:center; font-size:28px; margin-bottom:20px;">⭐ Рекомендації для тебе</h1>
+  <div class="ft-grid" id="recs-grid">
+    <div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Генерую рекомендації на основі твоїх переглядів...</div>
+  </div>
+  <a href="/" class="sec-more" onclick="event.preventDefault();showHome();" style="display:block; text-align:center; margin:30px auto;">← Головна</a>
+</div>
+
+<!-- WATCH PARTY SECTION -->
+<div class="ft" id="watchparty-sec" style="display:none;">
+  <h1 style="padding:30px 20px 0; text-align:center; font-size:28px; margin-bottom:20px;">🎭 Watch Party</h1>
+  <div style="max-width:600px; margin:0 auto; padding:20px; text-align:center;">
+    <div style="background:var(--bg3); padding:20px; border-radius:8px; margin-bottom:20px;">
+      <p style="margin-bottom:10px;">Запрошення друзів для спільного перегляду:</p>
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <input type="text" id="watchparty-link" readonly value="https://kinobaza.site/?party=" style="flex:1; padding:10px; background:var(--bg2); border:1px solid var(--border); border-radius:6px; color:var(--text);">
+        <button onclick="copyWatchPartyLink()" style="padding:10px 15px; background:var(--accent); color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">Копіювати</button>
+      </div>
+      <p style="font-size:12px; color:var(--muted);">Відправ це посилання другу, і ви зможете дивитись разом!</p>
+    </div>
+  </div>
+  <a href="/" class="sec-more" onclick="event.preventDefault();showHome();" style="display:block; text-align:center; margin:30px auto;">← Головна</a>
+</div>
+
 <!-- MOBILE DRAWER -->
 <div class="mob-ov" id="mob-ov" onclick="closeMobileMenu()"></div>
 <div class="mob-drawer" id="mob-drawer">
@@ -3654,6 +3706,7 @@
     <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'99'});closeMobileMenu()"><span class="mob-nav-icon">📰</span><span data-i18n="nav_docs">Документальні</span></button>
     <button class="mob-nav-link" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});closeMobileMenu()"><span class="mob-nav-icon">⭐</span><span data-i18n="nav_top">Топ рейтинг</span></button>
     <button class="mob-nav-link" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});closeMobileMenu()"><span class="mob-nav-icon">🎞</span><span data-i18n="nav_classic">Класика</span></button>
+    <button class="mob-nav-link" onclick="showTrending();closeMobileMenu()"><span class="mob-nav-icon">🎬</span><span>Трендинг</span></button>
   </div>
   <div class="mob-drawer-section" id="mob-auth-section"></div>
 </div>
@@ -4534,6 +4587,10 @@ async function doSearch(filter = 'all') {
         document.getElementById('home-content').style.display = 'none';
         document.getElementById('cat-section').style.display = 'none';
         document.getElementById('lib-section').style.display = 'none';
+        document.getElementById('trending-sec').style.display = 'none';
+        document.getElementById('friends-sec').style.display = 'none';
+        document.getElementById('recs-sec').style.display = 'none';
+        document.getElementById('watchparty-sec').style.display = 'none';
         document.getElementById('srch-sec').style.display = 'block';
         document.getElementById('srch-title').textContent = `Пошук: ${q}`;
 
@@ -5108,6 +5165,10 @@ function showHome(){
         document.getElementById('cat-section').style.display = 'none';
         document.getElementById('home-content').style.display = 'block';
         document.getElementById('srch-sec').style.display = 'none';
+        document.getElementById('trending-sec').style.display = 'none';
+        document.getElementById('friends-sec').style.display = 'none';
+        document.getElementById('recs-sec').style.display = 'none';
+        document.getElementById('watchparty-sec').style.display = 'none';
         document.querySelectorAll('nav a').forEach(a => a.classList.remove('act'));
         const nh = document.getElementById('nav-home');
         if (nh) nh.classList.add('act');
@@ -5116,9 +5177,13 @@ function showHome(){
 
 function showCatalog(preset = {}, skipHistory = false) {
     try {
-        document.getElementById('home-content').style.display = 'none'; 
-        document.getElementById('srch-sec').style.display = 'none'; 
-        document.getElementById('lib-section').style.display = 'none'; 
+        document.getElementById('home-content').style.display = 'none';
+        document.getElementById('srch-sec').style.display = 'none';
+        document.getElementById('lib-section').style.display = 'none';
+        document.getElementById('trending-sec').style.display = 'none';
+        document.getElementById('friends-sec').style.display = 'none';
+        document.getElementById('recs-sec').style.display = 'none';
+        document.getElementById('watchparty-sec').style.display = 'none';
         document.getElementById('cat-section').style.display = 'block';
 
         // 1. Оновлюємо тип контенту (фільми або серіали)
@@ -5538,6 +5603,10 @@ function showLibrary(tab = 'fav') {
     document.getElementById('home-content').style.display = 'none';
     document.getElementById('cat-section').style.display = 'none';
     document.getElementById('srch-sec').style.display = 'none';
+    document.getElementById('trending-sec').style.display = 'none';
+    document.getElementById('friends-sec').style.display = 'none';
+    document.getElementById('recs-sec').style.display = 'none';
+    document.getElementById('watchparty-sec').style.display = 'none';
     document.getElementById('lib-section').style.display = 'block';
     
     document.querySelectorAll('nav a').forEach(a => a.classList.remove('act'));
@@ -6433,6 +6502,163 @@ firebase.auth().onAuthStateChanged(async (user) => {
         setTimeout(() => initNewFeatures(), 1000);
     }
 });
+
+// =====================================================================
+// ✨ НОВІ ФУНКЦІЇ: ТРЕНДИНГ, ДРУЗІ, РЕКОМЕНДАЦІЇ, WATCH PARTY
+// =====================================================================
+
+function showTrending() {
+    hideAllSections();
+    document.getElementById('trending-sec').style.display = 'block';
+    document.getElementById('trending-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Завантаження...</div>';
+    loadTrendingMovies();
+}
+
+async function loadTrendingMovies() {
+    try {
+        // Отримуємо популярні фільми за останній тиждень
+        const data = await tmdb('trending/movie/week');
+        if (!data || !data.results) {
+            document.getElementById('trending-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Не вдалося завантажити трендинг</div>';
+            return;
+        }
+
+        const grid = document.getElementById('trending-grid');
+        grid.innerHTML = '';
+
+        data.results.slice(0, 20).forEach(m => {
+            const mcard = createMovieCard(m, 'movie');
+            grid.appendChild(mcard);
+        });
+    } catch (e) {
+        console.error('Помилка завантаження трендингу:', e);
+        document.getElementById('trending-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Помилка завантаження</div>';
+    }
+}
+
+function showFriends() {
+    if (!isLoggedIn()) return openAuth('login');
+    hideAllSections();
+    document.getElementById('friends-sec').style.display = 'block';
+    loadFriendsUI();
+}
+
+async function loadFriendsUI() {
+    try {
+        const uid = firebase.auth().currentUser.uid;
+        const snapshot = await db.collection('users').doc(uid).collection('friends').get();
+
+        const list = document.getElementById('friends-list');
+        list.innerHTML = '';
+
+        if (snapshot.empty) {
+            list.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:#999;">У тебе ще немає друзів. Додай першого!</div>';
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const friend = doc.data();
+            const card = document.createElement('div');
+            card.style.cssText = 'background:var(--bg3); padding:15px; border-radius:8px; border:1px solid var(--border);';
+            card.innerHTML = `
+                <div style="font-weight:bold; margin-bottom:10px;">👤 ${friend.name || 'Невідомий друг'}</div>
+                <div style="font-size:12px; color:var(--muted); margin-bottom:10px;">ID: ${friend.uid}</div>
+                <button onclick="removeFriend('${friend.uid}')" style="width:100%; padding:8px; background:#d32f2f; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:12px;">Видалити</button>
+            `;
+            list.appendChild(card);
+        });
+    } catch (e) {
+        console.error('Помилка завантаження друзів:', e);
+    }
+}
+
+async function addNewFriend() {
+    const uid = document.getElementById('friend-uid-input').value.trim();
+    const name = document.getElementById('friend-name-input').value.trim();
+
+    if (!uid || !name) {
+        showToast('Введи UID та ім\'я друга');
+        return;
+    }
+
+    try {
+        await addFriend(uid, name);
+        document.getElementById('friend-uid-input').value = '';
+        document.getElementById('friend-name-input').value = '';
+        loadFriendsUI();
+        showToast('✅ Друг додан!');
+    } catch (e) {
+        showToast('❌ Помилка: ' + e.message);
+    }
+}
+
+async function removeFriend(uid) {
+    if (!confirm('Видалити цього друга?')) return;
+    try {
+        const currentUid = firebase.auth().currentUser.uid;
+        await db.collection('users').doc(currentUid).collection('friends').doc(uid).delete();
+        loadFriendsUI();
+        showToast('✅ Друг видалений');
+    } catch (e) {
+        showToast('❌ Помилка: ' + e.message);
+    }
+}
+
+function showRecommendations() {
+    if (!isLoggedIn()) return openAuth('login');
+    hideAllSections();
+    document.getElementById('recs-sec').style.display = 'block';
+    loadRecommendationsUI();
+}
+
+async function loadRecommendationsUI() {
+    try {
+        const uid = firebase.auth().currentUser.uid;
+        const recDoc = await db.collection('recommendations').doc(uid).get();
+
+        if (!recDoc.exists) {
+            document.getElementById('recs-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Рекомендацій ще немає. Дивись більше фільмів!</div>';
+            return;
+        }
+
+        const recs = recDoc.data().movies || [];
+        if (!recs.length) {
+            document.getElementById('recs-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Рекомендацій ще немає. Дивись більше фільмів!</div>';
+            return;
+        }
+
+        const grid = document.getElementById('recs-grid');
+        grid.innerHTML = '';
+
+        for (const movieId of recs.slice(0, 20)) {
+            try {
+                const movieData = await tmdb(`/movie/${movieId}`);
+                if (movieData) {
+                    const mcard = createMovieCard(movieData, 'movie');
+                    grid.appendChild(mcard);
+                }
+            } catch (e) {}
+        }
+    } catch (e) {
+        console.error('Помилка завантаження рекомендацій:', e);
+    }
+}
+
+function copyWatchPartyLink() {
+    const link = document.getElementById('watchparty-link').value;
+    navigator.clipboard.writeText(link).then(() => {
+        showToast('✅ Посилання скопійовано!');
+    }).catch(() => {
+        showToast('❌ Помилка копіювання');
+    });
+}
+
+function hideAllSections() {
+    ['trending-sec', 'friends-sec', 'recs-sec', 'watchparty-sec', 'lib-sec', 'catalog-sec', 'home-sec', 'search-sec'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+}
 
 </script>
 </body>
