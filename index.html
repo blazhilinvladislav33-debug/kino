@@ -12,9 +12,9 @@
   
   <meta name="description" content="КіноБаза — безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.">
   <meta name="keywords" content="дивитись фільми онлайн, серіали онлайн, українська озвучка, HD якість, безкоштовно, кіно онлайн, фільми 2026">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="author" content="КіноБаза">
-  <link rel="canonical" href="https://kinobaza.site/">
+  <link id="canonical-link" rel="canonical" href="https://kinobaza.site/">
 
   <!-- ===== Open Graph (Facebook / Telegram) ===== -->
   <meta property="og:type" content="website">
@@ -3261,6 +3261,8 @@
       <a href="/trending" onclick="event.preventDefault();showTrending();">Трендинг</a>
       <a href="#" onclick="event.preventDefault();playRandomMovie();" title="Случайный фильм">Случайный</a>
       <a href="#" onclick="event.preventDefault();openActorSearch();" title="Поиск по актерам">Актеры</a>
+      <a href="#" onclick="event.preventDefault();openAdvancedSearch();" title="Расширенный поиск">Расширенный поиск</a>
+      <a href="#" id="admin-nav-stats" style="display:none;" onclick="event.preventDefault();openStatistics();" title="Статистика просмотров">Статистика</a>
     </nav>
 
     <div class="srch-wrap">
@@ -3544,33 +3546,8 @@
 
     <!-- СБОРКИ ПО НАСТРОЕНИЮ -->
     <div class="sec-hdr">
-      <div class="sec-title">Смотри по настроению</div>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px;">
-      <button onclick="showMoodCollection('happy')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
-        <div style="font-weight: 600;">Для хорошего настроения</div>
-        <div style="font-size: 12px; color: var(--muted);">Комедии и смешное</div>
-      </button>
-      <button onclick="showMoodCollection('scary')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
-        <div style="font-weight: 600;">Для адреналина</div>
-        <div style="font-size: 12px; color: var(--muted);">Триллеры и жахи</div>
-      </button>
-      <button onclick="showMoodCollection('romantic')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
-        <div style="font-weight: 600;">Для романтики</div>
-        <div style="font-size: 12px; color: var(--muted);">Мелодрамы и чувства</div>
-      </button>
-      <button onclick="showMoodCollection('thoughtful')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
-        <div style="font-weight: 600;">Для размышлений</div>
-        <div style="font-size: 12px; color: var(--muted);">Драмы и психология</div>
-      </button>
-      <button onclick="showMoodCollection('adventure')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
-        <div style="font-weight: 600;">Для приключений</div>
-        <div style="font-size: 12px; color: var(--muted);">Экшн и приключения</div>
-      </button>
-      <button onclick="showMoodCollection('scifi')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
-        <div style="font-weight: 600;">Для фантастики</div>
-        <div style="font-size: 12px; color: var(--muted);">Научная фантастика</div>
-      </button>
+      <div class="sec-title">Дивись по настроям</div>
+      <a href="#" class="sec-more" onclick="openMoodSelector();return false;">Вибрати →</a>
     </div>
 
     <!-- CONTINUE WATCHING -->
@@ -3776,6 +3753,9 @@
     <button class="mob-nav-link" onclick="showTrending();closeMobileMenu()"><span class="mob-nav-icon">Тренд</span><span>Трендинг</span></button>
     <button class="mob-nav-link" onclick="playRandomMovie();closeMobileMenu()"><span class="mob-nav-icon">Шанс</span><span>Случайный</span></button>
     <button class="mob-nav-link" onclick="openActorSearch();closeMobileMenu()"><span class="mob-nav-icon">Актер</span><span>По актерам</span></button>
+    <button class="mob-nav-link" onclick="openAdvancedSearch();closeMobileMenu()"><span class="mob-nav-icon">Поиск</span><span>Расширенный поиск</span></button>
+    <button class="mob-nav-link" id="admin-mob-stats" style="display:none;" onclick="openStatistics();closeMobileMenu()"><span class="mob-nav-icon">Стат</span><span>Статистика</span></button>
+    <button class="mob-nav-link" onclick="openNotificationSettings();closeMobileMenu()"><span class="mob-nav-icon">Уведом</span><span>Параметры</span></button>
   </div>
   <div class="mob-drawer-section" id="mob-auth-section"></div>
 </div>
@@ -5300,6 +5280,8 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
                 <button class="btn-trailer" onclick="downloadMovieOffline()" title="Завантажити для оффлайну">Завантажити</button>
                 <button class="btn-trailer" onclick="openSleepTimer()" title="Таймер сна">Таймер</button>
                 <button class="btn-trailer" onclick="showRatingComparison(${id},'${type}')" title="Сравнить рейтинги">Рейтинг</button>
+                <button class="btn-trailer" onclick="openPlaylistAddModal(${id},'${escapeHtml(title || data.name || '').replace(/'/g, '')}')" title="Додати до плейліста">До плейліста</button>
+                <button class="btn-trailer" onclick="openReviewModal(${id})" title="Написати рецензію">Рецензія</button>
             </div>
 
             ${extraItemsHtml}
@@ -5332,7 +5314,10 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
         } catch (e) {}
 
         _doLoadPlayer();
-        
+
+        // Track view when movie is opened
+        trackMovieView(id, title || data.name || 'Unknown', type);
+
         try { loadComments(id, type); } catch(e) {}
 
         try {
@@ -6048,6 +6033,7 @@ function showHome(){
         document.querySelectorAll('nav a').forEach(a => a.classList.remove('act'));
         const nh = document.getElementById('nav-home');
         if (nh) nh.classList.add('act');
+        updatePageMeta('КіноБаза — Дивитись фільми онлайн безкоштовно', 'Безкоштовний онлайн-кінотеатр. Тисячі фільмів та серіалів у HD якості з українською озвучкою. Без реєстрації.', 'home');
     } catch(e) {}
 }
 
@@ -6315,17 +6301,38 @@ function updateAuthUI() {
         const authBtns = document.getElementById('auth-btns'), userMenu = document.getElementById('user-menu');
         if (authBtns) authBtns.style.display = user ? 'none' : 'flex';
         if (userMenu) userMenu.style.display = user ? 'block' : 'none';
-        
+
         if (user) {
             const initialEl = document.getElementById('user-initial');
             if (initialEl) initialEl.textContent = (user.displayName || user.email || 'U')[0].toUpperCase();
             const nameEl = document.getElementById('ud-name');
             if (nameEl) nameEl.innerHTML = escapeHtml(user.displayName || user.email) + (currentUserSubscribed ? '<span class="sub-badge">Premium</span>' : '');
         }
-        
+
         const adminLink = document.getElementById('ud-admin');
         if (adminLink) adminLink.style.display = currentUserRole === 'admin' ? 'flex' : 'none';
+
+        // Перевір чи адмін - для показу кнопки Статистики
+        checkAdminStatus();
     } catch(e) {}
+}
+
+async function checkAdminStatus() {
+    if (!currentUser || !db) return;
+
+    try {
+        const adminDoc = await getDoc(doc(db, 'admins', currentUser.uid));
+        const isAdmin = adminDoc.exists();
+
+        // Показ/приховай кнопку Статистики
+        const navStats = document.getElementById('admin-nav-stats');
+        const mobStats = document.getElementById('admin-mob-stats');
+
+        if (navStats) navStats.style.display = isAdmin ? 'block' : 'none';
+        if (mobStats) mobStats.style.display = isAdmin ? 'block' : 'none';
+    } catch(e) {
+        console.error('Помилка перевірки адміна:', e);
+    }
 }
 
 function openAuth(tab = 'login') { try { switchTab(tab); const modal = document.getElementById('auth-modal'); if (modal) modal.classList.add('open'); } catch(e) {} }
@@ -7444,6 +7451,7 @@ function showTrending() {
     hideAllSections();
     document.getElementById('trending-sec').style.display = 'block';
     document.getElementById('trending-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Завантаження...</div>';
+    updatePageMeta('Трендинг - КіноБаза', 'Найпопулярніші фільми та серіали цього тижня. Дивись що дивляються інші!', 'trending');
     loadTrendingMovies();
 }
 
@@ -7988,11 +7996,11 @@ function openActorSearch() {
 
 // 2. СБОРКИ ПО НАСТРОЕНИЮ
 const moodCollections = {
-    happy: { name: 'Для хорошего настроения', genres: ['35'] }, // Комедия
-    scary: { name: 'Для адреналина', genres: ['27'] }, // Жахи
+    happy: { name: 'Для хорошого настрою', genres: ['35'] }, // Комедія
+    scary: { name: 'Для адреналіну', genres: ['27'] }, // Жахи
     romantic: { name: 'Для романтики', genres: ['10749'] }, // Мелодрама
-    thoughtful: { name: 'Для размышлений', genres: ['18'] }, // Драма
-    adventure: { name: 'Для приключений', genres: ['12,28'] }, // Приключения + Боевик
+    thoughtful: { name: 'Для роздумів', genres: ['18'] }, // Драма
+    adventure: { name: 'Для пригод', genres: ['12,28'] }, // Пригоди + Бойовик
     scifi: { name: 'Для фантастики', genres: ['878'] } // Фантастика
 };
 
@@ -8027,6 +8035,70 @@ async function showMoodCollection(moodKey) {
         console.error('Ошибка загрузки коллекции настроения:', e);
         showToast('Ошибка при загрузке коллекции');
     }
+}
+
+// 2.1 МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА НАСТРОЕНИЯ
+function openMoodSelector() {
+    const modal = document.createElement('div');
+    modal.id = 'mood-selector-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        z-index: 10000;
+        min-width: 90%;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    `;
+
+    modal.innerHTML = `
+        <div style="color: var(--text);">
+            <div style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">Дивись по настроям</div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                <button onclick="showMoodCollection('happy'); document.getElementById('mood-selector-modal').remove();" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+                    <div style="font-weight: 600;">Для хорошого настрою</div>
+                    <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">Комедії</div>
+                </button>
+
+                <button onclick="showMoodCollection('scary'); document.getElementById('mood-selector-modal').remove();" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+                    <div style="font-weight: 600;">Для адреналіну</div>
+                    <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">Триллери та жахи</div>
+                </button>
+
+                <button onclick="showMoodCollection('romantic'); document.getElementById('mood-selector-modal').remove();" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+                    <div style="font-weight: 600;">Для романтики</div>
+                    <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">Мелодрами</div>
+                </button>
+
+                <button onclick="showMoodCollection('thoughtful'); document.getElementById('mood-selector-modal').remove();" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+                    <div style="font-weight: 600;">Для роздумів</div>
+                    <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">Драми</div>
+                </button>
+
+                <button onclick="showMoodCollection('adventure'); document.getElementById('mood-selector-modal').remove();" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+                    <div style="font-weight: 600;">Для пригод</div>
+                    <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">Екшн</div>
+                </button>
+
+                <button onclick="showMoodCollection('scifi'); document.getElementById('mood-selector-modal').remove();" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+                    <div style="font-weight: 600;">Для фантастики</div>
+                    <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">Наукова фантастика</div>
+                </button>
+            </div>
+
+            <button onclick="document.getElementById('mood-selector-modal').remove()" style="width: 100%; padding: 10px 20px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">Закрити</button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
 }
 
 // 3. СРАВНЕНИЕ РЕЙТИНГОВ
@@ -8120,6 +8192,665 @@ async function showRatingComparison(id, type) {
         showToast('Ошибка при загрузке информации о рейтинге');
     }
 }
+
+// ===== SEO OPTIMIZATION =====
+
+function updateCanonicalTag(url) {
+    const canonicalLink = document.getElementById('canonical-link');
+    if (canonicalLink) {
+        canonicalLink.href = url;
+    }
+}
+
+function generateCanonicalUrl(type, params) {
+    const baseUrl = 'https://kinobaza.site';
+
+    if (!type || type === 'home') {
+        return baseUrl + '/';
+    }
+
+    if (type === 'movie' || type === 'tv') {
+        if (params && params.id) {
+            return baseUrl + '/?id=' + params.id + '&type=' + type;
+        }
+    }
+
+    if (type === 'catalog') {
+        const queryParts = [];
+        if (params) {
+            if (params.type) queryParts.push('type=' + params.type);
+            if (params.genre) queryParts.push('genre=' + params.genre);
+            if (params.sort) queryParts.push('sort=' + params.sort);
+            if (params.rating) queryParts.push('rating=' + params.rating);
+        }
+        return baseUrl + '/category/' + (params?.category || 'all') + (queryParts.length > 0 ? '?' + queryParts.join('&') : '');
+    }
+
+    if (type === 'trending') {
+        return baseUrl + '/trending';
+    }
+
+    if (type === 'statistics') {
+        return baseUrl + '/stats';
+    }
+
+    return baseUrl + '/';
+}
+
+function updatePageMeta(title, description, type, params) {
+    document.title = title;
+
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+        metaDescription.setAttribute('content', description);
+    }
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+        ogTitle.setAttribute('content', title);
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+        ogDescription.setAttribute('content', description);
+    }
+
+    const canonicalUrl = generateCanonicalUrl(type, params);
+    updateCanonicalTag(canonicalUrl);
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+        ogUrl.setAttribute('content', canonicalUrl);
+    }
+}
+
+// ===== PRO PACK FUNCTIONS =====
+
+// 1. TRACKING VIEWS - записуємо переглядання у Firebase
+let viewTrackingEnabled = true;
+async function trackMovieView(movieId, movieTitle, movieType = 'movie') {
+    if (!viewTrackingEnabled || !currentUser) return;
+
+    try {
+        const viewsCollection = collection(db, 'movies_views');
+        await addDoc(viewsCollection, {
+            movieId: movieId,
+            movieTitle: movieTitle,
+            movieType: movieType,
+            userId: currentUser.uid,
+            timestamp: new Date(),
+            watched_at: Timestamp.now()
+        });
+        console.log('Переглядання записано:', movieTitle);
+    } catch(e) {
+        console.error('Помилка запису переглядання:', e);
+    }
+}
+
+// 2. USER PLAYLISTS
+let userPlaylists = [];
+
+async function createPlaylist(playlistName) {
+    if (!currentUser) {
+        showToast('Потрібна реєстрація');
+        return;
+    }
+
+    try {
+        const playlistsCollection = collection(db, 'user_playlists');
+        await addDoc(playlistsCollection, {
+            userId: currentUser.uid,
+            name: playlistName,
+            movies: [],
+            created_at: Timestamp.now(),
+            updated_at: Timestamp.now()
+        });
+        showToast('Плейлист створено');
+        loadUserPlaylists();
+    } catch(e) {
+        console.error('Помилка при створенні плейліста:', e);
+        showToast('Помилка при створенні плейліста');
+    }
+}
+
+async function loadUserPlaylists() {
+    if (!currentUser) return;
+
+    try {
+        const playlistsCollection = collection(db, 'user_playlists');
+        const q = query(playlistsCollection, where('userId', '==', currentUser.uid));
+        const snapshot = await getDocs(q);
+
+        userPlaylists = [];
+        snapshot.forEach(doc => {
+            userPlaylists.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        console.log('Плейлисти завантажено:', userPlaylists.length);
+    } catch(e) {
+        console.error('Помилка при завантаженні плейлистів:', e);
+    }
+}
+
+async function addMovieToPlaylist(playlistId, movieId, movieTitle, posterPath) {
+    if (!currentUser) {
+        showToast('Потрібна реєстрація');
+        return;
+    }
+
+    try {
+        const playlistDoc = doc(db, 'user_playlists', playlistId);
+        const docSnap = await getDoc(playlistDoc);
+
+        if (docSnap.exists()) {
+            const movies = docSnap.data().movies || [];
+            if (!movies.find(m => m.movieId === movieId)) {
+                movies.push({
+                    movieId: movieId,
+                    movieTitle: movieTitle,
+                    posterPath: posterPath,
+                    added_at: new Date()
+                });
+
+                await updateDoc(playlistDoc, {
+                    movies: movies,
+                    updated_at: Timestamp.now()
+                });
+                showToast('Фільм додано до плейліста');
+            } else {
+                showToast('Фільм уже у плейліста');
+            }
+        }
+    } catch(e) {
+        console.error('Помилка при додаванні фільму до плейліста:', e);
+        showToast('Помилка при додаванні фільму');
+    }
+}
+
+// 3. USER REVIEWS
+async function submitReview(movieId, rating, reviewText) {
+    if (!currentUser) {
+        showToast('Потрібна реєстрація');
+        return;
+    }
+
+    if (rating < 1 || rating > 10) {
+        showToast('Оцінка має бути від 1 до 10');
+        return;
+    }
+
+    try {
+        const reviewsCollection = collection(db, 'movie_reviews');
+
+        const q = query(
+            reviewsCollection,
+            where('movieId', '==', movieId),
+            where('userId', '==', currentUser.uid)
+        );
+        const existing = await getDocs(q);
+
+        if (!existing.empty) {
+            const docId = existing.docs[0].id;
+            await updateDoc(doc(db, 'movie_reviews', docId), {
+                rating: rating,
+                reviewText: reviewText,
+                updated_at: Timestamp.now()
+            });
+            showToast('Рецензія оновлена');
+        } else {
+            await addDoc(reviewsCollection, {
+                movieId: movieId,
+                userId: currentUser.uid,
+                userName: currentUser.displayName || 'Користувач',
+                rating: rating,
+                reviewText: reviewText,
+                created_at: Timestamp.now(),
+                updated_at: Timestamp.now(),
+                likes: 0
+            });
+            showToast('Рецензія опублікована');
+        }
+
+        loadMovieReviews(movieId);
+    } catch(e) {
+        console.error('Помилка при публікації рецензії:', e);
+        showToast('Помилка при публікації рецензії');
+    }
+}
+
+async function loadMovieReviews(movieId) {
+    try {
+        const reviewsCollection = collection(db, 'movie_reviews');
+        const q = query(reviewsCollection, where('movieId', '==', movieId));
+        const snapshot = await getDocs(q);
+
+        const reviews = [];
+        snapshot.forEach(doc => {
+            reviews.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+
+        return reviews.sort((a, b) => b.created_at - a.created_at);
+    } catch(e) {
+        console.error('Помилка при завантаженні рецензій:', e);
+        return [];
+    }
+}
+
+// 4. ADVANCED SEARCH
+async function advancedSearch(filters) {
+    try {
+        let params = {
+            page: 1,
+            sort_by: filters.sortBy || 'popularity.desc'
+        };
+
+        if (filters.genres && filters.genres.length > 0) {
+            params.with_genres = filters.genres.join(',');
+        }
+
+        if (filters.minRating) {
+            params['vote_average.gte'] = filters.minRating;
+        }
+
+        if (filters.maxRating) {
+            params['vote_average.lte'] = filters.maxRating;
+        }
+
+        if (filters.yearFrom) {
+            params['primary_release_date.gte'] = `${filters.yearFrom}-01-01`;
+        }
+
+        if (filters.yearTo) {
+            params['primary_release_date.lte'] = `${filters.yearTo}-12-31`;
+        }
+
+        const data = await tmdb('/discover/movie', params);
+
+        if (data && data.results) {
+            document.getElementById('cat-section').style.display = 'block';
+            document.getElementById('cat-grid').innerHTML = '';
+
+            data.results.forEach(movie => {
+                const cardHtml = card(movie);
+                const div = document.createElement('div');
+                div.innerHTML = cardHtml;
+                document.getElementById('cat-grid').appendChild(div.firstChild);
+            });
+
+            const titleEl = document.querySelector('.cat-head .sec-title');
+            if (titleEl) titleEl.textContent = 'Результати пошуку';
+        }
+    } catch(e) {
+        console.error('Помилка розширеного пошуку:', e);
+        showToast('Помилка при пошуку');
+    }
+}
+
+function openAdvancedSearch() {
+    const modal = document.createElement('div');
+    modal.id = 'advanced-search-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        z-index: 10000;
+        min-width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    `;
+
+    modal.innerHTML = `
+        <div style="color: var(--text);">
+            <div style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">Розширений пошук</div>
+
+            <div style="display: grid; gap: 15px;">
+                <div>
+                    <label style="color: var(--muted); font-size: 12px; display: block; margin-bottom: 5px;">Від року</label>
+                    <input id="search-year-from" type="number" placeholder="2000" min="1900" max="2026"
+                        style="width: 100%; padding: 8px; background: var(--bg3); border: 1px solid var(--border);
+                        color: var(--text); border-radius: 6px; font-family: inherit;">
+                </div>
+
+                <div>
+                    <label style="color: var(--muted); font-size: 12px; display: block; margin-bottom: 5px;">До року</label>
+                    <input id="search-year-to" type="number" placeholder="2026" min="1900" max="2026"
+                        style="width: 100%; padding: 8px; background: var(--bg3); border: 1px solid var(--border);
+                        color: var(--text); border-radius: 6px; font-family: inherit;">
+                </div>
+
+                <div>
+                    <label style="color: var(--muted); font-size: 12px; display: block; margin-bottom: 5px;">Мінімальна оцінка</label>
+                    <input id="search-rating-min" type="number" placeholder="1" min="1" max="10" step="0.5"
+                        style="width: 100%; padding: 8px; background: var(--bg3); border: 1px solid var(--border);
+                        color: var(--text); border-radius: 6px; font-family: inherit;">
+                </div>
+
+                <div>
+                    <label style="color: var(--muted); font-size: 12px; display: block; margin-bottom: 5px;">Сортування</label>
+                    <select id="search-sort-by"
+                        style="width: 100%; padding: 8px; background: var(--bg3); border: 1px solid var(--border);
+                        color: var(--text); border-radius: 6px; font-family: inherit;">
+                        <option value="popularity.desc">За популярністю</option>
+                        <option value="vote_average.desc">За рейтингом (вищий)</option>
+                        <option value="release_date.desc">За датою (новіше)</option>
+                        <option value="release_date.asc">За датою (старіше)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="
+                    const filters = {
+                        yearFrom: document.getElementById('search-year-from').value,
+                        yearTo: document.getElementById('search-year-to').value,
+                        minRating: document.getElementById('search-rating-min').value,
+                        sortBy: document.getElementById('search-sort-by').value
+                    };
+                    advancedSearch(filters);
+                    document.getElementById('advanced-search-modal').remove();
+                " style="flex: 1; padding: 10px 20px; background: var(--accent); color: #fff; border: none;
+                border-radius: 6px; cursor: pointer; font-weight: bold;">Пошук</button>
+
+                <button onclick="document.getElementById('advanced-search-modal').remove()"
+                    style="padding: 10px 20px; background: var(--bg3); color: var(--text); border: 1px solid var(--border);
+                    border-radius: 6px; cursor: pointer;">Закрити</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+// 5. NOTIFICATIONS
+let userNotifications = [];
+let notificationPreferences = {
+    newReleases: true,
+    favoriteGenres: [],
+    favoriteActors: []
+};
+
+async function loadNotificationPreferences() {
+    if (!currentUser) return;
+
+    try {
+        const prefsDoc = await getDoc(doc(db, 'user_notification_prefs', currentUser.uid));
+        if (prefsDoc.exists()) {
+            notificationPreferences = prefsDoc.data();
+        }
+    } catch(e) {
+        console.error('Помилка при завантаженні переваг сповіщень:', e);
+    }
+}
+
+async function updateNotificationPreference(key, value) {
+    if (!currentUser) return;
+
+    try {
+        notificationPreferences[key] = value;
+        await setDoc(doc(db, 'user_notification_prefs', currentUser.uid), notificationPreferences);
+        showToast('Переваги оновлені');
+    } catch(e) {
+        console.error('Помилка при оновленні переваг:', e);
+    }
+}
+
+function openNotificationSettings() {
+    const modal = document.createElement('div');
+    modal.id = 'notification-settings-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        z-index: 10000;
+        min-width: 400px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    `;
+
+    modal.innerHTML = `
+        <div style="color: var(--text);">
+            <div style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">Параметри сповіщень</div>
+
+            <div style="display: grid; gap: 15px;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="notif-new-releases" ${notificationPreferences.newReleases ? 'checked' : ''}
+                        style="width: 18px; height: 18px; cursor: pointer;">
+                    <span>Сповіщати про нові випуски</span>
+                </label>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button onclick="document.getElementById('notification-settings-modal').remove()"
+                    style="width: 100%; padding: 10px 20px; background: var(--accent); color: #fff; border: none;
+                    border-radius: 6px; cursor: pointer; font-weight: bold;">Закрити</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById('notif-new-releases').addEventListener('change', (e) => {
+        updateNotificationPreference('newReleases', e.target.checked);
+    });
+}
+
+// 6. STATISTICS - ЗБІР ДАНИХ ДЛЯ СТАТИСТИКИ
+async function getViewStatistics() {
+    try {
+        const viewsCollection = collection(db, 'movies_views');
+        const snapshot = await getDocs(viewsCollection);
+
+        const stats = {
+            totalViews: 0,
+            movieStats: {},
+            genreStats: {},
+            hourlyStats: {}
+        };
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            stats.totalViews++;
+
+            if (data.movieTitle) {
+                stats.movieStats[data.movieTitle] = (stats.movieStats[data.movieTitle] || 0) + 1;
+            }
+
+            if (data.timestamp) {
+                const date = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
+                const dateStr = date.toISOString().split('T')[0];
+                stats.hourlyStats[dateStr] = (stats.hourlyStats[dateStr] || 0) + 1;
+            }
+        });
+
+        return stats;
+    } catch(e) {
+        console.error('Помилка при отриманні статистики:', e);
+        return null;
+    }
+}
+
+async function openStatistics() {
+    if (!currentUser) {
+        showToast('Треба увійти до системи');
+        return;
+    }
+
+    // Перевір чи це адмін
+    try {
+        const adminDoc = await getDoc(doc(db, 'admins', currentUser.uid));
+        if (!adminDoc.exists()) {
+            showToast('Доступ тільки для адміна');
+            return;
+        }
+    } catch(e) {
+        console.error('Помилка перевірки адміна:', e);
+        showToast('Помилка при перевірці доступу');
+        return;
+    }
+
+    // Відкрий адмін-панель
+    window.location.href = 'admin.html';
+}
+
+// 7. MODAL FUNCTIONS FOR PRO PACK
+
+function openPlaylistAddModal(movieId, movieTitle) {
+    if (!currentUser) {
+        showToast('Потрібна реєстрація');
+        return;
+    }
+
+    loadUserPlaylists().then(() => {
+        const modal = document.createElement('div');
+        modal.id = 'add-to-playlist-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            z-index: 10000;
+            min-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        `;
+
+        let playlistsHtml = '';
+        if (userPlaylists && userPlaylists.length > 0) {
+            playlistsHtml = userPlaylists.map(pl => `
+                <div onclick="addMovieToPlaylist('${pl.id}', ${movieId}, '${movieTitle.replace(/'/g, "")}', '')"
+                    style="padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s;">
+                    <div style="color: var(--text); font-weight: 600;">${escapeHtml(pl.name || 'Плейлист')}</div>
+                    <div style="color: var(--muted); font-size: 12px; margin-top: 4px;">Фільмів: ${(pl.movies || []).length}</div>
+                </div>
+            `).join('');
+        } else {
+            playlistsHtml = '<div style="color: var(--muted); text-align: center; padding: 20px;">У вас немає плейлистів</div>';
+        }
+
+        modal.innerHTML = `
+            <div style="color: var(--text);">
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">Додати до плейліста</div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">Створи новий плейлист:</div>
+                    <div style="display: flex; gap: 10px;">
+                        <input id="new-playlist-name" type="text" placeholder="Ім'я плейліста"
+                            style="flex: 1; padding: 8px; background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit;">
+                        <button onclick="
+                            const name = document.getElementById('new-playlist-name').value;
+                            if (name) {
+                                createPlaylist(name).then(() => {
+                                    document.getElementById('add-to-playlist-modal').remove();
+                                });
+                            }
+                        " style="padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Створи</button>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+                    <div style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">Мої плейлисти:</div>
+                    ${playlistsHtml}
+                </div>
+
+                <div style="text-align: right; margin-top: 20px;">
+                    <button onclick="document.getElementById('add-to-playlist-modal').remove()"
+                        style="padding: 10px 20px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">Закрити</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+    });
+}
+
+function openReviewModal(movieId) {
+    if (!currentUser) {
+        showToast('Потрібна реєстрація');
+        return;
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'review-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        z-index: 10000;
+        min-width: 450px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    `;
+
+    modal.innerHTML = `
+        <div style="color: var(--text);">
+            <div style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">Написати рецензію</div>
+
+            <div style="display: grid; gap: 15px;">
+                <div>
+                    <label style="color: var(--muted); font-size: 12px; display: block; margin-bottom: 8px;">Оцінка (1-10)</label>
+                    <input id="review-rating" type="number" min="1" max="10" step="0.5" placeholder="8.5"
+                        style="width: 100%; padding: 10px; background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; font-size: 14px;">
+                </div>
+
+                <div>
+                    <label style="color: var(--muted); font-size: 12px; display: block; margin-bottom: 8px;">Твоя рецензія</label>
+                    <textarea id="review-text" placeholder="Що ти думаєш про цей фільм?..."
+                        style="width: 100%; padding: 10px; background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-family: inherit; font-size: 14px; min-height: 120px; resize: none;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="
+                    const rating = parseFloat(document.getElementById('review-rating').value);
+                    const text = document.getElementById('review-text').value;
+                    if (rating >= 1 && rating <= 10 && text) {
+                        submitReview(${movieId}, rating, text);
+                        document.getElementById('review-modal').remove();
+                    } else {
+                        showToast('Заповни всі поля коректно');
+                    }
+                " style="flex: 1; padding: 10px 20px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Опублікувати</button>
+
+                <button onclick="document.getElementById('review-modal').remove()"
+                    style="padding: 10px 20px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">Скасувати</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+// Завантажуємо плейлисти і переваги при вході користувача
+auth.onAuthStateChanged(user => {
+    if (user) {
+        loadUserPlaylists();
+        loadNotificationPreferences();
+    }
+});
 
 </script>
 </body>
