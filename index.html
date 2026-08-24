@@ -3258,7 +3258,7 @@
       <a href="/category/documentary" data-i18n="nav_docs" onclick="event.preventDefault();showCatalog({type:'movie',genre:'99'});">Документальні</a>
       <a href="/category/top" data-i18n="nav_top" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});">Топ рейтинг</a>
       <a href="/category/classic" data-i18n="nav_classic" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});">Класика</a>
-      <a href="/trending" onclick="event.preventDefault();showTrending();">Тренди</a>
+      <a href="/trending" onclick="event.preventDefault();showTrending();">🎬 Трендинг</a>
     </nav>
 
     <div class="srch-wrap">
@@ -6516,9 +6516,13 @@ function showTrending() {
 
 async function loadTrendingMovies() {
     try {
+        console.log('📌 Завантаження Трендингу...');
         // Отримуємо популярні фільми за останній тиждень
-        const data = await tmdb('trending/movie/week');
-        if (!data || !data.results) {
+        const data = await tmdb('/trending/movie/week');
+        console.log('✅ Трендинг отримано:', data);
+
+        if (!data || !data.results || data.results.length === 0) {
+            console.warn('⚠️ Трендинг пусто');
             document.getElementById('trending-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Не вдалося завантажити трендинг</div>';
             return;
         }
@@ -6527,12 +6531,17 @@ async function loadTrendingMovies() {
         grid.innerHTML = '';
 
         data.results.slice(0, 20).forEach(m => {
-            const mcard = card(m, 'movie');
-            grid.appendChild(mcard);
+            try {
+                const mcard = card(m, 'movie');
+                grid.appendChild(mcard);
+            } catch (cardErr) {
+                console.warn('Помилка при створенні карточки:', cardErr);
+            }
         });
+        console.log('✅ Трендинг показано: ' + grid.children.length + ' фільмів');
     } catch (e) {
-        console.error('Помилка завантаження трендингу:', e);
-        document.getElementById('trending-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#999;">Помилка завантаження</div>';
+        console.error('❌ Помилка завантаження трендингу:', e);
+        document.getElementById('trending-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:red;">❌ Помилка: ' + e.message + '</div>';
     }
 }
 
@@ -6632,7 +6641,7 @@ async function loadRecommendationsUI() {
 
         for (const movieId of recs.slice(0, 20)) {
             try {
-                const movieData = await tmdb(`/movie/${movieId}`);
+                const movieData = await tmdb('/movie/' + movieId);
                 if (movieData) {
                     const mcard = card(movieData, 'movie');
                     grid.appendChild(mcard);
