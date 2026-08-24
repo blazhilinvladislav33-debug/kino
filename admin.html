@@ -3,848 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 КіноБаза - Адміністрування</title>
+    <title>КіноБаза - Адмін Панель</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg: #0d0d0d;
-            --bg2: #1a1a1a;
-            --bg3: #222;
-            --accent: #e50914;
-            --success: #4caf50;
-            --error: #f44336;
-            --warning: #ff9800;
-            --text: #fff;
-            --text-light: #e0e0e0;
-            --muted: #999;
-            --border: #333;
-        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            background: #0a0e27;
+            color: #fff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 1600px;
+        .admin-container {
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-        .login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
-        }
-        .login-box {
-            background: var(--bg2);
-            padding: 50px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 420px;
-            border: 1px solid var(--border);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        .login-box h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-            text-align: center;
-            background: linear-gradient(135deg, var(--accent), #ff1744);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .login-box p {
-            text-align: center;
-            color: var(--muted);
-            margin-bottom: 40px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        input[type="email"],
-        input[type="password"],
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 14px 16px;
-            background: var(--bg3);
-            border: 1.5px solid var(--border);
-            color: var(--text);
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: rgba(229, 9, 20, 0.05);
-            box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.1);
-        }
-        .btn {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, var(--accent), #ff1744);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.3);
-        }
-        .btn:disabled {
-            background: var(--muted);
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-        .btn-secondary {
-            background: var(--bg3);
-            color: var(--text);
-            border: 1.5px solid var(--border);
-        }
-        .btn-danger {
-            background: var(--error);
-        }
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 12px;
-        }
-        .btn-block {
-            width: 100%;
-        }
-        .alert {
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            font-size: 14px;
-            border-left: 4px solid;
-            animation: slideIn 0.3s ease;
-        }
-        .alert.show { display: block; }
-        .alert.success { background: rgba(76, 175, 80, 0.1); color: #90ee90; border-color: var(--success); }
-        .alert.error { background: rgba(244, 67, 54, 0.1); color: #ff6b6b; border-color: var(--error); }
-        .alert.warning { background: rgba(255, 152, 0, 0.1); color: #ffb74d; border-color: var(--warning); }
-        .header {
+        .admin-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 35px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid var(--border);
-        }
-        .header h1 {
-            font-size: 36px;
-            background: linear-gradient(135deg, var(--accent), #ff1744);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .user-email {
-            font-size: 14px;
-            color: var(--muted);
-            background: var(--bg3);
-            padding: 8px 16px;
-            border-radius: 6px;
-        }
-        .tabs {
-            display: flex;
-            gap: 5px;
             margin-bottom: 30px;
-            border-bottom: 2px solid var(--border);
-            overflow-x: auto;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #1a1f3a;
         }
-        .tab-btn {
-            padding: 14px 24px;
-            background: transparent;
-            color: var(--muted);
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-        .tab-btn.active {
-            color: var(--text);
-            border-bottom-color: var(--accent);
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card {
-            background: var(--bg2);
-            padding: 28px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .card h3 {
-            font-size: 20px;
-            margin-bottom: 20px;
+        .admin-header h1 {
+            font-size: 28px;
             font-weight: 700;
         }
-        .card h4 {
-            font-size: 16px;
-            margin: 20px 0 15px 0;
-            font-weight: 600;
-            color: var(--text-light);
+        .admin-nav {
+            display: flex;
+            gap: 15px;
         }
-        .grid {
+        .admin-nav a, .admin-nav button {
+            padding: 8px 16px;
+            background: #1a1f3a;
+            color: #fff;
+            border: 1px solid #2a2f4a;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .admin-nav a:hover, .admin-nav button:hover {
+            background: #2a2f4a;
+        }
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
-        .stat-box {
-            background: linear-gradient(135deg, var(--bg3), #252525);
-            padding: 24px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-        .stat-number {
-            font-size: 42px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent), #ff1744);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
+        .stat-card {
+            background: #1a1f3a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #2a2f4a;
         }
         .stat-label {
-            color: var(--muted);
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 8px;
         }
-        .row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #e50914;
+        }
+        .chart-container {
+            background: #1a1f3a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #2a2f4a;
+            margin-bottom: 30px;
+        }
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
             margin-bottom: 20px;
         }
-        .user-item, .comment-item {
-            background: var(--bg3);
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-        .user-item h4, .comment-item h4 {
-            margin: 0 0 10px 0;
-            font-size: 14px;
-        }
-        .user-item p, .comment-item p {
-            font-size: 13px;
-            color: var(--muted);
-            margin: 5px 0;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 56px;
-            height: 28px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #555;
-            transition: 0.4s;
-            border-radius: 28px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 22px;
-            width: 22px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background: linear-gradient(135deg, var(--accent), #ff1744);
-        }
-        input:checked + .slider:before {
-            transform: translateX(28px);
-        }
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .info-text {
-            font-size: 13px;
-            color: var(--muted);
-            margin-top: 8px;
-        }
-        .divider {
-            height: 1px;
-            background: var(--border);
+        canvas { max-height: 400px; }
+        .error {
+            background: #2a1515;
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 6px;
             margin: 20px 0;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
         }
-        table th {
-            background: var(--bg3);
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 1px solid var(--border);
-        }
-        table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-        }
-        table tr:hover {
-            background: rgba(229, 9, 20, 0.05);
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .badge-admin {
-            background: rgba(229, 9, 20, 0.2);
-            color: var(--accent);
-        }
-        .badge-user {
-            background: rgba(100, 200, 255, 0.2);
-            color: #64c8ff;
+        @media (max-width: 768px) {
+            .admin-container { padding: 10px; }
+            .admin-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .admin-nav { flex-wrap: wrap; }
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- LOGIN -->
-    <div id="login-screen" class="login-screen">
-        <div class="login-box">
-            <h1>🔐 КіноБаза</h1>
-            <p>Панель адміністратора</p>
-            <div id="login-alert" class="alert"></div>
-            <div class="form-group">
-                <label>📧 Email:</label>
-                <input type="email" id="login-email" placeholder="admin@example.com">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Адмін Панель КіноБази</h1>
+            <div class="admin-nav">
+                <a href="/">Назад на сайт</a>
+                <button onclick="logout()">Вихід</button>
             </div>
-            <div class="form-group">
-                <label>🔑 Пароль:</label>
-                <input type="password" id="login-password" placeholder="••••••••">
-            </div>
-            <button class="btn btn-block" onclick="handleLogin()" id="login-btn">Увійти</button>
         </div>
-    </div>
 
-    <!-- ADMIN PANEL -->
-    <div id="admin-screen" style="display: none;">
-        <div class="container">
-            <div class="header">
-                <h1>⚙️ Адміністрування КіноБаза</h1>
-                <div class="user-info">
-                    <span class="user-email" id="user-email">admin@example.com</span>
-                    <button class="btn btn-secondary" onclick="handleLogout()">🚪 Вихід</button>
+        <div id="error-msg" class="error" style="display:none;"></div>
+        <div id="loading" class="loading">Завантаження статистики...</div>
+
+        <div id="stats-section" style="display:none;">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Всього переглядів</div>
+                    <div class="stat-value" id="total-views">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Унікальних фільмів</div>
+                    <div class="stat-value" id="unique-movies">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Днів активності</div>
+                    <div class="stat-value" id="active-days">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Середньо за день</div>
+                    <div class="stat-value" id="avg-per-day">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Користувачів</div>
+                    <div class="stat-value" id="total-users">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Рецензій</div>
+                    <div class="stat-value" id="total-reviews">0</div>
                 </div>
             </div>
 
-            <div id="admin-alert" class="alert"></div>
-
-            <!-- TABS -->
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab(0)">📊 Статистика</button>
-                <button class="tab-btn" onclick="switchTab(1)">🎬 Плеєри</button>
-                <button class="tab-btn" onclick="switchTab(2)">📢 Реклама</button>
-                <button class="tab-btn" onclick="switchTab(3)">👥 Користувачі</button>
-                <button class="tab-btn" onclick="switchTab(4)">💬 Коментарі</button>
-                <button class="tab-btn" onclick="switchTab(5)">📈 Аналітика</button>
-                <button class="tab-btn" onclick="switchTab(6)">⚙️ Налаштування</button>
+            <div class="chart-container">
+                <div class="chart-title">Топ 20 найбільш переглянутих</div>
+                <canvas id="top-movies-chart"></canvas>
             </div>
 
-            <!-- TAB 0: STATISTICS -->
-            <div id="tab-0" class="tab-content active">
-                <div class="card">
-                    <h3>📊 Загальна статистика</h3>
-                    <div class="grid">
-                        <div class="stat-box">
-                            <div class="stat-number" id="stat-users">-</div>
-                            <div class="stat-label">Користувачів</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number" id="stat-sessions">-</div>
-                            <div class="stat-label">Сесій перегляду</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number" id="stat-comments">-</div>
-                            <div class="stat-label">Коментарів</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number" id="stat-admins">-</div>
-                            <div class="stat-label">Адмінів</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="chart-container">
+                <div class="chart-title">Тренд переглядів (30 днів)</div>
+                <canvas id="trend-chart"></canvas>
             </div>
 
-            <!-- TAB 1: PLAYERS -->
-            <div id="tab-1" class="tab-content">
-                <div class="card">
-                    <h3>🎬 Управління плеєрами</h3>
-                    <p class="info-text">Вимикайте плеєри, які не працюють або вам не потрібні</p>
-                    <div id="players-container" style="margin: 20px 0;"></div>
-                    <button class="btn" onclick="savePlayers()">💾 Зберегти</button>
-                </div>
-            </div>
-
-            <!-- TAB 2: ADS -->
-            <div id="tab-2" class="tab-content">
-                <div class="card">
-                    <h3>📢 Налаштування реклами</h3>
-
-                    <h4>Статус реклами</h4>
-                    <label class="switch" style="display: inline-block;">
-                        <input type="checkbox" id="ads-enabled">
-                        <span class="slider"></span>
-                    </label>
-                    <p class="info-text">Реклама увімкнена</p>
-
-                    <div class="divider"></div>
-
-                    <h4>Monetag URL</h4>
-                    <input type="text" id="monetag-url" placeholder="https://monetag.com/...">
-                    <p class="info-text">Вставте посилання на скрипт Monetag</p>
-
-                    <div class="divider"></div>
-
-                    <h4>Частота показу (секунди)</h4>
-                    <input type="number" id="ads-frequency" min="30" max="3600" value="300">
-                    <p class="info-text">Мінімум 30, максимум 3600 секунд</p>
-
-                    <button class="btn" onclick="saveAds()" style="margin-top: 20px;">💾 Зберегти</button>
-                </div>
-            </div>
-
-            <!-- TAB 3: USERS -->
-            <div id="tab-3" class="tab-content">
-                <div class="card">
-                    <h3>👥 Управління користувачами</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>Роль</th>
-                                <th>Дата реєстрації</th>
-                                <th>Дії</th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-table">
-                            <tr><td colspan="4" style="text-align: center; color: var(--muted);">Завантажується...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- TAB 4: COMMENTS -->
-            <div id="tab-4" class="tab-content">
-                <div class="card">
-                    <h3>💬 Коментарі</h3>
-                    <div id="comments-container">
-                        <p style="text-align: center; color: var(--muted);">Завантажується...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 5: ANALYTICS -->
-            <div id="tab-5" class="tab-content">
-                <div class="card">
-                    <h3>📈 Аналітика перегляду</h3>
-                    <h4>Останні 7 днів</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Кількість переглядів</th>
-                            </tr>
-                        </thead>
-                        <tbody id="analytics-table">
-                            <tr><td colspan="2" style="text-align: center; color: var(--muted);">Завантажується...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- TAB 6: SETTINGS -->
-            <div id="tab-6" class="tab-content">
-                <div class="card">
-                    <h3>⚙️ Загальні налаштування</h3>
-
-                    <h4>Назва сайту</h4>
-                    <input type="text" id="site-title" placeholder="КіноБаза">
-
-                    <h4>Опис сайту</h4>
-                    <textarea id="site-description" placeholder="Опис..." style="min-height: 100px; resize: vertical;"></textarea>
-
-                    <h4>Email підтримки</h4>
-                    <input type="email" id="support-email" placeholder="support@kinobaza.site">
-
-                    <div class="divider"></div>
-
-                    <h3 style="color: var(--error);">🗑️ Небезпечні операції</h3>
-                    <button class="btn btn-danger" onclick="resetAllData()">⚠️ ОЧИСТИТИ ВСІ ДАНІ</button>
-                    <p class="info-text" style="color: var(--error);">Це видалить ВСІ коментарі, сесії та аналітику. Не можна скасувати!</p>
-
-                    <button class="btn" onclick="saveSettings()" style="margin-top: 20px;">💾 Зберегти</button>
-                </div>
+            <div class="chart-container">
+                <div class="chart-title">Останні 10 рецензій</div>
+                <div id="reviews-list" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
-            authDomain: "kinobaza-6c109.firebaseapp.com",
-            projectId: "kinobaza-6c109",
-            storageBucket: "kinobaza-6c109.firebasestorage.app",
-            messagingSenderId: "639150355070",
-            appId: "1:639150355070:web:772f863f075d4d1d839e2f"
+            apiKey: "AIzaSyC1DPJw9s-k4Y4KX1oeH7eVc2Z7X8Q6wYo",
+            authDomain: "kinobaza-9e1f8.firebaseapp.com",
+            projectId: "kinobaza-9e1f8",
+            storageBucket: "kinobaza-9e1f8.appspot.com",
+            messagingSenderId: "519626748195",
+            appId: "1:519626748195:web:b4e3c5f2e8c7f1a4b5c6d7"
         };
 
-        let db, auth, currentUser;
-        let statsInterval;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        auth = firebase.auth();
+        let topMoviesChart = null;
+        let trendChart = null;
 
-        auth.onAuthStateChanged(user => {
-            if (user) checkAdminRole(user);
-            else showLoginScreen();
-        });
-
-        function showAlert(msg, type, screenId) {
-            const el = document.getElementById(screenId + '-alert');
-            el.textContent = msg;
-            el.className = 'alert show ' + type;
-            setTimeout(() => el.classList.remove('show'), 4000);
-        }
-
-        function showLoginScreen() {
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('admin-screen').style.display = 'none';
-            if (statsInterval) clearInterval(statsInterval);
-        }
-
-        function showAdminScreen() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('admin-screen').style.display = 'block';
-            loadAllData();
-            statsInterval = setInterval(loadAllData, 5000);
-        }
-
-        function checkAdminRole(user) {
-            db.collection('users').doc(user.uid).get().then(doc => {
-                if (doc.exists && doc.data().role === 'admin') {
-                    currentUser = user;
-                    document.getElementById('user-email').textContent = user.email;
-                    showAdminScreen();
-                } else {
-                    showAlert('❌ Тільки адміни мають доступ', 'error', 'login');
-                    auth.signOut();
-                }
-            }).catch(e => {
-                showAlert('❌ Помилка: ' + e.message, 'error', 'login');
-            });
-        }
-
-        async function handleLogin() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            const btn = document.getElementById('login-btn');
-
-            if (!email || !password) {
-                showAlert('❌ Введи email та пароль', 'error', 'login');
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                showError('Не авторизовані');
+                setTimeout(() => window.location.href = '/', 2000);
                 return;
             }
 
-            btn.disabled = true;
-            btn.textContent = 'Вхід...';
-
             try {
-                await auth.signInWithEmailAndPassword(email, password);
+                const adminRef = collection(db, 'admins');
+                const adminDocs = await getDocs(adminRef);
+                let isAdmin = false;
+                adminDocs.forEach(doc => {
+                    if (doc.id === user.uid) isAdmin = true;
+                });
+
+                if (!isAdmin) {
+                    showError('Тільки адміни');
+                    setTimeout(() => window.location.href = '/', 2000);
+                    return;
+                }
+
+                loadStatistics();
             } catch(e) {
-                let msg = e.message;
-                if (e.code === 'auth/user-not-found') msg = 'Користувач не знайдений';
-                if (e.code === 'auth/wrong-password') msg = 'Неправильний пароль';
-                showAlert('❌ ' + msg, 'error', 'login');
-                btn.disabled = false;
-                btn.textContent = 'Увійти';
+                console.error(e);
+                showError('Помилка: ' + e.message);
+            }
+        });
+
+        function showError(msg) {
+            document.getElementById('error-msg').textContent = msg;
+            document.getElementById('error-msg').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        async function loadStatistics() {
+            try {
+                const viewsSnapshot = await getDocs(collection(db, 'movies_views'));
+                const usersSnapshot = await getDocs(collection(db, 'users'));
+                const reviewsSnapshot = await getDocs(collection(db, 'movie_reviews'));
+
+                let totalViews = 0;
+                const movieMap = {};
+                const dayMap = {};
+
+                viewsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    totalViews++;
+                    const movieKey = `${data.movieId}`;
+                    movieMap[movieKey] = (movieMap[movieKey] || 0) + 1;
+
+                    if (data.timestamp) {
+                        const date = new Date(data.timestamp.toDate ? data.timestamp.toDate() : data.timestamp);
+                        const day = date.toISOString().split('T')[0];
+                        dayMap[day] = (dayMap[day] || 0) + 1;
+                    }
+                });
+
+                const uniqueMovies = Object.keys(movieMap).length;
+                const activeDays = Object.keys(dayMap).length;
+                const avgPerDay = activeDays > 0 ? Math.round(totalViews / activeDays) : 0;
+
+                document.getElementById('total-views').textContent = totalViews;
+                document.getElementById('unique-movies').textContent = uniqueMovies;
+                document.getElementById('active-days').textContent = activeDays;
+                document.getElementById('avg-per-day').textContent = avgPerDay;
+                document.getElementById('total-users').textContent = usersSnapshot.size;
+                document.getElementById('total-reviews').textContent = reviewsSnapshot.size;
+
+                const topMovies = Object.entries(movieMap)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 20);
+
+                renderTopMoviesChart(topMovies);
+
+                const sortedDays = Object.keys(dayMap).sort();
+                renderTrendChart(sortedDays, dayMap);
+
+                renderReviews(Array.from(reviewsSnapshot.docs).sort((a, b) =>
+                    (b.data().created_at?.toDate?.() || 0) - (a.data().created_at?.toDate?.() || 0)
+                ).slice(0, 10));
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('stats-section').style.display = 'block';
+
+            } catch(e) {
+                console.error(e);
+                showError('Помилка: ' + e.message);
             }
         }
 
-        function handleLogout() {
-            if (confirm('Вийти?')) {
-                auth.signOut();
-                document.getElementById('login-email').value = '';
-                document.getElementById('login-password').value = '';
-            }
-        }
-
-        function switchTab(idx) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + idx).classList.add('active');
-            document.querySelectorAll('.tab-btn')[idx].classList.add('active');
-        }
-
-        async function loadAllData() {
-            loadStats();
-            loadPlayers();
-            loadAds();
-            loadSettings();
-            loadUsers();
-            loadComments();
-            loadAnalytics();
-        }
-
-        function loadStats() {
-            db.collection('users').get().then(snap => {
-                let admins = 0;
-                snap.forEach(doc => { if (doc.data().role === 'admin') admins++; });
-                document.getElementById('stat-users').textContent = snap.size;
-                document.getElementById('stat-admins').textContent = admins;
-            }).catch(e => console.error(e));
-
-            db.collection('viewing_sessions').get().then(snap => {
-                document.getElementById('stat-sessions').textContent = snap.size;
-            }).catch(e => console.error(e));
-
-            db.collection('comments').get().then(snap => {
-                document.getElementById('stat-comments').textContent = snap.size;
-            }).catch(e => console.error(e));
-        }
-
-        function loadPlayers() {
-            db.collection('settings').doc('config').get().then(doc => {
-                const data = doc.data() || {};
-                const disabled = data.disabledPlayers || [];
-                const players = [
-                    { name: '🎬 Rendex', id: 'rendex' },
-                    { name: '🎞️ Collaps', id: 'collaps' },
-                    { name: '📹 Vidsrc', id: 'vidsrc' },
-                    { name: '🔍 Мультипошук', id: 'multisearch' }
-                ];
-                const html = players.map(p => `
-                    <div class="user-item">
-                        <h4>${p.name}</h4>
-                        <label class="switch" style="display: inline-block;">
-                            <input type="checkbox" ${!disabled.includes(p.id) ? 'checked' : ''} data-player="${p.id}">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                `).join('');
-                document.getElementById('players-container').innerHTML = html;
-            }).catch(e => console.error(e));
-        }
-
-        async function savePlayers() {
-            const disabled = [];
-            document.querySelectorAll('input[data-player]').forEach(cb => {
-                if (!cb.checked) disabled.push(cb.dataset.player);
+        function renderTopMoviesChart(topMovies) {
+            const ctx = document.getElementById('top-movies-chart').getContext('2d');
+            if (topMoviesChart) topMoviesChart.destroy();
+            topMoviesChart = new Chart(ctx, {
+                type: 'barh',
+                data: {
+                    labels: topMovies.map(([id]) => id),
+                    datasets: [{
+                        label: 'Переглядів',
+                        data: topMovies.map(([, count]) => count),
+                        backgroundColor: '#e50914',
+                        borderColor: '#ff1f27',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#888' }, grid: { color: '#1a1f3a' } },
+                        y: { ticks: { color: '#888' }, grid: { display: false } }
+                    }
+                }
             });
-            try {
-                await db.collection('settings').doc('config').set({ disabledPlayers: disabled }, { merge: true });
-                showAlert('✅ Плеєри збережені', 'success', 'admin');
-            } catch(e) {
-                showAlert('❌ Помилка: ' + e.message, 'error', 'admin');
-            }
         }
 
-        function loadAds() {
-            db.collection('settings').doc('config').get().then(doc => {
-                const data = doc.data() || {};
-                document.getElementById('monetag-url').value = data.monetagUrl || '';
-                document.getElementById('ads-enabled').checked = data.playerAdsEnabled !== false;
-                document.getElementById('ads-frequency').value = data.adsFrequency || 300;
-            }).catch(e => console.error(e));
-        }
-
-        async function saveAds() {
-            try {
-                await db.collection('settings').doc('config').set({
-                    monetagUrl: document.getElementById('monetag-url').value,
-                    playerAdsEnabled: document.getElementById('ads-enabled').checked,
-                    adsFrequency: parseInt(document.getElementById('ads-frequency').value) || 300
-                }, { merge: true });
-                showAlert('✅ Реклама збережена', 'success', 'admin');
-            } catch(e) {
-                showAlert('❌ Помилка: ' + e.message, 'error', 'admin');
-            }
-        }
-
-        function loadSettings() {
-            db.collection('settings').doc('config').get().then(doc => {
-                const data = doc.data() || {};
-                document.getElementById('site-title').value = data.siteTitle || 'КіноБаза';
-                document.getElementById('site-description').value = data.siteDescription || '';
-                document.getElementById('support-email').value = data.supportEmail || '';
-            }).catch(e => console.error(e));
-        }
-
-        async function saveSettings() {
-            try {
-                await db.collection('settings').doc('config').set({
-                    siteTitle: document.getElementById('site-title').value,
-                    siteDescription: document.getElementById('site-description').value,
-                    supportEmail: document.getElementById('support-email').value
-                }, { merge: true });
-                showAlert('✅ Налаштування збережені', 'success', 'admin');
-            } catch(e) {
-                showAlert('❌ Помилка: ' + e.message, 'error', 'admin');
-            }
-        }
-
-        function loadUsers() {
-            db.collection('users').get().then(snap => {
-                const html = snap.docs.map(doc => {
-                    const data = doc.data();
-                    return `
-                        <tr>
-                            <td>${data.email || '-'}</td>
-                            <td><span class="badge ${data.role === 'admin' ? 'badge-admin' : 'badge-user'}">${data.role || 'user'}</span></td>
-                            <td>${data.createdAt ? new Date(data.createdAt).toLocaleDateString('uk-UA') : '-'}</td>
-                            <td><button class="btn btn-sm" onclick="removeUser('${doc.id}')">Видалити</button></td>
-                        </tr>
-                    `;
-                }).join('');
-                document.getElementById('users-table').innerHTML = html || '<tr><td colspan="4">Немає користувачів</td></tr>';
-            }).catch(e => console.error(e));
-        }
-
-        async function removeUser(uid) {
-            if (confirm('Видалити цього користувача?')) {
-                try {
-                    await db.collection('users').doc(uid).delete();
-                    loadUsers();
-                    showAlert('✅ Користувач видалений', 'success', 'admin');
-                } catch(e) {
-                    showAlert('❌ Помилка: ' + e.message, 'error', 'admin');
+        function renderTrendChart(days, dayMap) {
+            const ctx = document.getElementById('trend-chart').getContext('2d');
+            if (trendChart) trendChart.destroy();
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days.slice(-30),
+                    datasets: [{
+                        label: 'Переглядів',
+                        data: days.slice(-30).map(d => dayMap[d] || 0),
+                        borderColor: '#e50914',
+                        backgroundColor: 'rgba(229, 9, 20, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#e50914',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#888' } } },
+                    scales: {
+                        x: { ticks: { color: '#888' }, grid: { color: '#1a1f3a' } },
+                        y: { ticks: { color: '#888' }, grid: { color: '#1a1f3a' } }
+                    }
                 }
-            }
+            });
         }
 
-        function loadComments() {
-            db.collection('comments').limit(20).get().then(snap => {
-                const html = snap.docs.map(doc => {
-                    const data = doc.data();
-                    return `
-                        <div class="comment-item">
-                            <h4>${data.authorName || 'Невідомо'}</h4>
-                            <p>Фільм: ${data.movieId}</p>
-                            <p>"${data.text}"</p>
-                            <button class="btn btn-sm btn-danger" onclick="removeComment('${doc.id}')">Видалити</button>
+        function renderReviews(reviewDocs) {
+            const list = document.getElementById('reviews-list');
+            if (reviewDocs.length === 0) {
+                list.innerHTML = '<div style="color: #888; padding: 20px; text-align: center;">Рецензій ще немає</div>';
+                return;
+            }
+            list.innerHTML = reviewDocs.map(doc => {
+                const data = doc.data();
+                const date = data.created_at?.toDate?.() ? new Date(data.created_at.toDate()).toLocaleDateString('uk-UA') : 'невідомо';
+                return `
+                    <div style="padding: 15px; border-bottom: 1px solid #2a2f4a;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <div style="font-weight: 600;">ID: ${data.movieId}</div>
+                            <div style="color: #e50914; font-weight: 600;">★ ${data.rating}/10</div>
                         </div>
-                    `;
-                }).join('');
-                document.getElementById('comments-container').innerHTML = html || '<p>Немає коментарів</p>';
-            }).catch(e => console.error(e));
+                        <div style="color: #888; font-size: 12px; margin-bottom: 8px;">${data.userName || 'Анонім'} • ${date}</div>
+                        <div style="color: #bbb; font-size: 14px;">${data.reviewText || '-'}</div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        async function removeComment(commentId) {
-            if (confirm('Видалити коментар?')) {
-                try {
-                    await db.collection('comments').doc(commentId).delete();
-                    loadComments();
-                    showAlert('✅ Коментар видалений', 'success', 'admin');
-                } catch(e) {
-                    showAlert('❌ Помилка: ' + e.message, 'error', 'admin');
-                }
-            }
-        }
-
-        function loadAnalytics() {
-            db.collection('analytics').get().then(snap => {
-                const data = [];
-                snap.forEach(doc => data.push({ date: doc.id, views: doc.data().views || 0 }));
-                data.sort((a, b) => a.date.localeCompare(b.date)).slice(-7);
-
-                const html = data.map(d => `
-                    <tr>
-                        <td>${d.date}</td>
-                        <td>${d.views}</td>
-                    </tr>
-                `).join('');
-                document.getElementById('analytics-table').innerHTML = html || '<tr><td colspan="2">Немає даних</td></tr>';
-            }).catch(e => console.error(e));
-        }
-
-        async function resetAllData() {
-            if (!confirm('⚠️ Видалити ВСІ дані? Це не можна скасувати!')) return;
-            if (!confirm('Ви впевнені?')) return;
-
-            try {
-                const batch = db.batch();
-                const collections = ['comments', 'viewing_sessions', 'analytics'];
-
-                for (const coll of collections) {
-                    const snap = await db.collection(coll).get();
-                    snap.forEach(doc => batch.delete(doc.ref));
-                }
-
-                await batch.commit();
-                showAlert('✅ Дані очищені', 'success', 'admin');
-                loadAllData();
-            } catch(e) {
-                showAlert('❌ Помилка: ' + e.message, 'error', 'admin');
-            }
-        }
-
-        showLoginScreen();
+        window.logout = async function() {
+            await signOut(auth);
+            window.location.href = '/';
+        };
     </script>
 </body>
 </html>
