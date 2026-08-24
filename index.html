@@ -3258,7 +3258,7 @@
       <a href="/category/documentary" data-i18n="nav_docs" onclick="event.preventDefault();showCatalog({type:'movie',genre:'99'});">Документальні</a>
       <a href="/category/top" data-i18n="nav_top" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});">Топ рейтинг</a>
       <a href="/category/classic" data-i18n="nav_classic" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});">Класика</a>
-      <a href="/trending" onclick="event.preventDefault();showTrending();">🎬 Трендинг</a>
+      <a href="/trending" onclick="event.preventDefault();showTrending();">Тренди</a>
     </nav>
 
     <div class="srch-wrap">
@@ -6527,7 +6527,7 @@ async function loadTrendingMovies() {
         grid.innerHTML = '';
 
         data.results.slice(0, 20).forEach(m => {
-            const mcard = createMovieCard(m, 'movie');
+            const mcard = card(m, 'movie');
             grid.appendChild(mcard);
         });
     } catch (e) {
@@ -6537,7 +6537,7 @@ async function loadTrendingMovies() {
 }
 
 function showFriends() {
-    if (!isLoggedIn()) return openAuth('login');
+    if (typeof currentUser === 'undefined' || !currentUser) return openAuth('login');
     hideAllSections();
     document.getElementById('friends-sec').style.display = 'block';
     loadFriendsUI();
@@ -6605,7 +6605,7 @@ async function removeFriend(uid) {
 }
 
 function showRecommendations() {
-    if (!isLoggedIn()) return openAuth('login');
+    if (typeof currentUser === 'undefined' || !currentUser) return openAuth('login');
     hideAllSections();
     document.getElementById('recs-sec').style.display = 'block';
     loadRecommendationsUI();
@@ -6634,7 +6634,7 @@ async function loadRecommendationsUI() {
             try {
                 const movieData = await tmdb(`/movie/${movieId}`);
                 if (movieData) {
-                    const mcard = createMovieCard(movieData, 'movie');
+                    const mcard = card(movieData, 'movie');
                     grid.appendChild(mcard);
                 }
             } catch (e) {}
@@ -6654,7 +6654,7 @@ function copyWatchPartyLink() {
 }
 
 function hideAllSections() {
-    ['trending-sec', 'friends-sec', 'recs-sec', 'watchparty-sec', 'lib-sec', 'catalog-sec', 'home-sec', 'search-sec'].forEach(id => {
+    ['trending-sec', 'friends-sec', 'recs-sec', 'watchparty-sec', 'lib-section', 'cat-section', 'home-content', 'srch-sec'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
