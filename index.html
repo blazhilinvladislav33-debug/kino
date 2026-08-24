@@ -3259,7 +3259,8 @@
       <a href="/category/top" data-i18n="nav_top" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});">Топ рейтинг</a>
       <a href="/category/classic" data-i18n="nav_classic" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});">Класика</a>
       <a href="/trending" onclick="event.preventDefault();showTrending();">Трендинг</a>
-      <a href="#" onclick="event.preventDefault();playRandomMovie();" title="Включить случайный фильм">Случайный</a>
+      <a href="#" onclick="event.preventDefault();playRandomMovie();" title="Случайный фильм">Случайный</a>
+      <a href="#" onclick="event.preventDefault();openActorSearch();" title="Поиск по актерам">Актеры</a>
     </nav>
 
     <div class="srch-wrap">
@@ -3541,6 +3542,37 @@
       <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2000);">2000-2010</a>
     </div>
 
+    <!-- СБОРКИ ПО НАСТРОЕНИЮ -->
+    <div class="sec-hdr">
+      <div class="sec-title">Смотри по настроению</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px;">
+      <button onclick="showMoodCollection('happy')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+        <div style="font-weight: 600;">Для хорошего настроения</div>
+        <div style="font-size: 12px; color: var(--muted);">Комедии и смешное</div>
+      </button>
+      <button onclick="showMoodCollection('scary')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+        <div style="font-weight: 600;">Для адреналина</div>
+        <div style="font-size: 12px; color: var(--muted);">Триллеры и жахи</div>
+      </button>
+      <button onclick="showMoodCollection('romantic')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+        <div style="font-weight: 600;">Для романтики</div>
+        <div style="font-size: 12px; color: var(--muted);">Мелодрамы и чувства</div>
+      </button>
+      <button onclick="showMoodCollection('thoughtful')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+        <div style="font-weight: 600;">Для размышлений</div>
+        <div style="font-size: 12px; color: var(--muted);">Драмы и психология</div>
+      </button>
+      <button onclick="showMoodCollection('adventure')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+        <div style="font-weight: 600;">Для приключений</div>
+        <div style="font-size: 12px; color: var(--muted);">Экшн и приключения</div>
+      </button>
+      <button onclick="showMoodCollection('scifi')" style="background: var(--bg3); border: 1px solid var(--border); color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+        <div style="font-weight: 600;">Для фантастики</div>
+        <div style="font-size: 12px; color: var(--muted);">Научная фантастика</div>
+      </button>
+    </div>
+
     <!-- CONTINUE WATCHING -->
     <div id="continue-section">
       <div class="sec-hdr">
@@ -3742,7 +3774,8 @@
     <button class="mob-nav-link" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});closeMobileMenu()"><span class="mob-nav-icon">⭐</span><span data-i18n="nav_top">Топ рейтинг</span></button>
     <button class="mob-nav-link" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});closeMobileMenu()"><span class="mob-nav-icon">🎞</span><span data-i18n="nav_classic">Класика</span></button>
     <button class="mob-nav-link" onclick="showTrending();closeMobileMenu()"><span class="mob-nav-icon">Тренд</span><span>Трендинг</span></button>
-    <button class="mob-nav-link" onclick="playRandomMovie();closeMobileMenu()"><span class="mob-nav-icon">Шанс</span><span>Случайный фильм</span></button>
+    <button class="mob-nav-link" onclick="playRandomMovie();closeMobileMenu()"><span class="mob-nav-icon">Шанс</span><span>Случайный</span></button>
+    <button class="mob-nav-link" onclick="openActorSearch();closeMobileMenu()"><span class="mob-nav-icon">Актер</span><span>По актерам</span></button>
   </div>
   <div class="mob-drawer-section" id="mob-auth-section"></div>
 </div>
@@ -5266,6 +5299,7 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
                 ${trailer ? `<button class="btn-trailer" onclick="openTrailer('${trailer.key}')">Трейлер</button>` : ''}
                 <button class="btn-trailer" onclick="downloadMovieOffline()" title="Завантажити для оффлайну">Завантажити</button>
                 <button class="btn-trailer" onclick="openSleepTimer()" title="Таймер сна">Таймер</button>
+                <button class="btn-trailer" onclick="showRatingComparison(${id},'${type}')" title="Сравнить рейтинги">Рейтинг</button>
             </div>
 
             ${extraItemsHtml}
@@ -7832,6 +7866,259 @@ function clearSleepTimer() {
     showToast('Таймер отменен');
     const modal = document.getElementById('sleep-timer-modal');
     if (modal) modal.remove();
+}
+
+// =====================================================================
+// MEDIUM PACK - 3 НОВЫХ ФУНКЦИИ
+// =====================================================================
+
+// 1. ПОИСК ПО АКТОРАМ И РЕЖИССЕРАМ
+async function searchByPerson(personId, personName) {
+    try {
+        const data = await tmdb(`/person/${personId}/movie_credits`);
+
+        if (data && data.cast && data.cast.length > 0) {
+            document.getElementById('cat-section').style.display = 'block';
+            document.getElementById('cat-grid').innerHTML = '';
+
+            const movies = data.cast.sort((a, b) =>
+                (b.release_date || '').localeCompare(a.release_date || '')
+            ).slice(0, 50);
+
+            movies.forEach(movie => {
+                if (movie.poster_path) {
+                    const cardHtml = card(movie);
+                    const div = document.createElement('div');
+                    div.innerHTML = cardHtml;
+                    document.getElementById('cat-grid').appendChild(div.firstChild);
+                }
+            });
+
+            const titleEl = document.querySelector('.cat-head .sec-title');
+            if (titleEl) titleEl.textContent = `Фильмы с участием: ${personName}`;
+
+            showToast(`Найдено ${movies.length} фильмов`);
+        } else {
+            showToast('Фильмы не найдены');
+        }
+    } catch(e) {
+        console.error('Ошибка поиска по актору:', e);
+        showToast('Ошибка при загрузке фильмов актера');
+    }
+}
+
+function openActorSearch() {
+    const modal = document.createElement('div');
+    modal.id = 'actor-search-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        z-index: 10000;
+        min-width: 350px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    `;
+
+    modal.innerHTML = `
+        <div style="color: var(--text);">
+            <div style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">Поиск по актерам</div>
+
+            <input type="text" id="actor-search-input" placeholder="Введи имя актера..."
+                style="width: 100%; padding: 12px; background: var(--bg3); border: 1px solid var(--border);
+                border-radius: 6px; color: #fff; font-size: 14px; margin-bottom: 15px;">
+
+            <div id="actor-search-results" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;">
+            </div>
+
+            <div style="text-align: right;">
+                <button onclick="document.getElementById('actor-search-modal').remove()"
+                    style="background: var(--accent); color: #fff; border: none; padding: 10px 20px;
+                    border-radius: 6px; cursor: pointer;">Закрыть</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const searchInput = document.getElementById('actor-search-input');
+    const resultsDiv = document.getElementById('actor-search-results');
+
+    searchInput.addEventListener('input', async (e) => {
+        const query = e.target.value.trim();
+        if (query.length < 2) {
+            resultsDiv.innerHTML = '';
+            return;
+        }
+
+        try {
+            const data = await tmdb('/search/person', { query: query });
+            if (data && data.results) {
+                resultsDiv.innerHTML = data.results.slice(0, 10).map(person => `
+                    <div onclick="searchByPerson(${person.id}, '${person.name}'); document.getElementById('actor-search-modal').remove();"
+                        style="padding: 10px; background: var(--bg3); border-radius: 6px; margin-bottom: 8px; cursor: pointer;
+                        border: 1px solid transparent; transition: 0.2s;"
+                        onmouseover="this.style.borderColor='var(--accent)'"
+                        onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-weight: 500;">${person.name}</div>
+                        <div style="font-size: 12px; color: var(--muted);">Популярность: ${Math.round(person.popularity)}</div>
+                    </div>
+                `).join('');
+            }
+        } catch(e) {
+            console.error('Ошибка поиска актера:', e);
+        }
+    });
+
+    searchInput.focus();
+
+    document.addEventListener('click', function onClickOutside(e) {
+        if (modal && !modal.contains(e.target)) {
+            if (document.getElementById('actor-search-modal')) {
+                document.getElementById('actor-search-modal').remove();
+            }
+            document.removeEventListener('click', onClickOutside);
+        }
+    });
+}
+
+// 2. СБОРКИ ПО НАСТРОЕНИЮ
+const moodCollections = {
+    happy: { name: 'Для хорошего настроения', genres: ['35'] }, // Комедия
+    scary: { name: 'Для адреналина', genres: ['27'] }, // Жахи
+    romantic: { name: 'Для романтики', genres: ['10749'] }, // Мелодрама
+    thoughtful: { name: 'Для размышлений', genres: ['18'] }, // Драма
+    adventure: { name: 'Для приключений', genres: ['12,28'] }, // Приключения + Боевик
+    scifi: { name: 'Для фантастики', genres: ['878'] } // Фантастика
+};
+
+async function showMoodCollection(moodKey) {
+    const mood = moodCollections[moodKey];
+    if (!mood) return;
+
+    try {
+        const params = {
+            with_genres: mood.genres[0],
+            sort_by: 'popularity.desc',
+            page: 1
+        };
+
+        const data = await tmdb('/discover/movie', params);
+
+        if (data && data.results) {
+            document.getElementById('cat-section').style.display = 'block';
+            document.getElementById('cat-grid').innerHTML = '';
+
+            data.results.forEach(movie => {
+                const cardHtml = card(movie);
+                const div = document.createElement('div');
+                div.innerHTML = cardHtml;
+                document.getElementById('cat-grid').appendChild(div.firstChild);
+            });
+
+            const titleEl = document.querySelector('.cat-head .sec-title');
+            if (titleEl) titleEl.textContent = mood.name;
+        }
+    } catch(e) {
+        console.error('Ошибка загрузки коллекции настроения:', e);
+        showToast('Ошибка при загрузке коллекции');
+    }
+}
+
+// 3. СРАВНЕНИЕ РЕЙТИНГОВ
+async function showRatingComparison(id, type) {
+    try {
+        const data = await tmdb(`/${type}/${id}`);
+
+        if (!data) return;
+
+        const tmdbRating = data.vote_average ? Number(data.vote_average).toFixed(1) : '—';
+        const imdbId = data.imdb_id || data.external_ids?.imdb_id;
+
+        const modal = document.createElement('div');
+        modal.id = 'rating-comparison-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            z-index: 10000;
+            min-width: 350px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        `;
+
+        let imdbLink = '';
+        if (imdbId) {
+            imdbLink = `<a href="https://www.imdb.com/title/${imdbId}/" target="_blank"
+                style="color: var(--accent); text-decoration: none; font-weight: bold;">
+                Открыть на IMDb
+            </a>`;
+        }
+
+        modal.innerHTML = `
+            <div style="color: var(--text);">
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">Сравнение рейтингов</div>
+
+                <div style="display: grid; gap: 15px; margin-bottom: 20px;">
+                    <div style="background: var(--bg3); padding: 15px; border-radius: 8px; border-left: 4px solid #FFB000;">
+                        <div style="color: var(--muted); font-size: 12px;">TMDB</div>
+                        <div style="font-size: 28px; font-weight: bold; color: #FFB000; margin-top: 8px;">${tmdbRating}/10</div>
+                        <div style="color: var(--muted); font-size: 12px; margin-top: 5px;">На основе ${data.vote_count || 0} голосов</div>
+                    </div>
+
+                    <div style="background: var(--bg3); padding: 15px; border-radius: 8px; border-left: 4px solid #F5B041;">
+                        <div style="color: var(--muted); font-size: 12px;">IMDb</div>
+                        <div style="font-size: 28px; font-weight: bold; color: #F5B041; margin-top: 8px;">Откройте IMDb</div>
+                        <div style="color: var(--muted); font-size: 12px; margin-top: 5px;">Нажмите ссылку выше</div>
+                    </div>
+
+                    <div style="background: var(--bg3); padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent);">
+                        <div style="color: var(--muted); font-size: 12px;">КіноБаза</div>
+                        <div style="font-size: 28px; font-weight: bold; color: var(--accent); margin-top: 8px;">${tmdbRating}/10</div>
+                        <div style="color: var(--muted); font-size: 12px; margin-top: 5px;">Рейтинг сообщества</div>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg3); padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 13px; color: var(--muted);">
+                    <div style="margin-bottom: 8px; color: var(--text);">Информация:</div>
+                    <div>TMDB - оценки от пользователей TheMovieDB</div>
+                    <div>IMDb - оценки от пользователей Internet Movie Database</div>
+                    <div>КіноБаза - среднее значение от TMDB</div>
+                </div>
+
+                ${imdbLink ? `<div style="text-align: center; margin-bottom: 15px;">${imdbLink}</div>` : ''}
+
+                <div style="text-align: right;">
+                    <button onclick="document.getElementById('rating-comparison-modal').remove()"
+                        style="background: var(--accent); color: #fff; border: none; padding: 10px 20px;
+                        border-radius: 6px; cursor: pointer;">Закрыть</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        document.addEventListener('click', function onClickOutside(e) {
+            if (modal && !modal.contains(e.target)) {
+                if (document.getElementById('rating-comparison-modal')) {
+                    document.getElementById('rating-comparison-modal').remove();
+                }
+                document.removeEventListener('click', onClickOutside);
+            }
+        });
+
+    } catch(e) {
+        console.error('Ошибка сравнения рейтингов:', e);
+        showToast('Ошибка при загрузке информации о рейтинге');
+    }
 }
 
 </script>
