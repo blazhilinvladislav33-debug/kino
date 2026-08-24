@@ -4,724 +4,337 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Адміністрування КіноБаза</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 { margin-bottom: 30px; font-size: 32px; }
+        .login-form {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #222;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #b20710; }
+        button:disabled { background: #666; cursor: not-allowed; }
+        .admin-panel {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #222;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .toggle {
+            width: 60px;
+            height: 30px;
+            background: #333;
+            border-radius: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: 0.3s;
+        }
+        .toggle.active {
+            background: #e50914;
+        }
+        .toggle-dot {
+            width: 26px;
+            height: 26px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+        .toggle.active .toggle-dot {
+            left: 32px;
+        }
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .message.show { display: block; }
+        .message.success { background: #1b4f1b; color: #90ee90; }
+        .message.error { background: #4f1b1b; color: #ff6b6b; }
+        .logout-btn {
+            background: #666;
+            width: auto;
+            padding: 10px 20px;
+            float: right;
+        }
+        .clear { clear: both; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- LOGIN ФОРМА -->
+        <div id="login-block">
+            <h1>🔐 Адміністрування КіноБаза</h1>
+            <div id="login-message" class="message"></div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="email" placeholder="admin@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="password" placeholder="••••••••">
+                </div>
+                <button onclick="doLogin()" id="login-btn">Увійти</button>
+            </div>
+        </div>
+
+        <!-- АДМІНІСТРУВАННЯ -->
+        <div id="admin-block" style="display: none;">
+            <div style="margin-bottom: 20px;">
+                <h1>⚙️ Адміністрування</h1>
+                <button class="logout-btn" onclick="doLogout()">Вихід</button>
+                <div class="clear"></div>
+            </div>
+
+            <div id="admin-message" class="message"></div>
+
+            <!-- ПЛЕЄРИ -->
+            <div class="admin-panel">
+                <h2>🎬 Управління плеєрами</h2>
+                <div id="players-list"></div>
+                <button onclick="savePlayers()" style="margin-top: 15px;">💾 Зберегти</button>
+            </div>
+
+            <!-- РЕКЛАМА -->
+            <div class="admin-panel">
+                <h2>📢 Налаштування реклами</h2>
+                <div class="form-group">
+                    <label>Monetag URL:</label>
+                    <input type="text" id="monetag-url" placeholder="https://monetag.com/...">
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="ads-enabled"> Реклама увімкнена</label>
+                </div>
+                <button onclick="saveAds()">💾 Зберегти</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
+            authDomain: "kinobaza-6c109.firebaseapp.com",
+            projectId: "kinobaza-6c109",
+            storageBucket: "kinobaza-6c109.firebasestorage.app",
+            messagingSenderId: "639150355070",
+            appId: "1:639150355070:web:772f863f075d4d1d839e2f",
+            measurementId: "G-GKVZ2JJDJN"
+        };
 
-        :root {
-            --accent: #e50914;
-            --bg1: #0a0e27;
-            --bg2: #111827;
-            --bg3: #1f2937;
-            --border: #374151;
-            --text: #f3f4f6;
-            --muted: #9ca3af;
-            --dim: #6b7280;
-        }
+        let db, auth, currentUser;
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg1);
-            color: var(--text);
-            line-height: 1.6;
-        }
+        // Ініціалізуємо Firebase
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        auth = firebase.auth();
 
-        .admin-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+        console.log('✅ Firebase ініціалізовано');
 
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .admin-header h1 {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .admin-header .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-        }
-
-        .btn-logout {
-            padding: 8px 16px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-logout:hover {
-            opacity: 0.9;
-        }
-
-        .admin-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .admin-tab {
-            padding: 12px 20px;
-            background: transparent;
-            color: var(--muted);
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            border-bottom: 3px solid transparent;
-            transition: 0.3s;
-        }
-
-        .admin-tab.active {
-            color: var(--text);
-            border-bottom-color: var(--accent);
-        }
-
-        .admin-tab:hover {
-            color: var(--text);
-        }
-
-        .admin-section {
-            display: none;
-        }
-
-        .admin-section.active {
-            display: block;
-        }
-
-        .settings-card {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-
-        .settings-card h2 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 16px;
-        }
-
-        .player-item {
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            transition: 0.3s;
-        }
-
-        .player-item:hover {
-            border-color: var(--accent);
-        }
-
-        .player-item.disabled {
-            opacity: 0.6;
-            border-left: 4px solid #f44336;
-        }
-
-        .player-item.enabled {
-            border-left: 4px solid #4CAF50;
-        }
-
-        .player-item-name {
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .player-item-id {
-            font-size: 12px;
-            color: var(--muted);
-            margin-bottom: 12px;
-        }
-
-        .player-item-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .toggle-switch {
-            width: 40px;
-            height: 20px;
-            background: #f44336;
-            border-radius: 10px;
-            position: relative;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .toggle-switch.active {
-            background: #4CAF50;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            right: 2px;
-            left: auto;
-        }
-
-        .player-item-status {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            background: var(--bg3);
-            border-radius: 6px;
-            margin-bottom: 12px;
-        }
-
-        .setting-item-label {
-            font-weight: 500;
-        }
-
-        .setting-item-desc {
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 4px;
-        }
-
-        .status-message {
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .status-message.success {
-            background: rgba(76, 175, 80, 0.2);
-            color: #81c784;
-            display: block;
-        }
-
-        .status-message.error {
-            background: rgba(244, 67, 54, 0.2);
-            color: #ef5350;
-            display: block;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--accent);
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: var(--bg1);
-        }
-
-        .login-box {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .login-box h1 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text);
-            font-size: 14px;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .form-group button {
-            width: 100%;
-            padding: 10px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .form-group button:hover {
-            opacity: 0.9;
-        }
-
-        .form-group button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-    </style>
-</head>
-<body>
-
-<div id="login-section" class="login-container" style="display: flex;">
-    <div class="login-box">
-        <h1>🔐 Адміністрування</h1>
-        <div id="login-error" class="status-message error"></div>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="login-email" placeholder="admin@example.com">
-        </div>
-        <div class="form-group">
-            <label>Пароль</label>
-            <input type="password" id="login-password" placeholder="••••••••">
-        </div>
-        <div class="form-group">
-            <button id="login-btn" onclick="adminLogin()">Вхід</button>
-        </div>
-    </div>
-</div>
-
-<div id="admin-section" style="display: none;">
-    <div class="admin-container">
-        <div class="admin-header">
-            <div>
-                <h1>⚙️ Адміністрування КіноБаза</h1>
-            </div>
-            <div class="user-info">
-                <span id="user-email">—</span>
-                <button class="btn-logout" onclick="adminLogout()">Вийти</button>
-            </div>
-        </div>
-
-        <div class="admin-tabs">
-            <button class="admin-tab active" onclick="switchAdminTab('players')">🎬 Плеєри</button>
-            <button class="admin-tab" onclick="switchAdminTab('ads')">📢 Реклама</button>
-            <button class="admin-tab" onclick="switchAdminTab('stats')">📊 Статистика</button>
-        </div>
-
-        <!-- ===== ПЛЕЄРИ ===== -->
-        <div id="tab-players" class="admin-section active">
-            <div id="players-status" class="status-message"></div>
-            <div class="settings-card">
-                <h2>🎬 Управління плеєрами</h2>
-                <p style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">
-                    Вмикайте чи вимикайте плеєри для всіх користувачів
-                </p>
-                <div id="players-grid" class="settings-grid">
-                    <div style="text-align: center; color: var(--muted); grid-column: 1 / -1; padding: 40px;">
-                        <div class="loading" style="margin: 0 auto 16px;"></div>
-                        Завантаження...
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== РЕКЛАМА ===== -->
-        <div id="tab-ads" class="admin-section">
-            <div id="ads-status" class="status-message"></div>
-            <div class="settings-card">
-                <h2>📢 Параметри реклами</h2>
-                <div class="setting-item">
-                    <div>
-                        <div class="setting-item-label">Показувати рекламу в плеєрі</div>
-                        <div class="setting-item-desc">Реклама буде показана для звичайних користувачів</div>
-                    </div>
-                    <div class="toggle-switch" id="ads-toggle" onclick="toggleAdsSetting()" style="cursor: pointer;"></div>
-                </div>
-            </div>
-
-            <div class="settings-card">
-                <h2>🔗 Посилання на монетаж</h2>
-                <div class="form-group">
-                    <label>URL монетаж-панелі (опційно)</label>
-                    <input type="url" id="monetag-url" placeholder="https://your-monetag-link.com">
-                </div>
-                <button onclick="saveMonetag()" style="padding: 10px 20px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
-                    Зберегти
-                </button>
-            </div>
-        </div>
-
-        <!-- ===== СТАТИСТИКА ===== -->
-        <div id="tab-stats" class="admin-section">
-            <div class="settings-card">
-                <h2>📊 Статистика сайту</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                    <div style="background: var(--bg3); padding: 20px; border-radius: 6px; text-align: center;">
-                        <div style="font-size: 32px; font-weight: bold; color: var(--accent); margin-bottom: 8px;">—</div>
-                        <div style="font-size: 14px; color: var(--muted);">Активних користувачів</div>
-                    </div>
-                    <div style="background: var(--bg3); padding: 20px; border-radius: 6px; text-align: center;">
-                        <div style="font-size: 32px; font-weight: bold; color: var(--accent); margin-bottom: 8px;">—</div>
-                        <div style="font-size: 14px; color: var(--muted);">Переглядів сьогодні</div>
-                    </div>
-                    <div style="background: var(--bg3); padding: 20px; border-radius: 6px; text-align: center;">
-                        <div style="font-size: 32px; font-weight: bold; color: var(--accent); margin-bottom: 8px;">—</div>
-                        <div style="font-size: 14px; color: var(--muted);">Активні сейшни</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="settings-card">
-                <h2>💾 Дії</h2>
-                <button onclick="clearAllCache()" style="padding: 10px 20px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; margin-right: 10px;">
-                    🗑️ Очистити кеш
-                </button>
-                <button onclick="reloadConfig()" style="padding: 10px 20px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
-                    🔄 Перезавантажити конфіг
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-// ============================================================
-// FIREBASE КОНФІГ (скопіюй з твого основного файлу)
-// ============================================================
-const firebaseConfig = {
-    apiKey: "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
-    authDomain: "kinobaza-6c109.firebaseapp.com",
-    projectId: "kinobaza-6c109",
-    storageBucket: "kinobaza-6c109.firebasestorage.app",
-    messagingSenderId: "639150355070",
-    appId: "1:639150355070:web:772f863f075d4d1d839e2f",
-    measurementId: "G-GKVZ2JJDJN"
-};
-
-let db = null;
-let currentAdminUser = null;
-
-// Ініціалізуємо Firebase
-try {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    console.log('✅ Firebase ініціалізовано');
-} catch (e) {
-    console.error('❌ Помилка Firebase:', e);
-}
-
-// ============================================================
-// АВТЕНТИФІКАЦІЯ
-// ============================================================
-function checkAdmin() {
-    const loginSection = document.getElementById('login-section');
-    const adminSection = document.getElementById('admin-section');
-
-    firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-            // Перевіряємо чи це адмін
-            db.collection('users').doc(user.uid).get().then(doc => {
-                if (doc.exists && doc.data().role === 'admin') {
-                    currentAdminUser = user;
-                    document.getElementById('user-email').textContent = user.email;
-                    loginSection.style.display = 'none';
-                    adminSection.style.display = 'block';
-                    loadPlayersPanel();
-                    loadAdsSettings();
+        // Перевірка користувача
+        setTimeout(() => {
+            auth.onAuthStateChanged(user => {
+                console.log('👤 Auth state changed:', user ? user.email : 'not logged in');
+                if (user) {
+                    checkAdminRole(user);
                 } else {
-                    console.error('❌ Тільки адміни мають доступ!');
-                    firebase.auth().signOut();
-                    loginSection.style.display = 'flex';
-                    adminSection.style.display = 'none';
+                    showLoginForm();
                 }
             });
-        } else {
-            loginSection.style.display = 'flex';
-            adminSection.style.display = 'none';
+        }, 500);
+
+        function showMessage(msg, elemId, type) {
+            const el = document.getElementById(elemId);
+            el.textContent = msg;
+            el.className = 'message show ' + type;
         }
-    });
-}
 
-async function adminLogin() {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    const btn = document.getElementById('login-btn');
-    const errorDiv = document.getElementById('login-error');
+        function showLoginForm() {
+            document.getElementById('login-block').style.display = 'block';
+            document.getElementById('admin-block').style.display = 'none';
+        }
 
-    if (!email || !password) {
-        showStatus(errorDiv, '❌ Введи email та пароль', 'error');
-        return;
-    }
+        function showAdminPanel() {
+            document.getElementById('login-block').style.display = 'none';
+            document.getElementById('admin-block').style.display = 'block';
+            loadPlayers();
+            loadAds();
+        }
 
-    btn.disabled = true;
-    btn.textContent = 'Вхід...';
+        function checkAdminRole(user) {
+            db.collection('users').doc(user.uid).get().then(doc => {
+                if (doc.exists && doc.data().role === 'admin') {
+                    currentUser = user;
+                    showAdminPanel();
+                } else {
+                    showMessage('❌ Тільки адміни мають доступ', 'login-message', 'error');
+                    auth.signOut();
+                    showLoginForm();
+                }
+            }).catch(e => {
+                showMessage('❌ Помилка: ' + e.message, 'login-message', 'error');
+            });
+        }
 
-    try {
-        await firebase.auth().signInWithEmailAndPassword(email, password);
-        console.log('✅ Вхід успішний');
-    } catch (e) {
-        showStatus(errorDiv, `❌ ${e.message}`, 'error');
-        btn.disabled = false;
-        btn.textContent = 'Вхід';
-    }
-}
+        async function doLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('login-btn');
 
-function adminLogout() {
-    firebase.auth().signOut();
-}
+            if (!email || !password) {
+                showMessage('❌ Введи email та пароль', 'login-message', 'error');
+                return;
+            }
 
-// ============================================================
-// УПРАВЛІННЯ ПЛЕЄРАМИ
-// ============================================================
-async function loadPlayersPanel() {
-    const grid = document.getElementById('players-grid');
-    const statusDiv = document.getElementById('players-status');
+            btn.disabled = true;
+            btn.textContent = 'Вхід...';
 
-    const PLAYERS = [
-        { id: 'rendex', name: 'Плеєр 1 (Rendex)', safe: true },
-        { id: 'collaps', name: 'Плеєр 2 (Collaps)', safe: true },
-        { id: 'vidsrc', name: 'Плеєр 3 (Vidsrc)', safe: false },
-        { id: 'multisearch', name: 'Плеєр 4 (Мультипошук)', safe: true }
-    ];
-
-    try {
-        // Читаємо конфіг
-        const configDoc = await db.collection('settings').doc('config').get();
-        const disabledPlayers = configDoc.exists ? (configDoc.data().disabledPlayers || []) : [];
-
-        grid.innerHTML = '';
-        PLAYERS.forEach(player => {
-            const isDisabled = disabledPlayers.includes(player.id);
-            const card = document.createElement('div');
-            card.className = `player-item ${isDisabled ? 'disabled' : 'enabled'}`;
-            card.innerHTML = `
-                <div class="player-item-name">${player.name}</div>
-                <div class="player-item-id">ID: ${player.id}</div>
-                <div class="player-item-toggle">
-                    <div class="toggle-switch ${!isDisabled ? 'active' : ''}" onclick="togglePlayer('${player.id}', ${isDisabled})"></div>
-                    <span class="player-item-status">${!isDisabled ? '✅ Активний' : '❌ Вимкнено'}</span>
-                </div>
-                <div style="font-size: 11px; color: var(--muted); margin-top: 8px;">
-                    ${player.safe ? '🛡️ Безпечний' : '⚠️ Сторонній'}
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-
-        showStatus(statusDiv, '✅ Конфіг завантажено', 'success');
-    } catch (e) {
-        console.error('❌ Помилка:', e);
-        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
-    }
-}
-
-async function togglePlayer(playerId, currentlyDisabled) {
-    const statusDiv = document.getElementById('players-status');
-
-    try {
-        const configDoc = await db.collection('settings').doc('config').get();
-        let disabledPlayers = configDoc.exists ? (configDoc.data().disabledPlayers || []) : [];
-
-        if (currentlyDisabled) {
-            // Вмикаємо
-            disabledPlayers = disabledPlayers.filter(id => id !== playerId);
-        } else {
-            // Вимикаємо
-            if (!disabledPlayers.includes(playerId)) {
-                disabledPlayers.push(playerId);
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showMessage('✅ Успіх!', 'login-message', 'success');
+            } catch(e) {
+                showMessage('❌ ' + e.message, 'login-message', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Увійти';
             }
         }
 
-        await db.collection('settings').doc('config').set({
-            disabledPlayers
-        }, { merge: true });
-
-        showStatus(statusDiv, `✅ "${playerId}" ${currentlyDisabled ? 'активований' : 'вимкнено'}`, 'success');
-        loadPlayersPanel();
-    } catch (e) {
-        console.error('❌ Помилка:', e);
-        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
-    }
-}
-
-// ============================================================
-// УПРАВЛІННЯ РЕКЛАМОЮ
-// ============================================================
-async function loadAdsSettings() {
-    const toggle = document.getElementById('ads-toggle');
-    const statusDiv = document.getElementById('ads-status');
-
-    try {
-        const configDoc = await db.collection('settings').doc('config').get();
-        const adsEnabled = configDoc.exists ? (configDoc.data().playerAdsEnabled !== false) : true;
-
-        if (adsEnabled) {
-            toggle.classList.add('active');
-        } else {
-            toggle.classList.remove('active');
+        function doLogout() {
+            auth.signOut();
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            showLoginForm();
         }
 
-        showStatus(statusDiv, '✅ Параметри реклами завантажені', 'success');
-    } catch (e) {
-        console.error('❌ Помилка:', e);
-        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
-    }
-}
+        function loadPlayers() {
+            db.collection('settings').doc('config').get().then(doc => {
+                const data = doc.data() || {};
+                const disabled = data.disabledPlayers || [];
 
-async function toggleAdsSetting() {
-    const toggle = document.getElementById('ads-toggle');
-    const statusDiv = document.getElementById('ads-status');
+                const html = [
+                    { name: 'Rendex', id: 'rendex' },
+                    { name: 'Collaps', id: 'collaps' },
+                    { name: 'Vidsrc', id: 'vidsrc' },
+                    { name: 'Мультипошук', id: 'multisearch' }
+                ].map(p => `
+                    <div class="player-item">
+                        <span>${p.name}</span>
+                        <div class="toggle ${!disabled.includes(p.id) ? 'active' : ''}"
+                             onclick="togglePlayer(this, '${p.id}')">
+                            <div class="toggle-dot"></div>
+                        </div>
+                    </div>
+                `).join('');
 
-    try {
-        const isActive = toggle.classList.contains('active');
-
-        await db.collection('settings').doc('config').set({
-            playerAdsEnabled: !isActive
-        }, { merge: true });
-
-        if (isActive) {
-            toggle.classList.remove('active');
-            showStatus(statusDiv, '✅ Реклама вимкнена', 'success');
-        } else {
-            toggle.classList.add('active');
-            showStatus(statusDiv, '✅ Реклама активна', 'success');
+                document.getElementById('players-list').innerHTML = html;
+            });
         }
-    } catch (e) {
-        console.error('❌ Помилка:', e);
-        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
-    }
-}
 
-async function saveMonetag() {
-    const url = document.getElementById('monetag-url').value;
-    const statusDiv = document.getElementById('ads-status');
+        function togglePlayer(el, id) {
+            el.classList.toggle('active');
+        }
 
-    try {
-        await db.collection('settings').doc('config').set({
-            monetagUrl: url || null
-        }, { merge: true });
+        async function savePlayers() {
+            const toggles = document.querySelectorAll('.toggle');
+            const disabled = [];
 
-        showStatus(statusDiv, '✅ Посилання збережено', 'success');
-    } catch (e) {
-        console.error('❌ Помилка:', e);
-        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
-    }
-}
+            const ids = ['rendex', 'collaps', 'vidsrc', 'multisearch'];
+            toggles.forEach((el, idx) => {
+                if (!el.classList.contains('active')) {
+                    disabled.push(ids[idx]);
+                }
+            });
 
-// ============================================================
-// ДОПОМІЖНІ ФУНКЦІЇ
-// ============================================================
-function switchAdminTab(tabName) {
-    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            try {
+                await db.collection('settings').doc('config').update({
+                    disabledPlayers: disabled
+                });
+                showMessage('✅ Плеєри збережені', 'admin-message', 'success');
+            } catch(e) {
+                showMessage('❌ ' + e.message, 'admin-message', 'error');
+            }
+        }
 
-    document.getElementById(`tab-${tabName}`).classList.add('active');
-    event.target.classList.add('active');
-}
+        function loadAds() {
+            db.collection('settings').doc('config').get().then(doc => {
+                const data = doc.data() || {};
+                document.getElementById('monetag-url').value = data.monetagUrl || '';
+                document.getElementById('ads-enabled').checked = data.playerAdsEnabled !== false;
+            });
+        }
 
-function showStatus(element, message, type) {
-    element.textContent = message;
-    element.className = `status-message ${type}`;
+        async function saveAds() {
+            try {
+                await db.collection('settings').doc('config').update({
+                    monetagUrl: document.getElementById('monetag-url').value,
+                    playerAdsEnabled: document.getElementById('ads-enabled').checked
+                });
+                showMessage('✅ Реклама збережена', 'admin-message', 'success');
+            } catch(e) {
+                showMessage('❌ ' + e.message, 'admin-message', 'error');
+            }
+        }
 
-    if (type === 'success') {
-        setTimeout(() => {
-            element.className = 'status-message';
-        }, 3000);
-    }
-}
-
-function clearAllCache() {
-    if (confirm('Ти впевнений? Це очистить весь кеш на серверах.')) {
-        localStorage.clear();
-        alert('✅ Кеш очищен');
-    }
-}
-
-function reloadConfig() {
-    location.reload();
-}
-
-// ============================================================
-// ЗАПУСК
-// ============================================================
-console.log('🚀 Admin panel завантажується...');
-console.log('📁 Firestore:', db ? '✅ готово' : '❌ не готово');
-console.log('🔐 Auth:', firebase.auth() ? '✅ готово' : '❌ не готово');
-
-// Гарантія що login форма видна при завантаженні
-setTimeout(() => {
-    const loginSection = document.getElementById('login-section');
-    if (loginSection && loginSection.style.display === 'none') {
-        console.warn('⚠️ Login форма прихована, показуємо...');
-        loginSection.style.display = 'flex';
-    }
-}, 500);
-
-checkAdmin();
-</script>
-
+        // Показуємо login форму при завантаженні
+        console.log('🚀 Admin panel завантажено');
+        showLoginForm();
+    </script>
 </body>
 </html>
