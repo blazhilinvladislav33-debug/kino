@@ -3258,7 +3258,7 @@
       <a href="/category/documentary" data-i18n="nav_docs" onclick="event.preventDefault();showCatalog({type:'movie',genre:'99'});">Документальні</a>
       <a href="/category/top" data-i18n="nav_top" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});">Топ рейтинг</a>
       <a href="/category/classic" data-i18n="nav_classic" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});">Класика</a>
-      <a href="/trending" onclick="event.preventDefault();showTrending();">Тренди</a>
+      <a href="/trending" onclick="event.preventDefault();showTrending();">🎬 Трендинг</a>
     </nav>
 
     <div class="srch-wrap">
@@ -3276,9 +3276,7 @@
         <div class="lang-lbl-min" id="curr-lang-lbl">UA</div>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
         <div class="lang-dd-menu" id="lang-dd-menu">
-          <div class="lang-opt act" onclick="setSiteLang('uk', event)">UA</div>
-          <div class="lang-opt" onclick="setSiteLang('en', event)">EN</div>
-          <div class="lang-opt" onclick="setSiteLang('ru', event)">RU</div>
+          <!-- Мови генеруються динамічно -->
         </div>
       </div>
 
@@ -3860,6 +3858,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('kb_cookies_accepted')) {
         document.getElementById('cookie-banner').style.display = 'flex';
     }
+    // Рендерити меню мов на основі локації
+    setTimeout(() => renderLanguageMenu(), 100);
 });
 
 // =====================================================================
@@ -3961,15 +3961,75 @@ const TRANSLATIONS = {
 };
 
 const LANG_INFO = {
-  'uk': { flag: '🇺🇦', text: ' UA' },
-  'ru': { flag: '🚫', text: ' RU' },
-  'en': { flag: '🇬🇧', text: ' EN' }
+  'uk': { flag: '🇺🇦', text: 'UA', fullName: 'Українська' },
+  'ru': { flag: '🇷🇺', text: 'RU', fullName: 'Русский' },
+  'en': { flag: '🇬🇧', text: 'EN', fullName: 'English' },
+  'pl': { flag: '🇵🇱', text: 'PL', fullName: 'Polski' },
+  'de': { flag: '🇩🇪', text: 'DE', fullName: 'Deutsch' },
+  'it': { flag: '🇮🇹', text: 'IT', fullName: 'Italiano' },
+  'es': { flag: '🇪🇸', text: 'ES', fullName: 'Español' },
+  'fr': { flag: '🇫🇷', text: 'FR', fullName: 'Français' }
 };
 
-let siteLang = localStorage.getItem('kb_site_lang') || 'uk';
+// Визначити доступні мови за локацією
+const LOCATION_LANGUAGES = {
+  'UA': ['uk', 'ru', 'en'],
+  'RU': ['ru', 'uk', 'en'],
+  'US': ['en', 'uk', 'ru'],
+  'GB': ['en', 'uk', 'ru'],
+  'PL': ['pl', 'en', 'uk'],
+  'DE': ['de', 'en', 'uk'],
+  'IT': ['it', 'en', 'uk'],
+  'ES': ['es', 'en', 'uk'],
+  'FR': ['fr', 'en', 'uk'],
+  'default': ['en', 'uk', 'ru']
+};
+
+let siteLang = localStorage.getItem('kb_site_lang') || detectBrowserLanguage();
+
+// Визначити мову браузера і локацію
+function detectBrowserLanguage() {
+  try {
+    const lang = navigator.language || navigator.userLanguage;
+    const langCode = lang.split('-')[0].toLowerCase();
+
+    // Спробуємо визначити країну
+    let country = lang.split('-')[1]?.toUpperCase() || 'default';
+
+    // Якщо мова є в LANG_INFO, використовуємо її
+    if (LANG_INFO[langCode]) return langCode;
+
+    // Інакше повертаємо першу мову для цієї країни
+    const availableLangs = LOCATION_LANGUAGES[country] || LOCATION_LANGUAGES['default'];
+    return availableLangs[0];
+  } catch (e) {
+    return 'uk'; // За замовчуванням - українська
+  }
+}
+
+// Отримати мови для поточної локації
+function getAvailableLanguages() {
+  try {
+    const lang = navigator.language || navigator.userLanguage;
+    const country = lang.split('-')[1]?.toUpperCase() || 'default';
+    return LOCATION_LANGUAGES[country] || LOCATION_LANGUAGES['default'];
+  } catch (e) {
+    return LOCATION_LANGUAGES['default'];
+  }
+}
 
 function getSiteLangParam() {
-  return siteLang === 'ru' ? 'ru-RU' : siteLang === 'en' ? 'en-US' : 'uk-UA';
+  const langMap = {
+    'uk': 'uk-UA',
+    'ru': 'ru-RU',
+    'en': 'en-US',
+    'pl': 'pl-PL',
+    'de': 'de-DE',
+    'it': 'it-IT',
+    'es': 'es-ES',
+    'fr': 'fr-FR'
+  };
+  return langMap[siteLang] || 'en-US';
 }
 
 function updateUIStrings(lang) {
@@ -3997,6 +4057,14 @@ function toggleLangDropdown(e) {
 
 function setSiteLang(lang, e) {
   if (e) { e.stopPropagation(); e.preventDefault(); }
+
+  // Перевірити чи мова доступна для цієї локації
+  const availableLangs = getAvailableLanguages();
+  if (!availableLangs.includes(lang)) {
+    console.warn(`⚠️ Мова '${lang}' недоступна для цієї локації. Доступні: ${availableLangs.join(', ')}`);
+    return;
+  }
+
   siteLang = lang;
   localStorage.setItem('kb_site_lang', lang);
   try { gaEvent('select_content', { content_type: 'language', item_id: lang }); } catch(err){}
@@ -4005,10 +4073,15 @@ function setSiteLang(lang, e) {
   document.getElementById('lang-dd-wrap').classList.remove('open');
 
   const lbl = document.getElementById('curr-lang-lbl');
-  if(lbl) lbl.innerHTML = `<span class="f">${LANG_INFO[lang].flag}</span><span class="t">${LANG_INFO[lang].text}</span>`;
+  if(lbl && LANG_INFO[lang]) {
+    lbl.innerHTML = `<span class="f">${LANG_INFO[lang].flag}</span><span class="t">${LANG_INFO[lang].text}</span>`;
+  }
 
   document.querySelectorAll('.lang-opt').forEach(opt => {
-    opt.classList.toggle('act', opt.getAttribute('onclick').includes(`'${lang}'`));
+    const isActive = Array.from(opt.children).some(child =>
+      LANG_INFO[lang] && child.textContent.includes(LANG_INFO[lang].text)
+    );
+    opt.classList.toggle('act', isActive);
   });
 
   updateUIStrings(lang);
@@ -4022,6 +4095,37 @@ function setSiteLang(lang, e) {
     }
   }
 }
+
+// Рендерити меню мов на основі локації користувача
+function renderLanguageMenu() {
+  const menu = document.getElementById('lang-dd-menu');
+  if (!menu) return;
+
+  const availableLangs = getAvailableLanguages();
+  const lbl = document.getElementById('curr-lang-lbl');
+
+  // Очистити меню
+  menu.innerHTML = '';
+
+  // Додати опції для кожної доступної мови
+  availableLangs.forEach(lang => {
+    const isActive = siteLang === lang;
+    const langInfo = LANG_INFO[lang];
+    if (!langInfo) return;
+
+    const opt = document.createElement('div');
+    opt.className = `lang-opt ${isActive ? 'act' : ''}`;
+    opt.innerHTML = `<span class="f">${langInfo.flag}</span><span class="t">${langInfo.text}</span>`;
+    opt.onclick = (e) => setSiteLang(lang, e);
+    menu.appendChild(opt);
+  });
+
+  // Оновити поточну мову
+  if (lbl && LANG_INFO[siteLang]) {
+    lbl.innerHTML = `<span class="f">${LANG_INFO[siteLang].flag}</span><span class="t">${LANG_INFO[siteLang].text}</span>`;
+  }
+}
+
 // =====================================================================
 // ВИБІР ЖАНРУ З ПАНЕЛІ АБО ФУТЕРА
 // =====================================================================
@@ -4285,6 +4389,10 @@ async function tmdb(ep, params = {}) {
             keyIdx = (keyIdx + 1) % keys.length;
             continue;
           }
+          if (r.status === 404) {
+            console.warn(`⚠️ Ресурс не знайдено (404): ${ep}`);
+            return null;
+          }
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
           const data = await r.json();
           if (!noCache) _tcSet(_tcKey(ep, params), data);
@@ -4456,14 +4564,17 @@ function card(m, badge) {
 
 async function loadGrid(id, ep, params = {}, badge = null, limit = 12) {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = getSkeletonHtml(limit); 
+    if (el) el.innerHTML = getSkeletonHtml(limit);
     try {
         const data = await tmdb(ep, params);
         if (!data || !data.results) {
             if (el) el.innerHTML = `<div style="color:var(--dim);padding:20px;grid-column:1/-1;text-align:center;">Помилка завантаження</div>`;
             return [];
         }
-        const validResults = data.results.filter(m => m.poster_path).slice(0, limit);
+        // Фільтруємо фільми: повинні мати постер, дату і базову інформацію
+        const validResults = data.results
+            .filter(m => m.poster_path && (m.title || m.name) && (m.release_date || m.first_air_date))
+            .slice(0, limit);
         if (el) el.innerHTML = validResults.map(m => card(m, badge)).join('');
         return validResults;
     } catch(e) {
