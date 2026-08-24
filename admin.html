@@ -335,7 +335,7 @@
 </head>
 <body>
 
-<div id="login-section" class="login-container" style="display: none;">
+<div id="login-section" class="login-container" style="display: flex;">
     <div class="login-box">
         <h1>🔐 Адміністрування</h1>
         <div id="login-error" class="status-message error"></div>
@@ -452,13 +452,13 @@
 // FIREBASE КОНФІГ (скопіюй з твого основного файлу)
 // ============================================================
 const firebaseConfig = {
-    // ВСТАВЬ СВОЇ ПАРАМЕТРИ FIREBASE
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
+    authDomain: "kinobaza-6c109.firebaseapp.com",
+    projectId: "kinobaza-6c109",
+    storageBucket: "kinobaza-6c109.firebasestorage.app",
+    messagingSenderId: "639150355070",
+    appId: "1:639150355070:web:772f863f075d4d1d839e2f",
+    measurementId: "G-GKVZ2JJDJN"
 };
 
 let db = null;
@@ -707,6 +707,19 @@ function reloadConfig() {
 // ============================================================
 // ЗАПУСК
 // ============================================================
+console.log('🚀 Admin panel завантажується...');
+console.log('📁 Firestore:', db ? '✅ готово' : '❌ не готово');
+console.log('🔐 Auth:', firebase.auth() ? '✅ готово' : '❌ не готово');
+
+// Гарантія що login форма видна при завантаженні
+setTimeout(() => {
+    const loginSection = document.getElementById('login-section');
+    if (loginSection && loginSection.style.display === 'none') {
+        console.warn('⚠️ Login форма прихована, показуємо...');
+        loginSection.style.display = 'flex';
+    }
+}, 500);
+
 checkAdmin();
 </script>
 
