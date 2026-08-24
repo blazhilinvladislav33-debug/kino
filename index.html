@@ -3267,6 +3267,7 @@
           <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
         </svg>
         <input type="text" id="si" data-i18n-ph="search_ph" placeholder="Пошук фільмів..." autocomplete="off" spellcheck="false" oninput="handleSrch(event)" onkeydown="acKeydown(event)" onfocus="acFocus()" onblur="setTimeout(hideAutocomplete,200)">
+        <input type="number" id="srch-year" placeholder="Рік" min="1900" max="2099" style="width:70px;padding:8px;background:#1a1a1a;border:none;border-radius:4px;color:#fff;font-size:14px;margin-left:8px;" oninput="handleSrch({target: document.getElementById('si')})">
       </div>
       <div id="ac-drop"></div>
     </div>
@@ -4166,10 +4167,18 @@ const FIREBASE_CONFIG = {
 };
 
 let db = null;
+let auth = null;
 try {
   if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
   db = firebase.firestore();
-} catch (e) {}
+  auth = firebase.auth();
+  // Анонімна аутентифікація для базового доступу
+  auth.signInAnonymously().catch(err => {
+      console.warn('⚠️ Анонімна аутентифікація не вдалась:', err.message);
+  });
+} catch (e) {
+  console.warn('⚠️ Firebase помилка:', e.message);
+}
 
 let adsCache  = [];
 let keysCache = [];
@@ -4245,6 +4254,9 @@ function initFirestore() {
                   console.log('🎬 Оновлено конфіг плеєрів:', disabledPlayers);
               }
           }
+      }, error => {
+          // Якщо помилка доступу - ігноруємо, пошук все одно працює
+          console.warn('⚠️ Не можна прочитати конфіг:', error.message);
       });
   } catch(e) {}
 
@@ -4252,22 +4264,31 @@ function initFirestore() {
       db.collection('ads').onSnapshot(snap => {
           adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
           renderAds();
-      }, () => { loadFallback(); });
+      }, error => {
+          console.warn('⚠️ Не можна завантажити рекламу:', error.message);
+          loadFallback();
+      });
   } catch(e) {}
   
   try {
       db.collection('apiKeys').onSnapshot(snap => {
           keysCache = snap.docs.map(d => d.data().value).filter(Boolean);
-          if (!dbReady) { dbReady = true; initSite(); } 
-      }, () => {
+          if (!dbReady) { dbReady = true; initSite(); }
+      }, error => {
+          console.warn('⚠️ Не можна завантажити API ключі з Firestore:', error.message);
+          // Завантажуємо з localStorage як fallback
           const raw = localStorage.getItem('kb_api_keys');
           try {
               const arr = raw ? JSON.parse(raw) : [];
               keysCache = arr.map(k => typeof k === 'string' ? k : k.value).filter(Boolean);
           } catch (err) {}
+          // Запускаємо сайт навіть якщо Firebase недоступний
           if (!dbReady) { dbReady = true; initSite(); }
       });
-  } catch(e) {}
+  } catch(e) {
+      console.warn('⚠️ Помилка Firebase:', e.message);
+      if (!dbReady) { dbReady = true; initSite(); }
+  }
   
   try {
       ['about','contacts','terms','dmca'].forEach(id => {
@@ -4866,6 +4887,7 @@ async function doSearch(filter = 'all') {
         const si = document.getElementById('si');
         if(!si) return;
         const q = si.value.trim();
+        const yearFilter = document.getElementById('srch-year').value; // Отримуємо рік
         if(!q) return;
 
         document.getElementById('home-content').style.display = 'none';
@@ -4876,10 +4898,14 @@ async function doSearch(filter = 'all') {
         document.getElementById('recs-sec').style.display = 'none';
         document.getElementById('watchparty-sec').style.display = 'none';
         document.getElementById('srch-sec').style.display = 'block';
-        document.getElementById('srch-title').textContent = `Пошук: ${q}`;
+        document.getElementById('srch-title').textContent = `Пошук: ${q}${yearFilter ? ` (${yearFilter})` : ''}`;
 
         document.querySelectorAll('.sf-btn').forEach(b => b.classList.remove('act'));
         document.getElementById(`sf-${filter}`).classList.add('act');
+
+        srchPage = 1; // Скидаємо сторінку при новому пошуку
+        srchQuery = q; // Зберігаємо запит
+        srchYear = yearFilter; // Зберігаємо рік
 
         const grid = document.getElementById('srch-grid');
         grid.innerHTML = getSkeletonHtml(12);
@@ -4889,7 +4915,15 @@ async function doSearch(filter = 'all') {
             let res = data.results.filter(m => m.media_type !== 'person' && m.poster_path);
             if(filter === 'movie') res = res.filter(m => m.media_type === 'movie');
             if(filter === 'tv') res = res.filter(m => m.media_type === 'tv');
-            
+
+            // Фільтруємо за роком якщо вказано
+            if(yearFilter) {
+                res = res.filter(m => {
+                    const itemYear = (m.release_date || m.first_air_date || '').slice(0, 4);
+                    return itemYear === yearFilter;
+                });
+            }
+
             if(res.length) {
                 grid.innerHTML = res.map(m => card(m)).join('');
             } else {
@@ -6532,23 +6566,36 @@ function pwaInstall() {
 // =====================================================================
 let srchPage = 1;
 let srchQuery = '';
+let srchYear = ''; // Зберігаємо рік для пагінації
 
-// Переписуємо handleSrch, щоб він показував гарний випадаючий список
+// Переписуємо handleSrch, щоб він показував гарний випадаючий список + фільтр за роком
 async function handleSrch(e) {
     clearTimeout(sT);
-    const val = e.target.value.trim();
+    const val = e.target.value ? e.target.value.trim() : document.getElementById('si').value.trim();
+    const yearInput = document.getElementById('srch-year').value;
     const drop = document.getElementById('ac-drop');
-    
-    if (!val) { 
-        drop.classList.remove('open'); 
-        return; 
+
+    if (!val) {
+        drop.classList.remove('open');
+        return;
     }
-    
+
     sT = setTimeout(async () => {
         try {
             const data = await tmdb('/search/multi', { query: val });
             if (data && data.results) {
-                const items = data.results.filter(m => m.media_type !== 'person' && m.poster_path).slice(0, 5);
+                let items = data.results.filter(m => m.media_type !== 'person' && m.poster_path);
+
+                // Фільтруємо за роком якщо вказано
+                if (yearInput) {
+                    items = items.filter(m => {
+                        const itemYear = (m.release_date || m.first_air_date || '').slice(0, 4);
+                        return itemYear === yearInput;
+                    });
+                }
+
+                items = items.slice(0, 5);
+
                 if (items.length) {
                     drop.innerHTML = items.map(m => `
                         <div class="ac-item" onclick="openMovie(${m.id}, '${m.media_type}')">
@@ -6574,16 +6621,24 @@ async function loadMoreSearch() {
     const grid = document.getElementById('srch-grid');
     const p = { query: srchQuery, page: srchPage };
     const data = await tmdb('/search/multi', p);
-    
+
     if (data && data.results) {
         let res = data.results.filter(m => m.media_type !== 'person' && m.poster_path);
         if (srchFilter === 'movie') res = res.filter(m => m.media_type === 'movie');
         if (srchFilter === 'tv') res = res.filter(m => m.media_type === 'tv');
-        
+
+        // Фільтруємо за роком якщо був вказаний
+        if (srchYear) {
+            res = res.filter(m => {
+                const itemYear = (m.release_date || m.first_air_date || '').slice(0, 4);
+                return itemYear === srchYear;
+            });
+        }
+
         if (res.length) {
             grid.innerHTML += res.map(m => card(m)).join('');
         }
-        
+
         const moreBtn = document.getElementById('srch-more');
         if (moreBtn) moreBtn.style.display = (srchPage < data.total_pages) ? 'block' : 'none';
     }
@@ -6695,8 +6750,16 @@ window.addEventListener('DOMContentLoaded', () => {
             lbl.innerHTML = `<span class="f">${LANG_INFO[siteLang].flag}</span><span class="t">${LANG_INFO[siteLang].text}</span>`;
         }
         updateUIStrings(siteLang);
-        initFirestore(); 
-        setTimeout(bootstrapApp, 1000); 
+        initFirestore();
+        setTimeout(bootstrapApp, 1000);
+
+        // 🚨 Гарантія запуску: якщо initSite не було викликано за 3 сек - примусово запустимо
+        setTimeout(() => {
+            if (!isAppReady) {
+                console.warn('⏱️ Timeout: примусово запускаємо сайт');
+                bootstrapApp();
+            }
+        }, 3000);
     } catch(e) {}
 });
 
