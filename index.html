@@ -4176,6 +4176,7 @@ let keysCache = [];
 let pagesCache = {};
 let dbReady   = false;
 let playerAdsEnabled = true; // Змінна стану реклами з адмінки
+let disabledPlayers = []; // Вимкнені плеєри з адмінки (напр. ['collaps', 'vidsrc'])
 
 // РЕНДЕР БАНЕРІВ ТА ПОПАПІВ
 function renderAds() {
@@ -4229,11 +4230,20 @@ function renderAds() {
 function initFirestore() {
   if (!db) { loadFallback(); return; }
 
-  // Відстежуємо стан тумблера з адмінки (settings/config)
+  // Відстежуємо конфіг з адмінки (settings/config)
   try {
       db.collection('settings').doc('config').onSnapshot(doc => {
-          if (doc.exists && doc.data().playerAdsEnabled !== undefined) {
-              playerAdsEnabled = doc.data().playerAdsEnabled;
+          if (doc.exists) {
+              const data = doc.data();
+              // Читаємо стан реклами
+              if (data.playerAdsEnabled !== undefined) {
+                  playerAdsEnabled = data.playerAdsEnabled;
+              }
+              // Читаємо список вимкнених плеєрів
+              if (Array.isArray(data.disabledPlayers)) {
+                  disabledPlayers = data.disabledPlayers;
+                  console.log('🎬 Оновлено конфіг плеєрів:', disabledPlayers);
+              }
           }
       });
   } catch(e) {}
@@ -4514,6 +4524,153 @@ const TV_PLAYERS = [
     { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` },
     { id: 'multisearch', name: 'Плеєр 4 (Мультипошук)', badge: 'AUTO', safe: true, isCustom: true }
 ];
+
+// =====================================================================
+// УПРАВЛІННЯ ПЛЕЄРАМИ (вмикання/вимикання з адмінки)
+// =====================================================================
+
+// Отримати тільки активні плеєри (не вимкнені)
+function getActivePlayers(allPlayers) {
+    return allPlayers.filter(p => !disabledPlayers.includes(p.id));
+}
+
+// Оновити конфіг вимкнених плеєрів в Firebase
+async function updateDisabledPlayers(newDisabledList) {
+    if (!db || !currentUserRole === 'admin') {
+        console.warn('❌ Тільки адмін може змінювати конфіг');
+        return false;
+    }
+    try {
+        await db.collection('settings').doc('config').set({
+            disabledPlayers: newDisabledList
+        }, { merge: true });
+        console.log('✅ Конфіг плеєрів оновлено:', newDisabledList);
+        return true;
+    } catch (e) {
+        console.error('❌ Помилка оновлення конфігу:', e);
+        return false;
+    }
+}
+
+// Вмикнути/вимкнути плеєр
+async function togglePlayerEnabled(playerId, enabled) {
+    const newDisabled = [...disabledPlayers];
+    if (enabled) {
+        // Вмикаємо - видаляємо з чорного списку
+        const idx = newDisabled.indexOf(playerId);
+        if (idx >= 0) newDisabled.splice(idx, 1);
+    } else {
+        // Вимикаємо - додаємо в чорний список
+        if (!newDisabled.includes(playerId)) newDisabled.push(playerId);
+    }
+    const success = await updateDisabledPlayers(newDisabled);
+    if (success) {
+        disabledPlayers = newDisabled;
+        console.log(`🎬 Плеєр "${playerId}": ${enabled ? '✅ УВІМКНЕНО' : '❌ ВИМКНЕНО'}`);
+        // Оновлюємо UI якщо адмін-панель відкрита
+        await renderPlayersAdminPanel();
+    }
+    return success;
+}
+
+// Адмін-панель управління плеєрами
+async function renderPlayersAdminPanel() {
+    try {
+        if (currentUserRole !== 'admin') return;
+
+        const allPlayers = [...MOVIE_PLAYERS, ...TV_PLAYERS];
+        const uniquePlayers = [];
+        const seenIds = new Set();
+
+        allPlayers.forEach(p => {
+            if (!seenIds.has(p.id)) {
+                uniquePlayers.push(p);
+                seenIds.add(p.id);
+            }
+        });
+
+        let html = `
+            <div style="padding:20px;background:var(--bg2);border-radius:8px;margin-bottom:20px;">
+                <div style="font-size:16px;font-weight:bold;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                    <span>🎬 Управління плеєрами</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">
+        `;
+
+        for (const player of uniquePlayers) {
+            const isDisabled = disabledPlayers.includes(player.id);
+            const isActive = !isDisabled;
+            const statusColor = isActive ? '#4CAF50' : '#f44336';
+            const statusText = isActive ? '✅ УВІМКНЕНО' : '❌ ВИМКНЕНО';
+
+            html += `
+                <div style="
+                    background:var(--bg3);
+                    border:1px solid var(--border);
+                    border-left:4px solid ${statusColor};
+                    border-radius:6px;
+                    padding:12px;
+                    transition:0.3s;
+                ">
+                    <div style="font-weight:bold;margin-bottom:8px;font-size:14px;">
+                        ${escapeHtml(player.name)}
+                        ${player.badge ? `<span style="background:var(--accent);color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;margin-left:6px;">${escapeHtml(player.badge)}</span>` : ''}
+                    </div>
+                    <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">
+                        ID: ${escapeHtml(player.id)}
+                    </div>
+                    <div style="
+                        display:flex;
+                        align-items:center;
+                        gap:8px;
+                        padding:8px;
+                        background:rgba(255,255,255,0.05);
+                        border-radius:4px;
+                        margin-bottom:10px;
+                    ">
+                        <div style="
+                            width:40px;height:20px;
+                            background:${isActive ? '#4CAF50' : '#f44336'};
+                            border-radius:10px;
+                            position:relative;
+                            cursor:pointer;
+                            transition:0.3s;
+                        " onclick="togglePlayerEnabled('${player.id}', ${isDisabled})">
+                            <div style="
+                                position:absolute;
+                                width:16px;height:16px;
+                                background:#fff;
+                                border-radius:50%;
+                                top:2px;
+                                ${isActive ? 'right:2px' : 'left:2px'};
+                                transition:0.3s;
+                            "></div>
+                        </div>
+                        <span style="font-size:12px;color:var(--text);">${statusText}</span>
+                    </div>
+                    <div style="font-size:11px;color:var(--muted);">
+                        ${player.safe ? '🛡️ Безпечний' : '⚠️ Сторонній сервіс'}
+                    </div>
+                </div>
+            `;
+        }
+
+        html += `
+                </div>
+            </div>
+        `;
+
+        // Якщо є контейнер для адмін-панелі
+        const panelContainer = document.getElementById('players-admin-panel');
+        if (panelContainer) {
+            panelContainer.innerHTML = html;
+        }
+
+        return html;
+    } catch (e) {
+        console.error('❌ Помилка рендерування адмін-панелі:', e);
+    }
+}
 // =====================================================================
 // 10. HERO SLIDER
 // =====================================================================
@@ -4553,16 +4710,20 @@ function card(m, badge) {
     const title = m.title || m.name || '—';
     const year = (m.release_date || m.first_air_date || '').slice(0, 4);
     const rat = m.vote_average ? Number(m.vote_average).toFixed(1) : '—';
-    const mtype = m.media_type || 'movie';
+
+    // 🔧 ВИПРАВКА: Гарантуємо правильний тип (movie чи tv)
+    let mtype = m.media_type || 'movie';
+    if (mtype !== 'tv' && mtype !== 'movie') mtype = 'movie';
+
     let isFav = false;
     try { isFav = isFavorite(m.id); } catch(e) {}
-    
+
     const poster = m.poster_path ? `<img class="c-poster" src="${IMG}w300${m.poster_path}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
     const ph = m.poster_path ? `<div class="c-ph" style="display:none">🎬</div>` : `<div class="c-ph">🎬</div>`;
     const badgeHtml = badge ? `<div class="c-badge ${badge.cls}">${badge.txt}</div>` : '';
 
     return `
-    <div class="m-card" onclick="openMovie(${m.id},'${mtype}',false,true)">
+    <div class="m-card" onclick="openMovie(${m.id},'${mtype}',false,true)" title="${escapeHtml(title)}">
         ${poster}${ph}
         <div class="c-ov"></div>
         ${badgeHtml}
@@ -4780,7 +4941,20 @@ let currentModalId = null, currentImdbId = '', currentModalType = 'movie', curre
 let currentCustomPlayers = []; // Кеш для кастомних плеєрів з бази
 
 async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = true) {
-    if (!id) return;
+    // 🔧 ОТРИМАНЕ: ID=${id}, Type=${type}, AutoPlay=${autoPlay}, PushHistory=${pushToHistory}
+    console.log(`🎬 openMovie() викликана: ID=${id}, Type=${type}`);
+
+    if (!id) {
+        console.error('❌ openMovie: ID не передано!');
+        return;
+    }
+
+    // 🔧 Гарантуємо правильний тип
+    if (type !== 'tv' && type !== 'movie') {
+        console.warn(`⚠️ Неправильний тип "${type}", змінюємо на "movie"`);
+        type = 'movie';
+    }
+
     currentModalId = id; currentModalType = type; currentSeason = 1; currentEpisode = 1; currentImdbId = '';
     currentCustomPlayers = []; // Очищаємо кастомні плеєри при кожному відкритті
 
@@ -4812,16 +4986,42 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
     try {
         const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
         let data = null;
+
         try {
             console.log(`🎬 Завантаження інформації про фільм: ${ep}`);
             data = await tmdb(ep, { append_to_response: 'videos,seasons,credits,external_ids,translations' });
+
+            if (!data) {
+                console.error(`❌ TMDB повернула null для: ${ep}`);
+                throw new Error(`Порожня відповідь від TMDB для ${ep}`);
+            }
+
+            console.log(`✅ Дані фільму завантажені:`, data);
         } catch (apiError) {
-            console.error(`❌ Критична помилка при завантаженні фільму:`, apiError);
+            console.error(`❌ Помилка завантаження ${ep}:`, apiError);
+            console.error(`📊 Детальна інформація:`, {
+                type,
+                id,
+                error: apiError.message,
+                status: apiError.status
+            });
+
+            // Показуємо помилку користувачу
+            content.innerHTML = `<div style="padding:40px;text-align:center;color:var(--muted);">
+                <div style="margin-bottom:10px;font-size:16px;">❌ Помилка завантаження фільму</div>
+                <div style="font-size:12px;color:var(--dim);margin-bottom:12px;">
+                    Не вдалося завантажити: ${escapeHtml(type === 'tv' ? 'Серіал' : 'Фільм')} ID: ${id}<br>
+                    Помилка: ${escapeHtml(apiError.message || 'Невідома помилка')}
+                </div>
+                <button onclick="closeMovieModal()" style="padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;margin-right:8px;">Закрити</button>
+                <button onclick="location.reload()" style="padding:8px 16px;background:var(--border);color:var(--text);border:none;border-radius:4px;cursor:pointer;">Оновити сторінку</button>
+            </div>`;
+            return;
         }
 
         if (!data) {
-            console.error(`❌ ПОМИЛКА: Дані про фільм не отримані. TMDB API недоступна або ключі неправильні.`);
-            content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);"><div style="margin-bottom:10px;">❌ Помилка завантаження фільму</div><div style="font-size:12px;color:var(--dim);">TMDB API недоступна. Перевірте:<br>1. Інтернет-з\'єднання<br>2. Конфігурацію Firebase<br>3. API ключи в адмін-панелі</div><br><button onclick="location.reload()" style="padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;">Оновити сторінку</button></div>';
+            console.error(`❌ ПОМИЛКА: Дані про фільм не отримані після усіх спроб`);
+            content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);"><div style="margin-bottom:10px;">❌ Помилка завантаження фільму</div><div style="font-size:12px;color:var(--dim);">Не вдалося отримати дані. Перевірте консоль браузера (F12) для деталей.</div><br><button onclick="location.reload()" style="padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;">Оновити сторінку</button></div>';
             return;
         }
 
@@ -4948,9 +5148,14 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
         const basePlayers = type === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
         const allPlayers = [...basePlayers, ...currentCustomPlayers];
 
+        // 🎬 ФІЛЬТРУЄМО ВИМКНЕНІ ПЛЕЄРИ
+        const activePlayers = getActivePlayers(allPlayers);
+
         let tabsHtml = '';
-        allPlayers.forEach((p, i) => {
-            tabsHtml += `<div class="player-tab${(i === currentPlayer) ? ' act' : ''}" onclick="switchPlayer(${i})">${escapeHtml(p.name)}${p.badge ? `<span class="ptab-badge">${escapeHtml(p.badge)}</span>` : ''}</div>`;
+        activePlayers.forEach((p, i) => {
+            // Знаходимо індекс в оригінальному списку
+            const origIdx = allPlayers.findIndex(pl => pl.id === p.id);
+            tabsHtml += `<div class="player-tab${(origIdx === currentPlayer) ? ' act' : ''}" onclick="switchPlayer(${origIdx})" title="${p.safe ? '✅ Безпечний' : '⚠️ Сторонній'}">${escapeHtml(p.name)}${p.badge ? `<span class="ptab-badge">${escapeHtml(p.badge)}</span>` : ''}</div>`;
         });
 
         let tvSelector = '';
@@ -5130,7 +5335,7 @@ function _doLoadPlayer() {
             wrap.appendChild(adOverlay);
         }
 
-        // --- МУЛЬТИПОШУК ПЛЕЄР ---
+        // --- МУЛЬТИПОШУК ПЛЕЄР (з автоембедом) ---
         if (p.id === 'multisearch') {
             let title = document.querySelector('.m-info-t') ? document.querySelector('.m-info-t').textContent : 'Фільм';
             let year = document.querySelector('.m-info-y') ? document.querySelector('.m-info-y').textContent : '';
@@ -5138,41 +5343,76 @@ function _doLoadPlayer() {
             const searchDiv = document.createElement('div');
             searchDiv.id = 'multisearch-player';
             searchDiv.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text);font-family:system-ui;overflow:auto;';
-            searchDiv.innerHTML = `
-                <div style="text-align:center;max-width:600px;padding:40px;">
-                    <div style="font-size:24px;margin-bottom:20px;font-weight:bold;">🔍 Автопошук джерел...</div>
-                    <div style="margin-bottom:20px;font-size:14px;color:var(--muted);">
-                        Шукаємо: <strong>${escapeHtml(title)} ${year}</strong>
-                    </div>
-                    <div id="multisearch-sources" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;width:100%;">
-                        <div style="padding:20px;color:var(--muted);">⏳ Завантаження...</div>
-                    </div>
-                    <div style="font-size:12px;color:var(--dim);margin-bottom:20px;">Натисніть на джерело щоб відкрити в новому вікні</div>
-                    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
-                        <button onclick="switchPlayer(${(currentPlayer + 1) % allPlayers.length})" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;">Спробувати наступний плеєр</button>
-                    </div>
+
+            const loadingHtml = `<div style="text-align:center;max-width:600px;padding:40px;">
+                <div style="font-size:24px;margin-bottom:20px;font-weight:bold;">⚡ Агресивний пошук...</div>
+                <div style="margin-bottom:20px;font-size:14px;color:var(--muted);">
+                    Шукаємо EMBED: <strong>${escapeHtml(title)} ${year}</strong>
                 </div>
-            `;
+                <div style="margin:30px 0;">
+                    <div style="display:inline-block;width:50px;height:50px;border:4px solid var(--accent);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                </div>
+                <div style="font-size:12px;color:var(--dim);">Спроба прямого завантаження з вільних сайтів...</div>
+                <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+                    <button onclick="switchPlayer(${(currentPlayer + 1) % allPlayers.length})" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;">Пропустити</button>
+                </div>
+            </div>
+            <style>@keyframes spin { to { transform: rotate(360deg); } }</style>`;
+
+            searchDiv.innerHTML = loadingHtml;
             wrap.appendChild(searchDiv);
             clearTimeout(fallbackTimer);
-            loading.style.display = 'none';
 
-            // Автоматично знайти джерела
-            autoDetectMovieSources(title, currentModalId, year).then(sources => {
-                const sourcesDiv = document.getElementById('multisearch-sources');
-                if (!sourcesDiv) return;
+            // ПАРАЛЕЛЬНА спроба автоембеду + пошук джерел
+            (async () => {
+                try {
+                    const sources = await autoDetectMovieSources(title, currentModalId, year, currentImdbId);
 
-                sourcesDiv.innerHTML = sources.map(source => `
-                    <button onclick="tryMultiSearchSource(${currentModalId}, '${source.url.replace(/'/g, "\\'")}')"
-                            style="padding:15px 10px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:0.3s;font-weight:bold;"
-                            onmouseover="this.style.background='var(--accent)';this.style.color='#fff';"
-                            onmouseout="this.style.background='var(--bg3)';this.style.color='var(--text)';">
-                        ${source.icon}<br>${source.name}
-                    </button>
-                `).join('');
-            }).catch(e => {
-                console.warn('⚠️ Помилка автопошуку:', e);
-            });
+                    // Спробуємо АВТОМАТИЧНИЙ EMBED
+                    const embedSuccess = await tryAutoEmbed(sources, wrap, loading);
+
+                    if (embedSuccess) {
+                        // Успіх! Embed загрузився
+                        console.log('✅ EMBED успішно завантажено!');
+                        searchDiv.remove();
+                        return;
+                    }
+
+                    // Якщо embed не сработав - показуємо ручні джерела
+                    console.log('⚠️ Автоембед не сработав, показуємо ручний пошук');
+
+                    const sourcesDiv = document.getElementById('multisearch-sources') || searchDiv;
+                    sourcesDiv.innerHTML = `
+                        <div style="text-align:center;max-width:600px;padding:40px;">
+                            <div style="font-size:20px;margin-bottom:20px;font-weight:bold;">❌ Автоембед не сработав</div>
+                            <div style="margin-bottom:20px;font-size:14px;color:var(--muted);">
+                                Спроба знайти: <strong>${escapeHtml(title)} ${year}</strong>
+                            </div>
+                            <div style="font-size:12px;color:var(--dim);margin-bottom:20px;">
+                                Попробуй найти вручную на этих сайтах:
+                            </div>
+                            <div id="multisearch-sources-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;width:100%;">
+                                ${sources.map(source => `
+                                    <button onclick="tryMultiSearchSource(${currentModalId}, '${source.url.replace(/'/g, "\\'")}')"
+                                            style="padding:15px 10px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:0.3s;font-weight:bold;"
+                                            onmouseover="this.style.background='var(--accent)';this.style.color='#fff';"
+                                            onmouseout="this.style.background='var(--bg3)';this.style.color='var(--text)';">
+                                        ${source.icon}<br><small>${source.name}</small>
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+                                <button onclick="switchPlayer(${(currentPlayer + 1) % allPlayers.length})" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;">Спробувати наступний плеєр</button>
+                            </div>
+                        </div>
+                    `;
+                    loading.style.display = 'none';
+
+                } catch (e) {
+                    console.error('❌ Помилка мультипошуку:', e);
+                    loading.style.display = 'none';
+                }
+            })();
 
             return;
         }
@@ -5264,6 +5504,29 @@ function _doLoadPlayer() {
 function switchPlayer(idx) {
     try {
         if (brokenPlayers.has(idx)) return;
+
+        // 🎬 ПЕРЕВІРЯЄМО ЧИ ПЛЕЄР НЕ ВИМКНЕНО
+        const basePlayers = currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS;
+        const allPlayers = [...basePlayers, ...currentCustomPlayers];
+        const player = allPlayers[idx];
+
+        if (player && disabledPlayers.includes(player.id)) {
+            console.warn(`❌ Плеєр "${player.name}" вимкнено адміном!`);
+            showToast(`❌ Плеєр "${player.name}" вимкнено адміном. Спробуємо наступний...`);
+
+            // Переходимо на наступний активний плеєр
+            const activePlayers = getActivePlayers(allPlayers);
+            if (activePlayers.length === 0) {
+                showToast('❌ Немає активних плеєрів');
+                return;
+            }
+
+            const nextActive = activePlayers[0];
+            const nextIdx = allPlayers.findIndex(p => p.id === nextActive.id);
+            if (nextIdx >= 0) switchPlayer(nextIdx);
+            return;
+        }
+
         currentPlayer = idx;
         localStorage.setItem('kb_pref_srv', idx);
         document.querySelectorAll('.player-tab').forEach((b, i) => {
@@ -5361,49 +5624,224 @@ function updateMovieDataUI(title, desc, posterPath) {
     }
 }
 
-// Автоматично знайти доступні джерела для фільму
-async function autoDetectMovieSources(movieTitle, movieId, year) {
+// Автоматично знайти доступні джерела для фільму з ембедами
+async function autoDetectMovieSources(movieTitle, movieId, year, imdbId) {
     try {
-        console.log(`🔍 Шукаємо джерела для: ${movieTitle}`);
+        console.log(`🔍 Агресивний пошук джерел для: ${movieTitle} (IMDB: ${imdbId})`);
 
         const sources = [];
+        const searchQuery = encodeURIComponent(movieTitle.replace(/[^\w\s]/g, '').trim());
+        const simpleTitle = movieTitle.replace(/[^\w\s]/g, '').trim();
 
-        // Джерело 1: YouTube
-        sources.push({
-            name: 'YouTube',
-            icon: '🔴',
-            url: `https://www.youtube.com/results?search_query=${encodeURIComponent(movieTitle + ' ' + year + ' фільм')}`,
-            type: 'youtube'
-        });
+        // ============ REZKA ============
+        if (imdbId) {
+            // Варіант 1: API ortified
+            sources.push({
+                name: 'Rezka (API)',
+                icon: '🎬',
+                url: `https://rezka.ag/search/?q=${movieTitle}`,
+                type: 'rezka',
+                embeds: [
+                    `https://api.ortified.ws/embed/imdb/${imdbId}`,
+                    `https://rezka.ag/embed/${imdbId}`,
+                    `https://rezka.ag/movies/imdb/${imdbId}`,
+                ]
+            });
 
-        // Джерело 2: Rezka
-        sources.push({
-            name: 'Rezka.ag',
-            icon: '🎬',
-            url: `https://rezka.ag/search/?q=${encodeURIComponent(movieTitle)}`,
-            type: 'rezka'
-        });
+            // Варіант 2: Direct Rezka iFrame
+            sources.push({
+                name: 'Rezka (Direct)',
+                icon: '🎬',
+                url: `https://rezka.ag/search/?q=${movieTitle}`,
+                type: 'rezka_direct',
+                embeds: [
+                    `https://rezka.ag/iframe?id=${imdbId}`,
+                    `https://rezka.ag/player?id=${imdbId}`,
+                ]
+            });
+        }
 
-        // Джерело 3: Кіно365
+        // ============ KINO365 ============
         sources.push({
             name: 'Кіно365',
             icon: '🎥',
-            url: `https://kino365.ua/search/${encodeURIComponent(movieTitle)}`,
-            type: 'kino365'
+            url: `https://kino365.ua/search/${searchQuery}`,
+            type: 'kino365',
+            embeds: [
+                `https://kino365.ua/embed/${simpleTitle.replace(/\s+/g, '-').toLowerCase()}`,
+                `https://kino365.ua/player/${simpleTitle.replace(/\s+/g, '-').toLowerCase()}`,
+                `https://kino365.ua/iframe?q=${searchQuery}`,
+                `https://kino365.ua/?search=${searchQuery}&embed=true`
+            ]
         });
 
-        // Джерело 4: IMDb
+        // ============ HDREZKA ============
         sources.push({
-            name: 'IMDb',
-            icon: '⭐',
-            url: `https://www.imdb.com/find/?q=${encodeURIComponent(movieTitle)}&s=tt`,
-            type: 'imdb'
+            name: 'HDRezka',
+            icon: '🔥',
+            url: `https://hdrezka.sh/search/?do=search&subaction=search&q=${searchQuery}`,
+            type: 'hdrezka',
+            embeds: [
+                `https://hdrezka.sh/embed?q=${searchQuery}`,
+                `https://hdrezka.sh/player?q=${searchQuery}`,
+                `https://hdrezka.sh/iframe?title=${encodeURIComponent(movieTitle)}&year=${year}`,
+            ]
         });
 
+        // ============ YOUTUBE ============
+        sources.push({
+            name: 'YouTube',
+            icon: '🔴',
+            url: `https://www.youtube.com/results?search_query=${encodeURIComponent(movieTitle + ' фільм')}`,
+            type: 'youtube',
+            embeds: [
+                `https://www.youtube.com/embed?search_query=${encodeURIComponent(movieTitle + ' фільм HD')}`
+            ]
+        });
+
+        // ============ TMDB ============
+        sources.push({
+            name: 'TMDB',
+            icon: '📺',
+            url: '#',
+            type: 'tmdb',
+            embeds: [
+                `https://www.themoviedb.org/movie/${movieId}?embed=true`,
+                `https://www.themoviedb.org/movie/${movieId}`,
+            ]
+        });
+
+        // ============ IMDB ============
+        if (imdbId) {
+            sources.push({
+                name: 'IMDb',
+                icon: '⭐',
+                url: `https://www.imdb.com/title/${imdbId}`,
+                type: 'imdb',
+                embeds: [
+                    `https://www.imdb.com/title/${imdbId}/videoplayer`,
+                    `https://www.imdb.com/title/${imdbId}?embed=true`,
+                ]
+            });
+        }
+
+        // ============ FALLBACK ============
+        sources.push({
+            name: 'VidSrc',
+            icon: '🎞️',
+            url: `https://vidsrc.me/embed/movie?imdb=${imdbId}`,
+            type: 'vidsrc',
+            embeds: [
+                `https://vidsrc.me/embed/movie?imdb=${imdbId}`,
+                `https://vidsrc.me/embed/${imdbId}`,
+            ]
+        });
+
+        console.log(`✅ Знайдено ${sources.length} джерел для auto-embed`);
         return sources;
     } catch (e) {
         console.warn('⚠️ Помилка автодетекції джерел:', e);
         return [];
+    }
+}
+
+// Спробувати завантажити embed з кількох джерел паралельно (з кількома варіантами для кожного)
+async function tryAutoEmbed(sources, wrap, loading) {
+    try {
+        console.log('⚡ Спроба автоматичного завантаження embed...');
+
+        // Фільтруємо джерела що мають embed/embeds
+        const embedSources = sources.filter(s => s.embed || s.embeds);
+
+        if (embedSources.length === 0) {
+            console.log('⚠️ Немає доступних embed джерел');
+            return false;
+        }
+
+        let sourceIndex = 0;
+
+        // Спробуємо кожне джерело
+        for (const source of embedSources) {
+            sourceIndex++;
+
+            // Отримуємо массив embed URL чи створюємо з старого формату
+            const embedUrls = source.embeds || (source.embed ? [source.embed] : []);
+
+            if (embedUrls.length === 0) continue;
+
+            console.log(`📡 Джерело #${sourceIndex}: ${source.name} (${embedUrls.length} варіантів)`);
+
+            // Спробуємо кожен варіант для цього джерела
+            for (let variantIdx = 0; variantIdx < embedUrls.length; variantIdx++) {
+                const embedUrl = embedUrls[variantIdx];
+
+                try {
+                    console.log(`  └─ Варіант ${variantIdx + 1}/${embedUrls.length}: ${embedUrl.substring(0, 60)}...`);
+
+                    const iframe = document.createElement('iframe');
+                    iframe.id = 'player-iframe';
+                    iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; accelerometer; gyroscope');
+                    iframe.setAttribute('allowfullscreen', 'true');
+                    iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-pointer-lock');
+                    iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;';
+
+                    // Вставляємо ПЕРЕД встановленням src (деякі сайти потребують це)
+                    wrap.appendChild(iframe);
+
+                    // Встановлюємо src і чекаємо загрузки
+                    const loadPromise = new Promise((resolve) => {
+                        let loaded = false;
+
+                        // Таймаут: 4 секунди
+                        const timer = setTimeout(() => {
+                            if (!loaded) {
+                                console.warn(`  └─ ⏱️ Timeout (4s)`);
+                                resolve(false);
+                            }
+                        }, 4000);
+
+                        iframe.onload = () => {
+                            if (!loaded) {
+                                loaded = true;
+                                clearTimeout(timer);
+                                console.log(`  └─ ✅ УСПІХ!`);
+                                resolve(true);
+                            }
+                        };
+
+                        iframe.onerror = () => {
+                            if (!loaded) {
+                                loaded = true;
+                                clearTimeout(timer);
+                                console.warn(`  └─ ❌ Помилка завантаження`);
+                                resolve(false);
+                            }
+                        };
+
+                        // Встановлюємо src ПІСЛЯ встановлення обробників
+                        iframe.src = embedUrl;
+                    });
+
+                    const loaded = await loadPromise;
+                    if (loaded) {
+                        loading.style.display = 'none';
+                        console.log(`🎉 EMBED успішно завантажено з ${source.name}!`);
+                        return true;
+                    } else {
+                        // Видаляємо невдалий iframe і спробуємо наступний варіант
+                        iframe.remove();
+                    }
+                } catch (e) {
+                    console.warn(`  └─ ⚠️ Помилка:`, e.message);
+                }
+            }
+        }
+
+        console.warn('⚠️ Усі embed джерела не працюють');
+        return false;
+    } catch (e) {
+        console.error('❌ Помилка автоембеду:', e);
+        return false;
     }
 }
 
