@@ -4167,15 +4167,9 @@ const FIREBASE_CONFIG = {
 };
 
 let db = null;
-let auth = null;
 try {
   if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
   db = firebase.firestore();
-  auth = firebase.auth();
-  // Анонімна аутентифікація для базового доступу
-  auth.signInAnonymously().catch(err => {
-      console.warn('⚠️ Анонімна аутентифікація не вдалась:', err.message);
-  });
 } catch (e) {
   console.warn('⚠️ Firebase помилка:', e.message);
 }
@@ -4887,7 +4881,8 @@ async function doSearch(filter = 'all') {
         const si = document.getElementById('si');
         if(!si) return;
         const q = si.value.trim();
-        const yearFilter = document.getElementById('srch-year').value; // Отримуємо рік
+        const yearEl = document.getElementById('srch-year');
+        const yearFilter = yearEl ? yearEl.value : ''; // Отримуємо рік
         if(!q) return;
 
         document.getElementById('home-content').style.display = 'none';
@@ -6223,7 +6218,13 @@ async function savePlayerProgress() {
 // АВТОРИЗАЦІЯ ТА ПРОФІЛЬ
 // =====================================================================
 let auth = null, currentUser = null, currentUserRole = 'user', currentUserSubscribed = false;
-try { auth = firebase.auth(); } catch(e) {}
+try {
+  auth = firebase.auth();
+  // Анонімна аутентифікація для базового доступу (пошук без логіну)
+  auth.signInAnonymously().catch(err => {
+    console.warn('⚠️ Анонімна аутентифікація:', err.message);
+  });
+} catch(e) {}
 
 if (auth) {
     try {
@@ -6572,7 +6573,8 @@ let srchYear = ''; // Зберігаємо рік для пагінації
 async function handleSrch(e) {
     clearTimeout(sT);
     const val = e.target.value ? e.target.value.trim() : document.getElementById('si').value.trim();
-    const yearInput = document.getElementById('srch-year').value;
+    const yearEl = document.getElementById('srch-year');
+    const yearInput = yearEl ? yearEl.value : '';
     const drop = document.getElementById('ac-drop');
 
     if (!val) {
