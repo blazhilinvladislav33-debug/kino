@@ -1,1746 +1,714 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>КіноБаза — Адмін Панель</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKVZ2JJDJN"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-GKVZ2JJDJN');
-  </script>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <style>
-    :root {
-      --bg: #0d0d0d; --bg2: #151515; --bg3: #1a1a1a; --bg4: #222;
-      --accent: #e50914; --gold: #f5c518;
-      --text: #fff; --muted: #888; --border: #2a2a2a;
-      --green: #1db954; --blue: #1a8cff; --orange: #f5a623;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адміністрування КіноБаза</title>
 
-    /* ===== LOGIN ===== */
-    #login-screen {
-      min-height:100vh; display:flex; align-items:center; justify-content:center;
-      background: radial-gradient(ellipse at center, #1a0505 0%, #0d0d0d 70%);
-    }
-    .login-box {
-      background:var(--bg2); border:1px solid var(--border); border-radius:16px;
-      padding:48px 40px; width:360px; text-align:center;
-    }
-    .login-logo { font-size:32px; font-weight:800; margin-bottom:8px; }
-    .login-logo span:first-child { color:var(--accent); }
-    .login-sub { color:var(--muted); font-size:13px; margin-bottom:32px; }
-    .form-group { margin-bottom:16px; text-align:left; }
-    .form-group label { font-size:12px; color:var(--muted); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px; }
-    .form-group input, .form-group select, .form-group textarea {
-      width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:8px;
-      color:var(--text); padding:10px 14px; font-size:14px; font-family:inherit; outline:none;
-      transition:border-color .2s;
-    }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--accent); }
-    .form-group textarea { resize:vertical; min-height:80px; }
-    .btn-primary {
-      width:100%; background:var(--accent); color:#fff; border:none; border-radius:8px;
-      padding:12px; font-size:15px; font-weight:700; cursor:pointer; transition:background .2s;
-    }
-    .btn-primary:hover { background:#b20710; }
-    .login-error { color:var(--accent); font-size:13px; margin-top:10px; display:none; }
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 
-    /* ===== ADMIN LAYOUT ===== */
-    #admin-screen { display:none; }
-    .admin-header {
-      background:var(--bg2); border-bottom:1px solid var(--border);
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 28px; height:56px; position:sticky; top:0; z-index:100;
-    }
-    .admin-logo { font-size:18px; font-weight:800; }
-    .admin-logo span:first-child { color:var(--accent); }
-    .admin-logo .badge {
-      background:var(--bg3); color:var(--muted); font-size:11px; font-weight:500;
-      padding:2px 8px; border-radius:4px; margin-left:8px; vertical-align:middle;
-    }
-    .admin-header-right { display:flex; align-items:center; gap:12px; }
-    .btn-site { color:var(--muted); font-size:13px; text-decoration:none; }
-    .btn-site:hover { color:#fff; }
-    .btn-logout {
-      background:transparent; border:1px solid var(--border); color:var(--muted);
-      padding:6px 14px; border-radius:6px; cursor:pointer; font-size:13px; transition:all .2s;
-    }
-    .btn-logout:hover { border-color:#fff; color:#fff; }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .admin-body { display:flex; min-height:calc(100vh - 56px); }
+        :root {
+            --accent: #e50914;
+            --bg1: #0a0e27;
+            --bg2: #111827;
+            --bg3: #1f2937;
+            --border: #374151;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --dim: #6b7280;
+        }
 
-    /* Sidebar */
-    .admin-sidebar {
-      width:220px; background:var(--bg2); border-right:1px solid var(--border);
-      padding:20px 0; flex-shrink:0;
-    }
-    .sidebar-section { padding:0 16px; margin-bottom:20px; }
-    .sidebar-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; padding:0 12px; margin-bottom:8px; }
-    .sidebar-link {
-      display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px;
-      color:var(--muted); font-size:14px; font-weight:500; cursor:pointer;
-      text-decoration:none; transition:all .2s; margin-bottom:2px;
-    }
-    .sidebar-link:hover { background:var(--bg3); color:#fff; }
-    .sidebar-link.active { background:rgba(229,9,20,.15); color:var(--accent); }
-    .sidebar-link .icon { width:20px; text-align:center; }
-    .sidebar-count {
-      margin-left:auto; background:var(--bg4); color:var(--muted);
-      font-size:11px; padding:1px 7px; border-radius:10px;
-    }
-    .sidebar-link.active .sidebar-count { background:rgba(229,9,20,.3); color:var(--accent); }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg1);
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-    /* Main content */
-    .admin-main { flex:1; padding:28px; overflow-x:hidden; }
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    /* Page header */
-    .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
-    .page-title { font-size:22px; font-weight:700; }
-    .page-sub { color:var(--muted); font-size:13px; margin-top:2px; }
-    .btn-add {
-      background:var(--accent); color:#fff; border:none; border-radius:8px;
-      padding:10px 20px; font-size:14px; font-weight:600; cursor:pointer;
-      display:flex; align-items:center; gap:6px; transition:background .2s;
-    }
-    .btn-add:hover { background:#b20710; }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
 
-    /* Stats row */
-    .stats-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:28px; }
-    .stat-card {
-      background:var(--bg2); border:1px solid var(--border); border-radius:12px;
-      padding:20px; display:flex; align-items:center; gap:16px;
-    }
-    .stat-icon { font-size:28px; }
-    .stat-num { font-size:26px; font-weight:800; }
-    .stat-label { color:var(--muted); font-size:12px; margin-top:2px; }
+        .admin-header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
 
-    /* Filters */
-    .filters-bar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
-    .filter-btn {
-      padding:6px 14px; border-radius:20px; border:1px solid var(--border);
-      background:var(--bg2); color:var(--muted); font-size:13px; cursor:pointer;
-      transition:all .2s; font-family:inherit;
-    }
-    .filter-btn:hover, .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
-    .search-filter {
-      margin-left:auto; background:var(--bg2); border:1px solid var(--border);
-      border-radius:8px; padding:6px 12px; color:var(--text); font-size:13px;
-      font-family:inherit; outline:none; width:200px;
-    }
-    .search-filter:focus { border-color:var(--accent); }
+        .admin-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
 
-    /* Ads table */
-    .ads-table { width:100%; border-collapse:collapse; }
-    .ads-table th {
-      text-align:left; padding:10px 14px; font-size:11px; color:var(--muted);
-      text-transform:uppercase; letter-spacing:.5px; border-bottom:1px solid var(--border);
-    }
-    .ads-table td { padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; }
-    .ads-table tr:hover td { background:rgba(255,255,255,.02); }
+        .btn-logout {
+            padding: 8px 16px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
-    .ad-thumb {
-      width:80px; height:45px; border-radius:6px; object-fit:cover;
-      background:var(--bg3); display:flex; align-items:center; justify-content:center;
-      font-size:20px; flex-shrink:0;
-    }
-    .ad-thumb img { width:100%; height:100%; object-fit:cover; border-radius:6px; }
-    .ad-name { font-weight:600; font-size:14px; }
-    .ad-link { color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px; }
+        .btn-logout:hover {
+            opacity: 0.9;
+        }
 
-    .slot-badge {
-      display:inline-flex; align-items:center; gap:4px; padding:3px 10px;
-      border-radius:20px; font-size:12px; font-weight:600;
-    }
-    .slot-header { background:rgba(26,140,255,.15); color:var(--blue); }
-    .slot-between { background:rgba(29,185,84,.15); color:var(--green); }
-    .slot-popup { background:rgba(229,9,20,.15); color:var(--accent); }
-    .slot-sidebar { background:rgba(245,166,35,.15); color:var(--orange); }
-    .slot-footer { background:rgba(128,128,128,.15); color:#aaa; }
+        .admin-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+        }
 
-    .type-badge {
-      display:inline-flex; align-items:center; gap:4px; padding:2px 8px;
-      border-radius:4px; font-size:11px; background:var(--bg3); color:var(--muted);
-    }
+        .admin-tab {
+            padding: 12px 20px;
+            background: transparent;
+            color: var(--muted);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: 0.3s;
+        }
 
-    .toggle-switch {
-      position:relative; width:42px; height:24px; display:inline-block; cursor:pointer;
-    }
-    .toggle-switch input { opacity:0; width:0; height:0; }
-    .toggle-slider {
-      position:absolute; inset:0; background:#333; border-radius:12px; transition:.3s;
-    }
-    .toggle-slider::before {
-      content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px;
-      background:#fff; border-radius:50%; transition:.3s;
-    }
-    .toggle-switch input:checked + .toggle-slider { background:var(--green); }
-    .toggle-switch input:checked + .toggle-slider::before { transform:translateX(18px); }
+        .admin-tab.active {
+            color: var(--text);
+            border-bottom-color: var(--accent);
+        }
 
-    .action-btn {
-      background:none; border:1px solid var(--border); color:var(--muted);
-      width:32px; height:32px; border-radius:6px; cursor:pointer; font-size:14px;
-      display:inline-flex; align-items:center; justify-content:center; transition:all .2s;
-    }
-    .action-btn:hover { border-color:#fff; color:#fff; }
-    .action-btn.del:hover { border-color:var(--accent); color:var(--accent); }
-    .action-btn.edit:hover { border-color:var(--blue); color:var(--blue); }
+        .admin-tab:hover {
+            color: var(--text);
+        }
 
-    /* Empty state */
-    .empty-state { text-align:center; padding:60px 20px; color:var(--muted); }
-    .empty-state .empty-icon { font-size:56px; margin-bottom:16px; }
-    .empty-state h3 { font-size:18px; color:#fff; margin-bottom:8px; }
+        .admin-section {
+            display: none;
+        }
 
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:1000;
-      display:flex; align-items:center; justify-content:center;
-      opacity:0; pointer-events:none; transition:opacity .25s;
-      backdrop-filter:blur(4px);
-    }
-    .modal-overlay.open { opacity:1; pointer-events:all; }
-    .modal {
-      background:var(--bg2); border:1px solid var(--border); border-radius:16px;
-      padding:32px; width:560px; max-width:95vw; max-height:90vh;
-      overflow-y:auto; position:relative;
-      animation: modalIn .25s ease;
-    }
-    @keyframes modalIn { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
-    .modal-title { font-size:18px; font-weight:700; margin-bottom:24px; }
-    .modal-close {
-      position:absolute; top:16px; right:16px; background:none; border:none;
-      color:var(--muted); font-size:22px; cursor:pointer;
-    }
-    .modal-close:hover { color:#fff; }
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    .form-hint { font-size:11px; color:var(--muted); margin-top:4px; }
-    .modal-footer { display:flex; gap:10px; margin-top:24px; justify-content:flex-end; }
-    .btn-cancel {
-      background:transparent; border:1px solid var(--border); color:var(--muted);
-      padding:10px 20px; border-radius:8px; cursor:pointer; font-size:14px;
-      font-family:inherit; transition:all .2s;
-    }
-    .btn-cancel:hover { border-color:#fff; color:#fff; }
-    .btn-save {
-      background:var(--green); color:#fff; border:none; border-radius:8px;
-      padding:10px 24px; font-size:14px; font-weight:700; cursor:pointer;
-      font-family:inherit; transition:background .2s;
-    }
-    .btn-save:hover { background:#17a845; }
+        .admin-section.active {
+            display: block;
+        }
 
-    /* Preview */
-    .preview-box {
-      background:var(--bg3); border:1px dashed var(--border); border-radius:8px;
-      padding:12px; margin-top:6px; text-align:center; overflow:hidden;
-    }
-    .preview-box img { max-width:100%; max-height:150px; border-radius:4px; object-fit:contain; }
-    .preview-placeholder { color:var(--muted); font-size:13px; padding:20px; }
+        .settings-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
 
-    /* Slots guide */
-    .slots-guide { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:20px; }
-    .slots-guide h3 { font-size:15px; margin-bottom:14px; }
-    .slot-row {
-      display:flex; align-items:center; gap:14px; padding:10px 0;
-      border-bottom:1px solid rgba(255,255,255,.04);
-    }
-    .slot-row:last-child { border:none; }
-    .slot-row .slot-icon { font-size:20px; width:32px; text-align:center; }
-    .slot-row .slot-info { flex:1; }
-    .slot-row .slot-name { font-size:14px; font-weight:600; }
-    .slot-row .slot-desc { font-size:12px; color:var(--muted); margin-top:2px; }
-    .slot-row .slot-dim { font-size:11px; color:var(--blue); }
+        .settings-card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .toast-admin {
-      position:fixed; bottom:24px; right:24px; background:#222; color:#fff;
-      padding:12px 20px; border-radius:8px; font-size:14px;
-      border-left:3px solid var(--green); z-index:9999;
-      transform:translateY(60px); transition:transform .3s; opacity:0;
-    }
-    .toast-admin.show { transform:translateY(0); opacity:1; }
-    .toast-admin.error { border-left-color:var(--accent); }
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
 
-    .section-page { display:none; }
-    .section-page.active { display:block; }
+        .player-item {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            transition: 0.3s;
+        }
 
-    /* ===== BLOCK 9: PAGES EDITOR ===== */
-    .pages-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);}
-    .pages-tab{padding:10px 18px;cursor:pointer;color:var(--muted);font-size:14px;font-weight:600;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
-    .pages-tab:hover{color:#fff;}
-    .pages-tab.active{color:#fff;border-bottom-color:var(--accent);}
-    .page-editor{display:none;}
-    .page-editor.active{display:block;}
-    .page-editor textarea{min-height:260px;font-family:monospace;font-size:13px;line-height:1.6;}
-    .page-save-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;}
-    .page-save-btn:hover{background:#17a845;}
-    /* ===== BLOCK 9: USERS ===== */
-    .role-badge{display:inline-flex;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:700;}
-    .role-admin{background:rgba(229,9,20,.15);color:var(--accent);}
-    .role-user{background:rgba(26,140,255,.15);color:var(--blue);}
-    .user-email{color:var(--muted);font-size:12px;margin-top:2px;}
+        .player-item:hover {
+            border-color: var(--accent);
+        }
 
-    @media (max-width:768px) {
-      .admin-sidebar { display:none; }
-      .stats-row { grid-template-columns:1fr 1fr; }
-    }
-  </style>
+        .player-item.disabled {
+            opacity: 0.6;
+            border-left: 4px solid #f44336;
+        }
+
+        .player-item.enabled {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .player-item-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .player-item-id {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .player-item-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            width: 40px;
+            height: 20px;
+            background: #f44336;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            right: 2px;
+            left: auto;
+        }
+
+        .player-item-status {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--bg3);
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .setting-item-label {
+            font-weight: 500;
+        }
+
+        .setting-item-desc {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .status-message {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #81c784;
+            display: block;
+        }
+
+        .status-message.error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #ef5350;
+            display: block;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--accent);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: var(--bg1);
+        }
+
+        .login-box {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .form-group button:hover {
+            opacity: 0.9;
+        }
+
+        .form-group button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
 
-<!-- ===== LOGIN ===== -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo"><span>Кіно</span><span>База</span></div>
-    <div class="login-sub">Вхід для адміністраторів</div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="login-email" placeholder="admin@example.com" onkeyup="if(event.key==='Enter')doLogin()">
+<div id="login-section" class="login-container" style="display: none;">
+    <div class="login-box">
+        <h1>🔐 Адміністрування</h1>
+        <div id="login-error" class="status-message error"></div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="login-email" placeholder="admin@example.com">
+        </div>
+        <div class="form-group">
+            <label>Пароль</label>
+            <input type="password" id="login-password" placeholder="••••••••">
+        </div>
+        <div class="form-group">
+            <button id="login-btn" onclick="adminLogin()">Вхід</button>
+        </div>
     </div>
-    <div class="form-group">
-      <label>Пароль</label>
-      <input type="password" id="login-pass" placeholder="••••••••" onkeyup="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn-primary" onclick="doLogin()">Увійти</button>
-    <div class="login-error" id="login-error">Невірний email або пароль</div>
-    <div style="text-align:center;margin-top:12px;">
-      <span onclick="doForgotPassword()" style="color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">Забули пароль?</span>
-    </div>
-  </div>
 </div>
 
-<!-- ===== ADMIN PANEL ===== -->
-<div id="admin-screen">
-  <!-- Header -->
-  <div class="admin-header">
-    <div class="admin-logo">
-      <span>Кіно</span><span>База</span>
-      <span class="badge">Admin</span>
+<div id="admin-section" style="display: none;">
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>⚙️ Адміністрування КіноБаза</h1>
+            </div>
+            <div class="user-info">
+                <span id="user-email">—</span>
+                <button class="btn-logout" onclick="adminLogout()">Вийти</button>
+            </div>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchAdminTab('players')">🎬 Плеєри</button>
+            <button class="admin-tab" onclick="switchAdminTab('ads')">📢 Реклама</button>
+            <button class="admin-tab" onclick="switchAdminTab('stats')">📊 Статистика</button>
+        </div>
+
+        <!-- ===== ПЛЕЄРИ ===== -->
+        <div id="tab-players" class="admin-section active">
+            <div id="players-status" class="status-message"></div>
+            <div class="settings-card">
+                <h2>🎬 Управління плеєрами</h2>
+                <p style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">
+                    Вмикайте чи вимикайте плеєри для всіх користувачів
+                </p>
+                <div id="players-grid" class="settings-grid">
+                    <div style="text-align: center; color: var(--muted); grid-column: 1 / -1; padding: 40px;">
+                        <div class="loading" style="margin: 0 auto 16px;"></div>
+                        Завантаження...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== РЕКЛАМА ===== -->
+        <div id="tab-ads" class="admin-section">
+            <div id="ads-status" class="status-message"></div>
+            <div class="settings-card">
+                <h2>📢 Параметри реклами</h2>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-item-label">Показувати рекламу в плеєрі</div>
+                        <div class="setting-item-desc">Реклама буде показана для звичайних користувачів</div>
+                    </div>
+                    <div class="toggle-switch" id="ads-toggle" onclick="toggleAdsSetting()" style="cursor: pointer;"></div>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h2>🔗 Посилання на монетаж</h2>
+                <div class="form-group">
+                    <label>URL монетаж-панелі (опційно)</label>
+                    <input type="url" id="monetag-url" placeholder="https://your-monetag-link.com">
+                </div>
+                <button onclick="saveMonetag()" style="padding: 10px 20px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                    Зберегти
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== СТАТИСТИКА ===== -->
+        <div id="tab-stats" class="admin-section">
+            <div class="settings-card">
+                <h2>📊 Статистика сайту</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div style="background: var(--bg3); padding: 20px; border-radius: 6px; text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold; color: var(--accent); margin-bottom: 8px;">—</div>
+                        <div style="font-size: 14px; color: var(--muted);">Активних користувачів</div>
+                    </div>
+                    <div style="background: var(--bg3); padding: 20px; border-radius: 6px; text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold; color: var(--accent); margin-bottom: 8px;">—</div>
+                        <div style="font-size: 14px; color: var(--muted);">Переглядів сьогодні</div>
+                    </div>
+                    <div style="background: var(--bg3); padding: 20px; border-radius: 6px; text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold; color: var(--accent); margin-bottom: 8px;">—</div>
+                        <div style="font-size: 14px; color: var(--muted);">Активні сейшни</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h2>💾 Дії</h2>
+                <button onclick="clearAllCache()" style="padding: 10px 20px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; margin-right: 10px;">
+                    🗑️ Очистити кеш
+                </button>
+                <button onclick="reloadConfig()" style="padding: 10px 20px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
+                    🔄 Перезавантажити конфіг
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="admin-header-right">
-      <a href="index.html" target="_blank" class="btn-site">↗ Переглянути сайт</a>
-      <button class="btn-logout" onclick="logout()">Вийти</button>
-    </div>
-  </div>
-
-  <div class="admin-body">
-    <!-- Sidebar -->
-    <div class="admin-sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-label">Меню</div>
-        <div class="sidebar-link active" onclick="showPage('ads')" id="nav-ads">
-          <span class="icon">📢</span> Реклама
-          <span class="sidebar-count" id="count-ads">0</span>
-        </div>
-        <div class="sidebar-link" onclick="showPage('apikeys')" id="nav-apikeys">
-          <span class="icon">🔑</span> API Ключі
-          <span class="sidebar-count" id="count-keys">0</span>
-        </div>
-        <div class="sidebar-link" onclick="showPage('slots')" id="nav-slots">
-          <span class="icon">🗺️</span> Слоти
-        </div>
-        <div class="sidebar-link" onclick="showPage('settings')" id="nav-settings">
-          <span class="icon">⚙️</span> Налаштування
-        </div>
-        <div class="sidebar-link" onclick="showPage('pages')" id="nav-pages">
-          <span class="icon">📄</span> Сторінки
-        </div>
-        <div class="sidebar-link" onclick="showPage('users');loadUsersData();" id="nav-users">
-          <span class="icon">👥</span> Користувачі
-          <span class="sidebar-count" id="count-users">0</span>
-        </div>
-        <div class="sidebar-link" onclick="showPage('streams')" id="nav-streams">
-          <span class="icon">🎬</span> Плеєри та YouTube
-        </div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-label">Статистика</div>
-        <div style="padding:0 12px; color:var(--muted); font-size:12px; line-height:1.8;">
-          <div>🟢 Активних: <span id="sb-active">0</span></div>
-          <div>🔴 Вимкнених: <span id="sb-inactive">0</span></div>
-          <div>🎯 Слотів: 6</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main -->
-    <div class="admin-main">
-<!-- === PAGE: CUSTOM STREAMS === -->
-<div class="section-page" id="page-streams">
-  <div class="page-header">
-    <div>
-      <div class="page-title">Кастомні плеєри та YouTube</div>
-      <div class="page-sub">Прив'язка YouTube відео або власних серверів за TMDB ID фільму</div>
-    </div>
-  </div>
-
-  <div style="max-width:600px;">
-    <div class="slots-guide">
-      <h3 style="margin-bottom:16px;">➕ Додати плеєр до фільму</h3>
-      
-      <div class="form-group">
-        <label>TMDB ID фільму / серіалу *</label>
-        <input type="text" id="cs-tmdb-id" placeholder="Наприклад: 550 або 1399">
-        <div class="form-hint">ID з посилання сайту (наприклад: /movie/550-fight-club -> ID: 550)</div>
-      </div>
-
-      <div class="form-group">
-        <label>YouTube Video ID (необов'язково)</label>
-        <input type="text" id="cs-yt-id" placeholder="Наприклад: dQw4w9WgXcQ">
-        <div class="form-hint">Тільки ID відео після v= у посиланні YouTube</div>
-      </div>
-
-      <div class="form-group">
-        <label>Кастомний URL плеєра (iFrame / Embed)</label>
-        <input type="url" id="cs-custom-url" placeholder="https://my-host.com/embed/123">
-      </div>
-
-      <div class="form-group">
-        <label>Назва вкладки у плеєрі</label>
-        <input type="text" id="cs-custom-name" placeholder="Наприклад: Сервер 4 (Українська озвучка)">
-      </div>
-
-      <button class="btn-primary" onclick="saveCustomStream()">💾 Зберегти посилання</button>
-    </div>
-
-    <!-- Заділ під майбутній YouTube API Key -->
-    <div class="slots-guide" style="margin-top:20px;">
-      <h3 style="margin-bottom:12px;">🔑 YouTube Data API v3 (На майбутнє)</h3>
-      <div class="form-group">
-        <label>YouTube API Key</label>
-        <input type="text" id="cs-yt-key" placeholder="AIzaSy...">
-        <div class="form-hint">Ключ з Google Cloud Console для майбутнього автоматичного пошуку</div>
-      </div>
-      <button class="btn-add" onclick="saveYtApiKey()" style="font-size:13px;padding:8px 16px;">Зберегти API Key</button>
-    </div>
-  </div>
 </div>
-      <!-- === PAGE: ADS === -->
-      <div class="section-page active" id="page-ads">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Рекламні банери</div>
-            <div class="page-sub">Керуйте рекламними оголошеннями на сайті</div>
-          </div>
-          <button class="btn-add" onclick="openModal()">+ Додати банер</button>
-        </div>
-
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-icon">📢</div>
-            <div><div class="stat-num" id="s-total">0</div><div class="stat-label">Всього банерів</div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">✅</div>
-            <div><div class="stat-num" id="s-active" style="color:var(--green)">0</div><div class="stat-label">Активних</div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🔴</div>
-            <div><div class="stat-num" id="s-inactive" style="color:var(--accent)">0</div><div class="stat-label">Вимкнених</div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🎯</div>
-            <div><div class="stat-num" id="s-slots" style="color:var(--blue)">0</div><div class="stat-label">Зайнятих слотів</div></div>
-          </div>
-        </div>
-
-        <div class="filters-bar">
-          <button class="filter-btn active" onclick="filterAds('all',this)">Всі</button>
-          <button class="filter-btn" onclick="filterAds('active',this)">Активні</button>
-          <button class="filter-btn" onclick="filterAds('inactive',this)">Вимкнені</button>
-          <button class="filter-btn" onclick="filterAds('header',this)">Шапка</button>
-          <button class="filter-btn" onclick="filterAds('popup',this)">Pop-up</button>
-          <input class="search-filter" type="text" placeholder="🔍 Пошук..." oninput="filterBySearch(this.value)">
-        </div>
-
-        <div id="ads-list-container">
-          <table class="ads-table">
-            <thead>
-              <tr>
-                <th>Банер</th>
-                <th>Назва / Посилання</th>
-                <th>Слот</th>
-                <th>Тип</th>
-                <th>Статус</th>
-                <th style="text-align:right">Дії</th>
-              </tr>
-            </thead>
-            <tbody id="ads-tbody"></tbody>
-          </table>
-          <div id="ads-empty" class="empty-state" style="display:none">
-            <div class="empty-icon">📭</div>
-            <h3>Немає банерів</h3>
-            <p>Додайте перший рекламний банер натиснувши кнопку вище</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- === PAGE: API KEYS === -->
-      <div class="section-page" id="page-apikeys">
-        <div class="page-header">
-          <div>
-            <div class="page-title">API Ключі TMDB</div>
-            <div class="page-sub">Ключі для завантаження інформації про фільми. При ліміті 429 — автоматична ротація.</div>
-          </div>
-          <button class="btn-add" onclick="openKeyModal()">+ Додати ключ</button>
-        </div>
-
-        <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
-          <div class="stat-card">
-            <div class="stat-icon">🔑</div>
-            <div><div class="stat-num" id="ks-total">0</div><div class="stat-label">Всього ключів</div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">✅</div>
-            <div><div class="stat-num" id="ks-active" style="color:var(--green)">0</div><div class="stat-label">Активних</div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🔄</div>
-            <div><div class="stat-num" id="ks-rotate" style="color:var(--blue)">Авто</div><div class="stat-label">Ротація при 429</div></div>
-          </div>
-        </div>
-
-        <div class="slots-guide" style="margin-bottom:20px;">
-          <h3 style="margin-bottom:10px;">ℹ️ Як отримати безкоштовний ключ TMDB</h3>
-          <div style="color:var(--muted);font-size:13px;line-height:1.8;">
-            1. Зареєструйтесь на <a href="https://www.themoviedb.org/signup" target="_blank" style="color:var(--blue)">themoviedb.org</a><br>
-            2. Перейдіть до <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--blue)">Налаштування → API</a><br>
-            3. Натисніть "Create" → виберіть "Developer"<br>
-            4. Скопіюйте "API Key (v3 auth)" та вставте нижче<br>
-            <span style="color:var(--orange)">💡 Можна додати кілька ключів — система буде чергувати їх автоматично</span>
-          </div>
-        </div>
-
-        <div id="keys-list-container">
-          <table class="ads-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Назва / Ключ</th>
-                <th>Статус</th>
-                <th>Додано</th>
-                <th style="text-align:right">Дії</th>
-              </tr>
-            </thead>
-            <tbody id="keys-tbody"></tbody>
-          </table>
-          <div id="keys-empty" class="empty-state" style="display:none">
-            <div class="empty-icon">🔑</div>
-            <h3>Немає API ключів</h3>
-            <p>Додайте ключ TMDB щоб сайт міг завантажувати інформацію про фільми</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- === PAGE: SLOTS === -->
-      <div class="section-page" id="page-slots">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Рекламні слоти</div>
-            <div class="page-sub">Розташування реклами на сайті</div>
-          </div>
-        </div>
-        <div class="slots-guide">
-          <h3>📍 Доступні позиції для реклами</h3>
-          <div class="slot-row">
-            <div class="slot-icon">🔝</div>
-            <div class="slot-info">
-              <div class="slot-name">header — Шапка сайту</div>
-              <div class="slot-desc">Банер під навігаційним меню, перший що бачить користувач</div>
-              <div class="slot-dim">Горизонтальний • 100% ширина • 90-150px висота</div>
-            </div>
-            <div class="slot-badge slot-header">горизонт.</div>
-          </div>
-          <div class="slot-row">
-            <div class="slot-icon">📌</div>
-            <div class="slot-info">
-              <div class="slot-name">between1 — Між рядами 1</div>
-              <div class="slot-desc">Після секції "Нові фільми"</div>
-              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
-            </div>
-            <div class="slot-badge slot-between">горизонт.</div>
-          </div>
-          <div class="slot-row">
-            <div class="slot-icon">📐</div>
-            <div class="slot-info">
-              <div class="slot-name">sidebar — Бокова панель</div>
-              <div class="slot-desc">Збоку від секції "Популярні фільми"</div>
-              <div class="slot-dim">Вертикальний • 200px ширина • 400-600px висота (мобільний: горизонт.)</div>
-            </div>
-            <div class="slot-badge slot-sidebar">вертикал.</div>
-          </div>
-          <div class="slot-row">
-            <div class="slot-icon">📌</div>
-            <div class="slot-info">
-              <div class="slot-name">between2 — Між рядами 2</div>
-              <div class="slot-desc">Після секції "Популярні"</div>
-              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
-            </div>
-            <div class="slot-badge slot-between">горизонт.</div>
-          </div>
-          <div class="slot-row">
-            <div class="slot-icon">📌</div>
-            <div class="slot-info">
-              <div class="slot-name">between3 — Між рядами 3</div>
-              <div class="slot-desc">Після секції "Топ рейтинг"</div>
-              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
-            </div>
-            <div class="slot-badge slot-between">горизонт.</div>
-          </div>
-          <div class="slot-row">
-            <div class="slot-icon">⬇️</div>
-            <div class="slot-info">
-              <div class="slot-name">footer — Підвал сайту</div>
-              <div class="slot-desc">У нижній частині сторінки</div>
-              <div class="slot-dim">Горизонтальний • 100% ширина • 90-120px висота</div>
-            </div>
-            <div class="slot-badge slot-footer">горизонт.</div>
-          </div>
-          <div class="slot-row">
-            <div class="slot-icon">💬</div>
-            <div class="slot-info">
-              <div class="slot-name">popup — Pop-up вікно</div>
-              <div class="slot-desc">Спливаюче вікно через 4 секунди після відкриття сайту</div>
-              <div class="slot-dim">Зображення 400×300px • Таймер 5 сек перед закриттям</div>
-            </div>
-            <div class="slot-badge slot-popup">pop-up</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- === PAGE: SETTINGS === -->
-      <div class="section-page" id="page-settings">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Налаштування</div>
-            <div class="page-sub">Конфігурація адмін-панелі</div>
-          </div>
-        </div>
-        <div style="max-width:480px;">
-          <div class="slots-guide">
-            <h3 style="margin-bottom:20px;">🔐 Зміна пароля</h3>
-            <div class="form-group">
-              <label>Поточний пароль</label>
-              <input type="password" id="cur-pass" placeholder="••••••••">
-            </div>
-            <div class="form-group">
-              <label>Новий пароль</label>
-              <input type="password" id="new-pass" placeholder="••••••••">
-            </div>
-            <div class="form-group">
-              <label>Повторіть новий пароль</label>
-              <input type="password" id="rep-pass" placeholder="••••••••">
-            </div>
-            <button class="btn-primary" onclick="changePassword()" style="width:auto;padding:10px 24px;">Змінити пароль</button>
-          </div>
-          <div class="slots-guide" style="margin-top:16px;">
-            <h3 style="margin-bottom:16px;">Дані</h3>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <button class="btn-add" onclick="exportData()" style="font-size:13px;padding:8px 16px;">Експорт JSON</button>
-              <button class="btn-add" onclick="document.getElementById('import-file').click()" style="background:var(--blue);font-size:13px;padding:8px 16px;">Імпорт JSON</button>
-              <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
-              <button class="btn-add" onclick="clearAllAds()" style="background:var(--accent);font-size:13px;padding:8px 16px;">Очистити всі</button>
-            </div>
-          </div>
-          <div class="slots-guide" style="margin-top:16px;">
-            <h3 style="margin-bottom:16px;">Захист від AdBlock</h3>
-            <div style="color:var(--muted);font-size:13px;margin-bottom:14px;line-height:1.7;">
-              Показує повідомлення з проханням вимкнути блокувальник реклами.<br>
-              Перевірка спрацьовує через 1.5 сек після завантаження сторінки.
-            </div>
-            <div class="slots-guide" style="margin-top:16px;">
-  <h3 style="margin-bottom:16px;">Реклама у плеєрі (Direct Link)</h3>
-  <div style="color:var(--muted);font-size:13px;margin-bottom:14px;line-height:1.7;">
-    Вмикає або вимикає рекламну заставку поверх відео для відвідувачів без Premium.
-  </div>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <label class="toggle-switch">
-      <input type="checkbox" id="player-ads-toggle" onchange="togglePlayerAds(this.checked)">
-      <div class="toggle-slider"></div>
-    </label>
-    <span style="font-size:14px;" id="player-ads-label">Завантаження...</span>
-  </div>
-</div>
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-              <label class="toggle-switch">
-                <input type="checkbox" id="ab-toggle" onchange="saveAntiAdblock(this.checked)">
-                <div class="toggle-slider"></div>
-              </label>
-              <span style="font-size:14px;" id="ab-label">Вимкнено</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- === PAGE: PAGES === -->
-      <div class="section-page" id="page-pages">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Сторінки сайту</div>
-            <div class="page-sub">Редагуйте контент Про нас, Контакти, Умови, DMCA — посилання у футері сайту</div>
-          </div>
-        </div>
-        <div class="slots-guide">
-          <div class="pages-tabs">
-            <div class="pages-tab active" onclick="switchPageTab('about',this)">Про нас</div>
-            <div class="pages-tab" onclick="switchPageTab('contacts',this)">Контакти</div>
-            <div class="pages-tab" onclick="switchPageTab('terms',this)">Умови</div>
-            <div class="pages-tab" onclick="switchPageTab('dmca',this)">DMCA</div>
-          </div>
-          <div class="page-editor active" id="pe-about">
-            <div class="form-group"><label>Заголовок сторінки</label><input type="text" id="pt-about" placeholder="Про нас"></div>
-            <div class="form-group"><label>Контент (підтримується HTML)</label><textarea id="pc-about" placeholder="Текст сторінки..."></textarea></div>
-            <div class="form-hint" style="margin-bottom:14px;">HTML теги: &lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;ul&gt; &lt;li&gt; &lt;a href="..."&gt; &lt;b&gt; &lt;br&gt;</div>
-            <button class="page-save-btn" onclick="savePage('about')">Зберегти</button>
-          </div>
-          <div class="page-editor" id="pe-contacts">
-            <div class="form-group"><label>Заголовок сторінки</label><input type="text" id="pt-contacts" placeholder="Контакти"></div>
-            <div class="form-group"><label>Контент (підтримується HTML)</label><textarea id="pc-contacts" placeholder="Текст сторінки..."></textarea></div>
-            <div class="form-hint" style="margin-bottom:14px;">HTML теги: &lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;ul&gt; &lt;li&gt; &lt;a href="..."&gt; &lt;b&gt; &lt;br&gt;</div>
-            <button class="page-save-btn" onclick="savePage('contacts')">Зберегти</button>
-          </div>
-          <div class="page-editor" id="pe-terms">
-            <div class="form-group"><label>Заголовок сторінки</label><input type="text" id="pt-terms" placeholder="Умови використання"></div>
-            <div class="form-group"><label>Контент (підтримується HTML)</label><textarea id="pc-terms" placeholder="Текст сторінки..."></textarea></div>
-            <div class="form-hint" style="margin-bottom:14px;">HTML теги: &lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;ul&gt; &lt;li&gt; &lt;a href="..."&gt; &lt;b&gt; &lt;br&gt;</div>
-            <button class="page-save-btn" onclick="savePage('terms')">Зберегти</button>
-          </div>
-          <div class="page-editor" id="pe-dmca">
-            <div class="form-group"><label>Заголовок сторінки</label><input type="text" id="pt-dmca" placeholder="DMCA"></div>
-            <div class="form-group"><label>Контент (підтримується HTML)</label><textarea id="pc-dmca" placeholder="Текст сторінки..."></textarea></div>
-            <div class="form-hint" style="margin-bottom:14px;">HTML теги: &lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;ul&gt; &lt;li&gt; &lt;a href="..."&gt; &lt;b&gt; &lt;br&gt;</div>
-            <button class="page-save-btn" onclick="savePage('dmca')">Зберегти</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- === PAGE: USERS === -->
-      <div class="section-page" id="page-users">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Користувачі</div>
-            <div class="page-sub">Список зареєстрованих користувачів. Зміна ролей — миттєво.</div>
-          </div>
-          <button class="btn-add" onclick="loadUsersData()" style="background:var(--blue);">Оновити</button>
-        </div>
-        <div class="stats-row" style="grid-template-columns:repeat(4,1fr);">
-          <div class="stat-card">
-            <div class="stat-icon">👥</div>
-            <div><div class="stat-num" id="us-total">0</div><div class="stat-label">Всього</div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🔑</div>
-            <div><div class="stat-num" id="us-admins" style="color:var(--accent)">0</div><div class="stat-label">Адмінів</div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">👤</div>
-            <div><div class="stat-num" id="us-users" style="color:var(--blue)">0</div><div class="stat-label">Звичайних</div></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⭐</div>
-            <div><div class="stat-num" id="us-subs" style="color:var(--gold)">0</div><div class="stat-label">Premium</div></div>
-          </div>
-        </div>
-        <div id="users-list-container">
-          <div id="users-loading" style="text-align:center;padding:40px;color:var(--muted);display:block;">Натисніть "Оновити" для завантаження</div>
-          <table class="ads-table" id="users-table" style="display:none;">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Ім'я / Email</th>
-                <th>Роль</th>
-                <th>Підписка</th>
-                <th>Зареєстровано</th>
-                <th style="text-align:right">Дії</th>
-              </tr>
-            </thead>
-            <tbody id="users-tbody"></tbody>
-          </table>
-          <div id="users-empty" class="empty-state" style="display:none">
-            <div class="empty-icon">👥</div>
-            <h3>Немає користувачів</h3>
-            <p>Зареєстровані користувачі з'являться тут</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- ===== ADD/EDIT MODAL ===== -->
-<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title" id="modal-title">Додати банер</div>
-
-    <input type="hidden" id="edit-id">
-
-    <div class="form-group">
-      <label>Назва банера *</label>
-      <input type="text" id="f-name" placeholder="Наприклад: Casino Banner шапка">
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Слот (позиція) *</label>
-        <select id="f-slot" onchange="updateTypeHint()">
-          <option value="header">Шапка (header)</option>
-          <option value="between1">Між рядами 1</option>
-          <option value="sidebar">Бокова панель (sidebar)</option>
-          <option value="between2">Між рядами 2</option>
-          <option value="between3">Між рядами 3</option>
-          <option value="footer">Підвал (footer)</option>
-          <option value="popup">Pop-up вікно</option>
-          <option value="popunder">Pop-under вкладка</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Тип банера</label>
-        <select id="f-type" onchange="updateTypeHint()">
-          <option value="horizontal">Горизонтальний</option>
-          <option value="vertical">Вертикальний</option>
-          <option value="popup">Pop-up</option>
-          <option value="video">Відео (MP4/GIF)</option>
-          <option value="popunder">Pop-under</option>
-        </select>
-        <div class="form-hint" id="type-hint">Горизонтальний: розтягується на всю ширину</div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>URL зображення *</label>
-      <input type="url" id="f-img" placeholder="https://example.com/banner.jpg" oninput="previewImage(this.value)">
-      <div class="form-hint">Рекомендовано: JPG, PNG, GIF, WebP</div>
-    </div>
-    <div class="preview-box" id="img-preview">
-      <div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>
-    </div>
-
-    <div class="form-group" id="video-url-group" style="display:none;margin-top:14px;">
-      <label>URL відео (MP4/WebM/GIF) *</label>
-      <input type="url" id="f-video" placeholder="https://example.com/video.mp4">
-      <div class="form-hint">Для типу "Відео". MP4 файл або GIF анімація.</div>
-    </div>
-
-    <div class="form-group" style="margin-top:14px;">
-      <label>URL посилання *</label>
-      <input type="url" id="f-link" placeholder="https://example.com">
-    </div>
-
-    <div class="form-group">
-      <label>Альтернативний текст</label>
-      <input type="text" id="f-alt" placeholder="Опис реклами для SEO">
-    </div>
-
-    <div class="form-group">
-      <label>HTML код (необов'язково)</label>
-      <textarea id="f-html" placeholder="Вставте готовий HTML код банера (якщо є). Перевага над зображенням."></textarea>
-      <div class="form-hint">Якщо вказати HTML — він буде використаний замість зображення</div>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">Скасувати</button>
-      <button class="btn-save" onclick="saveAd()">💾 Зберегти</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== API KEY MODAL ===== -->
-<div class="modal-overlay" id="key-modal-overlay" onclick="if(event.target===this)closeKeyModal()">
-  <div class="modal" style="width:480px;">
-    <button class="modal-close" onclick="closeKeyModal()">✕</button>
-    <div class="modal-title">Додати API ключ TMDB</div>
-
-    <div class="form-group">
-      <label>Назва (необов'язково)</label>
-      <input type="text" id="k-name" placeholder="Наприклад: Основний ключ, Запасний 1...">
-    </div>
-
-    <div class="form-group">
-      <label>API Key (v3) *</label>
-      <input type="text" id="k-value" placeholder="Вставте ключ TMDB тут...">
-      <div class="form-hint">32-символьний ключ з themoviedb.org/settings/api</div>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeKeyModal()">Скасувати</button>
-      <button class="btn-save" onclick="saveKey()">💾 Зберегти</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
-<div class="toast-admin" id="toast"></div>
 
 <script>
-  // ========================
-  // FIREBASE
-  // ========================
-  // ⚠️ Вставте ваш конфіг з Firebase Console (той самий що в index.html)
-  const FIREBASE_CONFIG = {
-    apiKey:            "AIzaSyDl-Cfaskl7DSCZAg-mRAJi_qNbF_qYNyc",
-    authDomain:        "kinobaza-6c109.firebaseapp.com",
-    projectId:         "kinobaza-6c109",
-    storageBucket:     "kinobaza-6c109.firebasestorage.app",
-    messagingSenderId: "639150355070",
-    appId:             "1:639150355070:web:772f863f075d4d1d839e2f",
-    measurementId:     "G-GKVZ2JJDJN"
-  };
+// ============================================================
+// FIREBASE КОНФІГ (скопіюй з твого основного файлу)
+// ============================================================
+const firebaseConfig = {
+    // ВСТАВЬ СВОЇ ПАРАМЕТРИ FIREBASE
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
 
-  let db = null;
-  try {
-    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+let db = null;
+let currentAdminUser = null;
+
+// Ініціалізуємо Firebase
+try {
+    firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
-  } catch(e) { console.warn('Firebase init failed'); }
+    console.log('✅ Firebase ініціалізовано');
+} catch (e) {
+    console.error('❌ Помилка Firebase:', e);
+}
 
-  // ========================
-  // AUTH — Firebase Auth
-  // ========================
-  let auth = null;
-  try { auth = firebase.auth(); } catch(e) { console.warn('Firebase Auth init failed'); }
+// ============================================================
+// АВТЕНТИФІКАЦІЯ
+// ============================================================
+function checkAdmin() {
+    const loginSection = document.getElementById('login-section');
+    const adminSection = document.getElementById('admin-section');
 
-  // Реакція на зміну стану авторизації
-  if (auth) {
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        // Не залогінений — показати форму входу
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('admin-screen').style.display = 'none';
-        return;
-      }
-      // Залогінений — перевірити роль у Firestore
-      let role = 'user';
-      let firestoreError = false;
-      if (db) {
-        try {
-          const doc = await db.collection('users').doc(user.uid).get();
-          if (doc.exists) role = doc.data().role || 'user';
-          else role = 'not_found'; // документ не існує
-        } catch(e) {
-          firestoreError = true;
-          console.warn('Firestore role check failed:', e);
-        }
-      } else {
-        firestoreError = true;
-      }
-      if (firestoreError) {
-        // Не вдалось перевірити роль — показати помилку без виходу
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('admin-screen').style.display = 'none';
-        const errEl = document.getElementById('login-error');
-        errEl.textContent = 'Помилка з\'єднання з базою даних. Перевірте інтернет і спробуйте ще раз.';
-        errEl.style.display = 'block';
-        return;
-      }
-      if (role !== 'admin') {
-        // Не адмін — вийти і показати помилку
-        await auth.signOut();
-        const errEl = document.getElementById('login-error');
-        errEl.textContent = role === 'not_found'
-          ? 'Акаунт не налаштований. Зверніться до власника проекту.'
-          : 'У вас немає прав адміністратора.';
-        errEl.style.display = 'block';
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('admin-screen').style.display = 'none';
-        return;
-      }
-      // Адмін — відкрити панель
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-screen').style.display = 'block';
-      initAdmin();
-    });
-  }
-
-  function doLogin() {
-    if (!auth) { alert('Firebase Auth недоступний'); return; }
-    const email = document.getElementById('login-email').value.trim();
-    const pass  = document.getElementById('login-pass').value;
-    const errEl = document.getElementById('login-error');
-    errEl.style.display = 'none';
-    if (!email || !pass) {
-      errEl.textContent = 'Заповніть всі поля';
-      errEl.style.display = 'block';
-      return;
-    }
-    auth.signInWithEmailAndPassword(email, pass)
-      .catch(e => {
-        const msgs = {
-          'auth/user-not-found':    'Користувача не знайдено',
-          'auth/wrong-password':    'Невірний пароль',
-          'auth/invalid-email':     'Невірний формат email',
-          'auth/invalid-credential':'Невірний email або пароль',
-          'auth/too-many-requests': 'Забагато спроб. Спробуйте пізніше'
-        };
-        errEl.textContent = msgs[e.code] || 'Помилка входу';
-        errEl.style.display = 'block';
-      });
-  }
-
-  function logout() {
-    if (auth) auth.signOut();
-  }
-
-  function doForgotPassword() {
-    if (!auth) return;
-    const email = document.getElementById('login-email').value.trim();
-    const errEl = document.getElementById('login-error');
-    if (!email) {
-      errEl.textContent = 'Введіть email вище';
-      errEl.style.display = 'block';
-      return;
-    }
-    auth.sendPasswordResetEmail(email)
-      .then(() => {
-        errEl.style.color = 'var(--green)';
-        errEl.textContent = `Лист надіслано на ${email}`;
-        errEl.style.display = 'block';
-        setTimeout(() => { errEl.style.color = ''; }, 5000);
-      })
-      .catch(() => {
-        errEl.textContent = 'Не вдалось надіслати лист';
-        errEl.style.display = 'block';
-      });
-  }
-
-  function changePassword() {
-    const nw  = document.getElementById('new-pass').value;
-    const rep = document.getElementById('rep-pass').value;
-    if (!nw || nw.length < 6) { showToast('Пароль мінімум 6 символів', true); return; }
-    if (nw !== rep) { showToast('Паролі не співпадають', true); return; }
-    const user = auth && auth.currentUser;
-    if (!user) { showToast('Не авторизовано', true); return; }
-    user.updatePassword(nw)
-      .then(() => {
-        showToast('✅ Пароль успішно змінено!');
-        ['cur-pass','new-pass','rep-pass'].forEach(id => {
-          const el = document.getElementById(id); if(el) el.value = '';
-        });
-      })
-      .catch(e => {
-        if (e.code === 'auth/requires-recent-login') {
-          showToast('Для зміни пароля виконайте повторний вхід', true);
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            // Перевіряємо чи це адмін
+            db.collection('users').doc(user.uid).get().then(doc => {
+                if (doc.exists && doc.data().role === 'admin') {
+                    currentAdminUser = user;
+                    document.getElementById('user-email').textContent = user.email;
+                    loginSection.style.display = 'none';
+                    adminSection.style.display = 'block';
+                    loadPlayersPanel();
+                    loadAdsSettings();
+                } else {
+                    console.error('❌ Тільки адміни мають доступ!');
+                    firebase.auth().signOut();
+                    loginSection.style.display = 'flex';
+                    adminSection.style.display = 'none';
+                }
+            });
         } else {
-          showToast('Помилка зміни пароля', true);
+            loginSection.style.display = 'flex';
+            adminSection.style.display = 'none';
         }
-      });
-  }
-
-  // ========================
-  // ADS DATA — Firestore
-  // ========================
-  let adsCache = [];
-
-  function startAdsListener() {
-    if (!db) { loadAdsFromLocalStorage(); return; }
-    db.collection('ads').orderBy('createdAt', 'desc').onSnapshot(snap => {
-      adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderAds();
-    }, () => loadAdsFromLocalStorage());
-  }
-
-  function loadAdsFromLocalStorage() {
-    try { adsCache = JSON.parse(localStorage.getItem('kb_ads') || '[]'); } catch { adsCache = []; }
-    renderAds();
-  }
-
-  function getAds() { return adsCache; }
-
-  // ========================
-  // RENDER
-  // ========================
-  const SLOT_LABELS = {
-    header:   ['Шапка',        'slot-header'],
-    between1: ['Між рядами 1', 'slot-between'],
-    between2: ['Між рядами 2', 'slot-between'],
-    between3: ['Між рядами 3', 'slot-between'],
-    sidebar:  ['Бокова панель','slot-sidebar'],
-    footer:   ['Підвал',       'slot-footer'],
-    popup:    ['Pop-up',       'slot-popup'],
-    popunder: ['Pop-under',    'slot-popup'],
-  };
-
-  let currentFilter = 'all';
-  let currentSearch = '';
-
-  function renderAds() {
-    const ads = getAds();
-    const active = ads.filter(a=>a.active).length;
-    const inactive = ads.filter(a=>!a.active).length;
-    const slots = new Set(ads.filter(a=>a.active).map(a=>a.slot)).size;
-
-    // Stats
-    document.getElementById('s-total').textContent = ads.length;
-    document.getElementById('s-active').textContent = active;
-    document.getElementById('s-inactive').textContent = inactive;
-    document.getElementById('s-slots').textContent = slots;
-    document.getElementById('count-ads').textContent = ads.length;
-    document.getElementById('sb-active').textContent = active;
-    document.getElementById('sb-inactive').textContent = inactive;
-
-    // Filter
-    let filtered = ads;
-    if (currentFilter === 'active') filtered = ads.filter(a=>a.active);
-    else if (currentFilter === 'inactive') filtered = ads.filter(a=>!a.active);
-    else if (['header','popup','between1','between2','between3','sidebar','footer'].includes(currentFilter))
-      filtered = ads.filter(a=>a.slot===currentFilter);
-
-    if (currentSearch)
-      filtered = filtered.filter(a =>
-        a.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
-        (a.linkUrl||'').toLowerCase().includes(currentSearch.toLowerCase())
-      );
-
-    const tbody = document.getElementById('ads-tbody');
-    const empty = document.getElementById('ads-empty');
-
-    if (!filtered.length) {
-      tbody.innerHTML = '';
-      empty.style.display = 'block';
-      return;
-    }
-    empty.style.display = 'none';
-
-    tbody.innerHTML = filtered.map(ad => {
-      const [slotLabel, slotClass] = SLOT_LABELS[ad.slot] || ['—', ''];
-      const thumb = ad.imageUrl
-        ? `<div class="ad-thumb"><img src="${ad.imageUrl}" onerror="this.parentNode.innerHTML='🖼️'"></div>`
-        : `<div class="ad-thumb">🖼️</div>`;
-      return `
-        <tr>
-          <td>${thumb}</td>
-          <td>
-            <div class="ad-name">${ad.name}</div>
-            <div class="ad-link">${ad.linkUrl || '—'}</div>
-          </td>
-          <td><span class="slot-badge ${slotClass}">${slotLabel}</span></td>
-          <td><span class="type-badge">${
-            ad.type==='vertical'?'Верт.':
-            ad.type==='popup'?'Pop-up':
-            ad.type==='video'?'Відео':
-            ad.type==='popunder'?'Pop-under':
-            'Горизонт.'
-          }</span></td>
-          <td>
-            <label class="toggle-switch">
-              <input type="checkbox" ${ad.active?'checked':''} onchange="toggleAd('${ad.id}',this.checked)">
-              <div class="toggle-slider"></div>
-            </label>
-          </td>
-          <td style="text-align:right;">
-            <button class="action-btn edit" onclick="editAd('${ad.id}')" title="Редагувати">✏️</button>
-            <button class="action-btn del" onclick="deleteAd('${ad.id}')" title="Видалити">🗑</button>
-          </td>
-        </tr>
-      `;
-    }).join('');
-  }
-
-  // ========================
-  // AD ACTIONS — Firestore
-  // ========================
-  function toggleAd(id, val) {
-    if (db) {
-      db.collection('ads').doc(id).update({ active: val })
-        .then(() => showToast(val ? '✅ Банер увімкнено' : '⏸ Банер вимкнено'))
-        .catch(() => showToast('Помилка оновлення', true));
-    } else {
-      const ads = getAds(); const ad = ads.find(a=>a.id===id);
-      if (ad) { ad.active = val; localStorage.setItem('kb_ads', JSON.stringify(ads)); renderAds(); }
-      showToast(val ? '✅ Банер увімкнено' : '⏸ Банер вимкнено');
-    }
-  }
-
-  function deleteAd(id) {
-    if (!confirm('Видалити цей банер?')) return;
-    if (db) {
-      db.collection('ads').doc(id).delete()
-        .then(() => showToast('🗑 Банер видалено'))
-        .catch(() => showToast('Помилка видалення', true));
-    } else {
-      const ads = getAds().filter(a=>a.id!==id);
-      localStorage.setItem('kb_ads', JSON.stringify(ads)); renderAds();
-      showToast('🗑 Банер видалено');
-    }
-  }
-
-  function editAd(id) {
-    const ad = getAds().find(a=>a.id===id);
-    if (!ad) return;
-    document.getElementById('edit-id').value = id;
-    document.getElementById('modal-title').textContent = 'Редагувати банер';
-    document.getElementById('f-name').value = ad.name;
-    document.getElementById('f-slot').value = ad.slot;
-    document.getElementById('f-type').value = ad.type;
-    document.getElementById('f-img').value = ad.imageUrl || '';
-    document.getElementById('f-video').value = ad.videoUrl || '';
-    document.getElementById('f-link').value = ad.linkUrl || '';
-    document.getElementById('f-alt').value = ad.altText || '';
-    document.getElementById('f-html').value = ad.html || '';
-    previewImage(ad.imageUrl || '');
-    updateTypeHint();
-    openModal();
-  }
-
-  function saveAd() {
-    const name = document.getElementById('f-name').value.trim();
-    const slot = document.getElementById('f-slot').value;
-    const type = document.getElementById('f-type').value;
-    const imageUrl = document.getElementById('f-img').value.trim();
-    const linkUrl = document.getElementById('f-link').value.trim();
-    const altText = document.getElementById('f-alt').value.trim();
-    const html = document.getElementById('f-html').value.trim();
-    const videoUrl = document.getElementById('f-video').value.trim();
-
-    if (!name) { showToast('Введіть назву банера', true); return; }
-    const isPopunder = slot === 'popunder' || type === 'popunder';
-    if (!isPopunder && !imageUrl && !html && type !== 'video') { showToast('Вкажіть URL зображення або HTML код', true); return; }
-    if (type === 'video' && !videoUrl && !imageUrl) { showToast('Вкажіть URL відео', true); return; }
-    if (!linkUrl && !html && !isPopunder) { showToast('Вкажіть URL посилання', true); return; }
-    if (isPopunder && !linkUrl) { showToast('Вкажіть URL посилання для pop-under', true); return; }
-
-    const editId = document.getElementById('edit-id').value;
-    const payload = { name, slot, type, imageUrl, videoUrl, linkUrl, altText, html };
-
-    if (db) {
-      if (editId) {
-        db.collection('ads').doc(editId).update(payload)
-          .then(() => { showToast('✅ Банер оновлено!'); closeModal(); })
-          .catch(() => showToast('Помилка збереження', true));
-      } else {
-        db.collection('ads').add({ ...payload, active: true, createdAt: new Date().toISOString() })
-          .then(() => { showToast('✅ Банер додано!'); closeModal(); })
-          .catch(() => showToast('Помилка збереження', true));
-      }
-    } else {
-      // localStorage fallback
-      const ads = getAds();
-      if (editId) { const ad = ads.find(a=>a.id===editId); if(ad) Object.assign(ad, payload); showToast('✅ Банер оновлено!'); }
-      else { ads.push({ id:'ad_'+Date.now(), ...payload, active:true, createdAt:new Date().toISOString() }); showToast('✅ Банер додано!'); }
-      localStorage.setItem('kb_ads', JSON.stringify(ads)); adsCache = ads; renderAds(); closeModal();
-    }
-  }
-
-  function clearAllAds() {
-    if (!confirm('Видалити ВСІ банери? Цю дію не можна скасувати.')) return;
-    if (db) {
-      const batch = db.batch();
-      adsCache.forEach(ad => batch.delete(db.collection('ads').doc(ad.id)));
-      batch.commit().then(() => showToast('🗑 Всі банери видалено')).catch(() => showToast('Помилка', true));
-    } else {
-      localStorage.setItem('kb_ads', '[]'); adsCache = []; renderAds();
-      showToast('🗑 Всі банери видалено');
-    }
-  }
-
-  // ========================
-  // FILTERS
-  // ========================
-  function filterAds(type, btn) {
-    currentFilter = type;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderAds();
-  }
-
-  function filterBySearch(q) {
-    currentSearch = q;
-    renderAds();
-  }
-
-  // ========================
-  // MODAL
-  // ========================
-  function openModal() {
-    document.getElementById('modal-overlay').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('open');
-    document.getElementById('edit-id').value = '';
-    document.getElementById('modal-title').textContent = 'Додати банер';
-    ['f-name','f-img','f-video','f-link','f-alt','f-html'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('f-slot').value = 'header';
-    document.getElementById('f-type').value = 'horizontal';
-    document.getElementById('img-preview').innerHTML = '<div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>';
-    updateTypeHint();
-  }
-
-  function previewImage(url) {
-    const box = document.getElementById('img-preview');
-    if (!url) {
-      box.innerHTML = '<div class="preview-placeholder">Введіть URL зображення для попереднього перегляду</div>';
-      return;
-    }
-    box.innerHTML = `<img src="${url}" onerror="this.parentNode.innerHTML='<div class=preview-placeholder>❌ Не вдалося завантажити зображення</div>'">`;
-  }
-
-  function updateTypeHint() {
-    const slot = document.getElementById('f-slot').value;
-    const type = document.getElementById('f-type').value;
-    const hints = {
-      header:    'Горизонтальний або відео • 100% ширина • 90-150px висота',
-      between1:  'Горизонтальний • повна ширина між рядами фільмів',
-      between2:  'Горизонтальний • повна ширина між рядами фільмів',
-      between3:  'Горизонтальний • повна ширина між рядами фільмів',
-      sidebar:   'Вертикальний • 200px ширина на десктопі, горизонт. на мобільному',
-      footer:    'Горизонтальний • повна ширина у підвалі',
-      popup:     "Pop-up • 480px • з'являється через 4 сек",
-      popunder:  'Відкриває посилання у новій вкладці при першому кліку (1 раз за сесію)',
-    };
-    const typeMap = {
-      header:'horizontal', between1:'horizontal', between2:'horizontal',
-      between3:'horizontal', sidebar:'vertical', footer:'horizontal',
-      popup:'popup', popunder:'popunder'
-    };
-    const auto = typeMap[slot];
-    if (auto) document.getElementById('f-type').value = auto;
-    document.getElementById('type-hint').textContent = hints[slot] || '';
-    // Показати/сховати поле відео URL
-    const showVideo = type === 'video' || document.getElementById('f-type').value === 'video';
-    document.getElementById('video-url-group').style.display = showVideo ? 'block' : 'none';
-  }
-
-  // ========================
-  // NAVIGATION
-  // ========================
-  function showPage(page) {
-    document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
-    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-    document.getElementById('nav-' + page).classList.add('active');
-  }
-
-  // ========================
-  // EXPORT / IMPORT
-  // ========================
-  function exportData() {
-    const data = { ads: getAds(), apiKeys: getKeys(), exportedAt: new Date().toISOString() };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'kinobaza-backup.json';
-    a.click();
-    showToast('✅ Дані експортовано!');
-  }
-
-  function importData(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async e => {
-      try {
-        const data = JSON.parse(e.target.result);
-        let msg = [];
-        if (data.ads && Array.isArray(data.ads) && db) {
-          const batch = db.batch();
-          data.ads.forEach(ad => {
-            const ref = ad.id ? db.collection('ads').doc(ad.id) : db.collection('ads').doc();
-            batch.set(ref, ad);
-          });
-          await batch.commit();
-          msg.push(`${data.ads.length} банерів`);
-        }
-        if (data.apiKeys && Array.isArray(data.apiKeys) && db) {
-          const batch = db.batch();
-          data.apiKeys.forEach(k => {
-            const ref = k.id ? db.collection('apiKeys').doc(k.id) : db.collection('apiKeys').doc();
-            batch.set(ref, k);
-          });
-          await batch.commit();
-          msg.push(`${data.apiKeys.length} ключів`);
-        }
-        if (msg.length) showToast(`✅ Імпортовано: ${msg.join(', ')}!`);
-        else showToast('❌ Невірний формат або Firebase недоступний', true);
-      } catch { showToast('❌ Помилка читання файлу', true); }
-    };
-    reader.readAsText(file);
-    input.value = '';
-  }
-
- // ========================
-  // ANTI-ADBLOCK SETTINGS
-  // ========================
-  function loadAntiAdblockSetting() {
-    if (!db) return;
-    db.collection('settings').doc('config').get().then(doc => {
-      const enabled = doc.exists ? (doc.data().antiAdblock || false) : false;
-      const toggle = document.getElementById('ab-toggle');
-      const label  = document.getElementById('ab-label');
-      if (toggle) toggle.checked = enabled;
-      if (label)  label.textContent = enabled ? 'Увімкнено' : 'Вимкнено';
-    }).catch(err => {
-      console.error('Помилка завантаження AdBlock:', err);
     });
-  }
-
-  function saveAntiAdblock(val) {
-    const label = document.getElementById('ab-label');
-    if (label) label.textContent = val ? 'Увімкнено' : 'Вимкнено';
-    if (!db) { showToast('Firebase недоступний', true); return; }
-    
-    // Змінено колекцію на 'settings' та документ на 'config' (правильніше для налаштувань сайту)
-    // Використовуємо set з merge:true для 100% збереження навіть якщо документа ще немає
-    db.collection('settings').doc('config').set({ antiAdblock: val, updatedAt: new Date().toISOString() }, { merge: true })
-      .then(() => showToast(val ? 'Захист від AdBlock увімкнено' : 'Захист від AdBlock вимкнено'))
-      .catch(err => {
-        console.error('Помилка збереження AdBlock:', err); // Тепер помилка буде видна в консолі (F12)
-        showToast('Помилка збереження (див. консоль)', true);
-      });
-  }
-  function loadPlayerAdsSetting() {
-  if (!db) return;
-  db.collection('settings').doc('config').get().then(doc => {
-    const enabled = doc.exists ? (doc.data().playerAdsEnabled !== false) : true;
-    const toggle = document.getElementById('player-ads-toggle');
-    const label  = document.getElementById('player-ads-label');
-    if (toggle) toggle.checked = enabled;
-    if (label)  label.textContent = enabled ? 'Увімкнено' : 'Вимкнено';
-  }).catch(err => console.error('Помилка завантаження налаштування плеєра:', err));
 }
 
-function togglePlayerAds(val) {
-  const label = document.getElementById('player-ads-label');
-  if (label) label.textContent = val ? 'Увімкнено' : 'Вимкнено';
-  if (!db) { showToast('Firebase недоступний', true); return; }
+async function adminLogin() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const btn = document.getElementById('login-btn');
+    const errorDiv = document.getElementById('login-error');
 
-  db.collection('settings').doc('config').set({ 
-    playerAdsEnabled: val, 
-    updatedAt: new Date().toISOString() 
-  }, { merge: true })
-    .then(() => showToast(val ? 'Рекламу у плеєрі увімкнено' : 'Рекламу у плеєрі вимкнено'))
-    .catch(() => showToast('Помилка збереження', true));
-}
-  // ========================
-  // TOAST
-  // ========================
-  let toastT = null;
-  function showToast(msg, error = false) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast-admin show' + (error ? ' error' : '');
-    clearTimeout(toastT);
-    toastT = setTimeout(() => t.classList.remove('show'), 3000);
-  }
+    if (!email || !password) {
+        showStatus(errorDiv, '❌ Введи email та пароль', 'error');
+        return;
+    }
 
-  // ========================
-  // API KEYS — Firestore
-  // ========================
-  let keysCache = [];
+    btn.disabled = true;
+    btn.textContent = 'Вхід...';
 
-  function startKeysListener() {
-    if (!db) { loadKeysFromLocalStorage(); return; }
-    db.collection('apiKeys').orderBy('addedAt', 'desc').onSnapshot(snap => {
-      keysCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderKeys();
-    }, () => loadKeysFromLocalStorage());
-  }
-
-  function loadKeysFromLocalStorage() {
     try {
-      const raw = localStorage.getItem('kb_api_keys');
-      const arr = raw ? JSON.parse(raw) : [];
-      keysCache = arr.map((k,i) => typeof k === 'string'
-        ? { id:'k_'+i, name:'Ключ '+(i+1), value:k, addedAt:new Date().toISOString() }
-        : k);
-      // backward compat
-      if (!keysCache.length) {
-        const old = localStorage.getItem('tmdb_key');
-        if (old) keysCache = [{ id:'k_legacy', name:'Імпортовано', value:old, addedAt:new Date().toISOString() }];
-      }
-    } catch { keysCache = []; }
-    renderKeys();
-  }
-
-  function getKeys() { return keysCache; }
-
-  function renderKeys() {
-    const keys = getKeys();
-    document.getElementById('ks-total').textContent = keys.length;
-    document.getElementById('ks-active').textContent = keys.length;
-    document.getElementById('count-keys').textContent = keys.length;
-
-    const tbody = document.getElementById('keys-tbody');
-    const empty = document.getElementById('keys-empty');
-
-    if (!keys.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
-    empty.style.display = 'none';
-
-    tbody.innerHTML = keys.map((k, i) => {
-      const masked = k.value && k.value.length > 10
-        ? k.value.slice(0, 6) + '••••••••••••••••••••' + k.value.slice(-4)
-        : (k.value || '—');
-      const date = k.addedAt ? new Date(k.addedAt).toLocaleDateString('uk-UA') : '—';
-      return `
-        <tr>
-          <td style="color:var(--muted);font-weight:700;">#${i+1}</td>
-          <td>
-            <div style="font-weight:600;font-size:14px;">${k.name || 'Ключ ' + (i+1)}</div>
-            <div style="font-family:monospace;font-size:12px;color:var(--muted);">${masked}</div>
-          </td>
-          <td><span style="color:var(--green);font-size:13px;">✅ Активний</span></td>
-          <td style="color:var(--muted);font-size:13px;">${date}</td>
-          <td style="text-align:right;">
-            <button class="action-btn" onclick="copyKey('${k.id}')" title="Копіювати">📋</button>
-            <button class="action-btn del" onclick="deleteKey('${k.id}')" title="Видалити">🗑</button>
-          </td>
-        </tr>
-      `;
-    }).join('');
-  }
-
-  function openKeyModal() {
-    document.getElementById('k-name').value = '';
-    document.getElementById('k-value').value = '';
-    document.getElementById('key-modal-overlay').classList.add('open');
-  }
-
-  function closeKeyModal() {
-    document.getElementById('key-modal-overlay').classList.remove('open');
-  }
-
-  function saveKey() {
-    const name = document.getElementById('k-name').value.trim();
-    const value = document.getElementById('k-value').value.trim();
-    if (!value) { showToast('Введіть API ключ', true); return; }
-    if (getKeys().find(k => k.value === value)) { showToast('Такий ключ вже існує', true); return; }
-    const payload = { name: name || ('Ключ ' + (getKeys().length + 1)), value, addedAt: new Date().toISOString() };
-    if (db) {
-      db.collection('apiKeys').add(payload)
-        .then(() => { showToast('✅ Ключ додано!'); closeKeyModal(); })
-        .catch(() => showToast('Помилка збереження', true));
-    } else {
-      keysCache.push({ id:'k_'+Date.now(), ...payload });
-      localStorage.setItem('kb_api_keys', JSON.stringify(keysCache));
-      renderKeys(); closeKeyModal(); showToast('✅ Ключ додано!');
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+        console.log('✅ Вхід успішний');
+    } catch (e) {
+        showStatus(errorDiv, `❌ ${e.message}`, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Вхід';
     }
-  }
-
-  function deleteKey(id) {
-    if (!confirm('Видалити цей API ключ?')) return;
-    if (db) {
-      db.collection('apiKeys').doc(id).delete()
-        .then(() => showToast('🗑 Ключ видалено'))
-        .catch(() => showToast('Помилка видалення', true));
-    } else {
-      keysCache = keysCache.filter(k => k.id !== id);
-      localStorage.setItem('kb_api_keys', JSON.stringify(keysCache));
-      renderKeys(); showToast('🗑 Ключ видалено');
-    }
-  }
-
-  function copyKey(id) {
-    const key = getKeys().find(k => k.id === id);
-    if (!key) return;
-    navigator.clipboard.writeText(key.value)
-      .then(() => showToast('📋 Ключ скопійовано!'))
-      .catch(() => showToast('Не вдалося скопіювати', true));
-  }
-
-  // ========================
-  // BLOCK 9: PAGES
-  // ========================
-  function switchPageTab(id, el) {
-    document.querySelectorAll('.pages-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.page-editor').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('pe-' + id).classList.add('active');
-  }
-
-  function loadPagesData() {
-    if (!db) return;
-    ['about','contacts','terms','dmca'].forEach(id => {
-      db.collection('pages').doc(id).get().then(doc => {
-        if (!doc.exists) return;
-        const d = doc.data();
-        const ti = document.getElementById('pt-' + id);
-        const co = document.getElementById('pc-' + id);
-        if (ti) ti.value = d.title || '';
-        if (co) co.value = d.content || '';
-      }).catch(() => {});
-    });
-  }
-
-  function savePage(id) {
-    if (!db) { showToast('Firebase недоступний', true); return; }
-    const title   = (document.getElementById('pt-' + id).value || '').trim();
-    const content = (document.getElementById('pc-' + id).value || '').trim();
-    if (!title) { showToast('Введіть заголовок', true); return; }
-    db.collection('pages').doc(id).set(
-      { title, content, updatedAt: new Date().toISOString() },
-      { merge: true }
-    ).then(() => showToast('Сторінку збережено'))
-     .catch(() => showToast('Помилка збереження', true));
-  }
-
-  // ========================
-  // BLOCK 9: USERS
-  // ========================
-  let usersCache = [];
-
-  function loadUsersData() {
-    if (!db) { showToast('Firebase недоступний', true); return; }
-    const loading = document.getElementById('users-loading');
-    const table   = document.getElementById('users-table');
-    const empty   = document.getElementById('users-empty');
-    loading.textContent = 'Завантаження...';
-    loading.style.display = 'block';
-    table.style.display   = 'none';
-    empty.style.display   = 'none';
-
-    db.collection('users').orderBy('createdAt','desc').limit(200).get()
-      .then(snap => { usersCache = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderUsers(); })
-      .catch(() => {
-        // fallback without orderBy (якщо немає індексу)
-        db.collection('users').limit(200).get()
-          .then(snap => { usersCache = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderUsers(); })
-          .catch(() => { loading.textContent = 'Помилка завантаження. Перевірте правила Firestore.'; });
-      });
-  }
-
-  function renderUsers() {
-    const loading = document.getElementById('users-loading');
-    const table   = document.getElementById('users-table');
-    const empty   = document.getElementById('users-empty');
-    const tbody   = document.getElementById('users-tbody');
-    const users   = usersCache;
-    const admins  = users.filter(u => u.role === 'admin').length;
-
-    document.getElementById('us-total').textContent  = users.length;
-    document.getElementById('us-admins').textContent = admins;
-    document.getElementById('us-users').textContent  = users.length - admins;
-    document.getElementById('count-users').textContent = users.length;
-
-    loading.style.display = 'none';
-    if (!users.length) { empty.style.display = 'block'; table.style.display = 'none'; return; }
-    empty.style.display = 'none';
-    table.style.display = 'table';
-
-    const me   = auth && auth.currentUser ? auth.currentUser.uid : null;
-    const subs = users.filter(u => u.subscribed).length;
-    document.getElementById('us-subs').textContent = subs;
-    tbody.innerHTML = users.map((u, i) => {
-      const isMe    = u.id === me;
-      const roleAdm = u.role === 'admin';
-      const isSub   = u.subscribed === true;
-      const date    = u.createdAt ? new Date(u.createdAt).toLocaleDateString('uk-UA') : '—';
-      return `
-        <tr>
-          <td style="color:var(--muted);font-weight:700;">${i + 1}</td>
-          <td>
-            <div style="font-weight:600;font-size:14px;">${u.name || '—'}${isMe ? ' <span style="color:var(--muted);font-size:11px;">(ви)</span>' : ''}</div>
-            <div class="user-email">${u.email || '—'}</div>
-          </td>
-          <td><span class="role-badge ${roleAdm ? 'role-admin' : 'role-user'}">${roleAdm ? 'Адмін' : 'Юзер'}</span></td>
-          <td>${isSub ? '<span style="color:var(--gold);font-weight:700;">⭐ Premium</span>' : '<span style="color:var(--muted);">—</span>'}</td>
-          <td style="color:var(--muted);font-size:13px;">${date}</td>
-          <td style="text-align:right;">
-            ${isMe ? '<span style="color:var(--muted);font-size:12px;">—</span>' : `
-              <button class="action-btn" onclick="toggleUserRole('${u.id}','${u.role}')" title="${roleAdm ? 'Понизити до юзера' : 'Зробити адміном'}" style="font-size:12px;width:auto;padding:0 10px;">
-                ${roleAdm ? 'Юзер' : 'Адмін'}
-              </button>
-              <button class="action-btn" onclick="toggleSubscription('${u.id}',${isSub})" title="${isSub ? 'Скасувати Premium' : 'Дати Premium'}" style="font-size:12px;width:auto;padding:0 10px;background:${isSub ? '#333' : 'rgba(245,197,24,.2)'};color:${isSub ? 'var(--muted)' : 'var(--gold)'};">
-                ${isSub ? 'Скасувати' : '⭐ Premium'}
-              </button>
-              <button class="action-btn del" onclick="deleteUserRecord('${u.id}')" title="Видалити запис">🗑</button>
-            `}
-          </td>
-        </tr>`;
-    }).join('');
-  }
-
-  function toggleUserRole(uid, currentRole) {
-    const newRole = currentRole === 'admin' ? 'user' : 'admin';
-    const msg = newRole === 'admin' ? 'Надати права адміна?' : 'Забрати права адміна?';
-    if (!confirm(msg)) return;
-    db.collection('users').doc(uid).update({ role: newRole })
-      .then(() => { showToast(newRole === 'admin' ? 'Роль: Адмін' : 'Роль: Юзер'); loadUsersData(); })
-      .catch(() => showToast('Помилка зміни ролі', true));
-  }
-
-  function toggleSubscription(uid, current) {
-    const msg = current ? 'Скасувати Premium підписку?' : 'Надати Premium підписку (без реклами)?';
-    if (!confirm(msg)) return;
-    db.collection('users').doc(uid).update({ subscribed: !current })
-      .then(() => { showToast(current ? 'Підписку скасовано' : 'Premium надано'); loadUsersData(); })
-      .catch(() => showToast('Помилка', true));
-  }
-
-  function deleteUserRecord(uid) {
-    if (!confirm('Видалити запис цього юзера з Firestore? Акаунт Firebase Auth збережеться.')) return;
-    db.collection('users').doc(uid).delete()
-      .then(() => { showToast('Запис видалено'); loadUsersData(); })
-      .catch(() => showToast('Помилка видалення', true));
-  }
-
-  // ========================
-  // INIT
-  // ========================
- function initAdmin() {
-  startAdsListener();
-  startKeysListener();
-  loadAntiAdblockSetting();
-  loadPlayerAdsSetting(); // <-- ДОДАНО ОЦЕЙ РЯДОК
-  loadPagesData();
 }
 
-  // Сесія керується через Firebase onAuthStateChanged (вище)
+function adminLogout() {
+    firebase.auth().signOut();
+}
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
-  // ========================
-  // ЗБЕРЕЖЕННЯ ПЛЕЄРІВ (CUSTOM STREAMS)
-  // ========================
-  function saveCustomStream() {
-      const tmdbId = document.getElementById('cs-tmdb-id').value.trim();
-      const ytId = document.getElementById('cs-yt-id').value.trim();
-      const customUrl = document.getElementById('cs-custom-url').value.trim();
-      const customName = document.getElementById('cs-custom-name').value.trim();
+// ============================================================
+// УПРАВЛІННЯ ПЛЕЄРАМИ
+// ============================================================
+async function loadPlayersPanel() {
+    const grid = document.getElementById('players-grid');
+    const statusDiv = document.getElementById('players-status');
 
-      if (!tmdbId) { showToast('Введіть TMDB ID фільму', true); return; }
-      if (!ytId && !customUrl) { showToast('Заповніть хоча б одне посилання (YouTube або URL)', true); return; }
+    const PLAYERS = [
+        { id: 'rendex', name: 'Плеєр 1 (Rendex)', safe: true },
+        { id: 'collaps', name: 'Плеєр 2 (Collaps)', safe: true },
+        { id: 'vidsrc', name: 'Плеєр 3 (Vidsrc)', safe: false },
+        { id: 'multisearch', name: 'Плеєр 4 (Мультипошук)', safe: true }
+    ];
 
-      const payload = {};
-      if (ytId) payload.youtubeId = ytId;
-      
-      if (customUrl) {
-          payload.customPlayers = [{
-              name: customName || 'Кастомний сервер',
-              url: customUrl,
-              badge: 'HD'
-          }];
-      }
+    try {
+        // Читаємо конфіг
+        const configDoc = await db.collection('settings').doc('config').get();
+        const disabledPlayers = configDoc.exists ? (configDoc.data().disabledPlayers || []) : [];
 
-      if (!db) { showToast('Firebase недоступний', true); return; }
+        grid.innerHTML = '';
+        PLAYERS.forEach(player => {
+            const isDisabled = disabledPlayers.includes(player.id);
+            const card = document.createElement('div');
+            card.className = `player-item ${isDisabled ? 'disabled' : 'enabled'}`;
+            card.innerHTML = `
+                <div class="player-item-name">${player.name}</div>
+                <div class="player-item-id">ID: ${player.id}</div>
+                <div class="player-item-toggle">
+                    <div class="toggle-switch ${!isDisabled ? 'active' : ''}" onclick="togglePlayer('${player.id}', ${isDisabled})"></div>
+                    <span class="player-item-status">${!isDisabled ? '✅ Активний' : '❌ Вимкнено'}</span>
+                </div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 8px;">
+                    ${player.safe ? '🛡️ Безпечний' : '⚠️ Сторонній'}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
 
-      db.collection('custom_streams').doc(tmdbId).set(payload, { merge: true })
-        .then(() => {
-            showToast('✅ Плеєр успішно прив\'язано до фільму!');
-            document.getElementById('cs-tmdb-id').value = '';
-            document.getElementById('cs-yt-id').value = '';
-            document.getElementById('cs-custom-url').value = '';
-            document.getElementById('cs-custom-name').value = '';
-        })
-        .catch(err => { showToast('Помилка збереження', true); console.error(err); });
-  }
+        showStatus(statusDiv, '✅ Конфіг завантажено', 'success');
+    } catch (e) {
+        console.error('❌ Помилка:', e);
+        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
+    }
+}
 
-  function saveYtApiKey() {
-      const key = document.getElementById('cs-yt-key').value.trim();
-      if (!key) { showToast('Введіть API ключ', true); return; }
-      if (!db) return;
+async function togglePlayer(playerId, currentlyDisabled) {
+    const statusDiv = document.getElementById('players-status');
 
-      db.collection('settings').doc('config').set({ youtubeApiKey: key }, { merge: true })
-        .then(() => showToast('✅ YouTube API Key збережено!'))
-        .catch(() => showToast('Помилка збереження', true));
-  }
+    try {
+        const configDoc = await db.collection('settings').doc('config').get();
+        let disabledPlayers = configDoc.exists ? (configDoc.data().disabledPlayers || []) : [];
+
+        if (currentlyDisabled) {
+            // Вмикаємо
+            disabledPlayers = disabledPlayers.filter(id => id !== playerId);
+        } else {
+            // Вимикаємо
+            if (!disabledPlayers.includes(playerId)) {
+                disabledPlayers.push(playerId);
+            }
+        }
+
+        await db.collection('settings').doc('config').set({
+            disabledPlayers
+        }, { merge: true });
+
+        showStatus(statusDiv, `✅ "${playerId}" ${currentlyDisabled ? 'активований' : 'вимкнено'}`, 'success');
+        loadPlayersPanel();
+    } catch (e) {
+        console.error('❌ Помилка:', e);
+        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
+    }
+}
+
+// ============================================================
+// УПРАВЛІННЯ РЕКЛАМОЮ
+// ============================================================
+async function loadAdsSettings() {
+    const toggle = document.getElementById('ads-toggle');
+    const statusDiv = document.getElementById('ads-status');
+
+    try {
+        const configDoc = await db.collection('settings').doc('config').get();
+        const adsEnabled = configDoc.exists ? (configDoc.data().playerAdsEnabled !== false) : true;
+
+        if (adsEnabled) {
+            toggle.classList.add('active');
+        } else {
+            toggle.classList.remove('active');
+        }
+
+        showStatus(statusDiv, '✅ Параметри реклами завантажені', 'success');
+    } catch (e) {
+        console.error('❌ Помилка:', e);
+        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
+    }
+}
+
+async function toggleAdsSetting() {
+    const toggle = document.getElementById('ads-toggle');
+    const statusDiv = document.getElementById('ads-status');
+
+    try {
+        const isActive = toggle.classList.contains('active');
+
+        await db.collection('settings').doc('config').set({
+            playerAdsEnabled: !isActive
+        }, { merge: true });
+
+        if (isActive) {
+            toggle.classList.remove('active');
+            showStatus(statusDiv, '✅ Реклама вимкнена', 'success');
+        } else {
+            toggle.classList.add('active');
+            showStatus(statusDiv, '✅ Реклама активна', 'success');
+        }
+    } catch (e) {
+        console.error('❌ Помилка:', e);
+        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
+    }
+}
+
+async function saveMonetag() {
+    const url = document.getElementById('monetag-url').value;
+    const statusDiv = document.getElementById('ads-status');
+
+    try {
+        await db.collection('settings').doc('config').set({
+            monetagUrl: url || null
+        }, { merge: true });
+
+        showStatus(statusDiv, '✅ Посилання збережено', 'success');
+    } catch (e) {
+        console.error('❌ Помилка:', e);
+        showStatus(statusDiv, `❌ Помилка: ${e.message}`, 'error');
+    }
+}
+
+// ============================================================
+// ДОПОМІЖНІ ФУНКЦІЇ
+// ============================================================
+function switchAdminTab(tabName) {
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    event.target.classList.add('active');
+}
+
+function showStatus(element, message, type) {
+    element.textContent = message;
+    element.className = `status-message ${type}`;
+
+    if (type === 'success') {
+        setTimeout(() => {
+            element.className = 'status-message';
+        }, 3000);
+    }
+}
+
+function clearAllCache() {
+    if (confirm('Ти впевнений? Це очистить весь кеш на серверах.')) {
+        localStorage.clear();
+        alert('✅ Кеш очищен');
+    }
+}
+
+function reloadConfig() {
+    location.reload();
+}
+
+// ============================================================
+// ЗАПУСК
+// ============================================================
+checkAdmin();
 </script>
+
 </body>
 </html>
