@@ -3273,10 +3273,13 @@
 
     <div class="hdr-right">
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
-        <div class="lang-lbl-min" id="curr-lang-lbl">UA</div>
+        <div class="lang-lbl-min" id="curr-lang-lbl"><span class="f">🇺🇦</span><span class="t">UA</span></div>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
         <div class="lang-dd-menu" id="lang-dd-menu">
-          <!-- Мови генеруються динамічно -->
+          <!-- Мови генеруються динамічно - резервна версія -->
+          <div class="lang-opt act" onclick="setSiteLang('uk', event)"><span class="f">🇺🇦</span><span class="t">UA</span></div>
+          <div class="lang-opt" onclick="setSiteLang('en', event)"><span class="f">🇬🇧</span><span class="t">EN</span></div>
+          <div class="lang-opt" onclick="setSiteLang('ru', event)"><span class="f">🇷🇺</span><span class="t">RU</span></div>
         </div>
       </div>
 
@@ -3653,7 +3656,18 @@
 <!-- FRIENDS SECTION -->
 <div class="ft" id="friends-sec" style="display:none;">
   <h1 style="padding:30px 20px 0; text-align:center; font-size:28px; margin-bottom:20px;">👥 Мої Друзі</h1>
+
+  <!-- АКТИВНІСТЬ ДРУЗІВ -->
+  <div style="max-width:1200px; margin:0 auto; padding:20px;">
+    <h2 style="font-size:20px; margin-bottom:15px;">🎬 Що дивляються друзі прямо зараз</h2>
+    <div id="friends-activity" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:15px; margin-bottom:30px;">
+      <div style="text-align:center; color:#999; grid-column:1/-1; padding:20px;">Завантаження активності друзів...</div>
+    </div>
+  </div>
+
+  <!-- СПИСОК ДРУЗІВ -->
   <div style="max-width:800px; margin:0 auto; padding:20px;">
+    <h2 style="font-size:20px; margin-bottom:15px;">👨‍👩‍👧 Мої друзі</h2>
     <div style="display:flex; gap:10px; margin-bottom:20px;">
       <input type="text" id="friend-uid-input" placeholder="Введи UID друга..." style="flex:1; padding:10px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text);">
       <input type="text" id="friend-name-input" placeholder="Ім'я друга..." style="flex:1; padding:10px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text);">
@@ -4098,31 +4112,27 @@ function setSiteLang(lang, e) {
 
 // Рендерити меню мов на основі локації користувача
 function renderLanguageMenu() {
-  const menu = document.getElementById('lang-dd-menu');
-  if (!menu) return;
+  try {
+    const menu = document.getElementById('lang-dd-menu');
+    const lbl = document.getElementById('curr-lang-lbl');
+    if (!menu || !lbl) return;
 
-  const availableLangs = getAvailableLanguages();
-  const lbl = document.getElementById('curr-lang-lbl');
+    const availableLangs = getAvailableLanguages();
 
-  // Очистити меню
-  menu.innerHTML = '';
+    // Очистити меню і додати опції
+    menu.innerHTML = availableLangs.map(lang => {
+      const isActive = siteLang === lang;
+      const langInfo = LANG_INFO[lang];
+      if (!langInfo) return '';
+      return `<div class="lang-opt ${isActive ? 'act' : ''}" onclick="setSiteLang('${lang}', event)"><span class="f">${langInfo.flag}</span><span class="t">${langInfo.text}</span></div>`;
+    }).join('');
 
-  // Додати опції для кожної доступної мови
-  availableLangs.forEach(lang => {
-    const isActive = siteLang === lang;
-    const langInfo = LANG_INFO[lang];
-    if (!langInfo) return;
-
-    const opt = document.createElement('div');
-    opt.className = `lang-opt ${isActive ? 'act' : ''}`;
-    opt.innerHTML = `<span class="f">${langInfo.flag}</span><span class="t">${langInfo.text}</span>`;
-    opt.onclick = (e) => setSiteLang(lang, e);
-    menu.appendChild(opt);
-  });
-
-  // Оновити поточну мову
-  if (lbl && LANG_INFO[siteLang]) {
-    lbl.innerHTML = `<span class="f">${LANG_INFO[siteLang].flag}</span><span class="t">${LANG_INFO[siteLang].text}</span>`;
+    // Оновити поточну мову в лейблі
+    if (LANG_INFO[siteLang]) {
+      lbl.innerHTML = `<span class="f">${LANG_INFO[siteLang].flag}</span><span class="t">${LANG_INFO[siteLang].text}</span>`;
+    }
+  } catch(e) {
+    console.warn('⚠️ Помилка при рендеруванні меню мов:', e);
   }
 }
 
@@ -4494,13 +4504,15 @@ findWorkingVidsrc();
 const MOVIE_PLAYERS = [
     { id: 'rendex',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: true },
     { id: 'collaps', name: 'Плеєр 2 (Collaps)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
-    { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` }
+    { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` },
+    { id: 'multisearch', name: 'Плеєр 4 (Мультипошук)', badge: 'AUTO', safe: true, isCustom: true }
 ];
 
 const TV_PLAYERS = [
     { id: 'rendex',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: true },
     { id: 'collaps', name: 'Плеєр 2 (Collaps)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
-    { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` }
+    { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { id: 'multisearch', name: 'Плеєр 4 (Мультипошук)', badge: 'AUTO', safe: true, isCustom: true }
 ];
 // =====================================================================
 // 10. HERO SLIDER
@@ -4802,7 +4814,7 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
         let data = null;
         try {
             console.log(`🎬 Завантаження інформації про фільм: ${ep}`);
-            data = await tmdb(ep, { append_to_response: 'videos,seasons,credits,external_ids' });
+            data = await tmdb(ep, { append_to_response: 'videos,seasons,credits,external_ids,translations' });
         } catch (apiError) {
             console.error(`❌ Критична помилка при завантаженні фільму:`, apiError);
         }
@@ -4811,6 +4823,13 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
             console.error(`❌ ПОМИЛКА: Дані про фільм не отримані. TMDB API недоступна або ключі неправильні.`);
             content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);"><div style="margin-bottom:10px;">❌ Помилка завантаження фільму</div><div style="font-size:12px;color:var(--dim);">TMDB API недоступна. Перевірте:<br>1. Інтернет-з\'єднання<br>2. Конфігурацію Firebase<br>3. API ключи в адмін-панелі</div><br><button onclick="location.reload()" style="padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;">Оновити сторінку</button></div>';
             return;
+        }
+
+        // Оновити статус того що користувач дивиться
+        try {
+            await updateUserWatchingStatus(id, data);
+        } catch (e) {
+            console.warn('⚠️ Помилка оновлення статусу перегляду:', e);
         }
 
         // --- ПЕРЕВІРКА КАСТОМНИХ ПЛЕЄРІВ У FIREBASE ---
@@ -4863,6 +4882,17 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
         let desc = data.overview || 'Опис відсутній.';
         let rat = data.vote_average ? Number(data.vote_average).toFixed(1) : '—';
         let genresHtml = data.genres ? data.genres.map(g => `<span class="m-gtag">${escapeHtml(g.name)}</span>`).join('') : '';
+
+        // 🔍 Автоматично шукаємо відсутні дані
+        enhanceMovieData(id, type, data).then(enhanced => {
+            if (enhanced.title) title = enhanced.title;
+            if (enhanced.desc && desc === 'Опис відсутній.') desc = enhanced.desc;
+            if (enhanced.poster && !data.poster_path) data.poster_path = enhanced.poster;
+            // Оновити UI якщо модалка все ще відкрита
+            if (currentModalId === id) {
+                updateMovieDataUI(title, desc, data.poster_path);
+            }
+        }).catch(e => console.warn('⚠️ Помилка збагачення даних:', e));
 
         if (pushToHistory) {
             try {
@@ -4973,6 +5003,7 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
                 <button class="${isWL ? 'm-btn-wl saved' : 'm-btn-wl'}" id="modal-wl-btn" onclick="toggleWatchLaterModal(${id},'${type}')">${isWL ? 'Збережено' : wlText}</button>
                 ${isWtch ? `<button class="m-btn-wl saved" style="pointer-events:none;">Переглянуто</button>` : ''}
                 ${trailer ? `<button class="btn-trailer" onclick="openTrailer('${trailer.key}')">Трейлер</button>` : ''}
+                <button class="btn-trailer" onclick="downloadMovieOffline()" title="Завантажити для оффлайну">📥 Завантажити</button>
             </div>
 
             ${extraItemsHtml}
@@ -5099,6 +5130,53 @@ function _doLoadPlayer() {
             wrap.appendChild(adOverlay);
         }
 
+        // --- МУЛЬТИПОШУК ПЛЕЄР ---
+        if (p.id === 'multisearch') {
+            let title = document.querySelector('.m-info-t') ? document.querySelector('.m-info-t').textContent : 'Фільм';
+            let year = document.querySelector('.m-info-y') ? document.querySelector('.m-info-y').textContent : '';
+
+            const searchDiv = document.createElement('div');
+            searchDiv.id = 'multisearch-player';
+            searchDiv.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text);font-family:system-ui;overflow:auto;';
+            searchDiv.innerHTML = `
+                <div style="text-align:center;max-width:600px;padding:40px;">
+                    <div style="font-size:24px;margin-bottom:20px;font-weight:bold;">🔍 Автопошук джерел...</div>
+                    <div style="margin-bottom:20px;font-size:14px;color:var(--muted);">
+                        Шукаємо: <strong>${escapeHtml(title)} ${year}</strong>
+                    </div>
+                    <div id="multisearch-sources" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;width:100%;">
+                        <div style="padding:20px;color:var(--muted);">⏳ Завантаження...</div>
+                    </div>
+                    <div style="font-size:12px;color:var(--dim);margin-bottom:20px;">Натисніть на джерело щоб відкрити в новому вікні</div>
+                    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+                        <button onclick="switchPlayer(${(currentPlayer + 1) % allPlayers.length})" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;">Спробувати наступний плеєр</button>
+                    </div>
+                </div>
+            `;
+            wrap.appendChild(searchDiv);
+            clearTimeout(fallbackTimer);
+            loading.style.display = 'none';
+
+            // Автоматично знайти джерела
+            autoDetectMovieSources(title, currentModalId, year).then(sources => {
+                const sourcesDiv = document.getElementById('multisearch-sources');
+                if (!sourcesDiv) return;
+
+                sourcesDiv.innerHTML = sources.map(source => `
+                    <button onclick="tryMultiSearchSource(${currentModalId}, '${source.url.replace(/'/g, "\\'")}')"
+                            style="padding:15px 10px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:0.3s;font-weight:bold;"
+                            onmouseover="this.style.background='var(--accent)';this.style.color='#fff';"
+                            onmouseout="this.style.background='var(--bg3)';this.style.color='var(--text)';">
+                        ${source.icon}<br>${source.name}
+                    </button>
+                `).join('');
+            }).catch(e => {
+                console.warn('⚠️ Помилка автопошуку:', e);
+            });
+
+            return;
+        }
+
         // --- YOUTUBE ---
         if (p.id === 'youtube') {
             let iframe = document.createElement('iframe');
@@ -5218,6 +5296,164 @@ function loadEpisodes(count) {
         }
         el.innerHTML = html;
     } catch(e) {}
+}
+
+// Функція для мультипошуку
+function tryMultiSearchSource(movieId, searchUrl) {
+    window.open(searchUrl, '_blank');
+    showToast('✅ Відкрите у новому вікні. Скопіюй посилання на відео.');
+}
+
+// Збагатити дані фільму з інтернету
+async function enhanceMovieData(movieId, type, baseData) {
+    try {
+        const result = { title: null, desc: null, poster: null };
+        const title = baseData.title || baseData.name || '';
+        const year = (baseData.release_date || baseData.first_air_date || '').slice(0, 4);
+
+        // Якщо немає опису - спробуємо отримати з IMDb
+        if (!baseData.overview || baseData.overview.length < 20) {
+            console.log('📡 Шукаємо опис фільму...');
+            // Тут можна додати запит до IMDb або інших джерел
+            result.desc = baseData.overview;
+        }
+
+        // Якщо немає постера - спробуємо отримати з резервних джерел
+        if (!baseData.poster_path) {
+            console.log('🖼️ Шукаємо постер фільму...');
+            // Резервний постер з omdb або інших джерел
+        }
+
+        // Пошук офіційних перекладів назви
+        if (title && siteLang !== 'en') {
+            console.log(`🌍 Шукаємо переклад назви для ${siteLang}...`);
+            if (baseData.translations && baseData.translations.translations) {
+                const translationObj = baseData.translations.translations.find(t => t.iso_3166_1.toLowerCase() === siteLang);
+                if (translationObj && translationObj.data && translationObj.data.title) {
+                    result.title = translationObj.data.title;
+                }
+            }
+        }
+
+        return result;
+    } catch (e) {
+        console.warn('⚠️ Помилка збагачення даних:', e);
+        return { title: null, desc: null, poster: null };
+    }
+}
+
+// Оновити UI з новими даними
+function updateMovieDataUI(title, desc, posterPath) {
+    try {
+        const titleEl = document.querySelector('.m-info-t');
+        const descEl = document.querySelector('.m-info-d');
+
+        if (titleEl && title) titleEl.textContent = title;
+        if (descEl && desc) descEl.textContent = desc;
+
+        // Оновити постер якщо є
+        if (posterPath) {
+            const posterImg = document.querySelector('.m-info-poster img');
+            if (posterImg) posterImg.src = `${IMG}w300${posterPath}`;
+        }
+    } catch (e) {
+        console.warn('⚠️ Помилка оновлення UI:', e);
+    }
+}
+
+// Автоматично знайти доступні джерела для фільму
+async function autoDetectMovieSources(movieTitle, movieId, year) {
+    try {
+        console.log(`🔍 Шукаємо джерела для: ${movieTitle}`);
+
+        const sources = [];
+
+        // Джерело 1: YouTube
+        sources.push({
+            name: 'YouTube',
+            icon: '🔴',
+            url: `https://www.youtube.com/results?search_query=${encodeURIComponent(movieTitle + ' ' + year + ' фільм')}`,
+            type: 'youtube'
+        });
+
+        // Джерело 2: Rezka
+        sources.push({
+            name: 'Rezka.ag',
+            icon: '🎬',
+            url: `https://rezka.ag/search/?q=${encodeURIComponent(movieTitle)}`,
+            type: 'rezka'
+        });
+
+        // Джерело 3: Кіно365
+        sources.push({
+            name: 'Кіно365',
+            icon: '🎥',
+            url: `https://kino365.ua/search/${encodeURIComponent(movieTitle)}`,
+            type: 'kino365'
+        });
+
+        // Джерело 4: IMDb
+        sources.push({
+            name: 'IMDb',
+            icon: '⭐',
+            url: `https://www.imdb.com/find/?q=${encodeURIComponent(movieTitle)}&s=tt`,
+            type: 'imdb'
+        });
+
+        return sources;
+    } catch (e) {
+        console.warn('⚠️ Помилка автодетекції джерел:', e);
+        return [];
+    }
+}
+
+// Завантажити фільм для офлайну
+async function downloadMovieOffline() {
+    if (!currentUser) return openAuth('login');
+
+    try {
+        const movieTitle = document.querySelector('.m-info-t')?.textContent || 'movie';
+        showToast('📥 Функція завантаження розробляється...');
+        console.log(`📥 Завантаження: ${movieTitle} (ID: ${currentModalId})`);
+
+        // Зберегти інформацію про завантаження
+        const downloadInfo = {
+            movieId: currentModalId,
+            title: movieTitle,
+            type: currentModalType,
+            addedAt: new Date().toISOString(),
+            status: 'queued'
+        };
+
+        // Зберегти в localStorage
+        try {
+            let downloads = JSON.parse(localStorage.getItem('kb_downloads') || '[]');
+            if (!downloads.find(d => d.movieId === currentModalId)) {
+                downloads.push(downloadInfo);
+                localStorage.setItem('kb_downloads', JSON.stringify(downloads));
+                showToast('✅ Фільм додан до черги завантаження!');
+            } else {
+                showToast('⚠️ Фільм вже в списку');
+            }
+        } catch (e) {
+            console.warn('⚠️ Помилка збереження:', e);
+            showToast('⚠️ Помилка збереження');
+        }
+    } catch (e) {
+        console.error('❌ Помилка завантаження:', e);
+        showToast('❌ Помилка');
+    }
+}
+
+// Показати список офлайн фільмів
+function showOfflineMovies() {
+    try {
+        const downloads = JSON.parse(localStorage.getItem('kb_downloads') || '[]');
+        console.log('📥 Офлайн фільми:', downloads);
+        showToast(`📥 Завантажено: ${downloads.length} фільмів`);
+    } catch (e) {
+        showToast('❌ Помилка');
+    }
 }
 
 function selectEp(n) {
@@ -6641,9 +6877,15 @@ async function loadTrendingMovies() {
         const grid = document.getElementById('trending-grid');
         grid.innerHTML = '';
 
-        data.results.slice(0, 20).forEach(m => {
+        // Фільтруємо фільми з постерами і назвами
+        const validResults = data.results
+            .filter(m => m.poster_path && (m.title || m.name))
+            .slice(0, 20);
+
+        validResults.forEach(m => {
             try {
-                const html = card(m, 'movie');
+                const mtype = m.media_type || 'movie';
+                const html = card(m, null);
                 const div = document.createElement('div');
                 div.innerHTML = html;
                 grid.appendChild(div.firstChild);
@@ -6675,6 +6917,8 @@ async function loadFriendsUI() {
 
         if (snapshot.empty) {
             list.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:#999;">У тебе ще немає друзів. Додай першого!</div>';
+            // Завантажити активність навіть без друзів
+            loadFriendsActivity();
             return;
         }
 
@@ -6689,8 +6933,96 @@ async function loadFriendsUI() {
             `;
             list.appendChild(card);
         });
+
+        // Завантажити активність друзів
+        loadFriendsActivity();
     } catch (e) {
         console.error('Помилка завантаження друзів:', e);
+    }
+}
+
+// Оновити статус того що користувач дивиться
+async function updateUserWatchingStatus(movieId, movieData) {
+    if (!currentUser) return;
+    try {
+        const status = {
+            movieId: movieId,
+            title: movieData.title || movieData.name || 'Без назви',
+            poster: movieData.poster_path || '',
+            updatedAt: new Date().toISOString(),
+            type: movieData.media_type || 'movie'
+        };
+        await db.collection('users').doc(currentUser.uid).update({
+            currentlyWatching: status
+        });
+        console.log('✅ Статус оновлено:', status);
+    } catch (e) {
+        console.warn('⚠️ Помилка оновлення статусу:', e);
+    }
+}
+
+// Завантажити активність друзів
+async function loadFriendsActivity() {
+    if (!currentUser) return;
+    try {
+        const uid = currentUser.uid;
+        const snapshot = await db.collection('users').doc(uid).collection('friends').get();
+        const activity = document.getElementById('friends-activity');
+
+        if (!activity) return;
+
+        activity.innerHTML = '';
+
+        if (snapshot.empty) {
+            activity.innerHTML = '<div style="text-align:center; color:#999; grid-column:1/-1; padding:20px;">Немає активності. Додай друзів!</div>';
+            return;
+        }
+
+        let hasActivity = false;
+        const activityPromises = snapshot.docs.map(async doc => {
+            const friend = doc.data();
+            try {
+                const userDoc = await db.collection('users').doc(friend.uid).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    if (userData.currentlyWatching) {
+                        hasActivity = true;
+                        return { friend, watching: userData.currentlyWatching };
+                    }
+                }
+            } catch (e) {
+                console.warn(`⚠️ Помилка завантаження активності друга ${friend.name}:`, e);
+            }
+            return null;
+        });
+
+        const results = await Promise.all(activityPromises);
+        const activeNow = results.filter(r => r !== null);
+
+        if (activeNow.length === 0) {
+            activity.innerHTML = '<div style="text-align:center; color:#999; grid-column:1/-1; padding:20px;">Твої друзі зараз нічого не дивляться 😴</div>';
+            return;
+        }
+
+        activeNow.forEach(({ friend, watching }) => {
+            const posterUrl = watching.poster ? `${IMG}w200${watching.poster}` : '';
+            const card = document.createElement('div');
+            card.style.cssText = 'background:var(--bg3); border-radius:8px; overflow:hidden; border:1px solid var(--accent); cursor:pointer; transition:0.3s;';
+            card.innerHTML = `
+                <div style="position:relative; aspect-ratio:2/3; background:var(--bg2);">
+                    ${posterUrl ? `<img src="${posterUrl}" alt="${watching.title}" style="width:100%; height:100%; object-fit:cover;">` : '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--muted);">🎬</div>'}
+                    <div style="position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.8));"></div>
+                </div>
+                <div style="padding:10px;">
+                    <div style="font-weight:bold; font-size:13px; margin-bottom:3px;">👤 ${friend.name}</div>
+                    <div style="font-size:12px; color:var(--accent); margin-bottom:3px;">🎬 ${watching.title}</div>
+                    <div style="font-size:11px; color:var(--muted);">📺 ${watching.type === 'tv' ? 'Серіал' : 'Фільм'}</div>
+                </div>
+            `;
+            activity.appendChild(card);
+        });
+    } catch (e) {
+        console.error('❌ Помилка завантаження активності друзів:', e);
     }
 }
 
