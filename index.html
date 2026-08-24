@@ -4009,8 +4009,24 @@ let keysCache = [];
 let pagesCache = {};
 let dbReady   = false;
 
-// ЗАГЛУШКА ДЛЯ РЕКЛАМИ (ЩОБ КОД НЕ КРАШИВСЯ, ЯКЩО НЕМАЄ ФУНКЦІЇ)
+let adsCache   = [];
+let keysCache  = [];
+let pagesCache = {};
+let dbReady    = false;
+let playerAdsEnabled = true; // Змінна стану реклами з адмінки
+
+// РЕНДЕР БАНЕРІВ ТА ПОПАПІВ
 function renderAds() {
+    // 🛡️ ЯКЩО ПРЕМІУМ АБО АДМІН — ПОВНІСТЮ ОЧИЩАЄМО ТА ВИМИКАЄМО РЕКЛАМУ
+    if (currentUserSubscribed || currentUserRole === 'admin') {
+        const slots = ['header', 'between1', 'between2', 'between3', 'sidebar', 'footer'];
+        slots.forEach(slot => {
+            const el = document.getElementById('slot-' + slot);
+            if (el) el.innerHTML = '';
+        });
+        return;
+    }
+
     if (!adsCache || !adsCache.length) return;
     
     // 1. Звичайна баннерна реклама на сторінці
@@ -4043,8 +4059,6 @@ function renderAds() {
             } else if (popAd.imageUrl) {
                 popBox.innerHTML = `${label}${closeBtn}<a href="${popAd.linkUrl || '#'}" target="_blank"><img src="${popAd.imageUrl}" alt="${escapeHtml(popAd.altText || '')}"></a>${bar}`;
             }
-            
-            // Запускаємо показ через 5 секунд після завантаження
             setTimeout(triggerPopupAd, 5000);
         }
     }
@@ -4052,12 +4066,23 @@ function renderAds() {
 
 function initFirestore() {
   if (!db) { loadFallback(); return; }
+
+  // Відстежуємо стан тумблера з адмінки (settings/config)
+  try {
+      db.collection('settings').doc('config').onSnapshot(doc => {
+          if (doc.exists && doc.data().playerAdsEnabled !== undefined) {
+              playerAdsEnabled = doc.data().playerAdsEnabled;
+          }
+      });
+  } catch(e) {}
+
   try {
       db.collection('ads').onSnapshot(snap => {
           adsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
           renderAds();
       }, () => { loadFallback(); });
   } catch(e) {}
+  
   try {
       db.collection('apiKeys').onSnapshot(snap => {
           keysCache = snap.docs.map(d => d.data().value).filter(Boolean);
@@ -4071,6 +4096,7 @@ function initFirestore() {
           if (!dbReady) { dbReady = true; initSite(); }
       });
   } catch(e) {}
+  
   try {
       ['about','contacts','terms','dmca'].forEach(id => {
           db.collection('pages').doc(id).onSnapshot(doc => {
@@ -4807,7 +4833,6 @@ function _doLoadPlayer() {
         const wrap = document.getElementById('player-wrap');
         if (!wrap) return;
 
-        // Скидаємо попередній 10-секундний таймер перевірки
         if (fallbackTimer) clearTimeout(fallbackTimer);
 
         let loading = document.getElementById('player-loading');
@@ -4820,7 +4845,6 @@ function _doLoadPlayer() {
         }
         loading.style.display = 'flex';
 
-        // Очищаємо попередні елементи, залишаючи плашку завантаження
         Array.from(wrap.children).forEach(child => {
             if (child.id !== 'player-loading') child.remove();
         });
@@ -4831,35 +4855,39 @@ function _doLoadPlayer() {
         if (isNaN(currentPlayer) || currentPlayer >= allPlayers.length || currentPlayer < 0) currentPlayer = 0;
         const p = allPlayers[currentPlayer];
 
-        // 10-СЕКУНДНИЙ ТАЙМЕР: Якщо плеєр не завантажився за 10 сек — авто-перехід на наступний сервер
+        // ⏱️ 10-СЕКУНДНИЙ ТАЙМЕР АВТО-ПЕРЕХОДУ
         fallbackTimer = setTimeout(() => {
-            console.warn(`Сервер "${p.name}" не відповів за 10 секунд. Авто-перехід на наступний...`);
-            showToast(`Сервер не відповідає. Переключаємо сервер...`);
+            console.warn(`Сервер "${p.name}" не відповів за 10 секунд. Перемикання...`);
+            showToast(`Сервер не відповідає. Переключаємо...`);
             const nextIdx = (currentPlayer + 1) % allPlayers.length;
             switchPlayer(nextIdx);
-        }, 10000); // 10000 мс = 10 секунд
+        }, 10000);
 
-        // СТВОРЮЄМО РЕКЛАМНИЙ ОВЕРЛЕЙ ПОВЕРХ ВІДЕО
-        const adOverlay = document.createElement('div');
-        adOverlay.id = 'player-ad-overlay';
-        adOverlay.style.cssText = 'position:absolute;inset:0;z-index:20;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;';
-        adOverlay.innerHTML = `
-            <div style="background:var(--accent);color:#fff;padding:12px 26px;border-radius:30px;font-weight:bold;font-size:15px;box-shadow:0 0 20px rgba(229,9,20,0.6);margin-bottom:8px;">▶ Натисніть для запуску</div>
-            <div style="color:#aaa;font-size:12px;">Клацніть, щоб відкрити плеєр</div>
-        `;
+        // 🛡️ ПЕРЕВІРКА: Показуємо заставку ТІЛЬКИ якщо вона увімкнена в адмінці, і юзер НЕ Premium / НЕ Адмін
+        const isVIP = (typeof currentUserSubscribed !== 'undefined' && currentUserSubscribed);
+        const isAdmin = (typeof currentUserRole !== 'undefined' && currentUserRole === 'admin');
 
-        adOverlay.onclick = () => {
-            // 💡 ВСТАВТЕ СЮДИ ВАШЕ DIRECT LINK ПОСИЛАННЯ З MONETAG 
-            const monetagDirectLink = 'https://your-monetag-direct-link.com'; 
+        if (playerAdsEnabled && !isVIP && !isAdmin) {
+            const adOverlay = document.createElement('div');
+            adOverlay.id = 'player-ad-overlay';
+            adOverlay.style.cssText = 'position:absolute;inset:0;z-index:20;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;';
+            adOverlay.innerHTML = `
+                <div style="background:var(--accent);color:#fff;padding:12px 26px;border-radius:30px;font-weight:bold;font-size:15px;box-shadow:0 0 20px rgba(229,9,20,0.6);margin-bottom:8px;">▶ Натисніть для запуску</div>
+                <div style="color:#aaa;font-size:12px;">Клацніть, щоб відкрити плеєр</div>
+            `;
 
-            if (monetagDirectLink && monetagDirectLink !== 'https://your-monetag-direct-link.com') {
-                window.open(monetagDirectLink, '_blank');
-            }
-            adOverlay.remove(); // Видаляємо заставку, відкриваючи плеєр
-        };
-        wrap.appendChild(adOverlay);
+            adOverlay.onclick = () => {
+                const monetagDirectLink = 'https://your-monetag-direct-link.com'; 
 
-        // --- ОБРОБКА YOUTUBE ---
+                if (monetagDirectLink && monetagDirectLink !== 'https://your-monetag-direct-link.com') {
+                    window.open(monetagDirectLink, '_blank');
+                }
+                adOverlay.remove();
+            };
+            wrap.appendChild(adOverlay);
+        }
+
+        // --- YOUTUBE ---
         if (p.id === 'youtube') {
             let iframe = document.createElement('iframe');
             iframe.id = 'player-iframe';
@@ -4873,7 +4901,7 @@ function _doLoadPlayer() {
             return;
         }
 
-        // --- ОБРОБКА SDK RENDEX ---
+        // --- RENDEX ---
         if (p.id === 'rendex') {
             let dataType = currentImdbId ? 'imdb' : (currentModalType === 'tv' ? 'series' : 'movie');
             let dataId = currentImdbId || currentModalId;
@@ -4893,7 +4921,7 @@ function _doLoadPlayer() {
             return;
         }
 
-        // --- ОБРОБКА ЗВИЧАЙНИХ IFRAME (Collaps, VidSrc тощо) ---
+        // --- IFRAME (Collaps, VidSrc тощо) ---
         const src = p.url ? (typeof p.url === 'function' ? p.url(currentModalId, currentImdbId, currentSeason, currentEpisode) : p.url) : '';
 
         let iframe = document.createElement('iframe');
@@ -4905,7 +4933,6 @@ function _doLoadPlayer() {
         wrap.appendChild(iframe);
         iframe.src = src;
         
-        // У разі успішного завантаження iframe — скасовуємо 10-секундний авто-перехід
         iframe.onload = () => { 
             clearTimeout(fallbackTimer); 
             loading.style.display = 'none'; 
@@ -5687,6 +5714,9 @@ setTimeout(() => {
 
 // 3. Функція виклику попап-реклами (можна викликати будь-де, наприклад, при кліку на фільм)
 function triggerPopupAd() {
+    // 🛡️ НЕ ПОКАЗУЄМО ПОПАПИ ДЛЯ ПРЕМІУМ ТА АДМІНІВ
+    if (currentUserSubscribed || currentUserRole === 'admin') return;
+
     const pop = document.getElementById('pop-ov');
     const bar = document.getElementById('pop-bar');
     const closeBtn = document.getElementById('pop-close');
@@ -5695,17 +5725,14 @@ function triggerPopupAd() {
         pop.classList.add('open');
         closeBtn.classList.add('locked');
         
-        // Скидаємо смужку
         bar.style.transition = 'none';
         bar.style.width = '100%';
         
-        // Запускаємо анімацію на 5 секунд
         setTimeout(() => {
             bar.style.transition = 'width 5s linear';
             bar.style.width = '0%';
         }, 50);
         
-        // Розблоковуємо кнопку хрестика через 5 секунд
         setTimeout(() => {
             closeBtn.classList.remove('locked');
         }, 5000);
