@@ -5873,6 +5873,568 @@ document.getElementById('pwa-btn').addEventListener('click', () => {
         deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
     }
 });
+
+// =====================================================================
+// 🎯 НОВІ ФУНКЦІЇ: СПИСКИ, ДРУЗІ, РЕКОМЕНДАЦІЇ, ПЕРСОНАЛІЗАЦІЯ
+// =====================================================================
+
+// 📋 ГЛОБАЛЬНІ ЗМІННІ ДЛЯ НОВИХ ФУНКЦІЙ
+let userLists = []; // Користувацькі списки
+let userFriends = []; // Список друзів
+let userNotifications = []; // Повідомлення
+let userPreferences = { theme: 'dark', language: 'uk', fontSize: 'normal' }; // Налаштування
+let watchHistory = []; // Історія перегляду
+let searchHistory = []; // Історія пошуку
+
+// =====================================================================
+// 1️⃣ УПРАВЛІННЯ СПИСКАМИ (Lists)
+// =====================================================================
+
+// Створити новий список
+async function createList(name, description = '', isPublic = false) {
+    if (!currentUser) return showToast('Увійдіть в акаунт');
+    if (!name.trim()) return showToast('Назва списку не може бути порожною');
+
+    try {
+        const listRef = await db.collection('users').doc(currentUser.uid).collection('lists').add({
+            name: name.trim(),
+            description: description,
+            isPublic: isPublic,
+            movies: [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        });
+        console.log(`✅ Список створено: ${name} (${listRef.id})`);
+        showToast(`Список "${name}" створено`);
+        await loadUserLists();
+        return listRef.id;
+    } catch(err) {
+        console.error('❌ Помилка створення списку:', err);
+        showToast('Помилка створення списку');
+    }
+}
+
+// Завантажити списки користувача
+async function loadUserLists() {
+    if (!currentUser) return;
+    try {
+        const snapshot = await db.collection('users').doc(currentUser.uid).collection('lists').get();
+        userLists = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log(`✅ Завантажено ${userLists.length} списків`);
+    } catch(err) {
+        console.error('❌ Помилка завантаження списків:', err);
+    }
+}
+
+// Додати фільм до списку
+async function addMovieToList(listId, movieId, movieData) {
+    if (!currentUser) return showToast('Увійдіть в акаунт');
+
+    try {
+        const listRef = db.collection('users').doc(currentUser.uid).collection('lists').doc(listId);
+        await listRef.update({
+            movies: firebase.firestore.FieldValue.arrayUnion({
+                id: movieId,
+                title: movieData.title,
+                posterPath: movieData.poster_path,
+                addedAt: new Date().toISOString()
+            }),
+            updatedAt: new Date().toISOString()
+        });
+        console.log(`✅ Фільм додано до списку`);
+        showToast('Фільм додано до списку');
+    } catch(err) {
+        console.error('❌ Помилка додавання фільму:', err);
+    }
+}
+
+// Видалити фільм зі списку
+async function removeMovieFromList(listId, movieId) {
+    if (!currentUser) return;
+
+    try {
+        const listRef = db.collection('users').doc(currentUser.uid).collection('lists').doc(listId);
+        const listDoc = await listRef.get();
+        const movies = listDoc.data().movies.filter(m => m.id !== movieId);
+        await listRef.update({
+            movies: movies,
+            updatedAt: new Date().toISOString()
+        });
+        console.log(`✅ Фільм видалено зі списку`);
+    } catch(err) {
+        console.error('❌ Помилка видалення:', err);
+    }
+}
+
+// Видалити список
+async function deleteList(listId) {
+    if (!currentUser) return;
+    if (!confirm('Ви впевнені? Це неможливо скасувати.')) return;
+
+    try {
+        await db.collection('users').doc(currentUser.uid).collection('lists').doc(listId).delete();
+        console.log(`✅ Список видалено`);
+        showToast('Список видалено');
+        await loadUserLists();
+    } catch(err) {
+        console.error('❌ Помилка видалення списку:', err);
+    }
+}
+
+// =====================================================================
+// 👥 СИСТЕМА ДРУЗІВ
+// =====================================================================
+
+// Додати в друзів
+async function addFriend(friendUid, friendName) {
+    if (!currentUser) return showToast('Увійдіть в акаунт');
+    if (friendUid === currentUser.uid) return showToast('Не можете додати себе');
+
+    try {
+        // Додати в мої друзі
+        await db.collection('users').doc(currentUser.uid).collection('friends').doc(friendUid).set({
+            uid: friendUid,
+            name: friendName,
+            addedAt: new Date().toISOString(),
+            blocked: false
+        });
+
+        // Додати в друзі їх (якщо вони в системі)
+        await db.collection('users').doc(friendUid).collection('friends').doc(currentUser.uid).set({
+            uid: currentUser.uid,
+            name: currentUser.displayName || 'Користувач',
+            addedAt: new Date().toISOString(),
+            blocked: false
+        }).catch(() => {});
+
+        console.log(`✅ Друг додано: ${friendName}`);
+        showToast(`${friendName} додано в друзі`);
+        await loadUserFriends();
+    } catch(err) {
+        console.error('❌ Помилка додавання друга:', err);
+    }
+}
+
+// Завантажити друзів
+async function loadUserFriends() {
+    if (!currentUser) return;
+    try {
+        const snapshot = await db.collection('users').doc(currentUser.uid).collection('friends').get();
+        userFriends = snapshot.docs.map(doc => doc.data()).filter(f => !f.blocked);
+        console.log(`✅ Завантажено ${userFriends.length} друзів`);
+    } catch(err) {
+        console.error('❌ Помилка завантаження друзів:', err);
+    }
+}
+
+// Видалити друга
+async function removeFriend(friendUid) {
+    if (!currentUser) return;
+
+    try {
+        await db.collection('users').doc(currentUser.uid).collection('friends').doc(friendUid).delete();
+        console.log(`✅ Друг видалено`);
+        showToast('Друг видалено');
+        await loadUserFriends();
+    } catch(err) {
+        console.error('❌ Помилка видалення друга:', err);
+    }
+}
+
+// =====================================================================
+// 🔔 СИСТЕМА ПОВІДОМЛЕНЬ
+// =====================================================================
+
+// Надіслати повідомлення
+async function sendNotification(type, title, message, data = {}) {
+    if (!currentUser) return;
+
+    try {
+        await db.collection('notifications').add({
+            userId: currentUser.uid,
+            type: type, // 'friend_added', 'movie_recommended', 'new_episode', etc
+            title: title,
+            message: message,
+            data: data,
+            read: false,
+            createdAt: new Date().toISOString()
+        });
+        console.log(`✅ Повідомлення надіслано: ${title}`);
+    } catch(err) {
+        console.error('❌ Помилка надіслання повідомлення:', err);
+    }
+}
+
+// Завантажити повідомлення
+async function loadNotifications() {
+    if (!currentUser) return;
+    try {
+        const snapshot = await db.collection('notifications')
+            .where('userId', '==', currentUser.uid)
+            .orderBy('createdAt', 'desc')
+            .limit(20)
+            .get();
+        userNotifications = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log(`✅ Завантажено ${userNotifications.length} повідомлень`);
+    } catch(err) {
+        console.error('❌ Помилка завантаження повідомлень:', err);
+    }
+}
+
+// Позначити як прочитано
+async function markNotificationAsRead(notificationId) {
+    if (!currentUser) return;
+
+    try {
+        await db.collection('notifications').doc(notificationId).update({
+            read: true
+        });
+    } catch(err) {
+        console.error('❌ Помилка позначення:', err);
+    }
+}
+
+// =====================================================================
+// 🎯 СИСТЕМА РЕКОМЕНДАЦІЙ
+// =====================================================================
+
+// Отримати рекомендації
+async function getRecommendations() {
+    if (!currentUser) return [];
+
+    try {
+        const snapshot = await db.collection('recommendations')
+            .doc(currentUser.uid)
+            .get();
+
+        if (!snapshot.exists) {
+            console.log('ℹ️ Рекомендації ще не розраховані');
+            return [];
+        }
+
+        return snapshot.data().movies || [];
+    } catch(err) {
+        console.error('❌ Помилка отримання рекомендацій:', err);
+        return [];
+    }
+}
+
+// Генерувати рекомендації на основі переглянутих фільмів
+async function generateRecommendations() {
+    if (!currentUser) return;
+
+    try {
+        // Отримати історію перегляду
+        const watched = libraryCache ? Object.keys(libraryCache).slice(0, 10) : [];
+        if (watched.length < 2) {
+            console.log('ℹ️ Недостатньо переглянутих фільмів для рекомендацій');
+            return;
+        }
+
+        // Отримати дані про переглянуті фільми
+        const watchedData = [];
+        for (let id of watched) {
+            try {
+                const data = await tmdb(`/movie/${id}`);
+                if (data) watchedData.push(data);
+            } catch(e) {}
+        }
+
+        // Знайти популярні жанри
+        const genreCounts = {};
+        watchedData.forEach(movie => {
+            if (movie.genres) {
+                movie.genres.forEach(g => {
+                    genreCounts[g.id] = (genreCounts[g.id] || 0) + 1;
+                });
+            }
+        });
+
+        const topGenres = Object.entries(genreCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(e => e[0]);
+
+        // Пошук рекомендованих фільмів
+        let recommendations = [];
+        for (let genreId of topGenres) {
+            const data = await tmdb('/discover/movie', {
+                with_genres: genreId,
+                sort_by: 'popularity.desc',
+                page: Math.floor(Math.random() * 3) + 1
+            });
+            if (data && data.results) {
+                recommendations = [...recommendations, ...data.results.slice(0, 5)];
+            }
+        }
+
+        // Зберегти рекомендації
+        await db.collection('recommendations').doc(currentUser.uid).set({
+            movies: recommendations.slice(0, 20),
+            generatedAt: new Date().toISOString()
+        });
+
+        console.log(`✅ Рекомендації генеровані: ${recommendations.length} фільмів`);
+    } catch(err) {
+        console.error('❌ Помилка генерування рекомендацій:', err);
+    }
+}
+
+// =====================================================================
+// 🔍 РОЗШИРЕНИЙ ПОШУК
+// =====================================================================
+
+// Розширений пошук з фільтрами
+async function advancedSearch(query, filters = {}) {
+    try {
+        console.log(`🔍 Розширений пошук: ${query}`, filters);
+
+        let params = { query: query };
+
+        // Додати фільтри
+        if (filters.year) params.primary_release_year = filters.year;
+        if (filters.genre) params.with_genres = filters.genre;
+        if (filters.language) params.with_original_language = filters.language;
+        if (filters.minRating) params.vote_average_gte = filters.minRating;
+        if (filters.country) params.with_production_countries = filters.country;
+
+        const data = await tmdb('/search/multi', params);
+
+        if (data && data.results) {
+            // Зберегти в історію пошуку
+            if (currentUser) {
+                try {
+                    await db.collection('users').doc(currentUser.uid).collection('search_history').add({
+                        query: query,
+                        filters: filters,
+                        resultsCount: data.results.length,
+                        searchedAt: new Date().toISOString()
+                    });
+                } catch(e) {}
+            }
+
+            console.log(`✅ Знайдено результатів: ${data.results.length}`);
+            return data.results;
+        }
+        return [];
+    } catch(err) {
+        console.error('❌ Помилка пошуку:', err);
+        return [];
+    }
+}
+
+// Отримати історію пошуку
+async function getSearchHistory() {
+    if (!currentUser) return [];
+
+    try {
+        const snapshot = await db.collection('users')
+            .doc(currentUser.uid)
+            .collection('search_history')
+            .orderBy('searchedAt', 'desc')
+            .limit(10)
+            .get();
+
+        return snapshot.docs.map(doc => doc.data());
+    } catch(err) {
+        console.error('❌ Помилка завантаження історії:', err);
+        return [];
+    }
+}
+
+// =====================================================================
+// 🎨 ПЕРСОНАЛІЗАЦІЯ
+// =====================================================================
+
+// Завантажити налаштування користувача
+async function loadUserPreferences() {
+    if (!currentUser) {
+        // Завантажити з localStorage для гостей
+        try {
+            const saved = localStorage.getItem('kb_preferences');
+            if (saved) userPreferences = JSON.parse(saved);
+        } catch(e) {}
+        return;
+    }
+
+    try {
+        const doc = await db.collection('users').doc(currentUser.uid).get();
+        if (doc.exists && doc.data().preferences) {
+            userPreferences = doc.data().preferences;
+            console.log(`✅ Налаштування завантажено`);
+            applyPreferences();
+        }
+    } catch(err) {
+        console.error('❌ Помилка завантаження налаштувань:', err);
+    }
+}
+
+// Зберегти налаштування
+async function savePreferences(prefs) {
+    userPreferences = { ...userPreferences, ...prefs };
+
+    // Зберегти локально
+    try {
+        localStorage.setItem('kb_preferences', JSON.stringify(userPreferences));
+    } catch(e) {}
+
+    // Зберегти в Firebase для залогінених
+    if (currentUser) {
+        try {
+            await db.collection('users').doc(currentUser.uid).update({
+                preferences: userPreferences
+            });
+        } catch(e) {}
+    }
+
+    applyPreferences();
+    console.log(`✅ Налаштування збережено`);
+}
+
+// Застосувати налаштування
+function applyPreferences() {
+    // Тема
+    if (userPreferences.theme === 'dark') {
+        document.documentElement.style.setProperty('--bg', '#0a0e27');
+        document.documentElement.style.setProperty('--bg2', '#141829');
+    } else {
+        document.documentElement.style.setProperty('--bg', '#ffffff');
+        document.documentElement.style.setProperty('--bg2', '#f5f5f5');
+    }
+
+    // Розмір шрифту
+    if (userPreferences.fontSize === 'large') {
+        document.body.style.fontSize = '16px';
+    } else if (userPreferences.fontSize === 'small') {
+        document.body.style.fontSize = '12px';
+    }
+
+    console.log(`✅ Налаштування застосовані`);
+}
+
+// =====================================================================
+// 📊 АНАЛІТИКА
+// =====================================================================
+
+// Записати подію перегляду
+async function trackViewEvent(movieId, movieType, watchTime) {
+    if (!currentUser) return;
+
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        await db.collection('analytics').doc(today).update({
+            [`views.${movieId}`]: firebase.firestore.FieldValue.increment(1),
+            [`watchTime.${movieId}`]: firebase.firestore.FieldValue.increment(watchTime),
+            totalViews: firebase.firestore.FieldValue.increment(1),
+            totalWatchTime: firebase.firestore.FieldValue.increment(watchTime)
+        }).catch(() => {
+            // Якщо документ не існує, створити його
+            return db.collection('analytics').doc(today).set({
+                date: today,
+                views: { [movieId]: 1 },
+                watchTime: { [movieId]: watchTime },
+                totalViews: 1,
+                totalWatchTime: watchTime
+            });
+        });
+    } catch(err) {
+        console.error('❌ Помилка запису аналітики:', err);
+    }
+}
+
+// Отримати топ переглянутих фільмів
+async function getTopWatchedMovies(days = 7) {
+    try {
+        let topMovies = {};
+        const today = new Date();
+
+        for (let i = 0; i < days; i++) {
+            const date = new Date(today);
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+
+            const doc = await db.collection('analytics').doc(dateStr).get();
+            if (doc.exists) {
+                const views = doc.data().views || {};
+                Object.entries(views).forEach(([movieId, count]) => {
+                    topMovies[movieId] = (topMovies[movieId] || 0) + count;
+                });
+            }
+        }
+
+        return Object.entries(topMovies)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10)
+            .map(([movieId, count]) => ({ movieId, views: count }));
+    } catch(err) {
+        console.error('❌ Помилка отримання аналітики:', err);
+        return [];
+    }
+}
+
+// =====================================================================
+// 💾 ЗБЕРЕЖЕННЯ ПРОГРЕСУ ПЕРЕГЛЯДУ
+// =====================================================================
+
+// Записати прогрес перегляду
+async function saveWatchProgress(movieId, progress) {
+    if (!currentUser) return;
+
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        await db.collection('users').doc(currentUser.uid).collection('watch_progress').doc(movieId).set({
+            movieId: movieId,
+            progress: progress,
+            lastWatchedAt: new Date().toISOString(),
+            date: today
+        }, { merge: true });
+    } catch(err) {
+        console.error('❌ Помилка збереження прогресу:', err);
+    }
+}
+
+// Отримати прогрес перегляду
+async function getWatchProgress(movieId) {
+    if (!currentUser) return 0;
+
+    try {
+        const doc = await db.collection('users').doc(currentUser.uid).collection('watch_progress').doc(movieId).get();
+        return doc.exists ? doc.data().progress : 0;
+    } catch(err) {
+        console.error('❌ Помилка отримання прогресу:', err);
+        return 0;
+    }
+}
+
+// =====================================================================
+// 🔄 ІНІЦІАЛІЗАЦІЯ НОВИХ ФУНКЦІЙ
+// =====================================================================
+
+// Вызвать при завантаженні сайту
+async function initNewFeatures() {
+    console.log('🚀 Ініціалізація нових функцій...');
+
+    if (currentUser) {
+        await loadUserLists();
+        await loadUserFriends();
+        await loadNotifications();
+        await loadUserPreferences();
+        await generateRecommendations();
+    } else {
+        loadUserPreferences();
+    }
+
+    console.log('✅ Нові функції ініціалізовані');
+}
+
+// Викликати при логіні
+firebase.auth().onAuthStateChanged(async (user) => {
+    if (user && typeof initNewFeatures === 'function') {
+        setTimeout(() => initNewFeatures(), 1000);
+    }
+});
+
+});
 </script>
 </body>
 </html>
