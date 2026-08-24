@@ -3258,7 +3258,7 @@
       <a href="/category/documentary" data-i18n="nav_docs" onclick="event.preventDefault();showCatalog({type:'movie',genre:'99'});">Документальні</a>
       <a href="/category/top" data-i18n="nav_top" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});">Топ рейтинг</a>
       <a href="/category/classic" data-i18n="nav_classic" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});">Класика</a>
-      <a href="/trending" onclick="event.preventDefault();showTrending();">🎬 Трендинг</a>
+      <a href="/trending" onclick="event.preventDefault();showTrending();">Тренди</a>
     </nav>
 
     <div class="srch-wrap">
@@ -6532,8 +6532,10 @@ async function loadTrendingMovies() {
 
         data.results.slice(0, 20).forEach(m => {
             try {
-                const mcard = card(m, 'movie');
-                grid.appendChild(mcard);
+                const html = card(m, 'movie');
+                const div = document.createElement('div');
+                div.innerHTML = html;
+                grid.appendChild(div.firstChild);
             } catch (cardErr) {
                 console.warn('Помилка при створенні карточки:', cardErr);
             }
@@ -6641,12 +6643,17 @@ async function loadRecommendationsUI() {
 
         for (const movieId of recs.slice(0, 20)) {
             try {
-                const movieData = await tmdb('/movie/' + movieId);
+                const id = typeof movieId === 'object' ? movieId.id : movieId;
+                const movieData = await tmdb('/movie/' + id);
                 if (movieData) {
-                    const mcard = card(movieData, 'movie');
-                    grid.appendChild(mcard);
+                    const html = card(movieData, 'movie');
+                    const div = document.createElement('div');
+                    div.innerHTML = html;
+                    grid.appendChild(div.firstChild);
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.warn('Помилка рекомендацій:', e);
+            }
         }
     } catch (e) {
         console.error('Помилка завантаження рекомендацій:', e);
