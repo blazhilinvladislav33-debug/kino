@@ -655,6 +655,19 @@
               Показує повідомлення з проханням вимкнути блокувальник реклами.<br>
               Перевірка спрацьовує через 1.5 сек після завантаження сторінки.
             </div>
+            <div class="slots-guide" style="margin-top:16px;">
+  <h3 style="margin-bottom:16px;">Реклама у плеєрі (Direct Link)</h3>
+  <div style="color:var(--muted);font-size:13px;margin-bottom:14px;line-height:1.7;">
+    Вмикає або вимикає рекламну заставку поверх відео для відвідувачів без Premium.
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <label class="toggle-switch">
+      <input type="checkbox" id="player-ads-toggle" onchange="togglePlayerAds(this.checked)">
+      <div class="toggle-slider"></div>
+    </label>
+    <span style="font-size:14px;" id="player-ads-label">Завантаження...</span>
+  </div>
+</div>
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
               <label class="toggle-switch">
                 <input type="checkbox" id="ab-toggle" onchange="saveAntiAdblock(this.checked)">
@@ -1382,6 +1395,29 @@
         showToast('Помилка збереження (див. консоль)', true);
       });
   }
+  function loadPlayerAdsSetting() {
+  if (!db) return;
+  db.collection('settings').doc('config').get().then(doc => {
+    const enabled = doc.exists ? (doc.data().playerAdsEnabled !== false) : true;
+    const toggle = document.getElementById('player-ads-toggle');
+    const label  = document.getElementById('player-ads-label');
+    if (toggle) toggle.checked = enabled;
+    if (label)  label.textContent = enabled ? 'Увімкнено' : 'Вимкнено';
+  }).catch(err => console.error('Помилка завантаження налаштування плеєра:', err));
+}
+
+function togglePlayerAds(val) {
+  const label = document.getElementById('player-ads-label');
+  if (label) label.textContent = val ? 'Увімкнено' : 'Вимкнено';
+  if (!db) { showToast('Firebase недоступний', true); return; }
+
+  db.collection('settings').doc('config').set({ 
+    playerAdsEnabled: val, 
+    updatedAt: new Date().toISOString() 
+  }, { merge: true })
+    .then(() => showToast(val ? 'Рекламу у плеєрі увімкнено' : 'Рекламу у плеєрі вимкнено'))
+    .catch(() => showToast('Помилка збереження', true));
+}
   // ========================
   // TOAST
   // ========================
@@ -1647,12 +1683,13 @@
   // ========================
   // INIT
   // ========================
-  function initAdmin() {
-    startAdsListener();
-    startKeysListener();
-    loadAntiAdblockSetting();
-    loadPagesData();
-  }
+ function initAdmin() {
+  startAdsListener();
+  startKeysListener();
+  loadAntiAdblockSetting();
+  loadPlayerAdsSetting(); // <-- ДОДАНО ОЦЕЙ РЯДОК
+  loadPagesData();
+}
 
   // Сесія керується через Firebase onAuthStateChanged (вище)
 
