@@ -4198,39 +4198,57 @@ setTimeout(_cleanTmdbCache, 3000);
 
 async function tmdb(ep, params = {}) {
   const keys = getKeys();
-  if (!keys.length) return null;
+  if (!keys.length) {
+    console.error(`❌ КРИТИЧНА ПОМИЛКА: API ключи не знайдені. Перевірте Firebase конфігурацію.`);
+    return null;
+  }
 
   const noCache = ep.includes('/search/');
   if (!noCache) {
       const ck = _tcKey(ep, params);
       const cached = _tcGet(ck);
-      if (cached) return cached;
+      if (cached) {
+        console.log(`✅ Кеш: ${ep}`);
+        return cached;
+      }
   }
 
+  let lastErr = null;
   for (let i = 0; i < keys.length; i++) {
       const key = keys[(keyIdx + i) % keys.length];
       const url = new URL(TMDB_BASE + ep);
-      
+
       url.searchParams.set('api_key', key);
       url.searchParams.set('language', getSiteLangParam());
-      
+
       try {
           if(typeof isKidsMode !== 'undefined' && isKidsMode && ep.includes('/discover/')) {
               params.without_genres = '27,53,80';
           }
       } catch(e){}
-      
+
       Object.entries(params).forEach(([k, v]) => { url.searchParams.set(k, String(v)); });
 
       try {
+          console.log(`📡 Запит до TMDB: ${ep} (ключ #${i})`);
           const r = await fetch(url);
-          if (r.status === 429) { keyIdx = (keyIdx + 1) % keys.length; continue; }
-          if (!r.ok) throw new Error(r.status);
+          if (r.status === 429) {
+            console.warn(`⚠️ Rate limit (429). Переходимо на наступний ключ...`);
+            keyIdx = (keyIdx + 1) % keys.length;
+            continue;
+          }
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
           const data = await r.json();
           if (!noCache) _tcSet(_tcKey(ep, params), data);
+          console.log(`✅ TMDB успішно завантажена: ${ep}`);
           return data;
-      } catch (err) { continue; }
+      } catch (err) {
+        lastErr = err;
+        console.warn(`⚠️ Помилка TMDB запиту #${i}: ${err.message}`);
+        continue;
+      }
   }
+  console.error(`❌ КРИТИЧНА ПОМИЛКА: Усі TMDB запити не вдалися. Останній помилка: ${lastErr?.message}`);
   return null;
 }
 
@@ -4298,13 +4316,22 @@ let vidsrcDomain = 'vidsrc.to';
 const vidsrcMirrors = ['vidsrc.to', 'vidsrc.win', 'vidsrc.me', 'vidsrc.pro', 'vidsrc.net'];
 
 async function findWorkingVidsrc() {
+    console.log(`🔍 Перевірка доступних дзеркал Vidsrc...`);
     for (let domain of vidsrcMirrors) {
         try {
-            await fetch(`https://${domain}/`, { mode: 'no-cors', cache: 'no-store' });
-            vidsrcDomain = domain; 
-            break; 
-        } catch (e) {}
+            console.log(`  📡 Перевіряю: ${domain}`);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 секунди таймаут
+            await fetch(`https://${domain}/`, { mode: 'no-cors', cache: 'no-store', signal: controller.signal });
+            clearTimeout(timeoutId);
+            vidsrcDomain = domain;
+            console.log(`✅ Знайдено робоче дзеркало: ${domain}`);
+            break;
+        } catch (e) {
+            console.warn(`  ❌ ${domain} недоступна: ${e.message}`);
+        }
     }
+    console.log(`✅ Використовуємо Vidsrc домен: ${vidsrcDomain}`);
 }
 findWorkingVidsrc();
 
@@ -4610,39 +4637,61 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
     try {
         const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
         let data = null;
-        try { data = await tmdb(ep, { append_to_response: 'videos,seasons,credits,external_ids' }); } catch (apiError) {}
-        
+        try {
+            console.log(`🎬 Завантаження інформації про фільм: ${ep}`);
+            data = await tmdb(ep, { append_to_response: 'videos,seasons,credits,external_ids' });
+        } catch (apiError) {
+            console.error(`❌ Критична помилка при завантаженні фільму:`, apiError);
+        }
+
         if (!data) {
-            content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Помилка завантаження фільму. Оновіть сторінку.</div>';
+            console.error(`❌ ПОМИЛКА: Дані про фільм не отримані. TMDB API недоступна або ключі неправильні.`);
+            content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);"><div style="margin-bottom:10px;">❌ Помилка завантаження фільму</div><div style="font-size:12px;color:var(--dim);">TMDB API недоступна. Перевірте:<br>1. Інтернет-з\'єднання<br>2. Конфігурацію Firebase<br>3. API ключи в адмін-панелі</div><br><button onclick="location.reload()" style="padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;">Оновити сторінку</button></div>';
             return;
         }
 
         // --- ПЕРЕВІРКА КАСТОМНИХ ПЛЕЄРІВ У FIREBASE ---
         if (typeof db !== 'undefined' && db) {
             try {
+                console.log(`📡 Завантаження кастомних плеєрів для фільму ID: ${id}`);
                 const streamDoc = await db.collection('custom_streams').doc(String(id)).get();
                 if (streamDoc.exists) {
                     const sData = streamDoc.data();
-                    if (sData.youtubeId) {
+                    console.log(`✅ Знайдено кастомні плеєри для фільму:`, sData);
+
+                    if (sData.youtubeId && typeof sData.youtubeId === 'string') {
                         currentCustomPlayers.push({
                             id: 'youtube',
                             name: sData.youtubeTitle || 'YouTube',
                             badge: 'FREE',
                             youtubeId: sData.youtubeId
                         });
+                        console.log(`✅ Додан YouTube плеєр`);
                     }
                     if (sData.customPlayers && Array.isArray(sData.customPlayers)) {
                         sData.customPlayers.forEach((cp, idx) => {
-                            currentCustomPlayers.push({
-                                id: `custom_${idx}`,
-                                name: cp.name || `Сервер ${idx + 4}`,
-                                badge: cp.badge || 'HD',
-                                url: cp.url
-                            });
+                            if (cp && cp.url && typeof cp.url === 'string') {
+                                currentCustomPlayers.push({
+                                    id: `custom_${idx}`,
+                                    name: cp.name || `Сервер ${idx + 4}`,
+                                    badge: cp.badge || 'HD',
+                                    url: cp.url
+                                });
+                                console.log(`✅ Додан кастомний плеєр: ${cp.name}`);
+                            } else {
+                                console.warn(`⚠️ Невалідний плеєр на індексі ${idx}:`, cp);
+                            }
                         });
                     }
+                } else {
+                    console.log(`ℹ️ Немає кастомних плеєрів у базі даних для фільму ID: ${id}`);
                 }
-            } catch (err) { console.warn('Custom streams fetch error:', err); }
+            } catch (err) {
+                console.error(`❌ Помилка завантаження кастомних плеєрів з Firebase:`, err);
+                console.log(`⚠️ Продовжуємо з базовими плеєрами`);
+            }
+        } else {
+            console.warn(`⚠️ Firebase не ініціалізована. Кастомні плеєри недоступні.`);
         }
         // -----------------------------------------------
 
@@ -4922,23 +4971,54 @@ function _doLoadPlayer() {
         }
 
         // --- IFRAME (Collaps, VidSrc тощо) ---
-        const src = p.url ? (typeof p.url === 'function' ? p.url(currentModalId, currentImdbId, currentSeason, currentEpisode) : p.url) : '';
+        let src = '';
+        try {
+            if (p.url) {
+                src = typeof p.url === 'function' ? p.url(currentModalId, currentImdbId, currentSeason, currentEpisode) : p.url;
+                if (!src || typeof src !== 'string' || !src.startsWith('http')) {
+                    console.error(`❌ ПОМИЛКА: Плеєр "${p.name}" повернув невалідний URL:`, src);
+                    throw new Error('Invalid player URL');
+                }
+            }
+        } catch(urlErr) {
+            console.error(`❌ Помилка отримання URL для плеєра "${p.name}":`, urlErr);
+            // Спробуємо наступний плеєр
+            const nextIdx = (currentPlayer + 1) % allPlayers.length;
+            console.log(`⚠️ Переміщаємось на плеєр #${nextIdx}`);
+            switchPlayer(nextIdx);
+            return;
+        }
+
+        if (!src) {
+            console.error(`❌ ПОМИЛКА: URL плеєра "${p.name}" є порожнім`);
+            const nextIdx = (currentPlayer + 1) % allPlayers.length;
+            switchPlayer(nextIdx);
+            return;
+        }
 
         let iframe = document.createElement('iframe');
         iframe.id = 'player-iframe';
         iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
         iframe.setAttribute('allowfullscreen', 'true');
         iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;';
-        
+
         wrap.appendChild(iframe);
         iframe.src = src;
-        
-        iframe.onload = () => { 
-            clearTimeout(fallbackTimer); 
-            loading.style.display = 'none'; 
+
+        iframe.onload = () => {
+            console.log(`✅ Плеєр "${p.name}" успішно завантажений`);
+            clearTimeout(fallbackTimer);
+            loading.style.display = 'none';
         };
 
-    } catch(e) {}
+        iframe.onerror = () => {
+            console.error(`❌ Помилка завантаження плеєра "${p.name}"`);
+            showToast(`Плеєр не відповідає. Переключаємо...`);
+            const nextIdx = (currentPlayer + 1) % allPlayers.length;
+            switchPlayer(nextIdx);
+        };
+
+    } catch(e) { console.error('❌ Критична помилка в _doLoadPlayer:', e); }
 }
 function switchPlayer(idx) {
     try {
