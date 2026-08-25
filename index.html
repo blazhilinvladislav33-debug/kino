@@ -5095,12 +5095,10 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
         }
 
         // Оновити статус того що користувач дивиться
-        try {
-            await updateUserWatchingStatus(id, data);
-        } catch (e) {
-            console.warn('⚠️ Помилка оновлення статусу перегляду:', e);
-        }
-
+        // Оновити статус того що користувач дивиться
+if (typeof updateUserWatchingStatus === 'function') {
+    try { await updateUserWatchingStatus(id, data); } catch (e) {}
+}
         // --- ПЕРЕВІРКА КАСТОМНИХ ПЛЕЄРІВ У FIREBASE ---
         if (typeof db !== 'undefined' && db) {
             try {
@@ -5316,7 +5314,9 @@ async function openMovie(id, type = 'movie', autoPlay = false, pushToHistory = t
         _doLoadPlayer();
 
         // Track view when movie is opened
-        trackMovieView(id, title || data.name || 'Unknown', type);
+if (typeof trackMovieView === 'function') {
+    try { trackMovieView(id, title || data.name || 'Unknown', type); } catch(e) {}
+}
 
         try { loadComments(id, type); } catch(e) {}
 
@@ -6268,10 +6268,6 @@ async function savePlayerProgress() {
 let auth = null, currentUser = null, currentUserRole = 'user', currentUserSubscribed = false;
 try {
   auth = firebase.auth();
-  // Анонімна аутентифікація для базового доступу (пошук без логіну)
-  auth.signInAnonymously().catch(err => {
-    console.warn('⚠️ Анонімна аутентифікація:', err.message);
-  });
 } catch(e) {}
 
 if (auth) {
