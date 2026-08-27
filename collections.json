@@ -1,5 +1,43 @@
 [
   {
+    "id": 1787855230360,
+    "date": "2026-08-27",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1516698,
+        "title": "Останній світанок",
+        "poster": "https://image.tmdb.org/t/p/w500/ugoSitb8EtDGVT52WaBoRLpAQbV.jpg",
+        "slug": "ostanngy-svgtanok"
+      },
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
+        "slug": "zakolot"
+      },
+      {
+        "id": 1212763,
+        "title": "Зловісні мерці у вогні",
+        "poster": "https://image.tmdb.org/t/p/w500/zziJ8lJgbCFMFJh9GxOr9B7x4Jt.jpg",
+        "slug": "zlovgsng-mertsg-u-vohng"
+      },
+      {
+        "id": 1101383,
+        "title": "Кінець Оук-Стріт",
+        "poster": "https://image.tmdb.org/t/p/w500/aFGEgXyzPl0SsuOp8999SK0ejiG.jpg",
+        "slug": "kgnetsyu-ouk-strgt"
+      },
+      {
+        "id": 1291595,
+        "title": "Астрал: За межами Потойбіччя",
+        "poster": "https://image.tmdb.org/t/p/w500/hMKteQXfFsxsjhWuEabiTqo41JS.jpg",
+        "slug": "astral-za-mezhamy-potoybgchchi"
+      }
+    ]
+  },
+  {
     "id": 1787646430447,
     "date": "2026-08-25",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
