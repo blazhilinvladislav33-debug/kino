@@ -1,5 +1,43 @@
 [
   {
+    "id": 1788009968385,
+    "date": "2026-08-29",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1339713,
+        "title": "Обсесія",
+        "poster": "https://image.tmdb.org/t/p/w500/nnvVkQFZgVCsiOeufwjLXzgf5N8.jpg",
+        "slug": "obsesgi"
+      },
+      {
+        "id": 1560520,
+        "title": "Бетмен: Падіння лицаря. Частина 1",
+        "poster": "https://image.tmdb.org/t/p/w500/360qdtu2hLnqMu8SVHMywn420w1.jpg",
+        "slug": "betmen-padgnni-lytsari-chastyna-1"
+      },
+      {
+        "id": 969681,
+        "title": "Людина-павук: Абсолютно новий день",
+        "poster": "https://image.tmdb.org/t/p/w500/mVuRjX8WWyQ6NB2459vGY3cxybo.jpg",
+        "slug": "lyedyna-pavuk-absolyetno-novyy-denyu"
+      },
+      {
+        "id": 860508,
+        "title": "Шепотун",
+        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
+        "slug": "shepotun"
+      },
+      {
+        "id": 1232569,
+        "title": "Pinocchio: Unstrung",
+        "poster": "https://image.tmdb.org/t/p/w500/eUJXk3bTvLBi5Zcb0BCedZU7lVL.jpg",
+        "slug": "pinocchio-unstrung"
+      }
+    ]
+  },
+  {
     "id": 1787855230360,
     "date": "2026-08-27",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
