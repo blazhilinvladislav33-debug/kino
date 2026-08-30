@@ -4417,6 +4417,42 @@ function _cleanTmdbCache() {
 }
 setTimeout(_cleanTmdbCache, 3000);
 
+// Універсальний HTTP-запит: fetch → XHR fallback (для старих TV-браузерів)
+function fetchJSON(url, timeoutMs) {
+  return new Promise(function(resolve, reject) {
+    var done = false;
+    function ok(data) { if(!done){done=true; resolve(data);} }
+    function fail(e) { if(!done){done=true; reject(e);} }
+
+    if (typeof fetch === 'function') {
+      var ctrl, timer;
+      try { ctrl = new AbortController(); timer = setTimeout(function(){ ctrl.abort(); }, timeoutMs||8000); } catch(e){}
+      fetch(url, ctrl ? {signal: ctrl.signal} : {})
+        .then(function(r){
+          if(timer) clearTimeout(timer);
+          if(r.status===429) return fail(new Error('429'));
+          if(!r.ok) return fail(new Error('HTTP '+r.status));
+          return r.json();
+        }).then(ok).catch(fail);
+    } else {
+      // XMLHttpRequest — працює на будь-якому TV-браузері
+      var xhr = new XMLHttpRequest();
+      var timer = setTimeout(function(){ xhr.abort(); fail(new Error('Timeout')); }, timeoutMs||8000);
+      xhr.open('GET', url, true);
+      xhr.onload = function(){
+        clearTimeout(timer);
+        if(xhr.status===429){ fail(new Error('429')); return; }
+        if(xhr.status>=200 && xhr.status<300){
+          try{ ok(JSON.parse(xhr.responseText)); }catch(e){ fail(e); }
+        } else { fail(new Error('HTTP '+xhr.status)); }
+      };
+      xhr.onerror = function(){ clearTimeout(timer); fail(new Error('Network')); };
+      xhr.onabort = function(){ fail(new Error('Abort')); };
+      xhr.send();
+    }
+  });
+}
+
 async function tmdb(ep, params = {}) {
   const keys = getKeys();
   if (!keys.length) {
@@ -4450,33 +4486,19 @@ async function tmdb(ep, params = {}) {
 
       try {
           console.log(`📡 Запит до TMDB: ${ep} (ключ #${i})`);
-          let fetchOpts = {};
-          let abortTimer = null;
-          try {
-              const ctrl = new AbortController();
-              abortTimer = setTimeout(() => ctrl.abort(), 8000);
-              fetchOpts = { signal: ctrl.signal };
-          } catch(e) {}
-          const r = await fetch(url, fetchOpts);
-          if (abortTimer) clearTimeout(abortTimer);
-          if (r.status === 429) {
-            console.warn(`⚠️ Rate limit (429). Переходимо на наступний ключ...`);
-            keyIdx = (keyIdx + 1) % keys.length;
-            continue;
-          }
-          if (r.status === 404) {
-            console.warn(`⚠️ Ресурс не знайдено (404): ${ep}`);
-            return null;
-          }
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          const data = await r.json();
+          const data = await fetchJSON(url, 8000);
           if (!noCache) _tcSet(_tcKey(ep, params), data);
-          console.log(`✅ TMDB успішно завантажена: ${ep}`);
+          console.log(`✅ TMDB успішно: ${ep}`);
           return data;
       } catch (err) {
-        lastErr = err || new Error('Unknown error');
-        console.warn(`⚠️ Помилка TMDB запиту #${i}: ${(lastErr?.message || 'Unknown')}`);
-        continue;
+          lastErr = err || new Error('Unknown');
+          if (err && err.message === '429') {
+              console.warn(`⚠️ Rate limit. Наступний ключ...`);
+              keyIdx = (keyIdx + 1) % keys.length;
+          } else {
+              console.warn(`⚠️ Помилка TMDB #${i}: ${lastErr.message || 'Unknown'}`);
+          }
+          continue;
       }
   }
   console.error(`❌ КРИТИЧНА ПОМИЛКА: Усі TMDB запити не вдалися. Останній помилка: ${lastErr?.message || 'Unknown'}`);
