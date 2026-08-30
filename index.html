@@ -14,7 +14,13 @@
   <meta name="keywords" content="дивитись фільми онлайн, серіали онлайн, українська озвучка, HD якість, безкоштовно, кіно онлайн, фільми 2026">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="author" content="КіноБаза">
-  <link id="canonical-link" rel="canonical" href="https://kinobaza.site/">
+  <script>
+    (function(){
+      var p=new URLSearchParams(window.location.search),id=p.get('id'),t=p.get('type');
+      var href=id?'https://kinobaza.site/?id='+encodeURIComponent(id)+'&type='+(t||'movie'):'https://kinobaza.site/';
+      document.write('<link id="canonical-link" rel="canonical" href="'+href+'">');
+    })();
+  </script>
 
   <!-- ===== Open Graph (Facebook / Telegram) ===== -->
   <meta property="og:type" content="website">
@@ -271,7 +277,7 @@
       font-size: 13px;
       letter-spacing: 0.5px;
     }
-    .lang-lbl-min .f { font-size: 16px; line-height: 1; }
+
 
     .lang-dd-wrap svg {
       width: 12px;
@@ -4151,7 +4157,7 @@ function renderLanguageMenu() {
 
     // Оновити поточну мову в лейблі
     if (LANG_INFO[siteLang]) {
-      lbl.innerHTML = `<span class="f">${LANG_INFO[siteLang].flag}</span><span class="t">${LANG_INFO[siteLang].text}</span>`;
+      lbl.innerHTML = `<span class="t">${LANG_INFO[siteLang].text}</span>`;
     }
   } catch(e) {
     console.warn('⚠️ Помилка при рендеруванні меню мов:', e);
@@ -6851,7 +6857,7 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
         const lbl = document.getElementById('curr-lang-lbl');
         if (lbl && LANG_INFO[siteLang]) {
-            lbl.innerHTML = `<span class="f">${LANG_INFO[siteLang].flag}</span><span class="t">${LANG_INFO[siteLang].text}</span>`;
+            lbl.innerHTML = `<span class="t">${LANG_INFO[siteLang].text}</span>`;
         }
         updateUIStrings(siteLang);
         initFirestore();
