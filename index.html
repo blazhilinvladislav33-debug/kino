@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="color-scheme" content="dark">
+  <style>html,body{background:#0d0d0d!important;color:#fff!important;}</style>
 
   <!-- ===== SEO ===== -->
   <title>КіноБаза — Дивитись фільми онлайн безкоштовно</title>
@@ -111,6 +113,7 @@
   <!-- СТИЛІ БЕЗ СКОРОЧЕНЬ -->
   <style>
     :root {
+      color-scheme: dark;
       --bg: #0d0d0d;
       --bg2: #141414;
       --bg3: #1a1a1a;
@@ -135,8 +138,10 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: #0d0d0d;
+      background: var(--bg, #0d0d0d);
+      color: #fff;
+      color: var(--text, #fff);
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -3253,7 +3258,7 @@
     }
   </style>
 </head>
-<body>
+<body style="background:#0d0d0d;color:#fff;">
 
 <!-- COOKIE BANNER -->
 <div id="cookie-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(20,20,20,0.95); padding:15px 20px; z-index:99999; border-top:1px solid #333; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
@@ -4447,7 +4452,15 @@ async function tmdb(ep, params = {}) {
 
       try {
           console.log(`📡 Запит до TMDB: ${ep} (ключ #${i})`);
-          const r = await fetch(url);
+          let fetchOpts = {};
+          let abortTimer = null;
+          try {
+              const ctrl = new AbortController();
+              abortTimer = setTimeout(() => ctrl.abort(), 8000);
+              fetchOpts = { signal: ctrl.signal };
+          } catch(e) {}
+          const r = await fetch(url, fetchOpts);
+          if (abortTimer) clearTimeout(abortTimer);
           if (r.status === 429) {
             console.warn(`⚠️ Rate limit (429). Переходимо на наступний ключ...`);
             keyIdx = (keyIdx + 1) % keys.length;
@@ -6861,15 +6874,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         updateUIStrings(siteLang);
         initFirestore();
-        setTimeout(bootstrapApp, 1000);
+        setTimeout(bootstrapApp, 2000);
 
-        // 🚨 Гарантія запуску: якщо initSite не було викликано за 3 сек - примусово запустимо
+        // 🚨 Гарантія запуску: якщо initSite не було викликано за 5 сек - примусово запустимо
         setTimeout(() => {
             if (!isAppReady) {
                 console.warn('⏱️ Timeout: примусово запускаємо сайт');
                 bootstrapApp();
             }
-        }, 3000);
+        }, 5000);
     } catch(e) {}
 });
 
