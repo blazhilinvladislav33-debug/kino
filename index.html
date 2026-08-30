@@ -266,9 +266,12 @@
     .lang-lbl-min {
       display: flex;
       align-items: center;
-      font-weight: 800;
+      gap: 5px;
+      font-weight: 700;
+      font-size: 13px;
       letter-spacing: 0.5px;
     }
+    .lang-lbl-min .f { font-size: 16px; line-height: 1; }
 
     .lang-dd-wrap svg {
       width: 12px;
@@ -3223,6 +3226,25 @@
         font-size: 13px;
       }
     }
+
+    /* ===== TV / Smart TV (великий екран, управління пультом) ===== */
+    @media(min-width:1280px) and (pointer:coarse), (min-width:1920px) {
+      body { font-size: 18px; }
+      .hdr { height: 80px; padding: 0 48px; }
+      .logo { font-size: 30px; }
+      nav a { font-size: 16px; padding: 8px 18px; }
+      .srch input { font-size: 16px; height: 46px; }
+      .movies-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+      .modal-box { max-width: 1400px; }
+      .m-title { font-size: 34px; }
+      .m-desc { font-size: 17px; }
+      .player-tab { font-size: 16px; padding: 14px 22px; }
+      .m-btn-fav, .m-btn-wl, .btn-trailer { padding: 14px 26px; font-size: 17px; border-radius: 10px; }
+      .ep-num { width: 52px; height: 52px; font-size: 16px; }
+      /* Видима рамка фокусу для пульта */
+      *:focus { outline: 3px solid var(--accent) !important; outline-offset: 3px !important; }
+      button:focus, a:focus, [onclick]:focus, select:focus { box-shadow: 0 0 0 4px rgba(229,9,20,.4) !important; }
+    }
   </style>
 </head>
 <body>
@@ -3257,11 +3279,6 @@
       <a href="/category/animation" data-i18n="nav_cartoons" onclick="event.preventDefault();showCatalog({type:'movie',genre:'16'});">Мультфільми</a>
       <a href="/category/documentary" data-i18n="nav_docs" onclick="event.preventDefault();showCatalog({type:'movie',genre:'99'});">Документальні</a>
       <a href="/category/top" data-i18n="nav_top" onclick="event.preventDefault();showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});">Топ рейтинг</a>
-      <a href="/category/classic" data-i18n="nav_classic" onclick="event.preventDefault();showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});">Класика</a>
-      <a href="/trending" onclick="event.preventDefault();showTrending();">Трендинг</a>
-      <a href="#" onclick="event.preventDefault();playRandomMovie();" title="Случайный фильм">Случайный</a>
-      <a href="#" onclick="event.preventDefault();openActorSearch();" title="Поиск по актерам">Актеры</a>
-      <a href="#" onclick="event.preventDefault();openAdvancedSearch();" title="Расширенный поиск">Расширенный поиск</a>
       <a href="#" id="admin-nav-stats" style="display:none;" onclick="event.preventDefault();openStatistics();" title="Статистика просмотров">Статистика</a>
     </nav>
 
@@ -3270,21 +3287,20 @@
         <svg class="srch-icon" viewBox="0 0 24 24">
           <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
         </svg>
-        <input type="text" id="si" data-i18n-ph="search_ph" placeholder="Пошук фільмів..." autocomplete="off" spellcheck="false" oninput="handleSrch(event)" onkeydown="acKeydown(event)" onfocus="acFocus()" onblur="setTimeout(hideAutocomplete,200)">
-        <input type="number" id="srch-year" placeholder="Рік" min="1900" max="2099" style="width:70px;padding:8px;background:#1a1a1a;border:none;border-radius:4px;color:#fff;font-size:14px;margin-left:8px;" oninput="handleSrch({target: document.getElementById('si')})">
+        <input type="text" id="si" data-i18n-ph="search_ph" placeholder="Пошук фільмів, серіалів..." autocomplete="off" spellcheck="false" oninput="handleSrch(event)" onkeydown="acKeydown(event)" onfocus="acFocus()" onblur="setTimeout(hideAutocomplete,200)">
       </div>
       <div id="ac-drop"></div>
     </div>
 
     <div class="hdr-right">
       <div class="lang-dd-wrap" id="lang-dd-wrap" onclick="toggleLangDropdown(event)">
-        <div class="lang-lbl-min" id="curr-lang-lbl"><span class="f">🇺🇦</span><span class="t">UA</span></div>
-        <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--muted)" style="flex-shrink:0;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <div class="lang-lbl-min" id="curr-lang-lbl"><span class="t">UA</span></div>
+        <svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:var(--muted);"><path d="M7 10l5 5 5-5z"/></svg>
         <div class="lang-dd-menu" id="lang-dd-menu">
-          <!-- Мови генеруються динамічно - резервна версія -->
-          <div class="lang-opt act" onclick="setSiteLang('uk', event)"><span class="f">🇺🇦</span><span class="t">UA</span></div>
-          <div class="lang-opt" onclick="setSiteLang('en', event)"><span class="f">🇬🇧</span><span class="t">EN</span></div>
-          <div class="lang-opt" onclick="setSiteLang('ru', event)"><span class="f">🇷🇺</span><span class="t">RU</span></div>
+          <div class="lang-opt act" onclick="setSiteLang('uk', event)"><span class="t">UA</span></div>
+          <div class="lang-opt" onclick="setSiteLang('en', event)"><span class="t">EN</span></div>
+          <div class="lang-opt" onclick="setSiteLang('ru', event)"><span class="t">RU</span></div>
         </div>
       </div>
 
@@ -3523,33 +3539,6 @@
   <!-- HOME CONTENT -->
   <div id="home-content">
   
-    <!-- ПОПУЛЯРНІ ДОБІРКИ -->
-<div class="sec-hdr" style="margin-top:0;"><div class="sec-title">Популярні добірки</div></div>
-<div class="seo-links-row" id="seo-links-container"></div>
-
-    <!-- ТОП ПО ГОДАМ -->
-    <div class="sec-hdr">
-      <div class="sec-title">Кращі фільми по років</div>
-    </div>
-    <div class="g-bar" style="margin-bottom:24px;overflow-x:auto;">
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2026);">2026</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2025);">2025</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2024);">2024</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2023);">2023</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2022);">2022</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2021);">2021</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2020);">2020</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2019);">2019</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2015);">2010-2015</a>
-      <a href="#" class="g-tag" onclick="event.preventDefault();showMoviesByYear(2000);">2000-2010</a>
-    </div>
-
-    <!-- СБОРКИ ПО НАСТРОЕНИЮ -->
-    <div class="sec-hdr">
-      <div class="sec-title">Дивись по настроям</div>
-      <a href="#" class="sec-more" onclick="openMoodSelector();return false;">Вибрати →</a>
-    </div>
-
     <!-- CONTINUE WATCHING -->
     <div id="continue-section">
       <div class="sec-hdr">
@@ -3749,11 +3738,7 @@
     <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'16'});closeMobileMenu()"><span class="mob-nav-icon">🎨</span><span data-i18n="nav_cartoons">Мультфільми</span></button>
     <button class="mob-nav-link" onclick="showCatalog({type:'movie',genre:'99'});closeMobileMenu()"><span class="mob-nav-icon">📰</span><span data-i18n="nav_docs">Документальні</span></button>
     <button class="mob-nav-link" onclick="showCatalog({type:'movie',sort:'vote_average.desc',rating:'7.5'});closeMobileMenu()"><span class="mob-nav-icon">⭐</span><span data-i18n="nav_top">Топ рейтинг</span></button>
-    <button class="mob-nav-link" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});closeMobileMenu()"><span class="mob-nav-icon">🎞</span><span data-i18n="nav_classic">Класика</span></button>
-    <button class="mob-nav-link" onclick="showTrending();closeMobileMenu()"><span class="mob-nav-icon">Тренд</span><span>Трендинг</span></button>
-    <button class="mob-nav-link" onclick="playRandomMovie();closeMobileMenu()"><span class="mob-nav-icon">Шанс</span><span>Случайный</span></button>
-    <button class="mob-nav-link" onclick="openActorSearch();closeMobileMenu()"><span class="mob-nav-icon">Актер</span><span>По актерам</span></button>
-    <button class="mob-nav-link" onclick="openAdvancedSearch();closeMobileMenu()"><span class="mob-nav-icon">Поиск</span><span>Расширенный поиск</span></button>
+    <button class="mob-nav-link" onclick="showCatalog({type:'movie',yearTo:'2000',sort:'vote_average.desc'});closeMobileMenu()"><span class="mob-nav-icon">🎞</span><span>Класика</span></button>
     <button class="mob-nav-link" id="admin-mob-stats" style="display:none;" onclick="openStatistics();closeMobileMenu()"><span class="mob-nav-icon">Стат</span><span>Статистика</span></button>
     <button class="mob-nav-link" onclick="openNotificationSettings();closeMobileMenu()"><span class="mob-nav-icon">Уведом</span><span>Параметры</span></button>
   </div>
@@ -4125,7 +4110,7 @@ function setSiteLang(lang, e) {
 
   const lbl = document.getElementById('curr-lang-lbl');
   if(lbl && LANG_INFO[lang]) {
-    lbl.innerHTML = `<span class="f">${LANG_INFO[lang].flag}</span><span class="t">${LANG_INFO[lang].text}</span>`;
+    lbl.innerHTML = `<span class="t">${LANG_INFO[lang].text}</span>`;
   }
 
   document.querySelectorAll('.lang-opt').forEach(opt => {
@@ -4161,7 +4146,7 @@ function renderLanguageMenu() {
       const isActive = siteLang === lang;
       const langInfo = LANG_INFO[lang];
       if (!langInfo) return '';
-      return `<div class="lang-opt ${isActive ? 'act' : ''}" onclick="setSiteLang('${lang}', event)"><span class="f">${langInfo.flag}</span><span class="t">${langInfo.text}</span></div>`;
+      return `<div class="lang-opt ${isActive ? 'act' : ''}" onclick="setSiteLang('${lang}', event)"><span class="t">${langInfo.text}</span></div>`;
     }).join('');
 
     // Оновити поточну мову в лейблі
@@ -4214,7 +4199,7 @@ let adsCache  = [];
 let keysCache = [];
 let pagesCache = {};
 let dbReady   = false;
-let playerAdsEnabled = true; // Змінна стану реклами з адмінки
+let playerAdsEnabled = false; // Змінна стану реклами з адмінки
 let disabledPlayers = []; // Вимкнені плеєри з адмінки (напр. ['collaps', 'vidsrc'])
 
 // РЕНДЕР БАНЕРІВ ТА ПОПАПІВ
@@ -4351,10 +4336,12 @@ const TMDB_BASE = 'https://api.themoviedb.org/3';
 const IMG = 'https://image.tmdb.org/t/p/';
 let keyIdx = 0;
 const TMDB_FALLBACK_KEY = '04c35731a5ee918f014970082a0088b1';
+const TMDB_FALLBACK_KEY2 = 'aed3678056e65fce3438f5b4cee6af9e';
 
 function getKeys() {
   const k = [...keysCache];
   if (TMDB_FALLBACK_KEY && !k.includes(TMDB_FALLBACK_KEY)) k.push(TMDB_FALLBACK_KEY);
+  if (TMDB_FALLBACK_KEY2 && !k.includes(TMDB_FALLBACK_KEY2)) k.push(TMDB_FALLBACK_KEY2);
   return k;
 }
 
@@ -4563,17 +4550,23 @@ async function findWorkingVidsrc() {
 findWorkingVidsrc();
 
 const MOVIE_PLAYERS = [
-    { id: 'rendex',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: true },
-    { id: 'collaps', name: 'Плеєр 2 (Collaps)', badge: '4K', safe: true, url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
-    { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` },
-    { id: 'multisearch', name: 'Плеєр 4 (Мультипошук)', badge: 'AUTO', safe: true, isCustom: true }
+    { id: 'collaps', name: 'Плеєр 1', badge: '4K', safe: true,  url: (id, imdb) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}` : `https://api.ortified.ws/embed/tmdb/${id}` },
+    { id: 'vidsrc',  name: 'Плеєр 2', badge: 'HD', safe: false, url: (id, imdb) => `https://${vidsrcDomain}/embed/movie/${id}?autoplay=1` },
+    { id: 'vidsrc2', name: 'Плеєр 3', badge: 'HD', safe: false, url: (id, imdb) => `https://vidsrc.cc/v2/embed/movie/${id}` },
+    { id: 'embed2',  name: 'Плеєр 4', badge: 'HD', safe: false, url: (id, imdb) => `https://www.2embed.cc/embed/${id}` },
+    { id: 'vidlink', name: 'Плеєр 5', badge: 'HD', safe: false, url: (id, imdb) => `https://vidlink.pro/movie/${id}?autoplay=true` },
+    { id: 'rendex',  name: 'Rendex',  badge: 'HD', safe: true },
+    { id: 'multisearch', name: 'Пошук', badge: 'AUTO', safe: true, isCustom: true }
 ];
 
 const TV_PLAYERS = [
-    { id: 'rendex',  name: 'Плеєр 1 (Головний)', badge: 'HD', safe: true },
-    { id: 'collaps', name: 'Плеєр 2 (Collaps)', badge: '4K', safe: true, url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
-    { id: 'vidsrc',  name: 'Плеєр 3 (Vidsrc)',  badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` },
-    { id: 'multisearch', name: 'Плеєр 4 (Мультипошук)', badge: 'AUTO', safe: true, isCustom: true }
+    { id: 'collaps', name: 'Плеєр 1', badge: '4K', safe: true,  url: (id, imdb, s, e) => imdb ? `https://api.ortified.ws/embed/imdb/${imdb}?season=${s}&episode=${e}` : `https://api.ortified.ws/embed/tmdb/${id}?season=${s}&episode=${e}` },
+    { id: 'vidsrc',  name: 'Плеєр 2', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://${vidsrcDomain}/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { id: 'vidsrc2', name: 'Плеєр 3', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://vidsrc.cc/v2/embed/tv/${id}?season=${s}&episode=${e}` },
+    { id: 'embed2',  name: 'Плеєр 4', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
+    { id: 'vidlink', name: 'Плеєр 5', badge: 'HD', safe: false, url: (id, imdb, s, e) => `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
+    { id: 'rendex',  name: 'Rendex',  badge: 'HD', safe: true },
+    { id: 'multisearch', name: 'Пошук', badge: 'AUTO', safe: true, isCustom: true }
 ];
 
 // =====================================================================
@@ -5275,11 +5268,6 @@ if (typeof updateUserWatchingStatus === 'function') {
                 <button class="${isWL ? 'm-btn-wl saved' : 'm-btn-wl'}" id="modal-wl-btn" onclick="toggleWatchLaterModal(${id},'${type}')">${isWL ? 'Збережено' : wlText}</button>
                 ${isWtch ? `<button class="m-btn-wl saved" style="pointer-events:none;">Переглянуто</button>` : ''}
                 ${trailer ? `<button class="btn-trailer" onclick="openTrailer('${trailer.key}')">Трейлер</button>` : ''}
-                <button class="btn-trailer" onclick="downloadMovieOffline()" title="Завантажити для оффлайну">Завантажити</button>
-                <button class="btn-trailer" onclick="openSleepTimer()" title="Таймер сна">Таймер</button>
-                <button class="btn-trailer" onclick="showRatingComparison(${id},'${type}')" title="Сравнить рейтинги">Рейтинг</button>
-                <button class="btn-trailer" onclick="openPlaylistAddModal(${id},'${escapeHtml(title || data.name || '').replace(/'/g, '')}')" title="Додати до плейліста">До плейліста</button>
-                <button class="btn-trailer" onclick="openReviewModal(${id})" title="Написати рецензію">Рецензія</button>
             </div>
 
             ${extraItemsHtml}
@@ -5379,13 +5367,13 @@ function _doLoadPlayer() {
         if (isNaN(currentPlayer) || currentPlayer >= allPlayers.length || currentPlayer < 0) currentPlayer = 0;
         const p = allPlayers[currentPlayer];
 
-        // ⏱️ 10-СЕКУНДНИЙ ТАЙМЕР АВТО-ПЕРЕХОДУ
+        // ⏱️ 7-СЕКУНДНИЙ ТАЙМЕР АВТО-ПЕРЕХОДУ
         fallbackTimer = setTimeout(() => {
-            console.warn(`Сервер "${p.name}" не відповів за 10 секунд. Перемикання...`);
+            console.warn(`Сервер "${p.name}" не відповів за 7 секунд. Перемикання...`);
             showToast(`Сервер не відповідає. Переключаємо...`);
             const nextIdx = (currentPlayer + 1) % allPlayers.length;
             switchPlayer(nextIdx);
-        }, 10000);
+        }, 7000);
 
         // 🛡️ ПЕРЕВІРКА: Показуємо заставку ТІЛЬКИ якщо вона увімкнена в адмінці, і юзер НЕ Premium / НЕ Адмін
         const isVIP = (typeof currentUserSubscribed !== 'undefined' && currentUserSubscribed);
@@ -5523,7 +5511,21 @@ function _doLoadPlayer() {
 
             wrap.appendChild(ins);
 
-            setTimeout(() => { clearTimeout(fallbackTimer); loading.style.display = 'none'; }, 800);
+            // Перевіряємо через 3с чи SDK справді відрендерив плеєр
+            setTimeout(() => {
+                loading.style.display = 'none';
+                const hasContent = ins.children.length > 0 || ins.shadowRoot ||
+                    wrap.querySelectorAll('iframe,video').length > 0;
+                if (!hasContent) {
+                    console.warn('⚠️ Rendex SDK не відрендерив плеєр — переключаємо...');
+                    clearTimeout(fallbackTimer);
+                    const allP = [...(currentModalType === 'tv' ? TV_PLAYERS : MOVIE_PLAYERS), ...currentCustomPlayers];
+                    const nextIdx = (currentPlayer + 1) % allP.length;
+                    switchPlayer(nextIdx);
+                } else {
+                    clearTimeout(fallbackTimer);
+                }
+            }, 3000);
             return;
         }
 
@@ -5555,21 +5557,31 @@ function _doLoadPlayer() {
 
         let iframe = document.createElement('iframe');
         iframe.id = 'player-iframe';
-        iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
+        iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; web-share');
         iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('webkitallowfullscreen', 'true');
+        iframe.setAttribute('mozallowfullscreen', 'true');
+        iframe.setAttribute('referrerpolicy', 'no-referrer');
         iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;';
 
         wrap.appendChild(iframe);
         iframe.src = src;
 
+        // Якщо onload не спрацював за 12с — просто ховаємо спінер
+        const iframeLoadTimeout = setTimeout(() => {
+            loading.style.display = 'none';
+        }, 12000);
+
         iframe.onload = () => {
-            console.log(`✅ Плеєр "${p.name}" успішно завантажений`);
+            clearTimeout(iframeLoadTimeout);
             clearTimeout(fallbackTimer);
             loading.style.display = 'none';
+            console.log(`✅ Плеєр "${p.name}" успішно завантажений`);
         };
 
         iframe.onerror = () => {
             console.error(`❌ Помилка завантаження плеєра "${p.name}"`);
+            clearTimeout(iframeLoadTimeout);
             showToast(`Плеєр не відповідає. Переключаємо...`);
             const nextIdx = (currentPlayer + 1) % allPlayers.length;
             switchPlayer(nextIdx);
@@ -8806,4 +8818,3 @@ auth.onAuthStateChanged(user => {
 </script>
 </body>
 </html>
-
