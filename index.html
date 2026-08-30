@@ -4437,18 +4437,16 @@ async function tmdb(ep, params = {}) {
   let lastErr = null;
   for (let i = 0; i < keys.length; i++) {
       const key = keys[(keyIdx + i) % keys.length];
-      const url = new URL(TMDB_BASE + ep);
-
-      url.searchParams.set('api_key', key);
-      url.searchParams.set('language', getSiteLangParam());
-
       try {
           if(typeof isKidsMode !== 'undefined' && isKidsMode && ep.includes('/discover/')) {
               params.without_genres = '27,53,80';
           }
       } catch(e){}
 
-      Object.entries(params).forEach(([k, v]) => { url.searchParams.set(k, String(v)); });
+      const qp = { api_key: key, language: getSiteLangParam() };
+      Object.entries(params).forEach(([k, v]) => { qp[k] = String(v); });
+      const qs = Object.entries(qp).map(([k,v]) => encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
+      const url = TMDB_BASE + ep + '?' + qs;
 
       try {
           console.log(`📡 Запит до TMDB: ${ep} (ключ #${i})`);
