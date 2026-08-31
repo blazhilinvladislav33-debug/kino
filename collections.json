@@ -1,5 +1,43 @@
 [
   {
+    "id": 1788190474175,
+    "date": "2026-08-31",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1516698,
+        "title": "Останній світанок",
+        "poster": "https://image.tmdb.org/t/p/w500/ugoSitb8EtDGVT52WaBoRLpAQbV.jpg",
+        "slug": "ostanngy-svgtanok"
+      },
+      {
+        "id": 1084244,
+        "title": "Історія іграшок 5",
+        "poster": "https://image.tmdb.org/t/p/w500/z7ATYNzGYj3qo9fsNF3sv3lbLBf.jpg",
+        "slug": "gstorgi-ghrashok-5"
+      },
+      {
+        "id": 1083381,
+        "title": "Backrooms: Залаштунки",
+        "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
+        "slug": "backrooms-zalashtunky"
+      },
+      {
+        "id": 1744462,
+        "title": "Grand Theft Auto VI: An Extended Look",
+        "poster": "https://image.tmdb.org/t/p/w500/xTZuh9ziUjIyHBWO9OvqNIPqVWe.jpg",
+        "slug": "grand-theft-auto-vi-an-extended-look"
+      },
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
+        "slug": "zakolot"
+      }
+    ]
+  },
+  {
     "id": 1788009968385,
     "date": "2026-08-29",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
