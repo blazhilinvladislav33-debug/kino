@@ -1,5 +1,43 @@
 [
   {
+    "id": 1788267016401,
+    "date": "2026-09-01",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1560520,
+        "title": "Бетмен: Падіння лицаря. Частина 1",
+        "poster": "https://image.tmdb.org/t/p/w500/360qdtu2hLnqMu8SVHMywn420w1.jpg",
+        "slug": "betmen-padgnni-lytsari-chastyna-1"
+      },
+      {
+        "id": 860508,
+        "title": "Шепотун",
+        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
+        "slug": "shepotun"
+      },
+      {
+        "id": 1516698,
+        "title": "Останній світанок",
+        "poster": "https://image.tmdb.org/t/p/w500/ugoSitb8EtDGVT52WaBoRLpAQbV.jpg",
+        "slug": "ostanngy-svgtanok"
+      },
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
+        "slug": "zakolot"
+      },
+      {
+        "id": 1368337,
+        "title": "Одіссея",
+        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
+        "slug": "odgssei"
+      }
+    ]
+  },
+  {
     "id": 1788190474175,
     "date": "2026-08-31",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
