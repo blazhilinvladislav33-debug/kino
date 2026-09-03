@@ -1,5 +1,43 @@
 [
   {
+    "id": 1788437892977,
+    "date": "2026-09-03",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1384216,
+        "title": "Сузір’я великого пса",
+        "poster": "https://image.tmdb.org/t/p/w500/fdQFSZhsxZxADdUhnITr1JIT3Jt.jpg",
+        "slug": "suzgr-i-velykoho-psa"
+      },
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
+        "slug": "zakolot"
+      },
+      {
+        "id": 1368337,
+        "title": "Одіссея",
+        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
+        "slug": "odgssei"
+      },
+      {
+        "id": 1631807,
+        "title": "Загадкова жінка",
+        "poster": "https://image.tmdb.org/t/p/w500/htPAfHuogi5EGkHo2MeM54QvXSH.jpg",
+        "slug": "zahadkova-zhgnka"
+      },
+      {
+        "id": 1101412,
+        "title": "Над безоднею 2",
+        "poster": "https://image.tmdb.org/t/p/w500/66I7isImbcnsyoebtq3rXKVXYwj.jpg",
+        "slug": "nad-bezodneye-2"
+      }
+    ]
+  },
+  {
     "id": 1788267016401,
     "date": "2026-09-01",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
