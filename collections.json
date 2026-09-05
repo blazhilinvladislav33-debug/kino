@@ -1,5 +1,43 @@
 [
   {
+    "id": 1788607561155,
+    "date": "2026-09-05",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1384216,
+        "title": "Сузір’я великого пса",
+        "poster": "https://image.tmdb.org/t/p/w500/fdQFSZhsxZxADdUhnITr1JIT3Jt.jpg",
+        "slug": "suzgr-i-velykoho-psa"
+      },
+      {
+        "id": 1368337,
+        "title": "Одіссея",
+        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
+        "slug": "odgssei"
+      },
+      {
+        "id": 1083381,
+        "title": "Backrooms: Залаштунки",
+        "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
+        "slug": "backrooms-zalashtunky"
+      },
+      {
+        "id": 860508,
+        "title": "Шепотун",
+        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
+        "slug": "shepotun"
+      },
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
+        "slug": "zakolot"
+      }
+    ]
+  },
+  {
     "id": 1788437892977,
     "date": "2026-09-03",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
