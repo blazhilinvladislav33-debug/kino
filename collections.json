@@ -1,5 +1,43 @@
 [
   {
+    "id": 1788788662538,
+    "date": "2026-09-07",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1204680,
+        "title": "Койот проти Акме",
+        "poster": "https://image.tmdb.org/t/p/w500/eDeikLgj46nTcY07p5a3gukrIKn.jpg",
+        "slug": "koyot-proty-akme"
+      },
+      {
+        "id": 860508,
+        "title": "Шепотун",
+        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
+        "slug": "shepotun"
+      },
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
+        "slug": "zakolot"
+      },
+      {
+        "id": 1108427,
+        "title": "Ваяна",
+        "poster": "https://image.tmdb.org/t/p/w500/eg4urMzEuzjikIoMEjWYdZm260J.jpg",
+        "slug": "vaina"
+      },
+      {
+        "id": 1083381,
+        "title": "Backrooms: Залаштунки",
+        "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
+        "slug": "backrooms-zalashtunky"
+      }
+    ]
+  },
+  {
     "id": 1788607561155,
     "date": "2026-09-05",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
