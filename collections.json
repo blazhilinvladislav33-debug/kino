@@ -1,5 +1,43 @@
 [
   {
+    "id": 1789129429293,
+    "date": "2026-09-11",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1522689,
+        "title": "Навіщо ми одружуємося знову?",
+        "poster": "https://image.tmdb.org/t/p/w500/zTn2CpgiSvU3s9AwnGAV6rYcHKT.jpg",
+        "slug": "navgshcho-my-odruzhuyimosi-znovu"
+      },
+      {
+        "id": 1365884,
+        "title": "Зателефонуйте моєму агенту! Фільм",
+        "poster": "https://image.tmdb.org/t/p/w500/1cASp6TCkdrOafqo77H7ttphCDt.jpg",
+        "slug": "zatelefonuyte-moyimu-ahentu-fglyum"
+      },
+      {
+        "id": 860508,
+        "title": "Шепотун",
+        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
+        "slug": "shepotun"
+      },
+      {
+        "id": 1440098,
+        "title": "Enfrentados: Marfil",
+        "poster": "https://image.tmdb.org/t/p/w500/umlft1ztFbUcnHf960pXJocjpdv.jpg",
+        "slug": "enfrentados-marfil"
+      },
+      {
+        "id": 1339713,
+        "title": "Обсесія",
+        "poster": "https://image.tmdb.org/t/p/w500/nnvVkQFZgVCsiOeufwjLXzgf5N8.jpg",
+        "slug": "obsesgi"
+      }
+    ]
+  },
+  {
     "id": 1788957099136,
     "date": "2026-09-09",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
