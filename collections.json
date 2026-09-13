@@ -1,5 +1,43 @@
 [
   {
+    "id": 1789303994336,
+    "date": "2026-09-13",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1423191,
+        "title": "Resident Evil: Оселя Зла",
+        "poster": "https://image.tmdb.org/t/p/w500/v6NEWBg53FbnzRh4JptAtbQKE0X.jpg",
+        "slug": "resident-evil-oseli-zla"
+      },
+      {
+        "id": 1083381,
+        "title": "Backrooms: Залаштунки",
+        "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
+        "slug": "backrooms-zalashtunky"
+      },
+      {
+        "id": 969681,
+        "title": "Людина-павук: Абсолютно новий день",
+        "poster": "https://image.tmdb.org/t/p/w500/mVuRjX8WWyQ6NB2459vGY3cxybo.jpg",
+        "slug": "lyedyna-pavuk-absolyetno-novyy-denyu"
+      },
+      {
+        "id": 1302904,
+        "title": "Практична магія 2",
+        "poster": "https://image.tmdb.org/t/p/w500/lU9Q7YbdTMe9MSFAE9ujip4iMdh.jpg",
+        "slug": "praktychna-mahgi-2"
+      },
+      {
+        "id": 1084244,
+        "title": "Історія іграшок 5",
+        "poster": "https://image.tmdb.org/t/p/w500/z7ATYNzGYj3qo9fsNF3sv3lbLBf.jpg",
+        "slug": "gstorgi-ghrashok-5"
+      }
+    ]
+  },
+  {
     "id": 1789129429293,
     "date": "2026-09-11",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
