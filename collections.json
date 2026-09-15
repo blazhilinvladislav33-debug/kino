@@ -1,5 +1,43 @@
 [
   {
+    "id": 1789476968743,
+    "date": "2026-09-15",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1433367,
+        "title": "Лише одна ніч",
+        "poster": "https://image.tmdb.org/t/p/w500/yBVIj8hfWAIwtUXroETZhgtSddh.jpg",
+        "slug": "lyshe-odna-ngch"
+      },
+      {
+        "id": 1137844,
+        "title": "Фестиваль небезпек",
+        "poster": "https://image.tmdb.org/t/p/w500/qiPRZXR9OpmzFYPC6nGfSN0QYPW.jpg",
+        "slug": "festyvalyu-nebezpek"
+      },
+      {
+        "id": 1288445,
+        "title": "Заколот",
+        "poster": "https://image.tmdb.org/t/p/w500/2Fs6GczANxbr2QnxI39LVlvWBIF.jpg",
+        "slug": "zakolot"
+      },
+      {
+        "id": 1386315,
+        "title": "Біжи!",
+        "poster": "https://image.tmdb.org/t/p/w500/5pKGtuiks1XTyV8DlJhjVcdnD2h.jpg",
+        "slug": "bgzhy"
+      },
+      {
+        "id": 1083381,
+        "title": "Backrooms: Залаштунки",
+        "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
+        "slug": "backrooms-zalashtunky"
+      }
+    ]
+  },
+  {
     "id": 1789303994336,
     "date": "2026-09-13",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
