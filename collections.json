@@ -1,5 +1,43 @@
 [
   {
+    "id": 1789649412332,
+    "date": "2026-09-17",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1433367,
+        "title": "Лише одна ніч",
+        "poster": "https://image.tmdb.org/t/p/w500/yBVIj8hfWAIwtUXroETZhgtSddh.jpg",
+        "slug": "lyshe-odna-ngch"
+      },
+      {
+        "id": 1377237,
+        "title": "Перевізник",
+        "poster": "https://image.tmdb.org/t/p/w500/ogGMyBvWZGilqnbdqnGkrdwv9Am.jpg",
+        "slug": "perevgznyk"
+      },
+      {
+        "id": 1315772,
+        "title": "Посіпаки і Монстряки",
+        "poster": "https://image.tmdb.org/t/p/w500/pfraKKbf0Zt7JS5UdxhcS9mfVPt.jpg",
+        "slug": "posgpaky-g-monstriky"
+      },
+      {
+        "id": 1275779,
+        "title": "День істини",
+        "poster": "https://image.tmdb.org/t/p/w500/b7OyH5StSuM8jNVU30Yi90GazGA.jpg",
+        "slug": "denyu-gstyny"
+      },
+      {
+        "id": 1365884,
+        "title": "Зателефонуйте моєму агенту! Фільм",
+        "poster": "https://image.tmdb.org/t/p/w500/1cASp6TCkdrOafqo77H7ttphCDt.jpg",
+        "slug": "zatelefonuyte-moyimu-ahentu-fglyum"
+      }
+    ]
+  },
+  {
     "id": 1789476968743,
     "date": "2026-09-15",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
