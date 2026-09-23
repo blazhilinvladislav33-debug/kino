@@ -1,5 +1,43 @@
 [
   {
+    "id": 1790168677203,
+    "date": "2026-09-23",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1248832,
+        "title": "Діґґер",
+        "poster": "https://image.tmdb.org/t/p/w500/eK5CJJtw7b89kvu6crZRKbe4Qnc.jpg",
+        "slug": "dg-er"
+      },
+      {
+        "id": 1368337,
+        "title": "Одіссея",
+        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
+        "slug": "odgssei"
+      },
+      {
+        "id": 969681,
+        "title": "Людина-павук: Абсолютно новий день",
+        "poster": "https://image.tmdb.org/t/p/w500/mVuRjX8WWyQ6NB2459vGY3cxybo.jpg",
+        "slug": "lyedyna-pavuk-absolyetno-novyy-denyu"
+      },
+      {
+        "id": 1607127,
+        "title": "One Last Shot",
+        "poster": "https://image.tmdb.org/t/p/w500/niQ4NBh2jqAf1hDZP5m6ReWFAb7.jpg",
+        "slug": "one-last-shot"
+      },
+      {
+        "id": 1058424,
+        "title": "Надія",
+        "poster": "https://image.tmdb.org/t/p/w500/zvZ2VGp0Xi5Cuk6e6Ktg0xWR3tF.jpg",
+        "slug": "nadgi"
+      }
+    ]
+  },
+  {
     "id": 1790001446370,
     "date": "2026-09-21",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
