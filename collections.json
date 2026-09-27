@@ -1,5 +1,43 @@
 [
   {
+    "id": 1790515302790,
+    "date": "2026-09-27",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1263337,
+        "title": "Серце звіра",
+        "poster": "https://image.tmdb.org/t/p/w500/eh2isYLTgEljiaBdet7ca0nKuuo.jpg",
+        "slug": "sertse-zvgra"
+      },
+      {
+        "id": 1339713,
+        "title": "Обсесія",
+        "poster": "https://image.tmdb.org/t/p/w500/nnvVkQFZgVCsiOeufwjLXzgf5N8.jpg",
+        "slug": "obsesgi"
+      },
+      {
+        "id": 1248832,
+        "title": "Діґґер",
+        "poster": "https://image.tmdb.org/t/p/w500/eK5CJJtw7b89kvu6crZRKbe4Qnc.jpg",
+        "slug": "dg-er"
+      },
+      {
+        "id": 1003596,
+        "title": "Месники: Сходження Доктора Дума",
+        "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
+        "slug": "mesnyky-skhodzhenni-doktora-duma"
+      },
+      {
+        "id": 1084244,
+        "title": "Історія іграшок 5",
+        "poster": "https://image.tmdb.org/t/p/w500/z7ATYNzGYj3qo9fsNF3sv3lbLBf.jpg",
+        "slug": "gstorgi-ghrashok-5"
+      }
+    ]
+  },
+  {
     "id": 1790341436223,
     "date": "2026-09-25",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
