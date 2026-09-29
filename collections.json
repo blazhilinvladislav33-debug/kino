@@ -1,5 +1,43 @@
 [
   {
+    "id": 1790691861968,
+    "date": "2026-09-29",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1248832,
+        "title": "Діґґер",
+        "poster": "https://image.tmdb.org/t/p/w500/eK5CJJtw7b89kvu6crZRKbe4Qnc.jpg",
+        "slug": "dg-er"
+      },
+      {
+        "id": 1339713,
+        "title": "Обсесія",
+        "poster": "https://image.tmdb.org/t/p/w500/nnvVkQFZgVCsiOeufwjLXzgf5N8.jpg",
+        "slug": "obsesgi"
+      },
+      {
+        "id": 1607127,
+        "title": "One Last Shot",
+        "poster": "https://image.tmdb.org/t/p/w500/niQ4NBh2jqAf1hDZP5m6ReWFAb7.jpg",
+        "slug": "one-last-shot"
+      },
+      {
+        "id": 1101383,
+        "title": "Кінець Оук-Стріт",
+        "poster": "https://image.tmdb.org/t/p/w500/aFGEgXyzPl0SsuOp8999SK0ejiG.jpg",
+        "slug": "kgnetsyu-ouk-strgt"
+      },
+      {
+        "id": 1032863,
+        "title": "Гіпотеза кохання",
+        "poster": "https://image.tmdb.org/t/p/w500/eviNugG94fIOtu9VHBUGCDzb3k5.jpg",
+        "slug": "hgpoteza-kokhanni"
+      }
+    ]
+  },
+  {
     "id": 1790515302790,
     "date": "2026-09-27",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Camp Rock 3",
         "poster": "https://image.tmdb.org/t/p/w500/rS7byWK9cfPfdLeFNlRIaJxH9mN.jpg",
         "slug": "camp-rock-3"
-      }
-    ]
-  },
-  {
-    "id": 1787409660277,
-    "date": "2026-08-22",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 687163,
-        "title": "Проєкт «Аве Марія»",
-        "poster": "https://image.tmdb.org/t/p/w500/Diwwr8A7xdZq1gVytOFMvh4aTa.jpg",
-        "slug": "proyikt-ave-margi"
-      },
-      {
-        "id": 1081003,
-        "title": "Суперґьорл",
-        "poster": "https://image.tmdb.org/t/p/w500/sAaAVBiQr4HpRPhtvkapvDYmUc3.jpg",
-        "slug": "super-yuorl"
-      },
-      {
-        "id": 1368337,
-        "title": "Одіссея",
-        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
-        "slug": "odgssei"
-      },
-      {
-        "id": 1288445,
-        "title": "Заколот",
-        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
-        "slug": "zakolot"
-      },
-      {
-        "id": 1275779,
-        "title": "День істини",
-        "poster": "https://image.tmdb.org/t/p/w500/b7OyH5StSuM8jNVU30Yi90GazGA.jpg",
-        "slug": "denyu-gstyny"
       }
     ]
   }
