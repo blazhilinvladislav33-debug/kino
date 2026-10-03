@@ -1,5 +1,43 @@
 [
   {
+    "id": 1791031668688,
+    "date": "2026-10-03",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1307118,
+        "title": "СОУЛМ8ЙМ",
+        "poster": "https://image.tmdb.org/t/p/w500/bNErActDctl6cdUGw9pnjSCmyhQ.jpg",
+        "slug": "soulm8ym"
+      },
+      {
+        "id": 1423191,
+        "title": "Resident Evil: Оселя Зла",
+        "poster": "https://image.tmdb.org/t/p/w500/v6NEWBg53FbnzRh4JptAtbQKE0X.jpg",
+        "slug": "resident-evil-oseli-zla"
+      },
+      {
+        "id": 1032863,
+        "title": "Гіпотеза кохання",
+        "poster": "https://image.tmdb.org/t/p/w500/eviNugG94fIOtu9VHBUGCDzb3k5.jpg",
+        "slug": "hgpoteza-kokhanni"
+      },
+      {
+        "id": 1492640,
+        "title": "Унабомбер",
+        "poster": "https://image.tmdb.org/t/p/w500/4f0dQzkSY04JN6yhby1fzr1FEGj.jpg",
+        "slug": "unabomber"
+      },
+      {
+        "id": 1377237,
+        "title": "Перевізник",
+        "poster": "https://image.tmdb.org/t/p/w500/ogGMyBvWZGilqnbdqnGkrdwv9Am.jpg",
+        "slug": "perevgznyk"
+      }
+    ]
+  },
+  {
     "id": 1790866355607,
     "date": "2026-10-01",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Астрал: За межами Потойбіччя",
         "poster": "https://image.tmdb.org/t/p/w500/hMKteQXfFsxsjhWuEabiTqo41JS.jpg",
         "slug": "astral-za-mezhamy-potoybgchchi"
-      }
-    ]
-  },
-  {
-    "id": 1787646430447,
-    "date": "2026-08-25",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1339713,
-        "title": "Обсесія",
-        "poster": "https://image.tmdb.org/t/p/w500/nnvVkQFZgVCsiOeufwjLXzgf5N8.jpg",
-        "slug": "obsesgi"
-      },
-      {
-        "id": 1083381,
-        "title": "Backrooms: Залаштунки",
-        "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
-        "slug": "backrooms-zalashtunky"
-      },
-      {
-        "id": 1288445,
-        "title": "Заколот",
-        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
-        "slug": "zakolot"
-      },
-      {
-        "id": 1621552,
-        "title": "Віч-на-віч з Ель Чапо",
-        "poster": "https://image.tmdb.org/t/p/w500/9fCDGdnTJzmdTnoZ8rHVxoTRmhJ.jpg",
-        "slug": "vgch-na-vgch-z-elyu-chapo"
-      },
-      {
-        "id": 1212763,
-        "title": "Зловісні мерці у вогні",
-        "poster": "https://image.tmdb.org/t/p/w500/zziJ8lJgbCFMFJh9GxOr9B7x4Jt.jpg",
-        "slug": "zlovgsng-mertsg-u-vohng"
       }
     ]
   }
