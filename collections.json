@@ -1,5 +1,43 @@
 [
   {
+    "id": 1791217810696,
+    "date": "2026-10-05",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1377237,
+        "title": "Перевізник",
+        "poster": "https://image.tmdb.org/t/p/w500/ogGMyBvWZGilqnbdqnGkrdwv9Am.jpg",
+        "slug": "perevgznyk"
+      },
+      {
+        "id": 1368337,
+        "title": "Одіссея",
+        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
+        "slug": "odgssei"
+      },
+      {
+        "id": 1423191,
+        "title": "Resident Evil: Оселя Зла",
+        "poster": "https://image.tmdb.org/t/p/w500/v6NEWBg53FbnzRh4JptAtbQKE0X.jpg",
+        "slug": "resident-evil-oseli-zla"
+      },
+      {
+        "id": 977942,
+        "title": "Месник",
+        "poster": "https://image.tmdb.org/t/p/w500/gUtE3VJ0FxGDpoJ5rQDphCd9RES.jpg",
+        "slug": "mesnyk"
+      },
+      {
+        "id": 1283515,
+        "title": "Верітi",
+        "poster": "https://image.tmdb.org/t/p/w500/97HBDXrtqiNpTyTTgkiQCbJ7j6F.jpg",
+        "slug": "vergti"
+      }
+    ]
+  },
+  {
     "id": 1791031668688,
     "date": "2026-10-03",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Pinocchio: Unstrung",
         "poster": "https://image.tmdb.org/t/p/w500/eUJXk3bTvLBi5Zcb0BCedZU7lVL.jpg",
         "slug": "pinocchio-unstrung"
-      }
-    ]
-  },
-  {
-    "id": 1787855230360,
-    "date": "2026-08-27",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1516698,
-        "title": "Останній світанок",
-        "poster": "https://image.tmdb.org/t/p/w500/ugoSitb8EtDGVT52WaBoRLpAQbV.jpg",
-        "slug": "ostanngy-svgtanok"
-      },
-      {
-        "id": 1288445,
-        "title": "Заколот",
-        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
-        "slug": "zakolot"
-      },
-      {
-        "id": 1212763,
-        "title": "Зловісні мерці у вогні",
-        "poster": "https://image.tmdb.org/t/p/w500/zziJ8lJgbCFMFJh9GxOr9B7x4Jt.jpg",
-        "slug": "zlovgsng-mertsg-u-vohng"
-      },
-      {
-        "id": 1101383,
-        "title": "Кінець Оук-Стріт",
-        "poster": "https://image.tmdb.org/t/p/w500/aFGEgXyzPl0SsuOp8999SK0ejiG.jpg",
-        "slug": "kgnetsyu-ouk-strgt"
-      },
-      {
-        "id": 1291595,
-        "title": "Астрал: За межами Потойбіччя",
-        "poster": "https://image.tmdb.org/t/p/w500/hMKteQXfFsxsjhWuEabiTqo41JS.jpg",
-        "slug": "astral-za-mezhamy-potoybgchchi"
       }
     ]
   }
