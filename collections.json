@@ -1,5 +1,43 @@
 [
   {
+    "id": 1791384571389,
+    "date": "2026-10-07",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1368337,
+        "title": "Одіссея",
+        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
+        "slug": "odgssei"
+      },
+      {
+        "id": 1423191,
+        "title": "Resident Evil: Оселя Зла",
+        "poster": "https://image.tmdb.org/t/p/w500/v6NEWBg53FbnzRh4JptAtbQKE0X.jpg",
+        "slug": "resident-evil-oseli-zla"
+      },
+      {
+        "id": 969681,
+        "title": "Людина-павук: Абсолютно новий день",
+        "poster": "https://image.tmdb.org/t/p/w500/7GBr9QUrnZnpDYLu368ygT0Joct.jpg",
+        "slug": "lyedyna-pavuk-absolyetno-novyy-denyu"
+      },
+      {
+        "id": 1204680,
+        "title": "Койот проти Акме",
+        "poster": "https://image.tmdb.org/t/p/w500/eDeikLgj46nTcY07p5a3gukrIKn.jpg",
+        "slug": "koyot-proty-akme"
+      },
+      {
+        "id": 1492640,
+        "title": "Унабомбер",
+        "poster": "https://image.tmdb.org/t/p/w500/4f0dQzkSY04JN6yhby1fzr1FEGj.jpg",
+        "slug": "unabomber"
+      }
+    ]
+  },
+  {
     "id": 1791217810696,
     "date": "2026-10-05",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Заколот",
         "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
         "slug": "zakolot"
-      }
-    ]
-  },
-  {
-    "id": 1788009968385,
-    "date": "2026-08-29",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1339713,
-        "title": "Обсесія",
-        "poster": "https://image.tmdb.org/t/p/w500/nnvVkQFZgVCsiOeufwjLXzgf5N8.jpg",
-        "slug": "obsesgi"
-      },
-      {
-        "id": 1560520,
-        "title": "Бетмен: Падіння лицаря. Частина 1",
-        "poster": "https://image.tmdb.org/t/p/w500/360qdtu2hLnqMu8SVHMywn420w1.jpg",
-        "slug": "betmen-padgnni-lytsari-chastyna-1"
-      },
-      {
-        "id": 969681,
-        "title": "Людина-павук: Абсолютно новий день",
-        "poster": "https://image.tmdb.org/t/p/w500/mVuRjX8WWyQ6NB2459vGY3cxybo.jpg",
-        "slug": "lyedyna-pavuk-absolyetno-novyy-denyu"
-      },
-      {
-        "id": 860508,
-        "title": "Шепотун",
-        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
-        "slug": "shepotun"
-      },
-      {
-        "id": 1232569,
-        "title": "Pinocchio: Unstrung",
-        "poster": "https://image.tmdb.org/t/p/w500/eUJXk3bTvLBi5Zcb0BCedZU7lVL.jpg",
-        "slug": "pinocchio-unstrung"
       }
     ]
   }
