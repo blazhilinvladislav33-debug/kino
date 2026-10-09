@@ -1,5 +1,43 @@
 [
   {
+    "id": 1791557076635,
+    "date": "2026-10-09",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 969681,
+        "title": "Людина-павук: Абсолютно новий день",
+        "poster": "https://image.tmdb.org/t/p/w500/7GBr9QUrnZnpDYLu368ygT0Joct.jpg",
+        "slug": "lyedyna-pavuk-absolyetno-novyy-denyu"
+      },
+      {
+        "id": 1400837,
+        "title": "Інша мама",
+        "poster": "https://image.tmdb.org/t/p/w500/muIwvqIYQXLfhAaviqRUIfOIiX8.jpg",
+        "slug": "gnsha-mama"
+      },
+      {
+        "id": 1307118,
+        "title": "СОУЛМ8ЙМ",
+        "poster": "https://image.tmdb.org/t/p/w500/nIkAHDzo9kbG3kDmDckqywo6CE9.jpg",
+        "slug": "soulm8ym"
+      },
+      {
+        "id": 1284046,
+        "title": "Ідеальна зброя",
+        "poster": "https://image.tmdb.org/t/p/w500/sBvy66hxvVYjFKYm6FZ29ymiHW9.jpg",
+        "slug": "gdealyuna-zbroi"
+      },
+      {
+        "id": 1458857,
+        "title": "Шанс на щастя",
+        "poster": "https://image.tmdb.org/t/p/w500/gPd1q9vzUtJ7709LwzZRmy7Oh7U.jpg",
+        "slug": "shans-na-shchasti"
+      }
+    ]
+  },
+  {
     "id": 1791384571389,
     "date": "2026-10-07",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Одіссея",
         "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
         "slug": "odgssei"
-      }
-    ]
-  },
-  {
-    "id": 1788190474175,
-    "date": "2026-08-31",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1516698,
-        "title": "Останній світанок",
-        "poster": "https://image.tmdb.org/t/p/w500/ugoSitb8EtDGVT52WaBoRLpAQbV.jpg",
-        "slug": "ostanngy-svgtanok"
-      },
-      {
-        "id": 1084244,
-        "title": "Історія іграшок 5",
-        "poster": "https://image.tmdb.org/t/p/w500/z7ATYNzGYj3qo9fsNF3sv3lbLBf.jpg",
-        "slug": "gstorgi-ghrashok-5"
-      },
-      {
-        "id": 1083381,
-        "title": "Backrooms: Залаштунки",
-        "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
-        "slug": "backrooms-zalashtunky"
-      },
-      {
-        "id": 1744462,
-        "title": "Grand Theft Auto VI: An Extended Look",
-        "poster": "https://image.tmdb.org/t/p/w500/xTZuh9ziUjIyHBWO9OvqNIPqVWe.jpg",
-        "slug": "grand-theft-auto-vi-an-extended-look"
-      },
-      {
-        "id": 1288445,
-        "title": "Заколот",
-        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
-        "slug": "zakolot"
       }
     ]
   }
