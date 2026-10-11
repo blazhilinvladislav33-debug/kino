@@ -1,5 +1,43 @@
 [
   {
+    "id": 1791728806526,
+    "date": "2026-10-11",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1375441,
+        "title": "Праймтайм",
+        "poster": "https://image.tmdb.org/t/p/w500/f6uYqw5pF8fGVCTLQrd8Bip9FZZ.jpg",
+        "slug": "praymtaym"
+      },
+      {
+        "id": 1377237,
+        "title": "Перевізник",
+        "poster": "https://image.tmdb.org/t/p/w500/ogGMyBvWZGilqnbdqnGkrdwv9Am.jpg",
+        "slug": "perevgznyk"
+      },
+      {
+        "id": 1236045,
+        "title": "Тварини",
+        "poster": "https://image.tmdb.org/t/p/w500/x5wcrbPpMMUm4N5odQQxw71wiHd.jpg",
+        "slug": "tvaryny"
+      },
+      {
+        "id": 1003596,
+        "title": "Месники: Сходження Доктора Дума",
+        "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
+        "slug": "mesnyky-skhodzhenni-doktora-duma"
+      },
+      {
+        "id": 1148365,
+        "title": "Matchbox: фільм",
+        "poster": "https://image.tmdb.org/t/p/w500/3eybnrFEv8u7cO3VeP1HFImNuHr.jpg",
+        "slug": "matchbox-fglyum"
+      }
+    ]
+  },
+  {
     "id": 1791557076635,
     "date": "2026-10-09",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Над безоднею 2",
         "poster": "https://image.tmdb.org/t/p/w500/66I7isImbcnsyoebtq3rXKVXYwj.jpg",
         "slug": "nad-bezodneye-2"
-      }
-    ]
-  },
-  {
-    "id": 1788267016401,
-    "date": "2026-09-01",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1560520,
-        "title": "Бетмен: Падіння лицаря. Частина 1",
-        "poster": "https://image.tmdb.org/t/p/w500/360qdtu2hLnqMu8SVHMywn420w1.jpg",
-        "slug": "betmen-padgnni-lytsari-chastyna-1"
-      },
-      {
-        "id": 860508,
-        "title": "Шепотун",
-        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
-        "slug": "shepotun"
-      },
-      {
-        "id": 1516698,
-        "title": "Останній світанок",
-        "poster": "https://image.tmdb.org/t/p/w500/ugoSitb8EtDGVT52WaBoRLpAQbV.jpg",
-        "slug": "ostanngy-svgtanok"
-      },
-      {
-        "id": 1288445,
-        "title": "Заколот",
-        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
-        "slug": "zakolot"
-      },
-      {
-        "id": 1368337,
-        "title": "Одіссея",
-        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
-        "slug": "odgssei"
       }
     ]
   }
