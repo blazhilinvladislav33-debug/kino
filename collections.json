@@ -1,5 +1,43 @@
 [
   {
+    "id": 1792068884911,
+    "date": "2026-10-15",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1101412,
+        "title": "Над безоднею 2",
+        "poster": "https://image.tmdb.org/t/p/w500/pOrpgi2EkdKsJlnAlcjD53AM7yw.jpg",
+        "slug": "nad-bezodneye-2"
+      },
+      {
+        "id": 1302904,
+        "title": "Практична магія 2",
+        "poster": "https://image.tmdb.org/t/p/w500/lU9Q7YbdTMe9MSFAE9ujip4iMdh.jpg",
+        "slug": "praktychna-mahgi-2"
+      },
+      {
+        "id": 1514026,
+        "title": "Приятель",
+        "poster": "https://image.tmdb.org/t/p/w500/1BdZbNvl1SfrrX8J9X5tQzN6Ivu.jpg",
+        "slug": "pryitelyu"
+      },
+      {
+        "id": 1291595,
+        "title": "Астрал: За межами Потойбіччя",
+        "poster": "https://image.tmdb.org/t/p/w500/9uVCgMaUtmnIZJ3NBAnhPPnC4XO.jpg",
+        "slug": "astral-za-mezhamy-potoybgchchi"
+      },
+      {
+        "id": 1003596,
+        "title": "Месники: Сходження Доктора Дума",
+        "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
+        "slug": "mesnyky-skhodzhenni-doktora-duma"
+      }
+    ]
+  },
+  {
     "id": 1791904846575,
     "date": "2026-10-13",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Backrooms: Залаштунки",
         "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
         "slug": "backrooms-zalashtunky"
-      }
-    ]
-  },
-  {
-    "id": 1788607561155,
-    "date": "2026-09-05",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1384216,
-        "title": "Сузір’я великого пса",
-        "poster": "https://image.tmdb.org/t/p/w500/fdQFSZhsxZxADdUhnITr1JIT3Jt.jpg",
-        "slug": "suzgr-i-velykoho-psa"
-      },
-      {
-        "id": 1368337,
-        "title": "Одіссея",
-        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
-        "slug": "odgssei"
-      },
-      {
-        "id": 1083381,
-        "title": "Backrooms: Залаштунки",
-        "poster": "https://image.tmdb.org/t/p/w500/hxZuCNRL2yJI6Id7MstH0lUsIUa.jpg",
-        "slug": "backrooms-zalashtunky"
-      },
-      {
-        "id": 860508,
-        "title": "Шепотун",
-        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
-        "slug": "shepotun"
-      },
-      {
-        "id": 1288445,
-        "title": "Заколот",
-        "poster": "https://image.tmdb.org/t/p/w500/rtWM5cgSswZq8EomxTd9cQ0NKN6.jpg",
-        "slug": "zakolot"
       }
     ]
   }
