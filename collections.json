@@ -1,5 +1,43 @@
 [
   {
+    "id": 1792588608369,
+    "date": "2026-10-21",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1148365,
+        "title": "Matchbox: фільм",
+        "poster": "https://image.tmdb.org/t/p/w500/3eybnrFEv8u7cO3VeP1HFImNuHr.jpg",
+        "slug": "matchbox-fglyum"
+      },
+      {
+        "id": 969681,
+        "title": "Людина-павук: Абсолютно новий день",
+        "poster": "https://image.tmdb.org/t/p/w500/jYctcX3t3sFqrqN6L0XLgvYjNzu.jpg",
+        "slug": "lyedyna-pavuk-absolyetno-novyy-denyu"
+      },
+      {
+        "id": 1248832,
+        "title": "Діґґер",
+        "poster": "https://image.tmdb.org/t/p/w500/eK5CJJtw7b89kvu6crZRKbe4Qnc.jpg",
+        "slug": "dg-er"
+      },
+      {
+        "id": 1381078,
+        "title": "Кохання твого життя",
+        "poster": "https://image.tmdb.org/t/p/w500/dL3Tcv4FU2K85bgnGRBgLjFSrLr.jpg",
+        "slug": "kokhanni-tvoho-zhytti"
+      },
+      {
+        "id": 1284186,
+        "title": "Справжній герой",
+        "poster": "https://image.tmdb.org/t/p/w500/lcuM0M6EonjY2ScS6JbOfpVHwc9.jpg",
+        "slug": "spravzhngy-heroy"
+      }
+    ]
+  },
+  {
     "id": 1792422257281,
     "date": "2026-10-19",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Історія іграшок 5",
         "poster": "https://image.tmdb.org/t/p/w500/z7ATYNzGYj3qo9fsNF3sv3lbLBf.jpg",
         "slug": "gstorgi-ghrashok-5"
-      }
-    ]
-  },
-  {
-    "id": 1789129429293,
-    "date": "2026-09-11",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1522689,
-        "title": "Навіщо ми одружуємося знову?",
-        "poster": "https://image.tmdb.org/t/p/w500/zTn2CpgiSvU3s9AwnGAV6rYcHKT.jpg",
-        "slug": "navgshcho-my-odruzhuyimosi-znovu"
-      },
-      {
-        "id": 1365884,
-        "title": "Зателефонуйте моєму агенту! Фільм",
-        "poster": "https://image.tmdb.org/t/p/w500/1cASp6TCkdrOafqo77H7ttphCDt.jpg",
-        "slug": "zatelefonuyte-moyimu-ahentu-fglyum"
-      },
-      {
-        "id": 860508,
-        "title": "Шепотун",
-        "poster": "https://image.tmdb.org/t/p/w500/t5vjllZqgIbUyvxARSTWXtVpc6q.jpg",
-        "slug": "shepotun"
-      },
-      {
-        "id": 1440098,
-        "title": "Enfrentados: Marfil",
-        "poster": "https://image.tmdb.org/t/p/w500/umlft1ztFbUcnHf960pXJocjpdv.jpg",
-        "slug": "enfrentados-marfil"
-      },
-      {
-        "id": 1339713,
-        "title": "Обсесія",
-        "poster": "https://image.tmdb.org/t/p/w500/nnvVkQFZgVCsiOeufwjLXzgf5N8.jpg",
-        "slug": "obsesgi"
       }
     ]
   }
