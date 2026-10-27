@@ -1,5 +1,43 @@
 [
   {
+    "id": 1793108485426,
+    "date": "2026-10-27",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1400940,
+        "title": "Глиноликий",
+        "poster": "https://image.tmdb.org/t/p/w500/w4o7cPX8H8OSgPQjKHsTA1svO2W.jpg",
+        "slug": "hlynolykyy"
+      },
+      {
+        "id": 1108427,
+        "title": "Ваяна",
+        "poster": "https://image.tmdb.org/t/p/w500/ih00lwoDD33dxamr9Qn8MfUkOBU.jpg",
+        "slug": "vaina"
+      },
+      {
+        "id": 1283515,
+        "title": "Верітi",
+        "poster": "https://image.tmdb.org/t/p/w500/5IPSMW6TstZdgJsY54YHxzYb4x0.jpg",
+        "slug": "vergti"
+      },
+      {
+        "id": 1780005,
+        "title": "Проти урагану",
+        "poster": "https://image.tmdb.org/t/p/w500/lFaMt4I8LiQAGW9Rb5gfGFXbvOY.jpg",
+        "slug": "proty-urahanu"
+      },
+      {
+        "id": 791523,
+        "title": "Диволіс",
+        "poster": "https://image.tmdb.org/t/p/w500/uD4uFbafQqlMRwSnR8tUfWfhhna.jpg",
+        "slug": "dyvolgs"
+      }
+    ]
+  },
+  {
     "id": 1792932530018,
     "date": "2026-10-25",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Підлітковий секс і смерть у таборі «Міазма»",
         "poster": "https://image.tmdb.org/t/p/w500/nLsFnXifieSTqSeWxjXSS8RvaUZ.jpg",
         "slug": "pgdlgtkovyy-seks-g-smertyu-u-taborg-mgazma"
-      }
-    ]
-  },
-  {
-    "id": 1789649412332,
-    "date": "2026-09-17",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1433367,
-        "title": "Лише одна ніч",
-        "poster": "https://image.tmdb.org/t/p/w500/yBVIj8hfWAIwtUXroETZhgtSddh.jpg",
-        "slug": "lyshe-odna-ngch"
-      },
-      {
-        "id": 1377237,
-        "title": "Перевізник",
-        "poster": "https://image.tmdb.org/t/p/w500/ogGMyBvWZGilqnbdqnGkrdwv9Am.jpg",
-        "slug": "perevgznyk"
-      },
-      {
-        "id": 1315772,
-        "title": "Посіпаки і Монстряки",
-        "poster": "https://image.tmdb.org/t/p/w500/pfraKKbf0Zt7JS5UdxhcS9mfVPt.jpg",
-        "slug": "posgpaky-g-monstriky"
-      },
-      {
-        "id": 1275779,
-        "title": "День істини",
-        "poster": "https://image.tmdb.org/t/p/w500/b7OyH5StSuM8jNVU30Yi90GazGA.jpg",
-        "slug": "denyu-gstyny"
-      },
-      {
-        "id": 1365884,
-        "title": "Зателефонуйте моєму агенту! Фільм",
-        "poster": "https://image.tmdb.org/t/p/w500/1cASp6TCkdrOafqo77H7ttphCDt.jpg",
-        "slug": "zatelefonuyte-moyimu-ahentu-fglyum"
       }
     ]
   }
