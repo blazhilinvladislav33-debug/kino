@@ -1,5 +1,43 @@
 [
   {
+    "id": 1793893895538,
+    "date": "2026-11-05",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1058424,
+        "title": "Надія",
+        "poster": "https://image.tmdb.org/t/p/w500/zvZ2VGp0Xi5Cuk6e6Ktg0xWR3tF.jpg",
+        "slug": "nadgi"
+      },
+      {
+        "id": 1283515,
+        "title": "Верітi",
+        "poster": "https://image.tmdb.org/t/p/w500/5IPSMW6TstZdgJsY54YHxzYb4x0.jpg",
+        "slug": "vergti"
+      },
+      {
+        "id": 1375441,
+        "title": "Праймтайм",
+        "poster": "https://image.tmdb.org/t/p/w500/f6uYqw5pF8fGVCTLQrd8Bip9FZZ.jpg",
+        "slug": "praymtaym"
+      },
+      {
+        "id": 891621,
+        "title": "Дикий кінь номер дев'ять",
+        "poster": "https://image.tmdb.org/t/p/w500/3usHHNC645QmdpCvEVFeVbqoFhf.jpg",
+        "slug": "dykyy-kgnyu-nomer-dev-ityu"
+      },
+      {
+        "id": 1654940,
+        "title": "余命一年、男をかう",
+        "poster": "https://image.tmdb.org/t/p/w500/rleue0CXFaVemfPnwkjtoe5TK5A.jpg",
+        "slug": ""
+      }
+    ]
+  },
+  {
     "id": 1793719924303,
     "date": "2026-11-03",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Гіпотеза кохання",
         "poster": "https://image.tmdb.org/t/p/w500/eviNugG94fIOtu9VHBUGCDzb3k5.jpg",
         "slug": "hgpoteza-kokhanni"
-      }
-    ]
-  },
-  {
-    "id": 1790515302790,
-    "date": "2026-09-27",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1263337,
-        "title": "Серце звіра",
-        "poster": "https://image.tmdb.org/t/p/w500/eh2isYLTgEljiaBdet7ca0nKuuo.jpg",
-        "slug": "sertse-zvgra"
-      },
-      {
-        "id": 1339713,
-        "title": "Обсесія",
-        "poster": "https://image.tmdb.org/t/p/w500/nnvVkQFZgVCsiOeufwjLXzgf5N8.jpg",
-        "slug": "obsesgi"
-      },
-      {
-        "id": 1248832,
-        "title": "Діґґер",
-        "poster": "https://image.tmdb.org/t/p/w500/eK5CJJtw7b89kvu6crZRKbe4Qnc.jpg",
-        "slug": "dg-er"
-      },
-      {
-        "id": 1003596,
-        "title": "Месники: Сходження Доктора Дума",
-        "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
-        "slug": "mesnyky-skhodzhenni-doktora-duma"
-      },
-      {
-        "id": 1084244,
-        "title": "Історія іграшок 5",
-        "poster": "https://image.tmdb.org/t/p/w500/z7ATYNzGYj3qo9fsNF3sv3lbLBf.jpg",
-        "slug": "gstorgi-ghrashok-5"
       }
     ]
   }
