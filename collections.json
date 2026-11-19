@@ -1,5 +1,43 @@
 [
   {
+    "id": 1795107166832,
+    "date": "2026-11-19",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1381071,
+        "title": "Ґодзілла: Мінус нуль",
+        "poster": "https://image.tmdb.org/t/p/w500/zpcoFlZwyLnBt7bb5wmvGDCdg06.jpg",
+        "slug": "odzglla-mgnus-nulyu"
+      },
+      {
+        "id": 1263337,
+        "title": "Серце звіра",
+        "poster": "https://image.tmdb.org/t/p/w500/QwTcll5ymgLseoerf7PUo9LDZM.jpg",
+        "slug": "sertse-zvgra"
+      },
+      {
+        "id": 1050981,
+        "title": "Бути людиною: Історія Джуді Гʼюмен",
+        "poster": "https://image.tmdb.org/t/p/w500/doKM5Wp43RTpRxGH4ujH5hCmF0E.jpg",
+        "slug": "buty-lyedynoye-gstorgi-dzhudg-h-yemen"
+      },
+      {
+        "id": 1185344,
+        "title": "Звір: Ціль №1",
+        "poster": "https://image.tmdb.org/t/p/w500/wqVLMLChSUo60i8y4dhockfdt7I.jpg",
+        "slug": "zvgr-tsglyu-1"
+      },
+      {
+        "id": 1170608,
+        "title": "Дюна: Частина третя",
+        "poster": "https://image.tmdb.org/t/p/w500/ocMNHstBPAPCFdW2imN0rH9TH3T.jpg",
+        "slug": "dyena-chastyna-treti"
+      }
+    ]
+  },
+  {
     "id": 1794935341940,
     "date": "2026-11-17",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Ідеальна зброя",
         "poster": "https://image.tmdb.org/t/p/w500/98BPkFz9I5vioRueq8zD5dyfN8t.jpg",
         "slug": "gdealyuna-zbroi"
-      }
-    ]
-  },
-  {
-    "id": 1791728806526,
-    "date": "2026-10-11",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1375441,
-        "title": "Праймтайм",
-        "poster": "https://image.tmdb.org/t/p/w500/f6uYqw5pF8fGVCTLQrd8Bip9FZZ.jpg",
-        "slug": "praymtaym"
-      },
-      {
-        "id": 1377237,
-        "title": "Перевізник",
-        "poster": "https://image.tmdb.org/t/p/w500/ogGMyBvWZGilqnbdqnGkrdwv9Am.jpg",
-        "slug": "perevgznyk"
-      },
-      {
-        "id": 1236045,
-        "title": "Тварини",
-        "poster": "https://image.tmdb.org/t/p/w500/x5wcrbPpMMUm4N5odQQxw71wiHd.jpg",
-        "slug": "tvaryny"
-      },
-      {
-        "id": 1003596,
-        "title": "Месники: Сходження Доктора Дума",
-        "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
-        "slug": "mesnyky-skhodzhenni-doktora-duma"
-      },
-      {
-        "id": 1148365,
-        "title": "Matchbox: фільм",
-        "poster": "https://image.tmdb.org/t/p/w500/3eybnrFEv8u7cO3VeP1HFImNuHr.jpg",
-        "slug": "matchbox-fglyum"
       }
     ]
   }
