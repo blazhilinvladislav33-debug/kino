@@ -1,5 +1,43 @@
 [
   {
+    "id": 1795275744656,
+    "date": "2026-11-21",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 969681,
+        "title": "Людина-павук: Абсолютно новий день",
+        "poster": "https://image.tmdb.org/t/p/w500/jYctcX3t3sFqrqN6L0XLgvYjNzu.jpg",
+        "slug": "lyedyna-pavuk-absolyetno-novyy-denyu"
+      },
+      {
+        "id": 1300968,
+        "title": "Голодні ігри: Світанок перед Жнивами",
+        "poster": "https://image.tmdb.org/t/p/w500/lg6THM7fRq4YLqMbCeOEkYQGPQw.jpg",
+        "slug": "holodng-ghry-svgtanok-pered-zhnyvamy"
+      },
+      {
+        "id": 1185344,
+        "title": "Звір: Ціль №1",
+        "poster": "https://image.tmdb.org/t/p/w500/wqVLMLChSUo60i8y4dhockfdt7I.jpg",
+        "slug": "zvgr-tsglyu-1"
+      },
+      {
+        "id": 1368337,
+        "title": "Одіссея",
+        "poster": "https://image.tmdb.org/t/p/w500/zgquGem3SzaeXFtaHxEhVTZSUnJ.jpg",
+        "slug": "odgssei"
+      },
+      {
+        "id": 1084409,
+        "title": "Талант до вбивства",
+        "poster": "https://image.tmdb.org/t/p/w500/mstDPKNKgSGFvVFVdfzeMNkcyw2.jpg",
+        "slug": "talant-do-vbyvstva"
+      }
+    ]
+  },
+  {
     "id": 1795107166832,
     "date": "2026-11-19",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Месники: Сходження Доктора Дума",
         "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
         "slug": "mesnyky-skhodzhenni-doktora-duma"
-      }
-    ]
-  },
-  {
-    "id": 1791904846575,
-    "date": "2026-10-13",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1400837,
-        "title": "Інша мама",
-        "poster": "https://image.tmdb.org/t/p/w500/muIwvqIYQXLfhAaviqRUIfOIiX8.jpg",
-        "slug": "gnsha-mama"
-      },
-      {
-        "id": 1476746,
-        "title": "Квіткар",
-        "poster": "https://image.tmdb.org/t/p/w500/2XapNaMWIXznvgAraRN48AaJLNF.jpg",
-        "slug": "kvgtkar"
-      },
-      {
-        "id": 1236045,
-        "title": "Тварини",
-        "poster": "https://image.tmdb.org/t/p/w500/x5wcrbPpMMUm4N5odQQxw71wiHd.jpg",
-        "slug": "tvaryny"
-      },
-      {
-        "id": 1368337,
-        "title": "Одіссея",
-        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
-        "slug": "odgssei"
-      },
-      {
-        "id": 1284046,
-        "title": "Ідеальна зброя",
-        "poster": "https://image.tmdb.org/t/p/w500/98BPkFz9I5vioRueq8zD5dyfN8t.jpg",
-        "slug": "gdealyuna-zbroi"
       }
     ]
   }
