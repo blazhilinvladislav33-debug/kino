@@ -1,5 +1,43 @@
 [
   {
+    "id": 1795462451262,
+    "date": "2026-11-23",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1339713,
+        "title": "Обсесія",
+        "poster": "https://image.tmdb.org/t/p/w500/ir19HKFIATJm3RdCVRGYEzTwtr7.jpg",
+        "slug": "obsesgi"
+      },
+      {
+        "id": 1003596,
+        "title": "Месники: Сходження Доктора Дума",
+        "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
+        "slug": "mesnyky-skhodzhenni-doktora-duma"
+      },
+      {
+        "id": 1561834,
+        "title": "Son Yemek",
+        "poster": "https://image.tmdb.org/t/p/w500/5VhfAWFs005xxN9akWJ2VIF5ozJ.jpg",
+        "slug": "son-yemek"
+      },
+      {
+        "id": 1381071,
+        "title": "Ґодзілла: Мінус нуль",
+        "poster": "https://image.tmdb.org/t/p/w500/zpcoFlZwyLnBt7bb5wmvGDCdg06.jpg",
+        "slug": "odzglla-mgnus-nulyu"
+      },
+      {
+        "id": 1185344,
+        "title": "Звір: Ціль №1",
+        "poster": "https://image.tmdb.org/t/p/w500/wqVLMLChSUo60i8y4dhockfdt7I.jpg",
+        "slug": "zvgr-tsglyu-1"
+      }
+    ]
+  },
+  {
     "id": 1795275744656,
     "date": "2026-11-21",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Тварини",
         "poster": "https://image.tmdb.org/t/p/w500/x5wcrbPpMMUm4N5odQQxw71wiHd.jpg",
         "slug": "tvaryny"
-      }
-    ]
-  },
-  {
-    "id": 1792068884911,
-    "date": "2026-10-15",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1101412,
-        "title": "Над безоднею 2",
-        "poster": "https://image.tmdb.org/t/p/w500/pOrpgi2EkdKsJlnAlcjD53AM7yw.jpg",
-        "slug": "nad-bezodneye-2"
-      },
-      {
-        "id": 1302904,
-        "title": "Практична магія 2",
-        "poster": "https://image.tmdb.org/t/p/w500/lU9Q7YbdTMe9MSFAE9ujip4iMdh.jpg",
-        "slug": "praktychna-mahgi-2"
-      },
-      {
-        "id": 1514026,
-        "title": "Приятель",
-        "poster": "https://image.tmdb.org/t/p/w500/1BdZbNvl1SfrrX8J9X5tQzN6Ivu.jpg",
-        "slug": "pryitelyu"
-      },
-      {
-        "id": 1291595,
-        "title": "Астрал: За межами Потойбіччя",
-        "poster": "https://image.tmdb.org/t/p/w500/9uVCgMaUtmnIZJ3NBAnhPPnC4XO.jpg",
-        "slug": "astral-za-mezhamy-potoybgchchi"
-      },
-      {
-        "id": 1003596,
-        "title": "Месники: Сходження Доктора Дума",
-        "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
-        "slug": "mesnyky-skhodzhenni-doktora-duma"
       }
     ]
   }
