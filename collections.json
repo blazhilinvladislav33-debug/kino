@@ -1,5 +1,43 @@
 [
   {
+    "id": 1795801275431,
+    "date": "2026-11-27",
+    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
+    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
+    "movies": [
+      {
+        "id": 1423191,
+        "title": "Resident Evil: Оселя Зла",
+        "poster": "https://image.tmdb.org/t/p/w500/iVI1qrZkIsbs0t0UB8FA1HGVt6b.jpg",
+        "slug": "resident-evil-oseli-zla"
+      },
+      {
+        "id": 1538497,
+        "title": "Чарокрай: Королівство магії",
+        "poster": "https://image.tmdb.org/t/p/w500/dE0OYrfzLhsIclSu0srwkXezf5M.jpg",
+        "slug": "charokray-korolgvstvo-mahg"
+      },
+      {
+        "id": 1003596,
+        "title": "Месники: Сходження Доктора Дума",
+        "poster": "https://image.tmdb.org/t/p/w500/p9pKlEL13P2sIYB2EFOEQux2umC.jpg",
+        "slug": "mesnyky-skhodzhenni-doktora-duma"
+      },
+      {
+        "id": 1496696,
+        "title": "Breeder",
+        "poster": "https://image.tmdb.org/t/p/w500/alsb3UC17kxIcytLWvwkmL0STgU.jpg",
+        "slug": "breeder"
+      },
+      {
+        "id": 1611767,
+        "title": "Крізь сніг і сварки",
+        "poster": "https://image.tmdb.org/t/p/w500/95K1Y96ELBDL3M8kyTVb5wocCtX.jpg",
+        "slug": "krgzyu-sngh-g-svarky"
+      }
+    ]
+  },
+  {
     "id": 1795630458073,
     "date": "2026-11-25",
     "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
@@ -718,44 +756,6 @@
         "title": "Справжній герой",
         "poster": "https://image.tmdb.org/t/p/w500/lcuM0M6EonjY2ScS6JbOfpVHwc9.jpg",
         "slug": "spravzhngy-heroy"
-      }
-    ]
-  },
-  {
-    "id": 1792422257281,
-    "date": "2026-10-19",
-    "title": "🔥 Топ-5 фільмів тижня, які варто подивитися",
-    "description": "Шукаєте цікаве кіно на вечір? Зібрали для вас найпопулярніші стрічки цього тижня з високим рейтингом.",
-    "movies": [
-      {
-        "id": 1423191,
-        "title": "Resident Evil: Оселя Зла",
-        "poster": "https://image.tmdb.org/t/p/w500/v6NEWBg53FbnzRh4JptAtbQKE0X.jpg",
-        "slug": "resident-evil-oseli-zla"
-      },
-      {
-        "id": 1248832,
-        "title": "Діґґер",
-        "poster": "https://image.tmdb.org/t/p/w500/eK5CJJtw7b89kvu6crZRKbe4Qnc.jpg",
-        "slug": "dg-er"
-      },
-      {
-        "id": 1368337,
-        "title": "Одіссея",
-        "poster": "https://image.tmdb.org/t/p/w500/brhZJ4GyvJDwNaHXkIrsD4CV4re.jpg",
-        "slug": "odgssei"
-      },
-      {
-        "id": 1058424,
-        "title": "Надія",
-        "poster": "https://image.tmdb.org/t/p/w500/zvZ2VGp0Xi5Cuk6e6Ktg0xWR3tF.jpg",
-        "slug": "nadgi"
-      },
-      {
-        "id": 1198654,
-        "title": "Паршиві вівці",
-        "poster": "https://image.tmdb.org/t/p/w500/sDgb5jVuZ6ZOh4YjtSMMnbovkCi.jpg",
-        "slug": "parshyvg-vgvtsg"
       }
     ]
   }
